@@ -3,9 +3,9 @@ AtomSpace Viewer - README
 
 Introduction
 ------------
-The AtomSpace Viewer is a tool that allows you to dynamically visualize the atoms from a running CogServer instance. See the help file, [av_help.html](https://github.com/opencog/external-tools/AtomViewer/WebContent/av_help.html), for instructions on how to configure and use the Viewer. You'll first need to set up the [REST API](http://wiki.opencog.org/w/Web_interface) for your OpenCog build.
+The AtomSpace Viewer is a tool that allows you to dynamically visualize the atoms from a running CogServer instance. See the help file (av_help.html) for instructions on how to configure and use the Viewer. You'll first need to set up the [REST API](http://wiki.opencog.org/w/Web_interface) for your OpenCog build.
 
-To run the Viewer, download the entire AtomViewer directory tree, including all sub-folders. Then open atom_viewer.html in your web browser. The AtomSpace Viewer can be run as a standalone app in the brower, it does not need to be hosted on a web server. There are no external dependencies either, but you should use the latest version of a modern web browser that supports HTML5 and CORS (e.g. Chrome, Firefox, Internet Explorer, etc.).
+To run the Viewer, download the entire AtomViewer directory tree, including all sub-folders. Then open atom_viewer.html (from the WebContent folder) in your web browser. The AtomSpace Viewer can be run as a standalone app in the brower, it does not need to be hosted on a web server. There are no external dependencies either, but you should use the latest version of a modern web browser that supports HTML5 and CORS (e.g. Chrome, Firefox, Internet Explorer, etc.).
 
 Development
 -----------
