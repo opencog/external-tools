@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+    
+<!--
+/*
+ * atom_viewer.html
+ *
+ * This is the main HTML page for the Atom Viewer. This file can be opened
+ * stand-alone in the web browser, or hosted on a web server. A modern
+ * browser that supports HTML5 should be used (mobile browsers are also
+ * supported).
+ *
+ * Copyright (C) 2013 OpenCog Foundation
+ * All Rights Reserved
+ *
+ * Written by Scott Jones <troy.scott.j@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+-->
+
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <title>OpenCog AtomSpace Viewer</title>
+
+        <!-- Dojo related code: -->
+        <script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'parseOnLoad':true,'async':true,'packages':[{'name':'gridx','location':'../gridx'},{'name':'clipart','location':'../../clipart'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'zazl','location':'../../zazl'},{'name':'widgets','location':'../../custom'}],'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[],'mblLoadCompatPattern':''"></script>
+        <script type="text/javascript">
+            require(["dijit/dijit", "dojo/parser", "maqetta/space", "maqetta/AppStates", "dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/layout/TabContainer", "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/MenuItem", "dijit/Menu", "dijit/form/ToggleButton", "shapes/Text", "dijit/form/TextBox", "dijit/TitlePane", "dijit/form/Button", "dijit/Toolbar", "dijit/ProgressBar", "dijit/form/FilteringSelect", "dojo/data/ItemFileReadStore", "gridx/Grid", "gridx/core/model/cache/Async", "dijit/form/ComboButton", "dijit/form/DropDownButton", "shapes/Rectangle", "dijit/form/CheckBox", "dijit/form/Select", "dijit/form/ComboBox", "clipart/Search"]);
+        </script>
+        <style>
+            @import "themes/claro/document.css";
+            @import "themes/claro/claro.css";
+            @import "lib/dojo/gridx/resources/claro/Gridx.css";
+            @import "lib/dojo/gridx/resources/claro/Gridx_rtl.css";
+            @import "css/av_main.css";
+
+        </style>
+
+        <!-- Our application code: -->
+        <script type="text/javascript" src="lib/jit/jit.js"></script>
+        <script type="text/javascript" src="lib/atomviewer/av_common.js"></script>
+        <script type="text/javascript" src="lib/atomviewer/views/av_graph_view.js"></script>
+        <script type="text/javascript" src="lib/atomviewer/views/av_views.js"></script>
+        <script type="text/javascript" src="lib/atomviewer/av_main.js"></script>
+    </head>
+    <body data-maq-flow-layout="true" data-maq-comptype="desktop" class="claro" data-maq-ws="collapse" onresize="onResize()" data-maq-appstates="{}" id="myapp">
+        <div data-dojo-type="dijit/layout/BorderContainer" design="sidebar" persist="false" gutters="true" style="min-width: 1em; min-height: 1px; z-index: 0; width: 100%; height: 100%;">
+            <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="top" splitter="false" maxSize="Infinity" style="padding: 3px; height: auto;" doLayout="false">
+                <span data-dojo-type="dijit/MenuBar" tabIndex="0"> <span data-dojo-type="dijit/PopupMenuBarItem" label="File" iconClass="dijitNoIcon"> <span data-dojo-type="dijit/Menu"> <span data-dojo-type="dijit/MenuItem" id="idFileImport" label="Import..." iconClass="dijitNoIcon" disabled="true"> </span> <span data-dojo-type="dijit/MenuItem" id="idFileExport" label="Export..." iconClass="dijitNoIcon" disabled="true"> </span> </span> </span> <span data-dojo-type="dijit/PopupMenuBarItem" label="Help" iconClass="dijitNoIcon"> <span data-dojo-type="dijit/Menu"> <span data-dojo-type="dijit/MenuItem" id="idHelpHowToUse" label="How to Use..." iconClass="dijitNoIcon" onclick="onClickHelp"> </span> <span data-dojo-type="dijit/MenuItem" id="idHelpAbout" label="About" iconClass="dijitNoIcon" onclick="onClickAbout"> </span> </span> </span> </span>
+            </div>
+            <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="bottom" splitter="false" maxSize="Infinity" style="text-align: left; vertical-align: top; overflow: auto; width: 100%; max-height: 130px; height: 120px; left: 304px; top: 695px;" doLayout="false">
+                <table border="0" style="border-collapse: collapse; table-layout: fixed; height: auto; width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: bold; height: auto;"> Selected Atom: </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table border="0" style="border-collapse: collapse; table-layout: fixed; width: 100%; height: auto;">
+                    <tbody>
+                        <tr style="height: 25px; vertical-align: middle;">
+                            <td style="width: 20px;"> &nbsp; </td>
+                            <td style="width: 35px; text-align: left;"> Name: </td>
+                            <td style="width: 170px; text-align: left;"> &nbsp;
+                            <input type="text" data-dojo-type="dijit/form/TextBox" id="idAtomName" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 155px;">
+                            </input> </td>
+                            <td style="width: 32px; text-align: left;"> Type: </td>
+                            <td style="width: 170px; text-align: left;"> &nbsp;
+                            <input type="text" data-dojo-type="dijit/form/TextBox" id="idAtomType" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 155px;">
+                            </input> </td>
+                            <td style="width: 40px; text-align: left;"> Handle: </td>
+                            <td style="text-align: left; width: 50px;"> &nbsp;
+                            <input type="text" data-dojo-type="dijit/form/TextBox" id="idAtomHandle" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 35px;">
+                            </input> </td>
+                            <td> &nbsp;
+                            <input type="button" data-dojo-type="dijit/form/Button" intermediateChanges="false" label="Edit..." iconClass="dijitNoIcon" onclick="onAtomEdit">
+                            </input> </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table border="0" style="border-collapse: collapse; table-layout: fixed; width: 100%; height: auto;">
+                    <colgroup>
+                        <col style="width: 81px;">
+                        </col>
+                        <col style="width: 28px;">
+                        </col>
+                        <col style="width: 135px;">
+                        </col>
+                        <col style="width: 14px;">
+                        </col>
+                        <col style="width: 64px;">
+                        </col>
+                        <col style="width: 64px;">
+                        </col>
+                        <col style="width: 123px;">
+                        </col>
+                        <col>
+                        </col>
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td style="font-style: italic;"> Attention Value: </td>
+                            <td> LTI: </td>
+                            <td>
+                            <input type="text" data-dojo-type="dijit/form/TextBox" id="idAvLTI" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 115px;">
+                            </input> </td>
+                            <td>&nbsp;</td>
+                            <td style="font-style: italic;"> Truth Value (Simple): </td>
+                            <td>Count:</td>
+                            <td>
+                            <input type="text" data-dojo-type="dijit/form/TextBox" id="idTvCount" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 115px;">
+                            </input></td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>STI:</td>
+                            <td>
+                            <input type="text" data-dojo-type="dijit/form/TextBox" id="idAvSTI" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 115px;">
+                            </input> </td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>Confidence:</td>
+                            <td>
+                            <input type="text" data-dojo-type="dijit/form/TextBox" id="idTvConfidence" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 115px;">
+                            </input></td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>VLTI:</td>
+                            <td>
+                            <input type="text" data-dojo-type="dijit/form/TextBox" id="idAvVLTI" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 40px;">
+                            </input> </td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>Strength:</td>
+                            <td>
+                            <input type="text" data-dojo-type="dijit/form/TextBox" id="idTvStrength" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 115px;">
+                            </input></td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="left" splitter="false" maxSize="Infinity" style="overflow: auto; max-width: 298px; height: 100%; width: 276px;" doLayout="false">
+                <a title="OpenCog" target="_blank" href="http://www.opencog.org"> <img src="images/OpenCog Logo.png" style="width: 120px; height: 115px; position: relative;"></img> </a>
+                <span data-dojo-type="shapes/Text" style="position: absolute; z-index: 900; font-style: italic; text-align: center; color: blue; font-size: 24px; font-family: Geneva,Tahoma,sans-serif; width: auto; height: auto; left: 127px; top: 32px;"> AtomSpace Viewer </span>
+                <br/>
+                <fieldset style="border: 2px groove threedface; margin: 2px; padding: 0.75em;">
+                    <legend>
+                        Control Panel
+                    </legend>
+                    <label> CogServer:</label>
+                    <input type="text" data-dojo-type="dijit/form/TextBox" id="idConfigCogServer" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 185.109375px;" value="http://localhost:5000/">
+                    </input>
+                    <br/>
+                    <br/>
+                    <div style="text-align: center;">
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnCtrlRefresh" intermediateChanges="false" label="Connect/Refresh..." iconClass="dijitNoIcon" onclick="onClickRefresh()">
+                        </input>
+                    </div>
+                    <div align="center">
+                        <span data-dojo-type="dijit/ProgressBar" id="idCtrlProgressBar" indeterminate="false" style="width: 200px; height: auto;"> </span>
+                    </div>
+                    <br/>
+                    <label> Status:</label>
+                    <div style="border: 1px solid black; text-align: center;">
+                        <span data-dojo-type="shapes/Text" id="idCtrlStatusMsg" style="font-size: 10pt; color: #373658;"> Waiting for connection... </span>
+                    </div>
+                    <br/>
+                    <div style="text-align: center;">
+                        <input type="button" data-dojo-type="dijit/form/ToggleButton" id="idConfigAutoUpdate" intermediateChanges="false" label="Auto Update OFF" iconClass="dijitCheckBoxIcon" onclick="onClickConfigAutoUpdate(this)" style="position: relative;">
+                        </input>
+                    </div>
+                </fieldset>
+                <span data-dojo-type="dijit/TitlePane" title="Filter" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;">
+                    <div>
+                        <input type="checkbox" data-dojo-type="dijit/form/CheckBox" id="idFilterCBAttFocus" intermediateChanges="false" iconClass="dijitNoIcon">
+                        Attentional Focus Only</input>
+                    </div>
+                    <br/>
+                    <div>
+                        <label>STI Range:</label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min:
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterSTIMin" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 30px;">
+                        </input>
+                        &nbsp;&nbsp;max:
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterSTIMax" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 30px;">
+                        </input>
+                    </div>
+                    <br/>
+                    <div>
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnApplyFilters" intermediateChanges="false" label="Apply Filters..." iconClass="dijitNoIcon" onclick="onApplyFilters">
+                        </input>
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnClearFilters" intermediateChanges="false" label="Clear Filters" iconClass="dijitNoIcon" style="float: right;" onclick="onClearFilters">
+                        </input>
+                    </div> </span><span data-dojo-type="dijit/TitlePane" title="Search" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;">
+                    <div>
+                        <label>Atom Name:</label>
+                        <br/>
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idSearchName" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 152px;">
+                        </input>
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnSearchName" intermediateChanges="false" iconClass="dijitIconSearch" onclick="onSearchName">
+                        </input>
+                    </div>
+                    <br/>
+                    <div>
+                        <label>Atom Handle:</label>
+                        <br/>
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idSearchHandle" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 32px;">
+                        </input>
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnSearchHandle" intermediateChanges="false" iconClass="dijitIconSearch" onclick="onSearchHandle">
+                        </input>
+                    </div>
+                    <br/>
+                    <div>
+                        <label>Atom Type:</label>
+                        <br/>
+                        <select data-dojo-type="dijit/form/ComboBox" id="idSearchType" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" invalidMessage="$_unset_$" pageSize="Infinity" searchDelay="200" style="width: 191.109375px;"></select>
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnSearchType" intermediateChanges="false" iconClass="dijitIconSearch" onclick="onSearchType">
+                        </input>
+                    </div> </span><span data-dojo-type="dijit/TitlePane" title="Analysis" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;"> <h2> W.I.P. - not yet implemented</h2> </span>
+            </div>
+            <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="center" splitter="false" maxSize="Infinity" doLayout="false" style="padding: 4px; overflow: auto; width: 100%; height: 100%;">
+                <span data-dojo-type="dijit/layout/TabContainer" id="idTabContainer" style="min-width: 1em; min-height: 1em; width: 100%; height: 100%;" controllerWidget="dijit.layout.TabController">
+                    <div data-dojo-type="dijit/layout/ContentPane" id="idGraphTab" title="Graph" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" selected="true" closable="false">
+                        <div id="idGraphCanvas"></div>
+                        <div id="idGraphStatus" style="height: 150px; vertical-align: middle; position: absolute; left: 50px; top: 50px; width: 350px;"></div>
+                    </div> <div data-dojo-type="dijit/layout/ContentPane" id="idTableTab" title="Table" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" selected="true" closable="false"></div> <div data-dojo-type="dijit/layout/ContentPane" id="idJSONTab" title="JSON" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" doLayout="true" selected="true" closable="false"></div> <div data-dojo-type="dijit/layout/ContentPane" id="idSchemeTab" title="Scheme" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" doLayout="true" selected="true" closable="false"></div> </span>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,139 @@
+<!--
+/*
+ * av_help.html
+ *
+ * This is the Help manual for how to use Atom Viewer.
+ *
+ * Copyright (C) 2013 OpenCog Foundation
+ * All Rights Reserved
+ *
+ * Written by Scott Jones <troy.scott.j@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+-->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <title>Atom Viewer Help</title>
+        <style type="text/css">
+            .style1
+            {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body style="font-family: Arial, Helvetica, sans-serif">
+            <h1 class="style1"> <em>AtomSpace Viewer Help</em></h1>
+            <h2> Contents</h2>
+            <ol>
+                <li><a href="#Introduction">Introduction</a></li>
+                <li><a href="#Configuration">Configuring and Connecting to the OpenCog Server</a></li>
+                <li><a href="#Filter">Filter Options</a></li>
+                <li><a href="#Search">Search Options</a></li>
+                <li><a href="#Views">Views</a></li>
+                <li><a href="#Analysis">Analysis</a></li>
+            </ol>
+            <h2>
+                <a name="Introduction"></a>Introduction</h2>
+            <p> The AtomSpace Viewer is a tool for 
+                visualizing the contents of the AtomSpace of a running CogServer instance in 
+                real time. Atoms are displayed graphically, as well as in various other views.</p>
+            <p> See the README.md file for development notes, current list of issues, and 
+                proposed enhancements.</p>
+            <h2> <a name="Configuration"></a>Configuring and Connecting to the OpenCog Server</h2>
+            <h3> Prerequisites</h3>
+            <p>
+                In order to use the AtomSpace Viewer, you must first carry out the following 
+                steps:</p>
+            <ol>
+                <li>Download and build the latest version of
+                    <a href="https://github.com/opencog/opencog" target="_blank">OpenCog</a>.</li>
+                <li>Install Python dependencies and add configuraton options required for the REST 
+                    API (refer to <a href="http://wiki.opencog.org/w/Web_interface#Prerequisites" 
+                        target="_blank">
+                    http://wiki.opencog.org/w/Web_interface#Prerequisites</a>).</li>
+                <li>Start the CogServer and open a telnet terminal.</li>
+                <li>Start the REST API by typing &quot;restapi.Start&quot; in the CogServer command shell.</li>
+            </ol>
+            <h3> Control Panel</h3>
+            <p> The default CogServer address (http://localhost:5000/) should work if you run 
+                the CogServer locally with all default settings. However, if you run your server 
+                on a different port, or if you wish to connect to a remote CogServer, enter the 
+                desired URL and port number here. For instructions on accessing remote servers 
+                via the REST API, refer to:
+                <a href="http://wiki.opencog.org/w/Web_interface#Default_Endpoint" 
+                    target="_blank">http://wiki.opencog.org/w/Web_interface#Default_Endpoint</a>.</p>
+            <p> After setting the CogServer address, hit the &quot;Connect/Refresh&quot; button to connect 
+                to the server and retrieve the atoms. By default, this will retrieve all atoms 
+                in the AtomSpace. If the number is very large, you will want to first set filter 
+                options, as described in the next section.</p>
+            <p> The &quot;Auto Update&quot; toggle button allows you to turn on automatic refreshes, so 
+                AtomSpace changes can be viewed in real time as they take place.</p>
+            <h2> <a name="Filter"></a>Filter Options</h2>
+            <p>
+                This allows you to filter the atoms by STI (short-term importance) range, or to 
+                view only those atoms in the attentional focus. Filters should be used whenever 
+                you have a large AtomSpace to reduce the atoms retrieved to a manageable number.</p>
+            <p>
+                Note that once configured, filter options remain active until cleared, so any 
+                subsequent updates will automatically apply the filters.</p>
+            <h2> <a name="Search"></a>Search Options</h2>
+            <p> You may search for specific atoms by name, handle, or type. Enter the value (case sensitive) and 
+                click the search icon button. Unlike filters, searches are one-time operations 
+                and do not affect subsequent updates. Therefore, you should be sure to turn off 
+                the &quot;Auto Update&quot; feature when searching, to avoid losing search results.</p>
+            <h2> <a name="Views"></a>Views</h2>
+            <h3> Graph</h3>
+            <p>
+                This view shows a force directed style graph of the atoms. Node type atoms are 
+                drawn with a circle, while Link atoms are drawn with a triangle.</p>
+            <p>
+                You may interact with the graph in the following ways:</p>
+            <ul>
+                <li>Zoom in or out, using the mouse wheel.</li>
+                <li>Mouse over an atom to quickly view its handle and type.</li>
+                <li>Drag atoms around to reposition them.</li>
+                <li>Drag the entire graph around the canvas.</li>
+                <li>Select a specific atom and view its details in the pane below the graph. The 
+                    currently selected atom will be shown as larger size, and clicking on the atom a 
+                    second time will clear the selection.</li>
+            </ul>
+            <h3> Table</h3>
+            <p>
+                Not yet implemented. Atoms will be displayed in a tabular style, similar to an 
+                object diagram.
+            </p>
+            <h3> Scheme</h3>
+            <p>
+                Not yet implemented. Atoms will be represented in Scheme, equivalent to the 
+                &quot;list -a&quot; CogServer console command.</p>
+            <h3> JSON</h3>
+            <p>
+                In this view, the Atoms are listed in JSON (<a 
+                    href="http://www.json.org/" target="_blank">JavaScript 
+                Object Notation</a>) format. This is the same format as returned by the REST 
+                API, and can be copied/pasted to other applications that understand JSON.</p>
+            <h2>
+                <a name="Analysis"></a>Analysis</h2>
+            <p>
+                Not yet implemented. This feature will provide useful statistical analysis of 
+                the AtomSpace.</p>
+    </body>
+</html>

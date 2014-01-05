@@ -1,0 +1,354 @@
+/*
+ * av_main.js
+ *
+ * This file contains the main application code, event handlers, etc.
+ *
+ * Copyright (C) 2013 OpenCog Foundation
+ * All Rights Reserved
+ *
+ * Written by Scott Jones <troy.scott.j@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License v3 as
+ * published by the Free Software Foundation and including the exceptions
+ * at http://opencog.org/wiki/Licenses
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program; if not, write to:
+ * Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+
+/*
+ * App initialization.
+ */
+require(["dojo/ready", "dojo/dom", "dijit/registry", "dojo/json", "dojo/request/xhr", "dojo/request/script"],
+function(ready, dom, registry, json, xhr, script)
+{
+    ready(function()
+    {
+        // logic that requires that Dojo is fully initialized should go here
+
+        // Save object references for later use:
+        av.DOM = dom;
+        av.Registry = registry;
+        av.JSON = json;
+        av.XHR = xhr;
+        av.Script = script;
+
+        // Set viewer to virgin state:        
+        resetAtomViewer();
+    });
+});
+
+
+/*
+ * Event handlers.
+ * 
+ * Note that if handling events from top level menu items in Dojo,
+ * you have to process the onmouseup (or down) event, since onmouseclick
+ * is handled by Dojo (child menu items can use onmouseclick).
+ */
+
+function onClickHelp()
+{
+    // Show help page in separate window:
+    window.open("av_help.html");
+}
+
+function onClickAbout()
+{
+    require(["dijit/Dialog", "dojo/domReady!"], function(Dialog)
+    {
+        aboutDialog = new Dialog(
+        {
+            title : "About Atom Viewer",
+            content : ABOUT_CONTENT,
+            style : "width: 300px"
+        });
+        
+        aboutDialog.show();
+    }); 
+}
+
+function onClickConfigAutoUpdate(tbtn)
+{
+    if (tbtn.checked)
+    {
+        tbtn.setLabel("AutoUpdate ON");
+
+        // TODO turn on polling/cogserver event processing. Remember
+        // to update selected atom automatically too.
+    } else
+    {
+        tbtn.setLabel("AutoUpdate OFF");
+
+        // TODO turn off polling/cogserver event processing
+    }
+    // TODO
+    alert("Not yet implemented...");
+}
+
+function onClickRefresh()
+{
+    resetAtomViewer();
+    var url = createCogServerRequest();
+    retrieveAtomsFromCogServer(url);
+}
+
+function onAtomEdit()
+{
+    // TODO
+    alert("Not yet implemented...");
+}
+
+function onSearchName()
+{
+    // Get the base URL:
+    var url = av.DOM.byId("idConfigCogServer").value + API_VER;
+
+    // Append name param:
+    url += "atoms?name=" + av.Registry.byId("idSearchName").value;
+    
+    resetAtomViewer();
+    retrieveAtomsFromCogServer(url);
+}
+
+function onSearchHandle()
+{
+    // Get the base URL:
+    var url = av.DOM.byId("idConfigCogServer").value + API_VER;
+
+    // Append name param:
+    url += "atoms/" + av.Registry.byId("idSearchHandle").value;
+    
+    resetAtomViewer();
+    retrieveAtomsFromCogServer(url);
+}
+
+function onSearchType()
+{
+    // Get the base URL:
+    var url = av.DOM.byId("idConfigCogServer").value + API_VER;
+
+    // Append name param:
+    url += "atoms?type=" + av.Registry.byId("idSearchType").value;
+    
+    resetAtomViewer();
+    retrieveAtomsFromCogServer(url);
+}
+
+function onApplyFilters()
+{
+    // Just do same as a connect/refresh
+    onClickRefresh();
+}
+
+function onClearFilters()
+{
+    // Clear filter settings:
+    av.Registry.byId("idFilterCBAttFocus").reset();
+    av.Registry.byId("idFilterSTIMin").reset();
+    av.Registry.byId("idFilterSTIMax").reset();;
+    
+    resetAtomViewer();
+}
+
+
+/*
+ * This function retrieves the atoms from the CogServer. 
+ */
+function retrieveAtomsFromCogServer(url)
+{
+    setStatusMsg("Retreiving atoms...");
+    
+    // Disable data retrieval buttons during update:
+    disableDataButtons(true);
+    
+    // First try using XHR (XMLHttpRequest), which is preferred. If that fails
+    // for some reason (such as client is a browser that does not support CORS),
+    // then use JSONP.
+
+    av.XHR(url,
+    {
+        handleAs: "json",
+        method: "GET",
+        headers: {"X-Requested-With": ""}   // prevents Dojo sending OPTIONS pre-flight request
+    }).then(function(data)
+    {
+        // Success - get the data:
+        receiveAtomData(data);
+        
+        // Restore buttons:
+        disableDataButtons(false);
+    }, function(err)
+    {
+        // TODO check error condition and handle more intelligently before passing
+        // to JSONP method..
+        setStatusMsg(err.toString() + " (Retrying...)");
+        
+        // TODO / BUG: this should not be called here, it should be in the
+        // success/failure cases below, but there's a bug where the failure
+        // function isn't called for JSONP, we have to re-enable buttons here.
+        disableDataButtons(false);
+        
+        // XHR failed, so try JSONP method:
+        if (/\?/.test(url))
+            url += "&callback=receiveAtomData";
+        else
+            url += "?callback=receiveAtomData";
+            
+        av.Script.get(url).then(function()
+        {
+            // Success. No progress events with JSONP, so just max out the
+            // progress bar:
+            av.Registry.byId("idCtrlProgressBar").update({maximum: 100, progress: 100});
+            disableDataButtons(false);
+        }, function(err)
+        {
+            // TODO / BUG: for some reason, dojo/request/script apparently never calls
+            // this error handler, even when the JSONP request fails.
+            setStatusMsg(err.toString());
+            disableDataButtons(false);
+        });
+    }, function(evt)
+    {
+        // Update progress bar (if the browser supports XHR2):
+        // TODO: find out why we're only getting 1 or 2 updates even for big data sets..
+        av.Registry.byId("idCtrlProgressBar").update({maximum: evt.total, progress: evt.loaded});
+    });
+}
+
+/*
+ * This function is called when the asynch retrieval of atoms is complete.
+ * We save a reference to the atom data and update all views.
+ */
+function receiveAtomData(json_atoms)
+{
+    // Check if result is collection or single atom
+    if (json_atoms.hasOwnProperty("result"))
+    {
+        // Collection of atoms
+        av.atom_data = json_atoms.result.atoms;
+        
+        if (av.atom_data.length == 0)
+        {
+            // This can happen when we successfully connect to the CogServer, but
+            // there are no atoms returned, either because none fit the given
+            // search/filter parameters, or the AtomSpace is empty.
+            setStatusMsg("The Cogserver returned no atoms for the given filter/search.");
+            av.atom_data = null;
+        }
+        else
+        {
+            setStatusMsg("Successfully retrieved " + av.atom_data.length.toString()
+                + " atoms.");
+            updateAllViews();
+        }
+    }
+    else
+    {
+        // Single atom result
+        av.atom_data = new Array();
+        av.atom_data[0] = json_atoms.atoms;
+        setStatusMsg("Search successful - found one matching atom.");
+        updateAllViews();
+    }
+}
+
+/*
+ * This helper function constructs the URL for making the request to the
+ * CogSever for the atom collection, applying any filters if configured.
+ */
+function createCogServerRequest()
+{
+    // Get the base URL:
+    var url = av.DOM.byId("idConfigCogServer").value + API_VER;
+
+    // Gets the whole collection:
+    url += "atoms";
+    
+    // Attentional focus filter?
+    if (av.Registry.byId("idFilterCBAttFocus").checked)
+    {
+        url += "?filterby=attentionalfocus";
+    }
+    else
+    {
+        // Check for STI range filter:
+        var min = av.Registry.byId("idFilterSTIMin").value;
+        var max = av.Registry.byId("idFilterSTIMax").value;
+        if (min != "" || max != "")
+        {
+            // In case user specifies max but not min
+            if (min == "")
+                min = "0";
+                
+            url += "?filterby=stirange&stimin=" + min;
+            if (max != "")
+                url += "&stimax=" + max;
+        }
+    }
+    
+    return url;
+}
+
+/*
+ * Helper function to set our status message.
+ */
+function setStatusMsg(msg)
+{
+    var statusMsg = av.DOM.byId("idCtrlStatusMsg");
+    statusMsg.innerHTML = msg;
+}
+
+/*
+ * Helper function to reset all views/status to initial state.
+ */
+function resetAtomViewer()
+{
+    av.Registry.byId("idCtrlProgressBar").update({maximum: 100, progress: 0});
+    av.atom_data = null;
+    resetAtomDetails();
+    updateAllViews();
+    setStatusMsg("Waiting for connection...");
+}
+
+/*
+ * Helper function to reset atom details pane.
+ */
+function resetAtomDetails()
+{
+    av.Registry.byId("idAtomName").reset();
+    av.Registry.byId("idAtomType").reset();
+    av.Registry.byId("idAtomHandle").reset();
+    av.Registry.byId("idAvLTI").reset();
+    av.Registry.byId("idAvSTI").reset();
+    av.Registry.byId("idAvVLTI").reset();
+    av.Registry.byId("idTvCount").reset();
+    av.Registry.byId("idTvConfidence").reset();
+    av.Registry.byId("idTvStrength").reset();
+}
+
+/*
+ * Helper function to disable/enable the buttons that cause data retrieval.
+ * This function should be called at the start and end of any asynch data
+ * retrieval in order to prevent multiple out of synch updates. 
+ * 
+ * @param disabled - true to disable the buttons, false to enable.
+ */
+function disableDataButtons(disabled)
+{
+    av.Registry.byId("idBtnCtrlRefresh").setDisabled(disabled);
+    av.Registry.byId("idBtnApplyFilters").setDisabled(disabled);
+    av.Registry.byId("idBtnClearFilters").setDisabled(disabled);
+    av.Registry.byId("idBtnSearchName").setDisabled(disabled);
+    av.Registry.byId("idBtnSearchHandle").setDisabled(disabled);
+    av.Registry.byId("idBtnSearchType").setDisabled(disabled);
+}

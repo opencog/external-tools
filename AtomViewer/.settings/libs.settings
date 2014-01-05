@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<libraries>
+<library id="html" name="html" required="true" version="0.8"/>
+<library id="dojo" name="dojo" required="false" version="1.8" virtualRoot="WebContent/lib/dojo"/>
+<library id="DojoThemes" name="DojoThemes" required="true" version="1.8" virtualRoot="WebContent/themes"/>
+<library id="gridx" name="gridx" required="false" version="1.0.0" virtualRoot="WebContent/lib/dojo/gridx"/>
+<library id="clipart" name="clipart" required="false" version="1.0" virtualRoot="WebContent/lib/clipart"/>
+<library id="maqettaSamples" name="maqettaSamples" required="true" version="1.0" virtualRoot="WebContent/samples"/>
+<library id="maqetta" name="maqetta" required="true" version="0.3" virtualRoot="WebContent/lib/maqetta"/>
+<library id="shapes" name="shapes" required="false" version="1.0" virtualRoot="WebContent/lib/shapes"/>
+<library id="zazl" name="zazl" required="true" version="0.3.0" virtualRoot="WebContent/lib/zazl"/>
+</libraries>
