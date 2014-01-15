@@ -18,11 +18,10 @@ TODO (High Priority)
 * Implement the atom edit feature (including delete function).
 * Implement auto-update feature. Ideally this should use the ZMQ atom change notification system (http://wiki.opencog.org/w/AtomSpace_Event_Publisher), but there are some performance issues with that at present (see https://github.com/opencog/opencog/pull/447). Could use a timer and polling for the short-term instead.
 * For search/filter results, include option to also show the other atoms that are within N links of the search results.
-* Dynamically popluate the atom type combobox. It should get these from the CogServer at run time. Requires change to REST API.
 
 TODO (Medium Priority)
 ----------------------
-* Implement the Table and Scheme views (for Scheme, need addition to the REST API to return equivalent of the "list -a" console command)  
+* Implement the Table and Scheme views. For Scheme, need addition to the REST API to return equivalent of the "list -a" console command. For Table, something like this: http://chris.photobooks.com/json/.  
 * Beef up error handling (e.g. 404 not found for atom search by handle, etc.)
 * Use gradient or similar method for node colors, based on importance or other configurable attribute.
 * Thin out the Dojo libraries and CSS to remove unused parts, compress files.
