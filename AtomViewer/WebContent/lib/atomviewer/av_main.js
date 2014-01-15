@@ -98,6 +98,11 @@ function onClickConfigAutoUpdate(tbtn)
 function onClickRefresh()
 {
     resetAtomViewer();
+    
+    // Clear atom types too, in case the new connection has different types:
+    av.Registry.byId("idSearchType").store.data = [];
+    av.Registry.byId("idSearchType").reset();
+    
     var url = createCogServerRequest();
     retrieveAtomsFromCogServer(url);
 }
@@ -114,10 +119,14 @@ function onSearchName()
     var url = av.DOM.byId("idConfigCogServer").value + API_VER;
 
     // Append name param:
-    url += "atoms?name=" + av.Registry.byId("idSearchName").value;
-    
-    resetAtomViewer();
-    retrieveAtomsFromCogServer(url);
+    var name = av.Registry.byId("idSearchName").value;
+    if (name != "")
+    {
+        url += "atoms?name=" + name;
+        
+        resetAtomViewer();
+        retrieveAtomsFromCogServer(url);
+    }
 }
 
 function onSearchHandle()
@@ -125,11 +134,28 @@ function onSearchHandle()
     // Get the base URL:
     var url = av.DOM.byId("idConfigCogServer").value + API_VER;
 
-    // Append name param:
-    url += "atoms/" + av.Registry.byId("idSearchHandle").value;
-    
-    resetAtomViewer();
-    retrieveAtomsFromCogServer(url);
+    // Append handle param:
+    var handle = av.Registry.byId("idSearchHandle").value;
+    if (handle != "")
+    {
+        url += "atoms/" + handle;
+        
+        resetAtomViewer();
+        retrieveAtomsFromCogServer(url);
+    }
+}
+
+function onSelectType()
+{
+    // User clicked the combobox for selecting atom type for searching. We
+    // use this event to query the CogServer for types and populate the
+    // combobox, if it hasn't been done already.
+    var cbTypesData = av.Registry.byId("idSearchType").store.data;
+    if (cbTypesData.length == 0)
+    {
+        // List is empty, need to populate
+        retrieveAtomTypes();
+    }
 }
 
 function onSearchType()
@@ -137,11 +163,15 @@ function onSearchType()
     // Get the base URL:
     var url = av.DOM.byId("idConfigCogServer").value + API_VER;
 
-    // Append name param:
-    url += "atoms?type=" + av.Registry.byId("idSearchType").value;
-    
-    resetAtomViewer();
-    retrieveAtomsFromCogServer(url);
+    // Append type param:
+    var type = av.Registry.byId("idSearchType").value;
+    if (type != "")
+    {
+        url += "atoms?type=" + type;
+        
+        resetAtomViewer();
+        retrieveAtomsFromCogServer(url);
+    }
 }
 
 function onApplyFilters()
@@ -159,7 +189,6 @@ function onClearFilters()
     
     resetAtomViewer();
 }
-
 
 /*
  * This function retrieves the atoms from the CogServer. 
@@ -351,4 +380,32 @@ function disableDataButtons(disabled)
     av.Registry.byId("idBtnSearchName").setDisabled(disabled);
     av.Registry.byId("idBtnSearchHandle").setDisabled(disabled);
     av.Registry.byId("idBtnSearchType").setDisabled(disabled);
+}
+
+/*
+ * This function retrieves the atom types from the CogServer.
+ */
+function retrieveAtomTypes()
+{
+    var url = av.DOM.byId("idConfigCogServer").value + API_VER + "types";
+    av.XHR(url,
+    {
+        handleAs : "json",
+        method : "GET",
+        headers :
+        {
+            "X-Requested-With" : ""
+        }
+    }).then(function(data)
+    {
+        // Success - save types to the combobox:
+        var cbTypesData = av.Registry.byId("idSearchType").store.data;
+        for (var i = 0; i < data.types.length; i++)
+        {
+            cbTypesData.push({name: data.types[i]});
+        }
+    }, function(err)
+    {
+        alert("Unable to retrieve atom types...check server configuration.");
+    }); 
 }
