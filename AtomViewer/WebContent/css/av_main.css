@@ -33,4 +33,39 @@ html,body {
 	height: 100%;
 	width: 100%;
 }
+table[class='atomTable'] 
+        {
+		overflow:hidden;
+		border:1px solid #d3d3d3;
+		background:#f6f6f6;
+		width:70%;
+		margin:5% auto 0;
+		-moz-border-radius:5px; 
+		-webkit-border-radius:5px;
+		border-radius:5px;
+		-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+		-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    	}
+	
+	th[class='atomTableHeader'], td[class='cellId']
+	 {
+	 	padding:15px 13px 13px;
+	    text-align:center;
+	    font-size:13px;
+	 }
+	
+	th[class='atomTableHeader'] 
+	{
+		padding-top:22px; 
+		text-shadow: 1px 1px 1px #fff;
+		 background:#e8eaeb;
+    }
+	
+	td[class='cellId'] 
+	{
+		border-top:1px solid #e0e0e0;
+		 border-right:1px solid #e0e0e0;
+		 font-size: 13px;
+	 }
+	
 
