@@ -3,7 +3,7 @@
  *
  * This file contains the main application code, event handlers, etc.
  *
- * Copyright (C) 2013 OpenCog Foundation
+ * Copyright (C) 2014 OpenCog Foundation
  * All Rights Reserved
  *
  * Written by Scott Jones <troy.scott.j@gmail.com>
@@ -113,38 +113,6 @@ function onAtomEdit()
     alert("Not yet implemented...");
 }
 
-function onSearchName()
-{
-    // Get the base URL:
-    var url = av.DOM.byId("idConfigCogServer").value + API_VER;
-
-    // Append name param:
-    var name = av.Registry.byId("idSearchName").value;
-    if (name != "")
-    {
-        url += "atoms?name=" + name;
-        
-        resetAtomViewer();
-        retrieveAtomsFromCogServer(url);
-    }
-}
-
-function onSearchHandle()
-{
-    // Get the base URL:
-    var url = av.DOM.byId("idConfigCogServer").value + API_VER;
-
-    // Append handle param:
-    var handle = av.Registry.byId("idSearchHandle").value;
-    if (handle != "")
-    {
-        url += "atoms/" + handle;
-        
-        resetAtomViewer();
-        retrieveAtomsFromCogServer(url);
-    }
-}
-
 function onSelectType()
 {
     // User clicked the combobox for selecting atom type for searching. We
@@ -158,34 +126,28 @@ function onSelectType()
     }
 }
 
-function onSearchType()
-{
-    // Get the base URL:
-    var url = av.DOM.byId("idConfigCogServer").value + API_VER;
-
-    // Append type param:
-    var type = av.Registry.byId("idSearchType").value;
-    if (type != "")
-    {
-        url += "atoms?type=" + type;
-        
-        resetAtomViewer();
-        retrieveAtomsFromCogServer(url);
-    }
-}
-
 function onApplyFilters()
 {
-    // Just do same as a connect/refresh
-    onClickRefresh();
+    resetAtomViewer();
+    
+    var url = createCogServerRequest();
+    retrieveAtomsFromCogServer(url);
 }
 
 function onClearFilters()
 {
     // Clear filter settings:
     av.Registry.byId("idFilterCBAttFocus").reset();
+    av.Registry.byId("idFilterCBIncomingSets").reset();;
+    av.Registry.byId("idFilterCBOutgoingSets").reset();;
     av.Registry.byId("idFilterSTIMin").reset();
     av.Registry.byId("idFilterSTIMax").reset();;
+    av.Registry.byId("idFilterTVMinStrength").reset();;
+    av.Registry.byId("idFilterTVMinConfidence").reset();;
+    av.Registry.byId("idFilterTVMinCount").reset();;
+    av.Registry.byId("idSearchType").reset();
+    av.Registry.byId("idSearchName").reset();
+    av.Registry.byId("idSearchHandle").reset();
     
     resetAtomViewer();
 }
@@ -260,71 +222,114 @@ function retrieveAtomsFromCogServer(url)
  */
 function receiveAtomData(json_atoms)
 {
-    // Check if result is collection or single atom
-    if (json_atoms.hasOwnProperty("result"))
+    // Collection of atoms
+    av.atom_data = json_atoms.result.atoms;
+    
+    if (av.atom_data.length == 0)
     {
-        // Collection of atoms
-        av.atom_data = json_atoms.result.atoms;
-        
-        if (av.atom_data.length == 0)
-        {
-            // This can happen when we successfully connect to the CogServer, but
-            // there are no atoms returned, either because none fit the given
-            // search/filter parameters, or the AtomSpace is empty.
-            setStatusMsg("The Cogserver returned no atoms for the given filter/search.");
-            av.atom_data = null;
-        }
-        else
-        {
-            setStatusMsg("Successfully retrieved " + av.atom_data.length.toString()
-                + " atoms.");
-            updateAllViews();
-        }
+        // This can happen when we successfully connect to the CogServer, but
+        // there are no atoms returned, either because none fit the given
+        // search/filter parameters, or the AtomSpace is empty.
+        setStatusMsg("The Cogserver returned no atoms for the given filter/search.");
+        av.atom_data = null;
     }
     else
     {
-        // Single atom result
-        av.atom_data = new Array();
-        av.atom_data[0] = json_atoms.atoms;
-        setStatusMsg("Search successful - found one matching atom.");
+        setStatusMsg("Successfully retrieved " + av.atom_data.length.toString()
+            + " atoms.");
         updateAllViews();
     }
 }
 
+/*
+ * Usage:
+ *   var data = { 'key1': 'value1', 'key2': 'value2', 'key3': value3 };
+ *   var querystring = EncodeQueryData(data);
+ */
+function EncodeQueryData(data)
+{
+   var ret = [];
+   for (var d in data)
+      ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
+   return ret.join("&");
+}
+ 
 /*
  * This helper function constructs the URL for making the request to the
  * CogSever for the atom collection, applying any filters if configured.
  */
 function createCogServerRequest()
 {
+    console.log("Enter createCogServerRequest");
+
     // Get the base URL:
     var url = av.DOM.byId("idConfigCogServer").value + API_VER;
 
-    // Gets the whole collection:
-    url += "atoms";
-    
-    // Attentional focus filter?
-    if (av.Registry.byId("idFilterCBAttFocus").checked)
+    // Choose between the AtomCollection and Atom API
+    if (av.Registry.byId("idSearchHandle").value != "")
     {
-        url += "?filterby=attentionalfocus";
+        url += "atoms/" + av.Registry.byId("idSearchHandle").value;
     }
     else
     {
-        // Check for STI range filter:
-        var min = av.Registry.byId("idFilterSTIMin").value;
-        var max = av.Registry.byId("idFilterSTIMax").value;
-        if (min != "" || max != "")
+        url += "atoms";
+
+        // Filters for AttentionalFocus and STI Range
+        // AttentionalFocus filter
+        if (av.Registry.byId("idFilterCBAttFocus").checked)
         {
-            // In case user specifies max but not min
-            if (min == "")
-                min = "0";
-                
-            url += "?filterby=stirange&stimin=" + min;
-            if (max != "")
-                url += "&stimax=" + max;
+            query.filterby = "attentionalfocus";
         }
+        else
+        {
+            // Otherwise, check for STI Range filter:
+            var min = av.Registry.byId("idFilterSTIMin").value;
+            var max = av.Registry.byId("idFilterSTIMax").value;
+            if (min != "" || max != "")
+            {
+                query.filterby = "stirange";
+            }
+
+            if (min != "" || max != "")
+            {
+                // In case user specifies max but not min
+                if (min == "")
+                    min = "0";
+                
+                query.stimin = min;
+
+                if (max != "")
+                    query.stimax = max;
+            }
+        }
+
+        // Filters for TruthValue attributes
+        if (av.Registry.byId("idFilterTVMinStrength").value != "")
+            query.tvStrengthMin = av.Registry.byId("idFilterTVMinStrength").value;
+        if (av.Registry.byId("idFilterTVMinConfidence").value != "")
+            query.tvConfidenceMin = av.Registry.byId("idFilterTVMinConfidence").value;
+        if (av.Registry.byId("idFilterTVMinCount").value != "")
+            query.tvCountMin = av.Registry.byId("idFilterTVMinCount").value;
+        
+        // Filter by Type
+        if (av.Registry.byId("idSearchType").value != "")
+            query.type = av.Registry.byId("idSearchType").value;
+
+        // Filter by Name
+        if (av.Registry.byId("idSearchName").value != "")
+            query.name = av.Registry.byId("idSearchName").value;
     }
-    
+
+    // Include Incoming and Outgoing Sets
+    query.includeIncoming = av.Registry.byId("idFilterCBIncomingSets").checked;
+    query.includeOutgoing = av.Registry.byId("idFilterCBOutgoingSets").checked;
+
+    // Encode the query string
+    queryString = EncodeQueryData(query);
+
+    url = url + "?" + queryString;             
+
+    console.log("URL: " + url);
     return url;
 }
 
@@ -345,6 +350,7 @@ function resetAtomViewer()
     av.Registry.byId("idCtrlProgressBar").update({maximum: 100, progress: 0});
     av.atom_data = null;
     resetAtomDetails();
+    resetQueryParameters();
     updateAllViews();
     setStatusMsg("Waiting for connection...");
 }
@@ -365,6 +371,11 @@ function resetAtomDetails()
     av.Registry.byId("idTvStrength").reset();
 }
 
+function resetQueryParameters()
+{
+    window.query = new Object();
+}
+
 /*
  * Helper function to disable/enable the buttons that cause data retrieval.
  * This function should be called at the start and end of any asynch data
@@ -377,9 +388,6 @@ function disableDataButtons(disabled)
     av.Registry.byId("idBtnCtrlRefresh").setDisabled(disabled);
     av.Registry.byId("idBtnApplyFilters").setDisabled(disabled);
     av.Registry.byId("idBtnClearFilters").setDisabled(disabled);
-    av.Registry.byId("idBtnSearchName").setDisabled(disabled);
-    av.Registry.byId("idBtnSearchHandle").setDisabled(disabled);
-    av.Registry.byId("idBtnSearchType").setDisabled(disabled);
 }
 
 /*
@@ -398,6 +406,7 @@ function retrieveAtomTypes()
         }
     }).then(function(data)
     {
+        data.types = data.types.sort();
         // Success - save types to the combobox:
         var cbTypesData = av.Registry.byId("idSearchType").store.data;
         for (var i = 0; i < data.types.length; i++)

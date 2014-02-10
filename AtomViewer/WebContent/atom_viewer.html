@@ -189,34 +189,46 @@
                         </input>
                     </div>
                 </fieldset>
-                <span data-dojo-type="dijit/TitlePane" title="Filter" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;">
+                <span data-dojo-type="dijit/TitlePane" title="Filter" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="true" style="min-width: 1em; width: 100%; height: auto;">
                     <div>
                         <input type="checkbox" data-dojo-type="dijit/form/CheckBox" id="idFilterCBAttFocus" intermediateChanges="false" iconClass="dijitNoIcon">
                         Attentional Focus Only</input>
                     </div>
                     <br/>
                     <div>
+                        <input type="checkbox" data-dojo-type="dijit/form/CheckBox" id="idFilterCBIncomingSets" intermediateChanges="false" iconClass="dijitNoIcon">
+                        Include Incoming Sets</input>
+                    </div>
+                    <br/>
+                    <div>
+                        <input type="checkbox" data-dojo-type="dijit/form/CheckBox" id="idFilterCBOutgoingSets" intermediateChanges="false" iconClass="dijitNoIcon">
+                        Include Outgoing Sets</input>
+                    </div>
+                    <br/>
+                    <div>
                         <label>STI Range:</label>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min:
-                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterSTIMin" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 30px;">
+                        <br/>
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterSTIMin" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 60px;" placeholder="min">
                         </input>
-                        &nbsp;&nbsp;max:
-                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterSTIMax" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 30px;">
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterSTIMax" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 60px;" placeholder="max">
                         </input>
                     </div>
                     <br/>
                     <div>
-                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnApplyFilters" intermediateChanges="false" label="Apply Filters..." iconClass="dijitNoIcon" onclick="onApplyFilters">
+                        <label>TruthValue Minimums:</label>
+                        <br/>
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterTVMinStrength" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 60px;" placeholder="strength">
                         </input>
-                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnClearFilters" intermediateChanges="false" label="Clear Filters" iconClass="dijitNoIcon" style="float: right;" onclick="onClearFilters">
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterTVMinConfidence" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 60px;" placeholder="confidence">
                         </input>
-                    </div> </span><span data-dojo-type="dijit/TitlePane" title="Search" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;">
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterTVMinCount" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 60px;" placeholder="count">
+                        </input>
+                    </div>
+                    <br/>
                     <div>
                         <label>Atom Name:</label>
                         <br/>
                         <input type="text" data-dojo-type="dijit/form/TextBox" id="idSearchName" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 152px;">
-                        </input>
-                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnSearchName" intermediateChanges="false" iconClass="dijitIconSearch" onclick="onSearchName">
                         </input>
                     </div>
                     <br/>
@@ -225,17 +237,21 @@
                         <br/>
                         <input type="text" data-dojo-type="dijit/form/TextBox" id="idSearchHandle" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 32px;">
                         </input>
-                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnSearchHandle" intermediateChanges="false" iconClass="dijitIconSearch" onclick="onSearchHandle">
-                        </input>
                     </div>
                     <br/>
                     <div>
                         <label>Atom Type:</label>
                         <br/>
                         <select data-dojo-type="dijit/form/ComboBox" id="idSearchType" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" invalidMessage="$_unset_$" pageSize="Infinity" searchDelay="200" style="width: 191.109375px;" onclick="onSelectType"></select>
-                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnSearchType" intermediateChanges="false" iconClass="dijitIconSearch" onclick="onSearchType">
+                    </div> 
+                    <br/>
+                    <div>
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnApplyFilters" intermediateChanges="false" label="Apply Filters..." iconClass="dijitNoIcon" onclick="onApplyFilters">
                         </input>
-                    </div> </span><span data-dojo-type="dijit/TitlePane" title="Analysis" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;"> <h2> W.I.P. - not yet implemented</h2> </span>
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnClearFilters" intermediateChanges="false" label="Clear Filters" iconClass="dijitNoIcon" style="float: right;" onclick="onClearFilters">
+                        </input>
+                    </div> 
+                </span><span data-dojo-type="dijit/TitlePane" title="Analysis" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;"> <h2> W.I.P. - not yet implemented</h2> </span>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="center" splitter="false" maxSize="Infinity" doLayout="false" style="padding: 4px; overflow: auto; width: 100%; height: 100%;">
                 <span data-dojo-type="dijit/layout/TabContainer" id="idTabContainer" style="min-width: 1em; min-height: 1em; width: 100%; height: 100%;" controllerWidget="dijit.layout.TabController">
