@@ -71,7 +71,8 @@ function resizeGraph()
 {
     if (av_graph.fdGraph != null)
     {
-        av_graph.fdGraph.canvas.resize(getGraphWidth(), getGraphHeight());
+        // av_graph.fdGraph.canvas.resize(getGraphWidth(), getGraphHeight());
+         av_graph.fdGraph.canvas.resize(window.innerWidth, window.innerWidth);
     }
 }
 
@@ -95,6 +96,24 @@ function getGraphHeight()
     return graph_height;
 }
 
+/**
+ * disable selection on mouse enter and on drag move
+ */
+function DeselectOnMouseDrag()
+{	
+	var style = document.createElement('style');
+	style.type = 'text/css';
+	style.innerHTML = '.cssClass {-webkit-user-select: none;-moz-user-select: -moz-none;-ms-user-select: none;  user-select: none; }';
+	document.getElementsByTagName('div')[0].appendChild(style);
+	document.getElementById('wrapper').className = 'cssClass';	
+}
+/**
+ * enable selection on mouse leave
+ */
+function RemoveDisableSelection()
+{
+	 document.getElementById("wrapper").className = "";
+}
 
 /*
  * This function does the work of actually creating our graph. This version
@@ -150,16 +169,19 @@ function createFDGraph()
             // Change cursor style when hovering a node:
             onMouseEnter : function()
             {
+            	DeselectOnMouseDrag();
                 av_graph.fdGraph.canvas.getElement().style.cursor = 'move';
             },
             onMouseLeave : function()
             {
+            	RemoveDisableSelection();
                 av_graph.fdGraph.canvas.getElement().style.cursor = '';
             },
 
             // Update node positions when dragged:
             onDragMove : function(node, eventInfo, e)
             {
+            	DeselectOnMouseDrag();
                 var pos = eventInfo.getPos();
                 node.pos.setc(pos.x, pos.y);
                 av_graph.fdGraph.plot();
@@ -167,7 +189,8 @@ function createFDGraph()
 
             // Implement the same handler for touchscreens:
             onTouchMove : function(node, eventInfo, e)
-            {
+            {  
+            	DeselectOnMouseDrag();
                 $jit.util.event.stop(e);
 
                 // stop default touchmove event
