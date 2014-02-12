@@ -129,9 +129,7 @@ function onSelectType()
 function onApplyFilters()
 {
     resetAtomViewer();
-    
-    var url = createCogServerRequest();
-    retrieveAtomsFromCogServer(url);
+    retrieveAtomsFromCogServer(createCogServerRequest());
 }
 
 function onClearFilters()
@@ -150,6 +148,12 @@ function onClearFilters()
     av.Registry.byId("idSearchHandle").reset();
     
     resetAtomViewer();
+}
+
+function onSearchHandle()
+{
+    resetAtomViewer();
+    retrieveAtomsFromCogServer(createCogServerRequest());
 }
 
 /*
