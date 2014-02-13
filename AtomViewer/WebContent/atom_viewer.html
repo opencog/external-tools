@@ -233,13 +233,6 @@
                     </div>
                     <br/>
                     <div>
-                        <label>Atom Handle:</label>
-                        <br/>
-                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idSearchHandle" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 32px;">
-                        </input>
-                    </div>
-                    <br/>
-                    <div>
                         <label>Atom Type:</label>
                         <br/>
                         <select data-dojo-type="dijit/form/ComboBox" id="idSearchType" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" invalidMessage="$_unset_$" pageSize="Infinity" searchDelay="200" style="width: 191.109375px;" onclick="onSelectType"></select>
@@ -251,7 +244,18 @@
                         <input type="button" data-dojo-type="dijit/form/Button" id="idBtnClearFilters" intermediateChanges="false" label="Clear Filters" iconClass="dijitNoIcon" style="float: right;" onclick="onClearFilters">
                         </input>
                     </div> 
-                </span><span data-dojo-type="dijit/TitlePane" title="Analysis" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;"> <h2> W.I.P. - not yet implemented</h2> </span>
+                </span>
+                <span data-dojo-type="dijit/TitlePane" title="Search" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;">
+                    <div>
+                        <label>Atom Handle:</label>
+                        <br/>
+                        <input type="text" data-dojo-type="dijit/form/TextBox" id="idSearchHandle" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 32px;">
+                        </input>
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnSearchHandle" intermediateChanges="false" iconClass="dijitIconSearch" onclick="onSearchHandle">
+                        </input>
+                    </div>
+                </span>
+                <span data-dojo-type="dijit/TitlePane" title="Analysis" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;"> <h2> W.I.P. - not yet implemented</h2> </span>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="center" splitter="false" maxSize="Infinity" doLayout="false" style="padding: 4px; overflow: auto; width: 100%; height: 100%;">
                 <span data-dojo-type="dijit/layout/TabContainer" id="idTabContainer" style="min-width: 1em; min-height: 1em; width: 100%; height: 100%;" controllerWidget="dijit.layout.TabController">
