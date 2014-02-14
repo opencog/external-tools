@@ -43,8 +43,8 @@ var av =
 /*
  * Constants.
  */
-var API_VER = "api/v1.0/";  // REST API version (appended to the URL)
+var API_VER = "api/v1.1/";  // REST API version (appended to the URL)
 var ABOUT_CONTENT =
     "<div align='center'><h2>OpenCog AtomSpace Visualization Tool</h2>" +
-    "<h4>Version: 0.8</h4>" +
+    "<h4>Version: 0.9</h4>" +
     "<h5>Copyright (C) 2013 <a href='http://www.opencog.org' target='_blank'>OpenCog Foundation</a></h5></div>";

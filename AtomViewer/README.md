@@ -17,7 +17,9 @@ TODO (High Priority)
 --------------------
 * Implement the atom edit feature (including delete function).
 * Implement auto-update feature. Ideally this should use the ZMQ atom change notification system (http://wiki.opencog.org/w/AtomSpace_Event_Publisher), but there are some performance issues with that at present (see https://github.com/opencog/opencog/pull/447). Could use a timer and polling for the short-term instead.
-* For search/filter results, include option to also show the other atoms that are within N links of the search results.
+* For search/filter results, include option to also show the other atoms that are within N links of the search results. An option already exists to include the incoming and outgoing sets of the search results. This could be extended to be recursive to N degrees.
+* Add a visual feature to distinguish directed edges
+* Add a tree-like layout for semi-hierarchical data (e.g. from NLP & PLN)
 
 TODO (Medium Priority)
 ----------------------
@@ -31,7 +33,6 @@ TODO (Nice to Have)
 * Find links with a given atom as target.
 * Pattern matching, e.g. ﬁnd atoms satisfying some predicate.
 * Neighborhood search, e.g. ﬁnd atoms that are within some radius of a given centroid atom.
-* Find atoms by TruthValue criteria.
 * Find atoms based on some temporal or spatial association.
 * Add more views (e.g. 3d graph, pinpoint graph (>350 atoms), patterns, etc.)
 * Add cancel button to stop atom retrieval.

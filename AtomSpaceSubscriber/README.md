@@ -3,23 +3,25 @@ AtomSpaceSubscriber
 
 AtomSpaceSubscriber contains sample clients for usage with the [AtomSpacePublisherModule](https://github.com/opencog/opencog/tree/master/opencog/persist/zmq/events) that can be extended to monitor the activity of the OpenCog system.
 
-Potential usage examples include: 
+##### Potential usage examples:
 
-- debugging
-- monitoring the dynamics of the AttentionAllocation system as it propagates STI and LTI throughout the network
-- monitoring PLN
-- allowing external modules such as the AtomSpace Visualizer to subscribe to real-time updates
+- Debugging
+- Monitoring the dynamics of the AttentionAllocation system as it propagates STI and LTI throughout the network and the AttentionalFocus changes
+- Monitoring PLN
+- Allowing external modules such as the AtomSpace Visualizer to subscribe to real-time updates
 
 The AtomSpacePublisherModule class publishes AtomSpace change events across the network using [ZeroMQ sockets](http://zeromq.org) to allow for external clients to receive updates from the AtomSpace via a publish/subscribe pattern.
 
 Clients can subscribe to the events by subscribing to a ZeroMQ socket.
 
-Supported events are:
+##### Supported events:
 
--   add
--   remove
--   tvchanged
--   avchanged
+*   **add**        (Atom added)
+*   **remove**     (Atom removed)
+*   **tvChanged**  (Atom TruthValue changed)
+*   **avChanged**  (Atom AttentionValue changed)
+*   **addAF**      (Atom was added to the AttentionalFocus)
+*   **removeAF**   (Atom was removed from the AttentionalFocus)
 
 Visit this link for the documentation of the AtomSpacePublisherModule:
 https://github.com/opencog/opencog/blob/master/opencog/persist/zmq/events/README.md
