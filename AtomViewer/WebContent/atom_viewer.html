@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html>
-    
+
 <!--
 /*
- * atom_viewer.html
- *
- * This is the main HTML page for the Atom Viewer. This file can be opened
- * stand-alone in the web browser, or hosted on a web server. A modern
- * browser that supports HTML5 should be used (mobile browsers are also
- * supported).
- *
- * Copyright (C) 2013 OpenCog Foundation
- * All Rights Reserved
- *
- * Written by Scott Jones <troy.scott.j@gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License v3 as
- * published by the Free Software Foundation and including the exceptions
- * at http://opencog.org/wiki/Licenses
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program; if not, write to:
- * Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+* atom_viewer.html
+*
+* This is the main HTML page for the Atom Viewer. This file can be opened
+* stand-alone in the web browser, or hosted on a web server. A modern
+* browser that supports HTML5 should be used (mobile browsers are also
+* supported).
+*
+* Copyright (C) 2013, 2014 OpenCog Foundation
+* All Rights Reserved
+*
+* Written by Scott Jones <troy.scott.j@gmail.com>
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License v3 as
+* published by the Free Software Foundation and including the exceptions
+* at http://opencog.org/wiki/Licenses
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program; if not, write to:
+* Free Software Foundation, Inc.,
+* 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 -->
 
+<html>
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -159,8 +159,8 @@
                 </table>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="left" splitter="false" maxSize="Infinity" style="overflow: auto; max-width: 298px; height: 100%; width: 276px;" doLayout="false">
-                <a title="OpenCog" target="_blank" href="http://www.opencog.org"> <img src="images/OpenCog Logo.png" style="width: 120px; height: 115px; position: relative;"></img> </a>
-                <span data-dojo-type="shapes/Text" style="position: absolute; z-index: 900; font-style: italic; text-align: center; color: blue; font-size: 24px; font-family: Geneva,Tahoma,sans-serif; width: auto; height: auto; left: 127px; top: 32px;"> AtomSpace Viewer </span>
+                <a title="OpenCog" target="_blank" href="http://www.opencog.org" style="text-decoration: none;"> <img src="images/OpenCog Logo.png" style="width: 115px; height: 110px; position: relative;"></img> </a>
+                <span data-dojo-type="shapes/Text" style="position: absolute; z-index: 900; font-style: italic; text-align: center; color: blue; font-size: 24px; font-family: Geneva,Tahoma,sans-serif; width: auto; height: auto; left: 127px; top: 32px;"> Atomspace Viewer </span>
                 <br/>
                 <fieldset style="border: 2px groove threedface; margin: 2px; padding: 0.75em;">
                     <legend>
@@ -196,16 +196,6 @@
                     </div>
                     <br/>
                     <div>
-                        <input type="checkbox" data-dojo-type="dijit/form/CheckBox" id="idFilterCBIncomingSets" intermediateChanges="false" iconClass="dijitNoIcon">
-                        Include Incoming Sets</input>
-                    </div>
-                    <br/>
-                    <div>
-                        <input type="checkbox" data-dojo-type="dijit/form/CheckBox" id="idFilterCBOutgoingSets" intermediateChanges="false" iconClass="dijitNoIcon">
-                        Include Outgoing Sets</input>
-                    </div>
-                    <br/>
-                    <div>
                         <label>STI Range:</label>
                         <br/>
                         <input type="text" data-dojo-type="dijit/form/TextBox" id="idFilterSTIMin" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 60px;" placeholder="min">
@@ -236,15 +226,31 @@
                         <label>Atom Type:</label>
                         <br/>
                         <select data-dojo-type="dijit/form/ComboBox" id="idFilterType" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" invalidMessage="$_unset_$" pageSize="Infinity" searchDelay="200" style="width: 191.109375px;" onclick="onSelectType"></select>
-                    </div> 
+                    </div>
                     <br/>
                     <div>
                         <input type="button" data-dojo-type="dijit/form/Button" id="idBtnApplyFilters" intermediateChanges="false" label="Apply Filters..." iconClass="dijitNoIcon" onclick="onApplyFilters">
                         </input>
                         <input type="button" data-dojo-type="dijit/form/Button" id="idBtnClearFilters" intermediateChanges="false" label="Clear Filters" iconClass="dijitNoIcon" style="float: right;" onclick="onClearFilters">
                         </input>
-                    </div> 
-                </span>
+                    </div>
+                    <br/>
+                    <fieldset style="border: 1px groove threedface; margin: 2px; padding: 0.75em;">
+                        <legend>
+                            Include:
+                        </legend>
+                        <div>
+                            <input type="checkbox" data-dojo-type="dijit/form/CheckBox" id="idFilterCBIncomingSets" intermediateChanges="false" iconClass="dijitNoIcon">
+                            Incoming Sets</input>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" data-dojo-type="dijit/form/CheckBox" id="idFilterCBOutgoingSets" intermediateChanges="false" iconClass="dijitNoIcon">
+                            Outgoing Sets</input>
+                        </div>
+                        <br/>
+                        <div style="text-align: center;">
+                            <label>(Applies to both Filter and Search)</label>
+                        </div>
+                    </fieldset> </span>
                 <span data-dojo-type="dijit/TitlePane" title="Search" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;">
                     <div>
                         <label>Atom Handle:</label>
@@ -253,8 +259,7 @@
                         </input>
                         <input type="button" data-dojo-type="dijit/form/Button" id="idBtnSearchHandle" intermediateChanges="false" iconClass="dijitIconSearch" onclick="onSearchHandle">
                         </input>
-                    </div>
-                </span>
+                    </div> </span>
                 <span data-dojo-type="dijit/TitlePane" title="Analysis" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;"> <h2> W.I.P. - not yet implemented</h2> </span>
             </div>
             <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="center" splitter="false" maxSize="Infinity" doLayout="false" style="padding: 4px; overflow: auto; width: 100%; height: 100%;">

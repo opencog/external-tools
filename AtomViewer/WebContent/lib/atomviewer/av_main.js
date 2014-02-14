@@ -3,7 +3,7 @@
  *
  * This file contains the main application code, event handlers, etc.
  *
- * Copyright (C) 2014 OpenCog Foundation
+ * Copyright (C) 2013, 2014 OpenCog Foundation
  * All Rights Reserved
  *
  * Written by Scott Jones <troy.scott.j@gmail.com>
@@ -140,8 +140,6 @@ function onClearFilters()
 {
     // Clear filter settings:
     av.Registry.byId("idFilterCBAttFocus").reset();
-    av.Registry.byId("idFilterCBIncomingSets").reset();;
-    av.Registry.byId("idFilterCBOutgoingSets").reset();;
     av.Registry.byId("idFilterSTIMin").reset();
     av.Registry.byId("idFilterSTIMax").reset();;
     av.Registry.byId("idFilterTVMinStrength").reset();;
