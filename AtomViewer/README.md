@@ -23,27 +23,16 @@ TODO (High Priority)
 
 TODO (Medium Priority)
 ----------------------
-* Implement the Table and Scheme views. For Scheme, need addition to the REST API to return equivalent of the "list -a" console command. For Table, something like this: http://chris.photobooks.com/json/.  
+* Implement the Scheme views. This would need an addition to the REST API to return the equivalent of the "list -a" console command.  
 * Beef up error handling (e.g. 404 not found for atom search by handle, etc.)
 * Use gradient or similar method for node colors, based on importance or other configurable attribute.
 * Thin out the Dojo libraries and CSS to remove unused parts, compress files.
 
 TODO (Nice to Have)
 -------------------
-* Find links with a given atom as target.
 * Pattern matching, e.g. ﬁnd atoms satisfying some predicate.
 * Neighborhood search, e.g. ﬁnd atoms that are within some radius of a given centroid atom.
 * Find atoms based on some temporal or spatial association.
 * Add more views (e.g. 3d graph, pinpoint graph (>350 atoms), patterns, etc.)
 * Add cancel button to stop atom retrieval.
 * Implement the Analysis feature (atom stats, etc.)
-
-Known Bugs
-----------
-* On Firefox browser, the resize event is not firing, so graph doesn't resize automatically (works on other browsers).
-* On Chrome browser, dragging graph nodes gets confused with drag-selection, causing painting issues (not a problem on other browsers).
-* JIT graph sometimes draws nodes off edge of canvas.
-* JSONP error function is never called by Dojo.
-* Asynch progress is not incremental on large datasets, probably need to add paging in the REST API.
-* When a search result contains only Link atoms, the JIT graph draws extraneous nodes.
- 
