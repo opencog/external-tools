@@ -3,7 +3,7 @@
  *
  * This file contains the main application code, event handlers, etc.
  *
- * Copyright (C) 2014 OpenCog Foundation
+ * Copyright (C) 2013, 2014 OpenCog Foundation
  * All Rights Reserved
  *
  * Written by Scott Jones <troy.scott.j@gmail.com>
@@ -100,8 +100,12 @@ function onClickRefresh()
     resetAtomViewer();
     
     // Clear atom types too, in case the new connection has different types:
-    av.Registry.byId("idSearchType").store.data = [];
-    av.Registry.byId("idSearchType").reset();
+    // TODO: the current REST API method returns all known atom types, so they
+    // won't change even if connection changes. So comment this out until a
+    // future change in the API allows pulling only the currently instantiated
+    // atom types.
+    // av.Registry.byId("idFilterType").store.data = [];
+    // av.Registry.byId("idFilterType").reset();
     
     var url = createCogServerRequest();
     retrieveAtomsFromCogServer(url);
@@ -118,7 +122,7 @@ function onSelectType()
     // User clicked the combobox for selecting atom type for searching. We
     // use this event to query the CogServer for types and populate the
     // combobox, if it hasn't been done already.
-    var cbTypesData = av.Registry.byId("idSearchType").store.data;
+    var cbTypesData = av.Registry.byId("idFilterType").store.data;
     if (cbTypesData.length == 0)
     {
         // List is empty, need to populate
@@ -136,24 +140,41 @@ function onClearFilters()
 {
     // Clear filter settings:
     av.Registry.byId("idFilterCBAttFocus").reset();
-    av.Registry.byId("idFilterCBIncomingSets").reset();;
-    av.Registry.byId("idFilterCBOutgoingSets").reset();;
     av.Registry.byId("idFilterSTIMin").reset();
     av.Registry.byId("idFilterSTIMax").reset();;
     av.Registry.byId("idFilterTVMinStrength").reset();;
     av.Registry.byId("idFilterTVMinConfidence").reset();;
     av.Registry.byId("idFilterTVMinCount").reset();;
-    av.Registry.byId("idSearchType").reset();
-    av.Registry.byId("idSearchName").reset();
-    av.Registry.byId("idSearchHandle").reset();
+    av.Registry.byId("idFilterType").reset();
+    av.Registry.byId("idFilterName").reset();
     
     resetAtomViewer();
 }
 
+/*
+ * Note that for searches, we treat them as one-time queries, rather
+ * than as persistently applied like filters.
+ */
 function onSearchHandle()
 {
-    resetAtomViewer();
-    retrieveAtomsFromCogServer(createCogServerRequest());
+    // Get the base URL:
+    var url = av.DOM.byId("idConfigCogServer").value + API_VER;
+
+    // Append handle param:
+    var handle = av.Registry.byId("idSearchHandle").value;
+    if (handle != "")
+    {
+        resetAtomViewer();
+        url += "atoms/" + handle;
+
+        // Include Incoming and Outgoing Sets if checked:
+        query.includeIncoming = av.Registry.byId("idFilterCBIncomingSets").checked;
+        query.includeOutgoing = av.Registry.byId("idFilterCBOutgoingSets").checked;
+        queryString = EncodeQueryData(query);
+        url = url + "?" + queryString;             
+        
+        retrieveAtomsFromCogServer(url);
+    }
 }
 
 /*
@@ -269,60 +290,55 @@ function createCogServerRequest()
     // Get the base URL:
     var url = av.DOM.byId("idConfigCogServer").value + API_VER;
 
-    // Choose between the AtomCollection and Atom API
-    if (av.Registry.byId("idSearchHandle").value != "")
+    url += "atoms";
+
+    // TODO: we should be able to combine all filters...currently only certain
+    // combinations are allowed, due to the way the REST API works.
+    
+    // Filters for AttentionalFocus and STI Range
+    // AttentionalFocus filter
+    if (av.Registry.byId("idFilterCBAttFocus").checked)
     {
-        url += "atoms/" + av.Registry.byId("idSearchHandle").value;
+        query.filterby = "attentionalfocus";
     }
     else
     {
-        url += "atoms";
-
-        // Filters for AttentionalFocus and STI Range
-        // AttentionalFocus filter
-        if (av.Registry.byId("idFilterCBAttFocus").checked)
+        // Otherwise, check for STI Range filter:
+        var min = av.Registry.byId("idFilterSTIMin").value;
+        var max = av.Registry.byId("idFilterSTIMax").value;
+        if (min != "" || max != "")
         {
-            query.filterby = "attentionalfocus";
-        }
-        else
-        {
-            // Otherwise, check for STI Range filter:
-            var min = av.Registry.byId("idFilterSTIMin").value;
-            var max = av.Registry.byId("idFilterSTIMax").value;
-            if (min != "" || max != "")
-            {
-                query.filterby = "stirange";
-            }
-
-            if (min != "" || max != "")
-            {
-                // In case user specifies max but not min
-                if (min == "")
-                    min = "0";
-                
-                query.stimin = min;
-
-                if (max != "")
-                    query.stimax = max;
-            }
+            query.filterby = "stirange";
         }
 
-        // Filters for TruthValue attributes
-        if (av.Registry.byId("idFilterTVMinStrength").value != "")
-            query.tvStrengthMin = av.Registry.byId("idFilterTVMinStrength").value;
-        if (av.Registry.byId("idFilterTVMinConfidence").value != "")
-            query.tvConfidenceMin = av.Registry.byId("idFilterTVMinConfidence").value;
-        if (av.Registry.byId("idFilterTVMinCount").value != "")
-            query.tvCountMin = av.Registry.byId("idFilterTVMinCount").value;
-        
-        // Filter by Type
-        if (av.Registry.byId("idSearchType").value != "")
-            query.type = av.Registry.byId("idSearchType").value;
+        if (min != "" || max != "")
+        {
+            // In case user specifies max but not min
+            if (min == "")
+                min = "0";
+            
+            query.stimin = min;
 
-        // Filter by Name
-        if (av.Registry.byId("idSearchName").value != "")
-            query.name = av.Registry.byId("idSearchName").value;
+            if (max != "")
+                query.stimax = max;
+        }
     }
+
+    // Filters for TruthValue attributes
+    if (av.Registry.byId("idFilterTVMinStrength").value != "")
+        query.tvStrengthMin = av.Registry.byId("idFilterTVMinStrength").value;
+    if (av.Registry.byId("idFilterTVMinConfidence").value != "")
+        query.tvConfidenceMin = av.Registry.byId("idFilterTVMinConfidence").value;
+    if (av.Registry.byId("idFilterTVMinCount").value != "")
+        query.tvCountMin = av.Registry.byId("idFilterTVMinCount").value;
+    
+    // Filter by Type
+    if (av.Registry.byId("idFilterType").value != "")
+        query.type = av.Registry.byId("idFilterType").value;
+
+    // Filter by Name
+    if (av.Registry.byId("idFilterName").value != "")
+        query.name = av.Registry.byId("idFilterName").value;
 
     // Include Incoming and Outgoing Sets
     query.includeIncoming = av.Registry.byId("idFilterCBIncomingSets").checked;
@@ -412,7 +428,7 @@ function retrieveAtomTypes()
     {
         data.types = data.types.sort();
         // Success - save types to the combobox:
-        var cbTypesData = av.Registry.byId("idSearchType").store.data;
+        var cbTypesData = av.Registry.byId("idFilterType").store.data;
         for (var i = 0; i < data.types.length; i++)
         {
             cbTypesData.push({name: data.types[i]});
