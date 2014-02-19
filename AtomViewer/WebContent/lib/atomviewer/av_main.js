@@ -224,7 +224,7 @@ function retrieveAtomsFromCogServer(url)
         {
             // Success. No progress events with JSONP, so just max out the
             // progress bar:
-            av.Registry.byId("idCtrlProgressBar").update({maximum: 100, progress: 100});
+            //av.Registry.byId("idCtrlProgressBar").update({maximum: 100, progress: 100});
             disableDataButtons(false);
         }, function(err)
         {
@@ -237,7 +237,7 @@ function retrieveAtomsFromCogServer(url)
     {
         // Update progress bar (if the browser supports XHR2):
         // TODO: find out why we're only getting 1 or 2 updates even for big data sets..
-        av.Registry.byId("idCtrlProgressBar").update({maximum: evt.total, progress: evt.loaded});
+      //  av.Registry.byId("idCtrlProgressBar").update({maximum: evt.total, progress: evt.loaded});
     });
 }
 
