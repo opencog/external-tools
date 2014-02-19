@@ -71,8 +71,8 @@ function resizeGraph()
 {
     if (av_graph.fdGraph != null)
     {
-        // av_graph.fdGraph.canvas.resize(getGraphWidth(), getGraphHeight());
-         av_graph.fdGraph.canvas.resize(window.innerWidth, window.innerWidth);
+        av_graph.fdGraph.canvas.resize(getGraphWidth(), getGraphHeight());
+         
     }
 }
 
@@ -216,12 +216,14 @@ function createFDGraph()
     av.DOM.byId("idGraphStatus").hidden = false;
     av_graph.fdGraph.computeIncremental(
     {
-        iter : 5,
+        iter : 7,
         property : 'end',
         onStep : function(perc)
         {
             var msg = "Building graph: %" + perc.toString();
             av.DOM.byId("idGraphStatus").innerHTML = "<h2>" + msg + "</h2>";
+            av.Registry.byId("idCtrlProgressBar").update({maximum: 100, progress: perc.toString()});
+            
         },
         onComplete : function()
         {
