@@ -14,6 +14,14 @@ http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 Set MONGODB_CONNECTION_STRING for your MongoDB server (default configuration is on localhost)
 Set COGSERVER_IP_ADDRESS and COGSERVER_PORT for the AtomSpacePublisher module in the CogServer
 Set SUBSCRIPTIONS to the list of topics that you want to store
+
+---
+Afterwards, you can use a MongoDB client to query the logs.
+Recommended client:
+http://robomongo.org/
+
+Search for all "tvChanged" events where the new TruthValue had strength > 0 and confidence > 0
+db.tvChanged.find({"tvNew.details.strength": {"$gt": 0}, "tvNew.details.confidence": {"$gt": 0}})
 """
 
 __author__ = 'Cosmo Harrigan'
@@ -53,8 +61,17 @@ def get_command(msg):
 
 
 def handler(message):
-    id = db[message[0]].insert(json.loads(message[1]))
-    print 'Inserted: {0} #{1}'.format(message[0], id)
+    print 'Processing [' + message[0] + ']'
+
+    try:
+        print json.loads(message[1])
+        id = db[message[0]].insert(json.loads(message[1]))
+        print 'Inserted: {0} #{1}'.format(message[0], id)
+    except ValueError, e:
+        print 'Caught ValueError: {0}'.format(e.message)
+        print 'message[0] was: {0}\n'.format(message[0])
+        print 'message[1] was: {0}\n'.format(message[1])
+        print 'Length of message array: {0}'.format(len(message))
 
 
 def atomspace_client(port_push=5556):
@@ -83,5 +100,3 @@ if __name__ == "__main__":
 
     Process(target=atomspace_client).start()
     server()
-
-
