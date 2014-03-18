@@ -136,6 +136,41 @@ function onApplyFilters()
     retrieveAtomsFromCogServer(createCogServerRequest());
 }
 
+/**
+ * it deletes atom or atoms per click
+ */
+function onAtomDelete()
+{
+     var url = av.DOM.byId("idConfigCogServer").value + API_VER;
+     var id = av.DOM.byId("idAtomHandle").value;
+     
+     url +="atoms/" + id;
+   
+    var retVal= confirm("Do you want to continue?"); 
+      if(retVal)
+      {
+      	av.XHR(url,
+     {
+         handleAs: "json",
+         method: "DELETE",
+         
+     }).then(function(data)
+     {
+    	// alert(JSON.stringify(data));
+    	 onClickRefresh();
+    	 createFDGraph();
+     }, function(err){
+     	
+    	alert(err.toString());
+     });   
+    }else
+    {
+    	//pass
+    }     
+}
+
+
+
 function onClearFilters()
 {
     // Clear filter settings:
