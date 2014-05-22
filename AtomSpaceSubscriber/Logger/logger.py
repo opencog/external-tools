@@ -45,11 +45,12 @@ def get_command(msg):
 
 
 def handler(message):
-    print 'Processing [' + message[0] + ']'
+    print '\nProcessing [' + message[0] + ']'
 
     try:
-        print json.loads(message[1])
-        id = db[message[0]].insert(json.loads(message[1]))
+        json_message = json.loads(message[1])
+        print json.dumps(json_message, indent=4, sort_keys=True)
+        id = db[message[0]].insert(json_message)
         print 'Inserted: {0} #{1}'.format(message[0], id)
 
         if len(message) > 2:

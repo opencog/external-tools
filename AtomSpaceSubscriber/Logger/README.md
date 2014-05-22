@@ -63,3 +63,40 @@ db.tvChanged.find({
   "tvOld.details.strength": {"$ne": "tvNew.details.strength"}
 })
 ```
+
+### Sample
+
+Sample log status message when an event is recorded:
+
+```
+Processing [add]
+{
+    "atom": {
+        "attentionvalue": {
+            "lti": 0,
+            "sti": 0,
+            "vlti": false
+        },
+        "handle": "6367",
+        "incoming": [],
+        "name": "",
+        "outgoing": [
+            "921",
+            "4887"
+        ],
+        "truthvalue": {
+            "details": {
+                "confidence": 0,
+                "count": 0,
+                "strength": 1
+            },
+            "type": "simple"
+        },
+        "type": "AsymmetricHebbianLink"
+    },
+    "timestamp": 1400741897
+}
+Inserted: add #537da00bc942244972e727a7
+```
+
+The event is then inserted into the MongoDB collection for later analysis.
