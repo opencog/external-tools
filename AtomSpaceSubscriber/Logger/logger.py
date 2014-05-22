@@ -1,27 +1,10 @@
 """
 AtomSpace Event Logger
 
-Receives AtomSpace events from the AtomSpacePublisherModule and stores them in MongoDB for analysis
+Receives AtomSpace events from the AtomSpacePublisherModule and stores them in
+MongoDB for analysis.
 
-Prerequisites:
-sudo pip install tornado
-sudo pip install pyzmq
-sudo pip install pymongo
-
-A MongoDB server is also required:
-http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
-
-Set MONGODB_CONNECTION_STRING for your MongoDB server (default configuration is on localhost)
-Set COGSERVER_IP_ADDRESS and COGSERVER_PORT for the AtomSpacePublisher module in the CogServer
-Set SUBSCRIPTIONS to the list of topics that you want to store
-
----
-Afterwards, you can use a MongoDB client to query the logs.
-Recommended client:
-http://robomongo.org/
-
-Search for all "tvChanged" events where the new TruthValue had strength > 0 and confidence > 0
-db.tvChanged.find({"tvNew.details.strength": {"$gt": 0}, "tvNew.details.confidence": {"$gt": 0}})
+Read the included README.md file for installation and usage instructions.
 """
 
 __author__ = 'Cosmo Harrigan'
@@ -53,6 +36,7 @@ def server(port="5556"):
     raw_input()
     socket.send("Exit")
 
+
 def get_command(msg):
     print "Received control command: %s" % msg
     if msg[0] == "Exit":
@@ -67,11 +51,18 @@ def handler(message):
         print json.loads(message[1])
         id = db[message[0]].insert(json.loads(message[1]))
         print 'Inserted: {0} #{1}'.format(message[0], id)
+
+        if len(message) > 2:
+            print 'Alert: message contains more than two frames'
+            for item in message:
+                print item
     except ValueError, e:
         print 'Caught ValueError: {0}'.format(e.message)
-        print 'message[0] was: {0}\n'.format(message[0])
-        print 'message[1] was: {0}\n'.format(message[1])
         print 'Length of message array: {0}'.format(len(message))
+        print 'Contents:'
+        for item in message:
+            print item
+        raise Exception("Failure")
 
 
 def atomspace_client(port_push=5556):
@@ -82,9 +73,10 @@ def atomspace_client(port_push=5556):
     socket_pull.connect("tcp://" + CONTROL_IP_ADDRESS + ":%s" % port_push)
     stream_pull = zmqstream.ZMQStream(socket_pull)
     stream_pull.on_recv(get_command)
-    print 'Connected to control server on port %s.'.format(port_push)
+    print 'Connected to control server on port {0}.'.format(port_push)
 
     socket = context.socket(zmq.SUB)
+    socket.set_hwm(1000000)
     socket.connect("tcp://" + COGSERVER_IP_ADDRESS + ":" + COGSERVER_PORT)
     [socket.setsockopt(zmq.SUBSCRIBE, topic) for topic in SUBSCRIPTIONS]
 
@@ -96,6 +88,7 @@ def atomspace_client(port_push=5556):
 if __name__ == "__main__":
     MONGODB_DATABASE = 'atomspace_events'
     client = pymongo.MongoClient(MONGODB_CONNECTION_STRING)
+    client.drop_database(MONGODB_DATABASE)
     db = client[MONGODB_DATABASE]
 
     Process(target=atomspace_client).start()
