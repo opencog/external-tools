@@ -16,8 +16,9 @@ import zmq
  
 def main():
     # Prepare the context and subscriber
-    context    = zmq.Context(1)
+    context = zmq.Context(1)
     subscriber = context.socket(zmq.SUB)
+    subscriber.set_hwm(1000000)
     subscriber.connect("tcp://" + IP_ADDRESS + ":" + PORT)
     subscriber.setsockopt(zmq.SUBSCRIBE, "add")
     subscriber.setsockopt(zmq.SUBSCRIBE, "remove")
@@ -25,7 +26,7 @@ def main():
     subscriber.setsockopt(zmq.SUBSCRIBE, "avChanged")
     subscriber.setsockopt(zmq.SUBSCRIBE, "addAF")
     subscriber.setsockopt(zmq.SUBSCRIBE, "removeAF")    
- 
+
     while True:
         # Read envelope with address
         [address, contents] = subscriber.recv_multipart()
