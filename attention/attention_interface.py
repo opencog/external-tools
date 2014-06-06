@@ -60,12 +60,11 @@ class Atom(object):
         self.sti = None
 
 
-def format_sti(atoms):
+def create_point(atoms):
     """
     Display the STI of an atom
     """
     point = PointInTime()
-    #timestamp = datetime.datetime.utcnow()
     for atom in atoms:
         data = Atom()
         data.handle = atom['handle']
@@ -90,7 +89,7 @@ def get_attentional_focus():
     """
     get_response = get(uri + 'atoms?filterBy=af')
     get_result = get_response.json()['result']['atoms']
-    return format_sti(get_result)
+    return create_point(get_result)
 
 
 def importance_diffusion():

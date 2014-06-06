@@ -17,6 +17,10 @@ Requires the REST API to be configured as described here:
 
 http://wiki.opencog.org/w/REST_API#Configuration
 
+Requires the requests library:
+
+http://docs.python-requests.org/en/latest/user/install/#install
+
 #### Example
 
 See the usage example in ```experiment.py```
