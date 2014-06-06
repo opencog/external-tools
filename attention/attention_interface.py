@@ -29,9 +29,9 @@ class PointInTime(object):
       (Refer to the definition of the Atom object)
     - an integer "timestep"
     """
-    def __init__(self):
+    def __init__(self, timestep):
         self.atoms = []
-        self.timestep = None
+        self.timestep = timestep
 
     def __str__(self):
         output = ""
@@ -62,10 +62,9 @@ class Atom(object):
 
 def create_point(timestep, atoms):
     """
-    Display the STI of an atom
+    Create a PointInTime object from a JSON atom representation
     """
-    point = PointInTime()
-    point.timestep = timestep
+    point = PointInTime(timestep)
 
     for atom in atoms:
         data = Atom()
@@ -102,6 +101,9 @@ def importance_diffusion():
 
 
 def write_timeseries(timeseries, filename):
+    """
+    Write the timeseries to a CSV file
+    """
     with open(filename, 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         for point in timeseries:
