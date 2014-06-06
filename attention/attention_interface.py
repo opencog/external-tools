@@ -60,11 +60,13 @@ class Atom(object):
         self.sti = None
 
 
-def create_point(atoms):
+def create_point(timestep, atoms):
     """
     Display the STI of an atom
     """
     point = PointInTime()
+    point.timestep = timestep
+
     for atom in atoms:
         data = Atom()
         data.handle = atom['handle']
@@ -83,13 +85,13 @@ def oc(command):
     post(uri + 'shell', data=json.dumps(data), headers=headers)
 
 
-def get_attentional_focus():
+def get_attentional_focus(timestep):
     """
     Get the atoms in the attentional focus
     """
     get_response = get(uri + 'atoms?filterBy=af')
     get_result = get_response.json()['result']['atoms']
-    return create_point(get_result)
+    return create_point(timestep, get_result)
 
 
 def importance_diffusion():

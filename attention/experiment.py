@@ -15,8 +15,7 @@ timeseries = []
 t = 0
 
 for i in range(0, num_steps):
-    point = get_attentional_focus()
-    point.timestep = t
+    point = get_attentional_focus(timestep=t)
     print point
     timeseries.append(point)
     importance_diffusion()
