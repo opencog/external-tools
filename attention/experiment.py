@@ -12,14 +12,16 @@ num_steps = 10                            # Number of time steps
 output_filename = 'ecan-timeseries.csv'   # Output filename
 
 timeseries = []
-t = 0
 
-for i in range(0, num_steps):
-    point = get_attentional_focus(timestep=t)
-    print point
-    timeseries.append(point)
+# Run num_steps cycles, capturing the contents of the attentional focus
+# at each discrete timestep, and then export the dataset
+
+for t in range(0, num_steps):
+    point_in_time = get_attentional_focus(timestep=t)
+    timeseries.append(point_in_time)
     importance_diffusion()
+
+    print point_in_time
     sleep(.1)
-    t += 1
 
 write_timeseries(timeseries, output_filename)
