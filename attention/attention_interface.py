@@ -93,13 +93,6 @@ def get_attentional_focus(timestep):
     return create_point(timestep, get_result)
 
 
-def importance_diffusion():
-    """
-    Run the simple importance diffusion agent
-    """
-    oc("agents-step opencog::SimpleImportanceDiffusionAgent")
-
-
 def write_timeseries(timeseries, filename):
     """
     Write the timeseries to a CSV file
@@ -109,3 +102,31 @@ def write_timeseries(timeseries, filename):
         for point in timeseries:
             for atom in point.atoms:
                 writer.writerow([point.timestep, atom.handle, atom.sti])
+
+
+def importance_diffusion():
+    """
+    Run a step of the simple importance diffusion agent
+    """
+    oc("agents-step opencog::SimpleImportanceDiffusionAgent")
+
+
+def importance_spreading():
+    """
+    Run a step of the importance spreading agent
+    """
+    oc("agents-step opencog::ImportanceSpreadingAgent")
+
+
+def hebbian_updating():
+    """
+    Run a step of the hebbian updating agent
+    """
+    oc("agents-step opencog::HebbianUpdatingAgent")
+
+
+def forgetting():
+    """
+    Run a step of the forgetting agent
+    """
+    oc("agents-step opencog::ForgettingAgent")
