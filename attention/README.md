@@ -15,13 +15,13 @@ Defines an interface to allow ECAN attention allocation experiments to be writte
 
 - Requires the REST API to be configured as described here:
 
-http://wiki.opencog.org/w/REST_API#Configuration
+    http://wiki.opencog.org/w/REST_API#Configuration
 
-The REST API must be started before using this interface.
+    The REST API must be started before using this interface.
 
 - Requires the requests library:
 
-http://docs.python-requests.org/en/latest/user/install/#install
+    http://docs.python-requests.org/en/latest/user/install/#install
 
 #### Example
 
