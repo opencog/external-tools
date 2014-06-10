@@ -11,6 +11,12 @@ from time import sleep
 num_steps = 10                            # Number of time steps
 output_filename = 'ecan-timeseries.csv'   # Output filename
 
+clear_atomspace()
+
+load_scheme_files(["python/pln/examples/tuffy/smokes/smokes.scm",
+                   "python/pln/examples/tuffy/smokes/extra-data.scm"])
+
+
 timeseries = []
 
 # Run num_steps cycles, capturing the contents of the attentional focus
@@ -21,7 +27,10 @@ for t in range(0, num_steps):
     timeseries.append(point_in_time)
     importance_diffusion()
 
-    print point_in_time
+    print "------------------------------------------------------\n"\
+          "{0}\nAF contents:\n{1}\n".\
+        format(point_in_time, dump_attentional_focus_scheme())
+
     sleep(.1)
 
 write_timeseries(timeseries, output_filename)
