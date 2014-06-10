@@ -19,17 +19,18 @@ load_scheme_files(["python/pln/examples/tuffy/smokes/smokes.scm",
 
 timeseries = []
 
-# Run num_steps cycles, capturing the contents of the attentional focus
-# at each discrete timestep, and then export the dataset
+# Run 'num_steps' cycles. At each discrete timestep, capture the STI values of
+# the atoms in the attentional focus, and also capture a Scheme dump of the
+# attentional focus. When finished, exports the STI timeseries dataset to
+# 'output_filename'.
 
 for t in range(0, num_steps):
-    point_in_time = get_attentional_focus(timestep=t)
+    point_in_time = get_attentional_focus(timestep=t, scheme=True)
     timeseries.append(point_in_time)
     importance_diffusion()
 
     print "------------------------------------------------------\n"\
-          "{0}\nAF contents:\n{1}\n".\
-        format(point_in_time, dump_attentional_focus_scheme())
+          "{0}\n".format(point_in_time)
 
     sleep(.1)
 
