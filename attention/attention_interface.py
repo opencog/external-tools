@@ -47,6 +47,8 @@ class PointInTime(object):
 
         return output
 
+    def get_atoms(self):
+        return self.atoms
 
 class Atom(object):
     """
@@ -59,6 +61,11 @@ class Atom(object):
         self.handle = None
         self.sti = None
 
+    def set_sti(self, sti):
+        self.sti = sti
+
+    def get_sti(self):
+        return self.sti
 
 def create_point(timestep, atoms):
     """
@@ -90,6 +97,7 @@ def get_attentional_focus(timestep):
     """
     get_response = get(uri + 'atoms?filterBy=af')
     get_result = get_response.json()['result']['atoms']
+    print(get_result)
     return create_point(timestep, get_result)
 
 
