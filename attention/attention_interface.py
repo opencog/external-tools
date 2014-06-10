@@ -88,7 +88,7 @@ def get_attentional_focus(timestep):
     """
     Get the atoms in the attentional focus
     """
-    get_response = get(uri + 'atoms?filterBy=af')
+    get_response = get(uri + 'atoms?filterby=attentionalfocus')
     get_result = get_response.json()['result']['atoms']
     return create_point(timestep, get_result)
 
