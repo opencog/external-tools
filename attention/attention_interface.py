@@ -139,26 +139,46 @@ def get_attentional_focus(timestep, scheme=False):
         return create_point(timestep, get_result, scheme=af_contents)
 
 
-def write_timeseries(timeseries, filename):
+def export_timeseries_csv(timeseries, filename, scheme=False):
     """
-    Write the timeseries to a CSV file.
+    Export the timeseries to a CSV file.
+
+    Parameters:
+    timeseries (required) The timeseries that will be exported.
+    filename (required) The name of the file that will be written to.
+    scheme (optional) If True, the full Scheme representation of the point in
+      in time will be included with each row. Defaults to False.
 
     Format:
     time, handle, sti
 
     If the timeseries contains a Scheme representation, the format is:
-    time, handle, sti, scheme
+      time, handle, sti, scheme
     """
     with open(filename, 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         for point in timeseries:
             for atom in point.atoms:
-                if point.scheme is not None:
+                if point.scheme is not None and scheme is True:
                     writer.writerow(
                         [point.timestep, atom.handle, atom.sti, point.scheme])
                 else:
                     writer.writerow(
                         [point.timestep, atom.handle, atom.sti])
+
+
+def export_timeseries_mongodb(timeseries, db, collection_name):
+    """
+    Export the timeseries to a MongoDB database.
+
+    Parameters:
+    timeseries (required) The timeseries that will be exported.
+    db (required) A MongoDB database object to export to
+    collection_name (required) The collection name to insert documents into
+
+    Note: Not yet implemented
+    """
+    pass
 
 
 def dump_atomspace_scheme():
