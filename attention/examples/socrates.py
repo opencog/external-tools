@@ -9,11 +9,13 @@ from time import sleep
 
 socrates_agent = "../../external-tools/attention/socrates_agent"
 
+
 def load_socrates_agent():
     """
     load SocratesAgent in the CogServer
     """
     shell("loadpy {0}".format(socrates_agent))
+
 
 def run_socrates_agent():
     """
