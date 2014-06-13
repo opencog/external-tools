@@ -118,6 +118,38 @@ def load_scheme_files(files):
         scheme(command)
 
 
+def load_python_agent(path):
+    """
+    Load an arbitrary Python MindAgent in the CogServer
+
+    Parameters:
+    path (required) Relative path to the agent, including the filename,
+      without the file extension
+
+    Example of 'path':
+      ../opencog/python/pln/examples/tuffy/smokes/smokes_agent
+    """
+    shell("loadpy {0}".format(path))
+
+
+def step_agent(path, name):
+    """
+    Run a step of an arbitrary agent in the CogServer
+
+    Parameters:
+    path (required) Relative path to the agent, including the filename,
+      without the file extension
+    name (required) Name of the agent
+
+    Example of 'path':
+      ../opencog/python/pln/examples/tuffy/smokes/smokes_agent
+    Example of 'name':
+      InferenceAgent
+    """
+    arg = "agents-step {0}.{1}".format(path, name)
+    shell(arg)
+
+
 def get_attentional_focus(timestep, scheme=False):
     """
     Get the atoms in the attentional focus
