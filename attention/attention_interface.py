@@ -206,11 +206,11 @@ def importance_diffusion():
     shell("agents-step opencog::SimpleImportanceDiffusionAgent")
 
 
-def importance_spreading():
+def importance_updating():
     """
-    Run a step of the importance spreading agent
+    Run a step of the importance updating agent
     """
-    shell("agents-step opencog::ImportanceSpreadingAgent")
+    shell("agents-step opencog::ImportanceUpdatingAgent")
 
 
 def hebbian_updating():
