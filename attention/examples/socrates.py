@@ -15,7 +15,7 @@ output_filename = 'ecan-timeseries.csv'   # Output filename
 
 clear_atomspace()
 
-load_scheme_files(["python/pln/examples/relex2logic/r2l-output-test.scm"])
+load_scheme_files(["python/pln/examples/relex2logic/socrates-r2l.scm"])
 
 timeseries = []
 
