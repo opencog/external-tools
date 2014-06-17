@@ -280,10 +280,17 @@ def dump_attentional_focus_scheme():
 
 
 def clear_atomspace():
+    """
+    Clear the atomspace
+    """
     scheme("(clear)")
 
 
 def stop_agent_loop():
+    """
+    Stop the automatic stepping of agents in the CogServer, so that agents
+    can be stepped manually
+    """
     shell("agents-stop-loop")
 
 
