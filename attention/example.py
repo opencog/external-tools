@@ -14,7 +14,7 @@ __author__ = 'Cosmo Harrigan'
 from attention_interface import *
 
 # Configurable parameters:
-num_steps = 100                            # Number of time steps
+num_steps = 50                            # Number of time steps
 output_filename = 'ecan-timeseries.csv'   # Output filename
 
 # PLN agent parameters
