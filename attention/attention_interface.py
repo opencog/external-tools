@@ -11,6 +11,7 @@ from requests import *
 import json
 import csv
 from os.path import expanduser
+from time import sleep
 
 # Configure the OpenCog REST API client
 IP_ADDRESS = '127.0.0.1'
@@ -89,10 +90,24 @@ def create_point(timestep, atoms, scheme=None):
     return point
 
 
+def _pause():
+    """
+    As recorded in issue #859:
+    https://github.com/opencog/opencog/issues/859
+
+    the CogServer throws a segmentation fault if repeated requests are made
+    without rate limiting them. Once that issue has been addressed, this
+    method should not be used anymore.
+    """
+    sleep(.5)
+
+
 def shell(command):
     """
     Send a command to the CogServer shell
     """
+    _pause()
+
     data = {'command': command + '\n'}
 
     post(uri + 'shell', data=json.dumps(data), headers=headers)
@@ -102,6 +117,8 @@ def scheme(command):
     """
     Send a Scheme command to the Scheme interpreter
     """
+    _pause()
+
     data = {'command': command + '\n'}
 
     result = post(uri + 'scheme', data=json.dumps(data), headers=headers)
@@ -129,12 +146,47 @@ def load_python_agent(path):
     Example of 'path':
       ../opencog/python/pln/examples/tuffy/smokes/smokes_agent
     """
-    shell("loadpy {0}".format(path))
+    arg = "loadpy {0}".format(path)
+    shell(arg)
 
 
-def step_agent(path, name):
+def start_python_agent(path, name):
     """
-    Run a step of an arbitrary agent in the CogServer
+    Start a Python MindAgent that has already been loaded
+
+    Parameters:
+    path (required) Relative path to the agent, including the filename,
+      without the file extension
+
+    Example of 'path':
+      ../opencog/python/pln/examples/tuffy/smokes/smokes_agent
+
+    name (required) Name of the agent
+
+    Example of 'name':
+      InferenceAgent
+    """
+    arg = "agents-start {0}.{1}".format(path, name)
+    shell(arg)
+
+
+def step_agent(name):
+    """
+    Run a step of an arbitrary C++ agent in the CogServer
+
+    Parameters:
+    name (required) Name of the agent
+
+    Example of 'name':
+      SimpleImportanceDiffusionAgent
+    """
+    arg = "agents-step opencog::{0}".format(name)
+    shell(arg)
+
+
+def step_python_agent(path, name):
+    """
+    Run a step of an arbitrary Python agent in the CogServer
 
     Parameters:
     path (required) Relative path to the agent, including the filename,
@@ -146,7 +198,7 @@ def step_agent(path, name):
     Example of 'name':
       InferenceAgent
     """
-    arg = "agents-step {0}.{1}".format(path, name)
+    arg = "agents-step opencog::PyMindAgent({0}.{1})".format(path, name)
     shell(arg)
 
 
@@ -231,29 +283,44 @@ def clear_atomspace():
     scheme("(clear)")
 
 
+def stop_agent_loop():
+    shell("agents-stop-loop")
+
+
+def set_af_boundary(value):
+    """
+    Set the AttentionalFocusBoundary
+
+    Parameters:
+    value The STI value to set the AttentionalFocusBoundary to
+    """
+    arg = "(cog-set-af-boundary! {0})".format(value)
+    scheme(arg)
+
+
 def importance_diffusion():
     """
     Run a step of the simple importance diffusion agent
     """
-    shell("agents-step opencog::SimpleImportanceDiffusionAgent")
+    step_agent("SimpleImportanceDiffusionAgent")
 
 
 def importance_updating():
     """
     Run a step of the importance updating agent
     """
-    shell("agents-step opencog::ImportanceUpdatingAgent")
+    step_agent("ImportanceUpdatingAgent")
 
 
 def hebbian_updating():
     """
     Run a step of the hebbian updating agent
     """
-    shell("agents-step opencog::HebbianUpdatingAgent")
+    step_agent("HebbianUpdatingAgent")
 
 
 def forgetting():
     """
     Run a step of the forgetting agent
     """
-    shell("agents-step opencog::ForgettingAgent")
+    step_agent("ForgettingAgent")
