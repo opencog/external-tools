@@ -7,57 +7,12 @@ See README.md for documentation and instructions.
 
 __author__ = 'Cosmo Harrigan'
 
-from requests import *
-import json
-import csv
-from os.path import expanduser
-from time import sleep
+from configuration import *
 
-# Configure the OpenCog REST API client
-IP_ADDRESS = '127.0.0.1'
-PORT = '5000'
-uri = 'http://' + IP_ADDRESS + ':' + PORT + '/api/v1.1/'
-headers = {'content-type': 'application/json'}
-
-# Configure the path of the OpenCog source folder relative to the user's
-# home directory
-OPENCOG_SOURCE_FOLDER = expanduser("~") + "/opencog/opencog/"
-
-
-class PointInTime(object):
-    """
-    Represents a discrete point in time in a time series from an experiment
-    with the ECAN attention allocation discrete dynamical system
-
-    Each point in time contains:
-
-    - a list of "atoms" which consists of a list of objects of type Atom
-      (Refer to the definition of the Atom object)
-    - an integer "timestep"
-    - (optional) A Scheme representation of the point in time
-    """
-    def __init__(self, timestep):
-        self.atoms = []
-        self.timestep = timestep
-        self.scheme = None
-
-    def __str__(self):
-        output = ""
-        counter = 0
-
-        output += "; Time: {0}\n".format(self.timestep)
-
-        for atom in self.atoms:
-            counter += 1
-            output += "; Handle: {0} STI: {1}".\
-                format(atom.handle, atom.sti)
-            output += "\n"
-
-        if self.scheme is not None:
-            output += "; Scheme:\n"
-            output += self.scheme
-
-        return output
+# Create a MongoDB connection
+client = pymongo.MongoClient(MONGODB_CONNECTION_STRING)
+client.drop_database(MONGODB_DATABASE)
+mongo = client[MONGODB_DATABASE]
 
 
 class Atom(object):
@@ -74,18 +29,33 @@ class Atom(object):
 
 def create_point(timestep, atoms, scheme=None):
     """
-    Create a PointInTime object from a JSON atom representation
+    Create a PointInTime dictionary from a JSON atom representation
+
+    Represents a discrete point in time in a time series from an experiment
+    with the ECAN attention allocation discrete dynamical system
+
+    Each point in time contains:
+
+    - a list of "atoms" which consists of a list of objects of type Atom
+      (Refer to the definition of the Atom object)
+    - an integer "timestep"
+    - (optional) A Scheme representation of the point in time
     """
-    point = PointInTime(timestep)
+
+    atom_list = []
 
     for atom in atoms:
-        data = Atom()
-        data.handle = atom['handle']
-        data.sti = atom['attentionvalue']['sti']
-        point.atoms.append(data)
+        data = {
+            'handle': atom['handle'],
+            'sti': atom['attentionvalue']['sti']
+        }
+        atom_list.append(data)
 
-    if scheme is not None:
-        point.scheme = scheme
+    point = {
+        'timestep': timestep,
+        'atoms': atom_list,
+        'scheme': scheme
+    }
 
     return point
 
@@ -242,27 +212,26 @@ def export_timeseries_csv(timeseries, filename, scheme=False):
     with open(filename, 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         for point in timeseries:
-            for atom in point.atoms:
-                if point.scheme is not None and scheme is True:
-                    writer.writerow(
-                        [point.timestep, atom.handle, atom.sti, point.scheme])
+            for atom in point['atoms']:
+                if point['scheme'] is not None and scheme is True:
+                    writer.writerow([point['timestep'],
+                                     atom['handle'],
+                                     atom['sti'],
+                                     point['scheme']])
                 else:
-                    writer.writerow(
-                        [point.timestep, atom.handle, atom.sti])
+                    writer.writerow([point['timestep'],
+                                     atom['handle'],
+                                     atom['sti']])
 
 
-def export_timeseries_mongodb(timeseries, db, collection_name):
+def export_timeseries_mongodb(timeseries):
     """
     Export the timeseries to a MongoDB database.
 
     Parameters:
     timeseries (required) The timeseries that will be exported.
-    db (required) A MongoDB database object to export to
-    collection_name (required) The collection name to insert documents into
-
-    Note: Not yet implemented
     """
-    pass
+    mongo['points'].insert(timeseries)
 
 
 def dump_atomspace_scheme():

@@ -23,6 +23,14 @@ Defines an interface to allow ECAN attention allocation experiments to be writte
 
     http://docs.python-requests.org/en/latest/user/install/#install
 
+- Requires the PyMongo library:
+
+    http://api.mongodb.org/python/current/installation.html
+
+- (Optional) To actually use the MongoDB storage feature requires a MongoDB server to be running:
+
+    http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
+
 #### Example
 
 See the usage example in ```example.py```
