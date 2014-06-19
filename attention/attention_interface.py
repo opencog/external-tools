@@ -11,8 +11,12 @@ from configuration import *
 
 # Create a MongoDB connection
 client = pymongo.MongoClient(MONGODB_CONNECTION_STRING)
-client.drop_database(MONGODB_DATABASE)
 mongo = client[MONGODB_DATABASE]
+
+
+def clear_mongodb():
+    client.drop_database(MONGODB_DATABASE)
+    mongo = client[MONGODB_DATABASE]
 
 
 class Atom(object):
@@ -231,6 +235,7 @@ def export_timeseries_mongodb(timeseries):
     Parameters:
     timeseries (required) The timeseries that will be exported.
     """
+    clear_mongodb()
     mongo['points'].insert(timeseries)
 
 
@@ -239,6 +244,16 @@ def dump_atomspace_scheme():
     Returns all atoms in the atomspace in Scheme format
     """
     return scheme("(cog-prt-atomspace)")
+
+
+def dump_atomspace_dot():
+    """
+    Returns all atoms in the atomspace in DOT graph description language
+    format
+    """
+    get_response = get(uri + 'atoms?dot=True')
+    get_result = get_response.json()['result']
+    return get_result
 
 
 def dump_attentional_focus_scheme():

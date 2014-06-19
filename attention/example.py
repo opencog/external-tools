@@ -53,5 +53,4 @@ for t in range(0, num_steps):
     print "Timestep {0}, {1} atoms captured.".format(
         t, len(point_in_time['atoms']))
 
-export_timeseries_csv(timeseries, output_filename, scheme=True)
 export_timeseries_mongodb(timeseries)

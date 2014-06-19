@@ -10,6 +10,7 @@ Defines an interface to allow ECAN attention allocation experiments to be writte
 - Capture the discrete dynamical evolution of the attentional focus
 - Capture the discrete dynamical evolution of the STI of each atom in the attentional focus
 - Store the captured data as a timeseries in a CSV file for plotting and analysis (using pandas, matplotlib, SciPy, etc.)
+- Render the captured data as a sequence of graphical visualizations of the attentional focus
 
 #### Requirements
 
@@ -27,13 +28,15 @@ Defines an interface to allow ECAN attention allocation experiments to be writte
 
     http://api.mongodb.org/python/current/installation.html
 
-- (Optional) To actually use the MongoDB storage feature requires a MongoDB server to be running:
+- Requires MongoDB:
 
     http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
 #### Example
 
 See the usage example in ```example.py```
+
+See an example visualization of the attentional focus dynamics as a slideshow of PNG images rendered from DOT representations in ```attentional_focus_slideshow.py```
 
 #### Documentation
 
