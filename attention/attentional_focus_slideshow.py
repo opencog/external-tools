@@ -13,6 +13,14 @@ example.py.
 A convenient application for viewing a slideshow of images is gwenview:
   sudo apt-get install gwenview
 
+Prerequisites:
+
+Requires Graphviz
+  sudo apt-get install graphviz
+
+Or, for the newest version, use:
+  http://www.graphviz.org/Download_linux_ubuntu.php
+
 Example usage:
 
 cd ~/external-tools/attention/
@@ -22,6 +30,7 @@ gwenview ./timeseries -s
 """
 
 import os
+from subprocess import check_call
 from attention_interface import *
 
 __author__ = 'Cosmo Harrigan'
@@ -39,9 +48,17 @@ mongo = client[MONGODB_DATABASE]
 points = mongo['points']
 
 
-def render_image():
-    dot_filename = "{0}-{1:05d}.dot".format(sub_dir, sequence_number)
-    png_filename = "{0}-{1:05d}.png".format(sub_dir, sequence_number)
+def render_image(dot, uid):
+    """
+    Renders a PNG image from a DOT graph description
+
+    Parameters:
+
+    dot (required) The DOT graph description of the point in time
+    uid (required) A unique identifier, which should increment at each time interval
+    """
+    dot_filename = "{0}-{1:05d}.dot".format(sub_dir, uid)
+    png_filename = "{0}-{1:05d}.png".format(sub_dir, uid)
 
     dot_full_path = os.path.join(ANALYSIS_FOLDER, sub_dir, dot_filename)
     png_full_path = os.path.join(ANALYSIS_FOLDER, sub_dir, png_filename)
@@ -49,7 +66,7 @@ def render_image():
     with open(dot_full_path, 'w') as outfile:
         outfile.write(dot)
 
-    from subprocess import check_call
+    # Render the image using Graphviz
     check_call(['dot', '-Tpng', dot_full_path, '-o', png_full_path])
     os.remove(dot_full_path)
 
@@ -67,6 +84,6 @@ for point in points.find():
     dot = dump_atomspace_dot()
 
     # Render the graph to an image
-    render_image()
+    render_image(dot, sequence_number)
 
     sequence_number += 1
