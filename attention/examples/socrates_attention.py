@@ -5,24 +5,27 @@ An adaptation of the interface defined in attention_interface.py to the Socrates
 __author__ = 'Sebastian Ruder'
 
 from attention.attention_interface import *
+from opencog.atomspace import types
 from time import sleep
 
 # Configurable parameters:
 num_steps = 50                            # Number of time steps
 output_filename = 'ecan-timeseries.csv'   # Output filename
 
-path = "../opencog/python/pln/examples/attentionallocation/socrates_agent"
+path = "../opencog/python/pln/examples/attentionallocation/socrates_attention_agent"
 name = "SocratesAgent"
 
 clear_atomspace()
 set_af_boundary(5)
 
-print(dump_atomspace_scheme())
-
 load_python_agent(path)
 start_python_agent(path, name)
 
-load_scheme_files(["python/pln/examples/relex2logic/socrates-r2l.scm"])
+load_scheme_files(["python/pln/examples/attentionallocation" +
+                   "/socrates-attention.scm"])
+
+atoms = dump_atomspace_scheme()
+print(atoms)
 
 # no query to be defined
 
@@ -38,5 +41,6 @@ for t in range(0, num_steps):
 
     print "------------------------------------------------------\n"\
           "{0}\n".format(point_in_time)
+    print(dump_attentional_focus_scheme())
 
 export_timeseries_csv(timeseries, output_filename, scheme=True)
