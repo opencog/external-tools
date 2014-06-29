@@ -12,7 +12,8 @@ from time import sleep
 num_steps = 50                            # Number of time steps
 output_filename = 'ecan-timeseries.csv'   # Output filename
 
-path = "../opencog/python/pln/examples/attentionallocation/socrates_attention_agent"
+path = "../opencog/python/pln/examples/attentionallocation/" \
+       "socrates_attention_agent"
 name = "SocratesAgent"
 
 clear_atomspace()
@@ -22,10 +23,7 @@ load_python_agent(path)
 start_python_agent(path, name)
 
 load_scheme_files(["python/pln/examples/attentionallocation" +
-                   "/socrates-attention.scm"])
-
-atoms = dump_atomspace_scheme()
-print(atoms)
+                   "/socrates-attention-node-av.scm"])
 
 # no query to be defined
 
@@ -41,6 +39,8 @@ for t in range(0, num_steps):
 
     print "------------------------------------------------------\n"\
           "{0}\n".format(point_in_time)
+
+    #print(dump_atomspace_scheme())
     print(dump_attentional_focus_scheme())
 
 export_timeseries_csv(timeseries, output_filename, scheme=True)
