@@ -40,17 +40,23 @@ load_scheme_files(["python/pln/examples/tuffy/smokes/smokes.scm",
 # The PLN agent will constantly give stimulus to the query
 scheme("(define query hasCancer)")
 
-timeseries = []
+af_timeseries = []
+atomspace_timeseries = []
 
 for t in range(0, num_steps):
-    point_in_time = get_attentional_focus(timestep=t, scheme=True)
-    timeseries.append(point_in_time)
+    af_point_in_time = get_attentional_focus(timestep=t, scheme=True)
+    atomspace_point_in_time = get_atomspace(timestep=t, scheme=True)
+    af_timeseries.append(af_point_in_time)
+    atomspace_timeseries.append(atomspace_point_in_time)
 
     importance_diffusion()
     importance_updating()
     step_python_agent(agent_path, agent_name)
 
-    print "Timestep {0}, {1} atoms captured.".format(
-        t, len(point_in_time['atoms']))
+    print("Timestep {0}, {1} atoms captured in attentional focus. "
+          "{2} atoms captured in atomspace."
+          .format(t, len(af_point_in_time['atoms']),
+                  len(atomspace_point_in_time['atoms'])))
 
-export_timeseries_mongodb(timeseries)
+export_timeseries_mongodb(af_timeseries)
+#export_timeseries_mongodb(atomspace_timeseries)

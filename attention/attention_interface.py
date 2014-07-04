@@ -197,6 +197,27 @@ def get_attentional_focus(timestep, scheme=False):
         return create_point(timestep, get_result, scheme=af_contents)
 
 
+def get_atomspace(timestep, scheme=False):
+    """
+    Take a snapshot of the atomspace at a given point in time
+
+    :param timestep: an integer representing a monotonically increasing
+    timestep value which identifies the timestep of this atomspace snapshot
+    :param scheme: If True, the Scheme representation of the atomspace will
+    also be captured.
+    :return: a PointInTime dictionary that captures the atomspace at the given
+    timestep
+    """
+    get_response = get(uri + 'atoms')
+    get_result = get_response.json()['result']['atoms']
+
+    if not scheme:
+        return create_point(timestep, get_result)
+    else:
+        atomspace_contents = dump_atomspace_scheme()
+        return create_point(timestep, get_result, scheme=atomspace_contents)
+
+
 def export_timeseries_csv(timeseries, filename, scheme=False):
     """
     Export the timeseries to a CSV file.
