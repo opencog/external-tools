@@ -37,7 +37,18 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <title>OpenCog AtomSpace Viewer</title>
 
-        <!-- Dojo related code: -->
+
+        <!-- d3 related code -->
+		<script type="text/javascript" src="lib/d3/d3.js"></script>
+		
+		<script type="text/javascript" src="lib/d3/events/OnMouseOver.js"></script>
+		<script type="text/javascript" src="lib/d3/events/OnMouseOut.js"></script>
+		<script type="text/javascript" src="lib/d3/views/av_d3grahp.js"></script>
+		<script type="text/javascript" src="lib/d3/receiveAtomData.js"></script>
+		<script type="text/javascript" src="lib/d3/getAtomeTypeLink.js"></script>
+		
+		
+        <!-- Dojo related code: --> 
         <script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'parseOnLoad':true,'async':true,'packages':[{'name':'gridx','location':'../gridx'},{'name':'clipart','location':'../../clipart'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'zazl','location':'../../zazl'},{'name':'widgets','location':'../../custom'}],'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[],'mblLoadCompatPattern':''"></script>
         <script type="text/javascript">
             require(["dijit/dijit", "dojo/parser", "maqetta/space", "maqetta/AppStates", "dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/layout/TabContainer", "dijit/MenuBar", "dijit/PopupMenuBarItem", "dijit/MenuItem", "dijit/Menu", "dijit/form/ToggleButton", "shapes/Text", "dijit/form/TextBox", "dijit/TitlePane", "dijit/form/Button", "dijit/Toolbar", "dijit/ProgressBar", "dijit/form/FilteringSelect", "dojo/data/ItemFileReadStore", "gridx/Grid", "gridx/core/model/cache/Async", "dijit/form/ComboButton", "dijit/form/DropDownButton", "shapes/Rectangle", "dijit/form/CheckBox", "dijit/form/Select", "dijit/form/ComboBox", "clipart/Search"]);
@@ -48,6 +59,7 @@
             @import "lib/dojo/gridx/resources/claro/Gridx.css";
             @import "lib/dojo/gridx/resources/claro/Gridx_rtl.css";
             @import "css/av_main.css";
+            @import "lib/d3/style/d3_style.css";
 
         </style>
 
@@ -57,6 +69,7 @@
         <script type="text/javascript" src="lib/atomviewer/views/av_graph_view.js"></script>
         <script type="text/javascript" src="lib/atomviewer/views/av_views.js"></script>
         <script type="text/javascript" src="lib/atomviewer/av_main.js"></script>
+        
     </head>
     <body data-maq-flow-layout="true" data-maq-comptype="desktop" class="claro" data-maq-ws="collapse" onresize="onResize()" data-maq-appstates="{}" id="myapp">
         <div data-dojo-type="dijit/layout/BorderContainer" design="sidebar" persist="false" gutters="true" style="min-width: 1em; min-height: 1px; z-index: 0; width: 100%; height: 100%;" id="wrapper">
@@ -88,7 +101,7 @@
                             <input type="text" data-dojo-type="dijit/form/TextBox" id="idAtomHandle" readOnly="true" intermediateChanges="false" trim="false" uppercase="false" lowercase="false" propercase="false" selectOnClick="false" style="width: 35px;">
                             </input> </td>
                             <td> &nbsp;
-                            <input type="button" data-dojo-type="dijit/form/Button" intermediateChanges="false" label="Edit..." iconClass="dijitNoIcon" onclick="onAtomEdit">
+                            <input type="button" data-dojo-type="dijit/form/Button" intermediateChanges="false" label="Edit..." iconClass="dijitNoIcon" onclick="myDialog.show();">
                             </input> </td>
                         </tr>
                     </tbody>
@@ -158,6 +171,7 @@
                     </tbody>
                 </table>
             </div>
+           
             <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="left" splitter="false" maxSize="Infinity" style="overflow: auto; max-width: 298px; height: 100%; width: 276px;" doLayout="false">
                 <a title="OpenCog" target="_blank" href="http://www.opencog.org" style="text-decoration: none;"> <img src="images/OpenCog Logo.png" style="width: 115px; height: 110px; position: relative;"></img> </a>
                 <span data-dojo-type="shapes/Text" style="position: absolute; z-index: 900; font-style: italic; text-align: center; color: blue; font-size: 24px; font-family: Geneva,Tahoma,sans-serif; width: auto; height: auto; left: 127px; top: 32px;"> Atomspace Viewer </span>
@@ -172,7 +186,9 @@
                     <br/>
                     <br/>
                     <div style="text-align: center;">
-                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnCtrlRefresh" intermediateChanges="false" label="Connect/Refresh..." iconClass="dijitNoIcon" onclick="onClickRefresh()">
+                        <!--<input type="button" data-dojo-type="dijit/form/Button" id="idBtnCtrlRefresh" intermediateChanges="false" label="Connect/Refresh..." iconClass="dijitNoIcon" onclick=onclickfuncalls()>-->
+                        <input type="button" data-dojo-type="dijit/form/Button" id="idBtnCtrlRefresh" intermediateChanges="false" label="Connect/Refresh..." iconClass="dijitNoIcon" onclick=onClickRefresh()>
+                      
                         </input>
                     </div>
                     <div align="center">
@@ -251,6 +267,7 @@
                             <label>(Applies to both Filter and Search)</label>
                         </div>
                     </fieldset> </span>
+                
                 <span data-dojo-type="dijit/TitlePane" title="Search" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;">
                     <div>
                         <label>Atom Handle:</label>
@@ -262,13 +279,22 @@
                     </div> </span>
                 <span data-dojo-type="dijit/TitlePane" title="Analysis" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;"> <h2> W.I.P. - not yet implemented</h2> </span>
             </div>
+         
             <div data-dojo-type="dijit/layout/ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="center" splitter="false" maxSize="Infinity" doLayout="false" style="padding: 4px; overflow: auto; width: 100%; height: 100%;">
                 <span data-dojo-type="dijit/layout/TabContainer" id="idTabContainer" style="min-width: 1em; min-height: 1em; width: 100%; height: 100%;" controllerWidget="dijit.layout.TabController">
+                    <div data-dojo-type="dijit/layout/ContentPane" id="idTestTab" title="D3 Graph"  extractContent="false" preventCache="false" preload="false" refreshOnShow="false" selected="true" closable="false">
+                    	<script type="text/javascript">
+                    		retrieveAtomTypes();
+                    	</script>
+                    </div>
                     <div data-dojo-type="dijit/layout/ContentPane" id="idGraphTab" title="Graph" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" selected="true" closable="false">
                         <div id="idGraphCanvas"> </div>
                         <div id="idGraphStatus" style="height: 150px; vertical-align: middle; position: absolute; left: 50px; top: 50px; width: 350px;"></div>
-                    </div> <div data-dojo-type="dijit/layout/ContentPane" id="idTableTab" title="Table" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" selected="true" closable="false"></div> <div data-dojo-type="dijit/layout/ContentPane" id="idJSONTab" title="JSON" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" doLayout="true" selected="true" closable="false"></div> <div data-dojo-type="dijit/layout/ContentPane" id="idSchemeTab" title="Scheme" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" doLayout="true" selected="true" closable="false"></div> </span>
+                    </div> <div data-dojo-type="dijit/layout/ContentPane" id="idTableTab" title="Table" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" selected="true" closable="false"></div> 
+                    <div data-dojo-type="dijit/layout/ContentPane" id="idJSONTab" title="JSON" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" doLayout="true" selected="true" closable="false"></div> 
+                    <div data-dojo-type="dijit/layout/ContentPane" id="idSchemeTab" title="Scheme" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" doLayout="true" selected="true" closable="false"></div> </span>
             </div>
-        </div>
-    </body>
+
+
+</body>
 </html>

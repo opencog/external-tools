@@ -239,6 +239,7 @@ function retrieveAtomsFromCogServer(url)
         // TODO: find out why we're only getting 1 or 2 updates even for big data sets..
         av.Registry.byId("idCtrlProgressBar").update({maximum: evt.total, progress: evt.loaded});
     });
+    
 }
 
 /*
@@ -262,8 +263,9 @@ function receiveAtomData(json_atoms)
     {
         setStatusMsg("Successfully retrieved " + av.atom_data.length.toString()
             + " atoms.");
-        updateAllViews();
+          updateAllViews();
     }
+    
 }
 
 /*
@@ -427,6 +429,7 @@ function retrieveAtomTypes()
     }).then(function(data)
     {
         data.types = data.types.sort();
+       
         // Success - save types to the combobox:
         var cbTypesData = av.Registry.byId("idFilterType").store.data;
         for (var i = 0; i < data.types.length; i++)

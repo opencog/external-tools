@@ -43,6 +43,29 @@ function updateAllViews()
     
     // JSON view:
     updateJSONView();
+    
+    // D3 view:
+    updateD3Graph();
+     
+        
+       
+}
+
+
+function updateD3Graph(){
+	
+	
+	  //av_graph.fdGraph = null;
+    
+	 if (av.atom_data != null)
+     {
+     	//Clearing what ever in html idTestTab div and redrow the d3 graph 
+     	av.DOM.byId("idTestTab").innerHTML = "";
+     	
+        var jsonobj={};
+    	jsonobj=av.atom_data;
+        updateD3GraphView(jsonobj);
+     }
 }
 
 /*
