@@ -19,6 +19,8 @@ name = "SocratesAgent"
 clear_atomspace()
 set_af_boundary(5)
 
+stop_agent_loop()
+
 load_python_agent(path)
 start_python_agent(path, name)
 
