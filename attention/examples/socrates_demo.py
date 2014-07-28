@@ -119,8 +119,8 @@ for i in range(0, num_steps):
                     if out[0].is_a(types.PredicateNode)\
                         and "breathe" in out[0].name\
                         and out[1].is_a(types.ListLink)\
-                        and "Socrates" in out[1][0].name\
-                        and "air" in out[1][1].name:
+                        and "Socrates" in out[1].out[0].name\
+                        and "air" in out[1].out[1].name:
                         result_found = True
 
             atomspace_string += str(atom)
