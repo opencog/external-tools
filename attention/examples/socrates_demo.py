@@ -1,5 +1,7 @@
 """
 For running socrates_agent.py without the cogserver
+Requires mongodb to be installed as specified in attention/README.md
+mongodb needs to be started with 'sudo service mongod start'
 """
 
 import os
