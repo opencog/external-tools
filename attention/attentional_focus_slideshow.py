@@ -48,7 +48,7 @@ mongo = client[MONGODB_DATABASE]
 points = mongo['points']
 
 
-def render_image(dot, uid):
+def render_image(dot, uid, ANALYSIS_FOLDER, sub_dir):
     """
     Renders a PNG image from a DOT graph description
 
@@ -84,6 +84,6 @@ for point in points.find():
     dot = dump_atomspace_dot()
 
     # Render the graph to an image
-    render_image(dot, sequence_number)
+    render_image(dot, sequence_number, ANALYSIS_FOLDER, sub_dir)
 
     sequence_number += 1
