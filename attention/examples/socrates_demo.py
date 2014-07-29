@@ -15,6 +15,7 @@ After the inference, the produced images can be viewed with
 """
 
 import os
+import re
 from pln.examples.socrates_demo import socrates_agent
 from opencog.atomspace import types, AtomSpace, TruthValue
 from opencog.scheme_wrapper import load_scm, scheme_eval, scheme_eval_h, __init__
@@ -124,6 +125,8 @@ for i in range(0, num_steps):
                         result_found = True
 
             atomspace_string += str(atom)
+        # the atom uuids are shortened for the visualization
+        atomspace_string = re.sub(r"""@..+?(?=\")""", "@X", atomspace_string)
 
         # The scheme representation is imported in the atomspace, the dot
         # representation is retrieved and the image is rendered
