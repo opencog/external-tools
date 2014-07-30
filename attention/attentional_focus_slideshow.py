@@ -21,8 +21,12 @@ Requires Graphviz
 Or, for the newest version, use:
   http://www.graphviz.org/Download_linux_ubuntu.php
 
+Requires mongodb:
+    sudo apt-get install mongodb-org
+
 Example usage:
 
+sudo service mongod start
 cd ~/external-tools/attention/
 python example.py
 python attentional_focus_slideshow.py

@@ -9,6 +9,7 @@ __author__ = 'Cosmo Harrigan'
 
 from configuration import *
 
+# MongoDB needs to be started with 'sudo service mongod start'
 # Create a MongoDB connection
 client = pymongo.MongoClient(MONGODB_CONNECTION_STRING)
 mongo = client[MONGODB_DATABASE]
