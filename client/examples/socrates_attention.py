@@ -13,7 +13,7 @@ data = ["opencog/atomspace/core_types.scm",
         "opencog/python/pln/examples/attentionallocation/atomspace.log"]
 
 # Configurable parameters:
-num_steps = 2                            # Number of time steps
+num_steps = 10                            # Number of time steps
 output_filename = 'ecan-timeseries.csv'   # Output filename
 
 path = "../opencog/python/pln/examples/attentionallocation/" \
@@ -48,6 +48,11 @@ for t in range(0, num_steps):
     for item in data:
         load_scm(atomspace, item)
 
+
+    print("Atom space contents")
+    for atom in atomspace.get_atoms_by_type(types.Atom):
+        print atom
+    print("Atomspace appended!")
     atomspace_series.append(atomspace)
 
     importance_diffusion()
@@ -60,18 +65,22 @@ for t in range(0, num_steps):
     #print(dump_atomspace_scheme())
     print(dump_attentional_focus_scheme())
 
-current_atoms = []
+atoms_so_far = []
 timestep_count = 0
-for atomspace in atomspace_series:
-
-    atoms = [atom for atom in atomspace.get_atoms_by_type(types.Atom)
-             if atom not in current_atoms
-             and not atom.type in (types.ConceptNode, types.PredicateNode,
-                                   types.VariableNode, types.ListLink)]
-    current_atoms.append(atoms)
+# Todo fix: first atomspace snapshot already contains all produced atoms
+for current_atomspace in atomspace_series:
+    current_atoms = []
+    for atom in current_atomspace.get_atoms_by_type(types.Atom):
+        if atom not in atoms_so_far:
+            out = [atom1 for atom1 in current_atomspace.get_outgoing(atom.h)]
+            if out and "$pln_var" in out[0].name:
+                continue
+            else:
+                current_atoms.append(atom)
+    atoms_so_far = atoms_so_far + current_atoms
 
     print("Timestep: {0}; additional atoms:".format(timestep_count))
-    for atom in atoms:
+    for atom in current_atoms:
         print(atom)
     print("\n")
     timestep_count += 1
