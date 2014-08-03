@@ -337,3 +337,23 @@ def forgetting():
     Run a step of the forgetting agent
     """
     step_agent("ForgettingAgent")
+
+
+def set_diffusion_percent(value):
+    """
+    Sets the diffusion percentage parameter for the importance diffusion agent
+    :param value: Probability value between 0 and 1 representing the percentage
+    of an atom's STI that should be diffused at each step
+    """
+    scheme('(EvaluationLink (PredicateNode "CONFIG-DiffusionPercent") (ListLink '
+           '(NumberNode "{0}")))'.format(value))
+
+
+def set_stimulus_amount(value):
+    """
+    Sets the stimulus amount parameter for the PLN reasoning agent
+    :param value: Integer value representing the amount of stimulus to be
+    assigned to the target
+    """
+    scheme('(EvaluationLink (PredicateNode "CONFIG-StimulusAmount") (ListLink '
+           '(NumberNode "{0}")))'.format(value))

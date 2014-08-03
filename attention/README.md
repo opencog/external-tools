@@ -191,13 +191,14 @@ The attention_interface API has docstrings for each method that describe correct
 
 ###### clear_mongodb()
 
-###### _pause()
-    As recorded in issue #859:
-    https://github.com/opencog/opencog/issues/859
+###### set_diffusion_percent(value)
+    Sets the diffusion percentage parameter for the importance diffusion agent
+    value is a probability value between 0 and 1 representing the percentage
+    of an atom's STI that should be diffused at each step
 
-    the CogServer throws a segmentation fault if repeated requests are made
-    without rate limiting them. Once that issue has been addressed, this
-    method should not be used anymore.
+###### set_stimulus_amount(value)
+    Sets the stimulus amount parameter for the PLN reasoning agent
+    Integer value representing the amount of stimulus to be assigned to the target
 
 ###### class Atom(object)
     Stores an atom handle and an STI value
