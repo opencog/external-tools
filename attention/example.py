@@ -25,7 +25,7 @@ agent_name = "InferenceAgent"
 # restarting the CogServer, since it will clear the contents of the atomspace
 # each time.
 clear_atomspace()
-set_af_boundary(5)
+set_af_boundary(10)
 
 # The agent loop needs to be stopped so that we can manually step agents, to
 # allow for data to be captured between each step.
@@ -39,6 +39,10 @@ load_scheme_files(["python/pln/examples/tuffy/smokes/smokes.scm",
 
 # The PLN agent will constantly give stimulus to the query
 scheme("(define query hasCancer)")
+
+# Set the configuration parameters for diffusion
+set_stimulus_amount("20")
+set_diffusion_percent("0.20")
 
 af_timeseries = []
 atomspace_timeseries = []
@@ -58,5 +62,6 @@ for t in range(0, num_steps):
           .format(t, len(af_point_in_time['atoms']),
                   len(atomspace_point_in_time['atoms'])))
 
-export_timeseries_mongodb(af_timeseries)
-#export_timeseries_mongodb(atomspace_timeseries)
+#export_timeseries_mongodb(af_timeseries)
+export_timeseries_mongodb(atomspace_timeseries)
+export_timeseries_csv(atomspace_timeseries, "output.csv", scheme=False)
