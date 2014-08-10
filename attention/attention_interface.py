@@ -10,6 +10,10 @@ __author__ = 'Cosmo Harrigan'
 from configuration import *
 
 # MongoDB needs to be started with 'sudo service mongod start'
+# If MongoDB refuses to start, e.g. after a recent crash, check the log at
+# /var/log/mongodb/mongodb.log. This may be due to an old lock file which can
+# be easily removed with "rm /var/lib/mongodb/mongod.lock"
+
 # Create a MongoDB connection
 client = pymongo.MongoClient(MONGODB_CONNECTION_STRING)
 mongo = client[MONGODB_DATABASE]
