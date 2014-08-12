@@ -27,7 +27,7 @@ Requires mongodb:
 Example usage:
 
 sudo service mongod start
-cd ~/external-tools/attention/
+cd ~/external-tools/client/
 python example.py
 python attentional_focus_slideshow.py
 gwenview ./timeseries -s
@@ -35,7 +35,7 @@ gwenview ./timeseries -s
 
 import os
 from subprocess import check_call
-from attention_interface import *
+from client import *
 
 __author__ = 'Cosmo Harrigan'
 

@@ -20,8 +20,13 @@ uri = 'http://' + IP_ADDRESS + ':' + PORT + '/api/v1.1/'
 headers = {'content-type': 'application/json'}
 
 # Configure the path of the OpenCog source folder relative to the user's
-# home directory
+# home directory, including parameters to allow automatic bootstrapping of the
+# CogServer
 OPENCOG_SOURCE_FOLDER = expanduser("~") + "/opencog/opencog/"
+OPENCOG_SUBFOLDER = expanduser("~") + '/opencog/build'
+OPENCOG_COGSERVER_START = './opencog/server/cogserver'
+OPENCOG_RESTAPI_START = 'echo "restapi.Start" | nc localhost 17001'
+OPENCOG_INIT_DELAY = 2
 
 # Configure MongoDB parameters
 MONGODB_CONNECTION_STRING = "mongodb://localhost:27017"

@@ -8,6 +8,8 @@ See README.md for documentation and instructions.
 __author__ = 'Cosmo Harrigan'
 
 from configuration import *
+import os
+from subprocess import check_call, Popen
 
 # MongoDB needs to be started with 'sudo service mongod start'
 # If MongoDB refuses to start, e.g. after a recent crash, check the log at
@@ -345,12 +347,13 @@ def forgetting():
 
 def set_diffusion_percent(value):
     """
-    Sets the diffusion percentage parameter for the importance diffusion agent
+    Sets the diffusion percentage parameter for the attention allocation
+    importance diffusion agent
     :param value: Probability value between 0 and 1 representing the percentage
     of an atom's STI that should be diffused at each step
     """
-    scheme('(EvaluationLink (PredicateNode "CONFIG-DiffusionPercent") (ListLink '
-           '(NumberNode "{0}")))'.format(value))
+    scheme('(EvaluationLink (PredicateNode "CONFIG-DiffusionPercent") '
+           '(ListLink (NumberNode "{0}")))'.format(value))
 
 
 def set_stimulus_amount(value):
@@ -361,3 +364,50 @@ def set_stimulus_amount(value):
     """
     scheme('(EvaluationLink (PredicateNode "CONFIG-StimulusAmount") (ListLink '
            '(NumberNode "{0}")))'.format(value))
+
+
+def set_rent(value):
+    """
+    Sets the rent parameter for the attention allocation importance updating
+    agent
+    :param value: Integer value representing the amount of stimulus to be
+    assigned to the target
+    """
+    scheme('(EvaluationLink (PredicateNode "CONFIG-Rent") (ListLink '
+           '(NumberNode "{0}")))'.format(value))
+
+
+def set_wages(value):
+    """
+    Sets the wages parameter for the attention allocation importance updating
+    agent
+    :param value: Integer value representing the amount of stimulus to be
+    assigned to the target
+    """
+    scheme('(EvaluationLink (PredicateNode "CONFIG-Wages") (ListLink '
+           '(NumberNode "{0}")))'.format(value))
+
+
+def run_opencog_daemon():
+    """
+    Bootstraps the OpenCog CogServer daemon so that it will run in the
+     background with the REST API so that further commands can be issued by
+     sending them to the REST API
+    """
+    # Start the OpenCog CogServer daemon
+    os.chdir(OPENCOG_SUBFOLDER)
+    Popen([OPENCOG_COGSERVER_START])
+    sleep(OPENCOG_INIT_DELAY)
+
+    # Start the REST API so that further commands can be issued using it
+    os.system(OPENCOG_RESTAPI_START)
+
+
+def terminate_opencog_daemon():
+    """
+    Terminate the OpenCog CogServer daemon
+    """
+    # CogServer doesn't terminate cleanly when running REST API process. When
+    # fixed, change this to a much friendlier mechanism
+    os.system('pkill cogserver')
+    sleep(OPENCOG_INIT_DELAY)
