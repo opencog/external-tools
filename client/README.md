@@ -1,5 +1,5 @@
-OpenCog Python Scripting Interface
-==================================
+OpenCog Python Client
+=====================
 
 Defines an interface to allow OpenCog experiments to be written as short Python scripts.
 
@@ -40,7 +40,7 @@ See an example visualization of the attentional focus dynamics as a slideshow of
 
 #### Documentation
 
-The attention_interface API has docstrings for each method that describe correct usage. A summary of the available methods is presented below.
+The client API has docstrings for each method that describe correct usage. A summary of the available methods is presented below.
 
 ##### OpenCog Python Scripting Interface API
 
@@ -198,11 +198,24 @@ The attention_interface API has docstrings for each method that describe correct
 
 ###### set_stimulus_amount(value)
     Sets the stimulus amount parameter for the PLN reasoning agent
-    Integer value representing the amount of stimulus to be assigned to the target
+    value is an Integer value representing the amount of stimulus to be assigned to the target
+
+###### set_rent(value)
+    Sets the rent parameter for the attention allocation importance updating agent
+    value is an Integer value representing the amount of stimulus to be assigned to the target
+
+###### set_wages(value)
+    Sets the wages parameter for the attention allocation importance updating agent
+    value is an Integer value representing the amount of stimulus to be assigned to the target
+
+###### run_opencog_daemon()
+    Bootstraps the OpenCog CogServer daemon so that it will run in the background with the REST API so that further commands can be issued by sending them to the REST API
+
+###### terminate_opencog_daemon()
+    Terminate the OpenCog CogServer daemon
 
 ###### class Atom(object)
     Stores an atom handle and an STI value
 
     Represents the STI value of an atom at a particular point in time.
     Intended to be contained in a PointInTime object with a timestep value.
-

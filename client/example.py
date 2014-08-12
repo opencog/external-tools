@@ -1,5 +1,5 @@
 """
-An example implementation of the interface defined in attention_interface.py
+An example implementation of the interface defined in client.py
 
 Runs 'num_steps' cycles. At each discrete timestep, captures the STI values of
 the atoms in the attentional focus, and also capture a Scheme dump of the
@@ -11,7 +11,7 @@ Read README.md before running this example.
 
 __author__ = 'Cosmo Harrigan'
 
-from attention_interface import *
+from client import *
 
 # Configurable parameters:
 num_steps = 50                            # Number of time steps
@@ -20,6 +20,11 @@ output_filename = 'ecan-timeseries.csv'   # Output filename
 # PLN agent parameters
 agent_path = "../opencog/python/pln/examples/tuffy/smokes/smokes_agent"
 agent_name = "InferenceAgent"
+
+# Restart the CogServer - it is not currently designed in such a way that it
+# can completely reinitialize itself cleanly without restarting
+terminate_opencog_daemon()
+run_opencog_daemon()
 
 # Initialize the CogServer. This script can be ran multiple times without
 # restarting the CogServer, since it will clear the contents of the atomspace
@@ -42,7 +47,9 @@ scheme("(define query hasCancer)")
 
 # Set the configuration parameters for diffusion
 set_stimulus_amount("20")
-set_diffusion_percent("0.20")
+set_diffusion_percent("0.50")
+set_wages("3")
+set_rent("8")
 
 af_timeseries = []
 atomspace_timeseries = []
@@ -61,6 +68,9 @@ for t in range(0, num_steps):
           "{2} atoms captured in atomspace."
           .format(t, len(af_point_in_time['atoms']),
                   len(atomspace_point_in_time['atoms'])))
+
+    print "People with cancer: {0}".format(
+        scheme("(count-people-with-cancer)"))
 
 #export_timeseries_mongodb(af_timeseries)
 export_timeseries_mongodb(atomspace_timeseries)
