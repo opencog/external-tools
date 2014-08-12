@@ -42,7 +42,7 @@ See an example visualization of the attentional focus dynamics as a slideshow of
 
 The client API has docstrings for each method that describe correct usage. A summary of the available methods is presented below.
 
-##### OpenCog Python Scripting Interface API
+##### OpenCog Python Client API Documentation
 
 ###### create_point(timestep, atoms, scheme=None)
     Create a PointInTime dictionary from a JSON atom representation
@@ -209,7 +209,8 @@ The client API has docstrings for each method that describe correct usage. A sum
     value is an Integer value representing the amount of stimulus to be assigned to the target
 
 ###### run_opencog_daemon()
-    Bootstraps the OpenCog CogServer daemon so that it will run in the background with the REST API so that further commands can be issued by sending them to the REST API
+    Bootstraps the OpenCog CogServer daemon so that it will run in the background with the
+    REST API so that further commands can be issued by sending them to the REST API
 
 ###### terminate_opencog_daemon()
     Terminate the OpenCog CogServer daemon
