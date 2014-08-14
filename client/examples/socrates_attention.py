@@ -1,15 +1,19 @@
 """
-An adaptation of the interface defined in attention_interface.py to the Socrates demo
+An adaptation of the interface defined in client.py to the Socrates demo
 """
 
 __author__ = 'Sebastian Ruder'
 
 from client.client import *
-from opencog.atomspace import types
-from time import sleep
+from opencog.atomspace import AtomSpace, types
+from opencog.scheme_wrapper import __init__, load_scm
+
+data = ["opencog/atomspace/core_types.scm",
+        "opencog/scm/utilities.scm",
+        "opencog/python/pln/examples/attentionallocation/atomspace.log"]
 
 # Configurable parameters:
-num_steps = 50                            # Number of time steps
+num_steps = 10                            # Number of time steps
 output_filename = 'ecan-timeseries.csv'   # Output filename
 
 path = "../opencog/python/pln/examples/attentionallocation/" \
@@ -19,6 +23,8 @@ name = "SocratesAgent"
 clear_atomspace()
 set_af_boundary(5)
 
+stop_agent_loop()
+
 load_python_agent(path)
 start_python_agent(path, name)
 
@@ -27,11 +33,27 @@ load_scheme_files(["python/pln/examples/attentionallocation" +
 
 # no query to be defined
 
-timeseries = []
+timeseries = []  # list of timesteps
+atomspace_series = []  # list of atomspaces pertaining to each timestep
+
+atomspace = AtomSpace()
+__init__(atomspace)
 
 for t in range(0, num_steps):
     point_in_time = get_attentional_focus(timestep=t, scheme=True)
     timeseries.append(point_in_time)
+
+    with open("../../../opencog/opencog/python/pln/examples/attentionallocation/atomspace.log", "w") as log:
+        log.write(dump_atomspace_scheme())
+    for item in data:
+        load_scm(atomspace, item)
+
+
+    print("Atom space contents")
+    for atom in atomspace.get_atoms_by_type(types.Atom):
+        print atom
+    print("Atomspace appended!")
+    atomspace_series.append(atomspace)
 
     importance_diffusion()
     importance_updating()
@@ -42,5 +64,25 @@ for t in range(0, num_steps):
 
     #print(dump_atomspace_scheme())
     print(dump_attentional_focus_scheme())
+
+atoms_so_far = []
+timestep_count = 0
+# Todo fix: first atomspace snapshot already contains all produced atoms
+for current_atomspace in atomspace_series:
+    current_atoms = []
+    for atom in current_atomspace.get_atoms_by_type(types.Atom):
+        if atom not in atoms_so_far:
+            out = [atom1 for atom1 in current_atomspace.get_outgoing(atom.h)]
+            if out and "$pln_var" in out[0].name:
+                continue
+            else:
+                current_atoms.append(atom)
+    atoms_so_far = atoms_so_far + current_atoms
+
+    print("Timestep: {0}; additional atoms:".format(timestep_count))
+    for atom in current_atoms:
+        print(atom)
+    print("\n")
+    timestep_count += 1
 
 export_timeseries_csv(timeseries, output_filename, scheme=True)
