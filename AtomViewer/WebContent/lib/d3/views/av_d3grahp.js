@@ -104,7 +104,7 @@ function updateD3GraphView(json) {
 		return Math.sqrt(d.value);
 	});
 
-	var node = svg.selectAll(".node").data(force.nodes()).enter().append("g").attr("class", "node").on("mouseover", mouseover).on("mouseout", mouseout).call(force.drag);
+	var node = svg.selectAll(".node").data(force.nodes()).enter().append("g").attr("class", "node").on("mouseover", mouseover).on("mouseout", mouseout).on("click",click).on("mousedown",mousedown).call(force.drag);
 
 	node.append("circle").style("fill", function(d, i) {
 		return color(d.type);
@@ -118,8 +118,7 @@ function updateD3GraphView(json) {
 	});
 
 	node.append("text")
-	//.style("fill", "white")
-	.attr("text-anchor", "middle").attr("dx", 0)//function(d){if(d.name=="") return -30; else return -12;})
+	.attr("text-anchor", "middle").attr("dx", 0)
 	.attr("dy", ".35em").text(function(d) {
 		if (d.name == "")
 			return d.type;
