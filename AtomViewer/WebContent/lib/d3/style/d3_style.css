@@ -1,10 +1,10 @@
-
 .link {
-  stroke: #ccc;
+  stroke: black;
+  stroke-width: 1px;
+  stroke-opacity: 1.0;
 }
 .node circle {
   fill: #ccc;
   stroke: #fff;
   stroke-width: 1.5px;
 }
-
