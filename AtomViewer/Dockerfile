@@ -1,5 +1,5 @@
 # This docker file creates a simple apache server for use with the visualizer
-# Tested using docker version 1.3.1
+# Tested using docker version 1.3.2
 
 FROM ubuntu:14.04
 
@@ -13,3 +13,6 @@ RUN adduser --disabled-password --gecos "OpenCog Developer" visualizer
 RUN adduser visualizer sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER visualizer
+
+# Defaults
+CMD sudo service apache2 start ; bash
