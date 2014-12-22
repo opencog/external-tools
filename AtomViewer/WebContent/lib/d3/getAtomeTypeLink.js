@@ -263,7 +263,7 @@ function receiveAtomData(json_atoms)
     {
         setStatusMsg("Successfully retrieved " + av.atom_data.length.toString()
             + " atoms.");
-          updateAllViews();
+        updateAllViews();
               
         //diclering JSON object for d3 graph. 
         //this JSON object is passed to updateD3GraphView function and used to drow the hypergraph

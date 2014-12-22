@@ -371,6 +371,7 @@ function resetAtomViewer()
 {
     av.Registry.byId("idCtrlProgressBar").update({maximum: 100, progress: 0});
     av.atom_data = null;
+    //jsonobj=null;
     resetAtomDetails();
     resetQueryParameters();
     updateAllViews();

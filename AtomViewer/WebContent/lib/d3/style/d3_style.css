@@ -8,3 +8,15 @@
   stroke: #fff;
   stroke-width: 1.5px;
 }
+.node-active circle{
+  stroke: #555;
+  stroke-width: 1.5px;
+}
+.link-active {
+  stroke-opacity: 1;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
