@@ -36,3 +36,20 @@ TODO (Nice to Have)
 * Add more views (e.g. 3d graph, pinpoint graph (>350 atoms), patterns, etc.)
 * Add cancel button to stop atom retrieval.
 * Implement the Analysis feature (atom stats, etc.)
+
+Using Docker
+------------------
+1. build and run opencog conatiner. Make sure the name of the running container to be "opencog"
+2. Start the restapi
+From this directory
+3. docker build -t $USER/visualizer .
+4. docker run --rm --name apache -p 80:80 -v $PWD/WebContent:/var/www/visualizer/ --link opencog:link -it $USER/visualizer
+From within the container
+4. sudo service apache2 start
+5. env
+Take note of the IP Address of LINK_PORT_5000_TCP_ADDR
+6. in the web browser address go to localhost
+7. change the cogserver ip address to the ip address you noted above
+8. Connect/Refresh
+
+
