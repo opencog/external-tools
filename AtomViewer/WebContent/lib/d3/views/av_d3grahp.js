@@ -71,10 +71,10 @@ function updateD3GraphView(json) {
 	var width = getGraphWidth() - margin.left - margin.right, height = getGraphHeight() - margin.top - margin.bottom;
 
 	var color = d3.scale.category20();
-
+	var linkD = controls.linkDistance-10;
 	force = d3.layout.force().charge(controls.charge).gravity(controls.gravity).linkDistance(controls.linkDistance).size([width + margin.left + margin.right, height + margin.top + margin.bottom]);
 
-	var zoom = d3.behavior.zoom().scaleExtent([1, 10]);
+	var zoom = d3.behavior.zoom().scaleExtent([0.05, 5]);
 
 	zoom.on("zoom", zoomed);
 
@@ -127,7 +127,28 @@ function updateD3GraphView(json) {
 			return d.type;
 		else
 			return d.name;
-	});
+	})
+	.filter(function(d){
+			d.tw=this.getComputedTextLength();
+			//console.log(function(d){if(d.name=="")return d.type; else return d.name;},d.tw,"",(Math.PI*10/2));
+			return (Math.PI*linkD/2)<d.tw;
+			})
+	.each(function(d){
+			     var proposedLabel;
+				if(d.name=="") proposedLabel=d.type; else proposedLabel=d.name;
+                var proposedLabelArray = proposedLabel.split('');
+                while ((d.tw > (Math.PI*linkD/2) && proposedLabelArray.length)) {
+                    // pull out 3 chars at a time to speed things up (one at a time is too slow)
+                    proposedLabelArray.pop();proposedLabelArray.pop(); proposedLabelArray.pop();
+                    if (proposedLabelArray.length===0) {
+                        proposedLabel = "";
+                    } else {
+                        proposedLabel = proposedLabelArray.join('') + "..."; // manually truncate with ellipsis
+                    }
+                    d3.select(this).text(proposedLabel);
+                    d.tw = this.getComputedTextLength();
+                }
+			});
 	//.style("stroke","gray");
 	node.append("title").text(function(d) {
 		if (d.name == "")
@@ -152,24 +173,60 @@ function updateD3GraphView(json) {
 		});
 	});
 
+	var connectedNode = [];
+	var allNode;
+
+	function arrycontain(obj) {
+		var i = connectedNode.length;
+		while (i--) {
+			if (connectedNode[i] === obj) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function getnode(handle) {
+		for ( jnode = 0; jnode < json.length; jnode++)
+			if (handle == json[jnode].handle)
+				return json[jnode];
+	}
+
+	/*this function check wethr the nodes are connecte or not */
 	function isConnected(a, b) {
 
-		for(i=0;i<b.incoming.length;i++){
-			for(j=0;j<a.incoming.length;j++){
-				if(b.incoming[i]==a.incoming[j])
-					return true;
-			}
-		}	
-		for(x=0;x<a.incoming.length;x++){
-			  if(b.handle == a.incoming[x])
-				 return true;
-     	}		
-     	if(a.outgoing.length > 0){
-			for (i = 0; i < a.outgoing.length; i++) {
-    				if(b.handle==a.outgoing[i])
-    					return true;
-			}		
+		if (!arrycontain(a))
+			connectedNode[connectedNode.length] = a;
+	
+		function recurse(node) {
+			if (node.incoming.length > 0)
+				node.incoming.forEach(function(entry) {
+					//finde better way
+					var currentNde = getnode(entry);
+					if (!arrycontain(currentNde)) {
+						connectedNode[connectedNode.length] = currentNde;
+						recurse(currentNde);
+					}
+				});
+			if (node.outgoing.length > 0)
+				node.outgoing.forEach(function(entry) {
+					//finde better way
+					var currentNde = getnode(entry);
+					if (!arrycontain(currentNde)) {
+						connectedNode[connectedNode.length] = currentNde;
+						recurse(currentNde);
+						console.log("out true");
+					}
+				});
+			//return connectedNode;
 		}
+
+		recurse(a);
+
+		if (!arrycontain(b))
+			return false;
+		else
+			return true;
 	}
 
 	function node_radius(d) {
@@ -208,6 +265,7 @@ function updateD3GraphView(json) {
 			else
 				return 10;
 		});
+		connectedNode.splice(0, connectedNode.length);
 	});
 
 	//"dblclick.zoom"
@@ -218,6 +276,38 @@ function updateD3GraphView(json) {
 		zoom.translate([dcx, dcy]);
 		container.transition().duration(750).attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + zoom.scale() + ")");
 		showSelectedAtom(d);
+		/*
+		 d3.select(this).select("circle")
+		 .transition()
+		 .duration(500)
+		 .attr("r", function(d){ return 1.4 * node_radius(d);});
+		 */
+		node.transition(5000).duration(1000).style("opacity", function(o) {
+			//console.log(d);
+			return isConnected(d, o) ? 1.0 : 1e-6;
+		}).ease(Math.sqrt).attr("r", function(o) {
+			return isConnected(d, o) ? node_radius(d) : 1;
+		});
+
+		link.transition(5000).duration(1000).style("stroke-opacity", function(o) {
+			
+			for ( j = 0; j < connectedNode.length; j++) {
+				if (connectedNode[j].handle == o.source.handle)
+					return 1.0;
+				if (connectedNode[j].handle == o.target.handle)
+					return 1.0;
+			}
+			return 1e-6;
+		});
+	});
+
+	svg.on("click", function(d) {
+		d3.select(this).select("circle").transition().duration(1000).attr("r", node_radius);
+		//Put them back to opacity=1
+		link.transition(5000).duration(1000).style("stroke-opacity", 1);
+		node.transition(5000).duration(1000).style("opacity", 1);
+
+		connectedNode.splice(0, connectedNode.length);
 	});
 
 	function dottype(d) {
@@ -260,20 +350,17 @@ function updateD3GraphView(json) {
 		av.DOM.byId("idTvConfidence").value = atom.truthvalue.details.confidence;
 		av.DOM.byId("idTvStrength").value = atom.truthvalue.details.strength;
 	}
-	
-	function getGraphWidth()
-	{
-    	var activeTabID = (av.Registry.byId("idTabContainer")).selectedChildWidget.id;
-    	var graph_width = (av.DOM.byId(activeTabID)).clientWidth - 20;
-    	return graph_width;   
+
+	function getGraphWidth() {
+		var activeTabID = (av.Registry.byId("idTabContainer")).selectedChildWidget.id;
+		var graph_width = (av.DOM.byId(activeTabID)).clientWidth - 20;
+		return graph_width;
 	}
 
-	function getGraphHeight()
-	{
-    	var activeTabID = (av.Registry.byId("idTabContainer")).selectedChildWidget.id;
-    	var graph_height = (av.DOM.byId(activeTabID)).clientHeight - 20;
-    	return graph_height;
+	function getGraphHeight() {
+		var activeTabID = (av.Registry.byId("idTabContainer")).selectedChildWidget.id;
+		var graph_height = (av.DOM.byId(activeTabID)).clientHeight - 20;
+		return graph_height;
 	}
-
 
 }

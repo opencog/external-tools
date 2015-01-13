@@ -1,6 +1,6 @@
 var controls = new function() {
 this.charge = -200;
-this.linkDistance = 50;
+this.linkDistance = 60;
 this.gravity=0.05;
 this.backgroundColor = '#091a28';
 this.linkColor = '#91b8d9';
