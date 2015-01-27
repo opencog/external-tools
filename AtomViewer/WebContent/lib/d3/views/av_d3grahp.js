@@ -39,24 +39,43 @@ function updateD3GraphView(json) {
 	var gui;
 	var links = [];
 	var index = 0;
-
+	
 	// determing the source and destination of the the link
 	for (var n = 0; n < json.length; n++) {
+		//console.log(json[n]);
 		if (json[n].outgoing.length > 0) {
 			for (var outindex = 0; outindex < json[n].outgoing.length; outindex++) {
 				var templink = {};
-
+				
 				for (var i = 0; i < json.length; i++) {
 					if (json[i].handle == json[n].outgoing[outindex]) {
 						templink["source"] = n;
 						templink["target"] = i;
 						links[index] = templink;
+						index++;
 						break;
 					}
 				}
-				index++;
+				
 			}
 		}
+		/*
+		if (json[n].incoming.length > 0) {
+			for (var inindex = 0; inindex < json[n].incoming.length; inindex++) {
+				var templink = {};
+				
+				for (var i = 0; i < json.length; i++) {
+					if (json[i].handle == json[n].ingoing[inindex]) {
+						templink["source"] = n;
+						templink["target"] = i;
+						links[index] = templink;
+						index++;
+						break;
+					}
+				}
+			}
+		}
+		*/
 	}
 	console.log(links);
 
@@ -215,7 +234,6 @@ function updateD3GraphView(json) {
 					if (!arrycontain(currentNde)) {
 						connectedNode[connectedNode.length] = currentNde;
 						recurse(currentNde);
-						console.log("out true");
 					}
 				});
 			//return connectedNode;
@@ -238,15 +256,17 @@ function updateD3GraphView(json) {
 
 
 	node.on("mouseover", function(d) {
-
+		
 		node.classed("node-active", function(o) {
 			thisOpacity = isConnected(d, o) ? true : false;
 			this.setAttribute('fill-opacity', thisOpacity);
 			return thisOpacity;
 		});
+		
 		link.classed("link-active", function(o) {
 			return o.source === d || o.target === d ? true : false;
 		});
+		
 		d3.select(this).classed("node-active", true);
 		d3.select(this).select("circle").transition().duration(750).attr("r", function(d) {
 			if (d.name == "")
@@ -276,12 +296,12 @@ function updateD3GraphView(json) {
 		zoom.translate([dcx, dcy]);
 		container.transition().duration(750).attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + zoom.scale() + ")");
 		showSelectedAtom(d);
-		/*
+		
 		 d3.select(this).select("circle")
 		 .transition()
 		 .duration(500)
 		 .attr("r", function(d){ return 1.4 * node_radius(d);});
-		 */
+		 
 		node.transition(5000).duration(1000).style("opacity", function(o) {
 			//console.log(d);
 			return isConnected(d, o) ? 1.0 : 1e-6;

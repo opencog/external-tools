@@ -408,7 +408,7 @@ function resetQueryParameters()
  */
 function disableDataButtons(disabled)
 {
-    av.Registry.byId("idBtnCtrlRefresh").setDisabled(disabled);
+    //av.Registry.byId("idBtnCtrlRefresh").setDisabled(disabled);
     av.Registry.byId("idBtnApplyFilters").setDisabled(disabled);
     av.Registry.byId("idBtnClearFilters").setDisabled(disabled);
 }

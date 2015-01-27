@@ -49,7 +49,7 @@ function updateAllViews()
      
 }
 
-var jsonobj={};
+//var jsonobj={};
 function updateD3Graph(){
 	
 	  //av_graph.fdGraph = null;
@@ -58,8 +58,9 @@ function updateD3Graph(){
      	//Clearing what ever in html idTestTab div and redrow the d3 graph 
      	av.DOM.byId("idTestTab").innerHTML = "";
      	
-    	jsonobj=av.atom_data;
-        updateD3GraphView(jsonobj);
+    	//jsonobj=generateGraphJSONForD3();
+    	//jsonobj=av.atom_data;
+        updateD3GraphView(generateGraphJSONForD3());
      }else
      {
         av.DOM.byId("idTestTab").innerHTML = "<h1 align='center'>(No Data)</h1>";
