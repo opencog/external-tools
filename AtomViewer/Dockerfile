@@ -1,5 +1,6 @@
 # This docker file creates a simple apache server for use with the visualizer
 # Tested using docker version 1.4.1
+# docker build -t $USER/visualizer .
 
 FROM ubuntu:trusty
 
