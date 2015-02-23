@@ -286,6 +286,30 @@ function generateGraphJSON()
         
         graph_json.push(graph_node);
     }
+	console.log("Jit implemntation",graph_json);
+    return graph_json;
+}
+
+
+function generateGraphJSONForD3()
+{
+    var graph_json = new Array();
+    
+    var node_limit = av.atom_data.length;
+    if (node_limit > MAX_GRAPH_NODES)
+    {
+        // Must cap the number of nodes so Jit graph doesn't crash:
+        node_limit = MAX_GRAPH_NODES;
+        
+        // TODO: a better idea is to change to a different graph type that can
+        // show all the nodes as points or something (like a galaxy of stars).
+    }
+    
+    for (var i = 0; i < node_limit; i++)
+    {
+        var graph_node =av.atom_data[i];
+        graph_json.push(graph_node);
+    }
 
     return graph_json;
 }

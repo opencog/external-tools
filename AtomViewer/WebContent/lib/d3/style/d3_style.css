@@ -1,0 +1,22 @@
+.link {
+  stroke: black;
+  stroke-width: 1px;
+  stroke-opacity: 1.0;
+}
+.node circle {
+  fill: #ccc;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+.node-active circle{
+  stroke: #555;
+  stroke-width: 1.5px;
+}
+.link-active {
+  stroke-opacity: 1;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
