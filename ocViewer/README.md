@@ -9,7 +9,7 @@ All the Javascript code as well as any assets used such as images or CSS code is
 Filestructure
 --------------
 Media
-	css
-	images
-	js
+--->css
+--->images
+--->js
 atom_viewer.html
