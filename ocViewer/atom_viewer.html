@@ -22,7 +22,6 @@
     <link href="media/css/jquery.switchButton.css" rel="stylesheet">
     <link rel="shortcut icon" href="media/images/favicon.png" type="image/x-icon"/>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-
     <link href="media/css/jquery.terminal.css" rel="stylesheet">
      
 </head>
@@ -367,7 +366,7 @@
                 <h1> OpenCog AtomViewer</h1>
                 <hr>
                 <p>OpenCog AtomSpace Visualization Tool</p>
-                <p>Version: 1</p>
+                <p>Version: 1.1</p>
                 <p>Copyright (C) 2015 OpenCog Foundation</p>
                 <hr>
                 <button id="AboutCloseButton" class="btn btn-success">Close</button>
@@ -376,101 +375,39 @@
 
             <div id="screen-help">
             <!-- CONTENT -->
-            <h1><em>AtomSpace Viewer Help</em></h1>
-            <h2>Contents</h2>
-            <ol>
-                <li><a href="#Introduction">Introduction</a></li>
-                <li><a href="#Configuration">Configuring and Connecting to the OpenCog Server</a></li>
-                <li><a href="#Filter">Filter Options</a></li>
-                <li><a href="#Search">Search Options</a></li>
-                <li><a href="#Views">Views</a></li>
-                <li><a href="#Analysis">Analysis</a></li>
-            </ol>
-            <h2>
-                <a name="Introduction"></a>Introduction</h2>
-            <p> The AtomSpace Viewer is a tool for 
-                visualizing the contents of the AtomSpace of a running CogServer instance in 
-                real time. Atoms are displayed graphically, as well as in various other views.</p>
-            <p> See the README.md file for development notes, current list of issues, and 
-                proposed enhancements.</p>
-            <h2> <a name="Configuration"></a>Configuring and Connecting to the OpenCog Server</h2>
-            <h3> Prerequisites</h3>
-            <p>
-                In order to use the AtomSpace Viewer, you must first carry out the following 
-                steps:</p>
-            <ol>
-                <li>Download and build the latest version of
-                    <a href="https://github.com/opencog/opencog" target="_blank">OpenCog</a>.</li>
-                <li>Install Python dependencies and add configuraton options required for the REST 
-                    API (refer to <a href="http://wiki.opencog.org/w/Web_interface#Prerequisites" 
-                        target="_blank">
-                    http://wiki.opencog.org/w/Web_interface#Prerequisites</a>).</li>
-                <li>Start the CogServer and open a telnet terminal.</li>
-                <li>Start the REST API by typing &quot;restapi.Start&quot; in the CogServer command shell.</li>
-            </ol>
-            <h3> Control Panel</h3>
-            <p> The default CogServer address (http://localhost:5000/) should work if you run 
-                the CogServer locally with all default settings. However, if you run your server 
-                on a different port, or if you wish to connect to a remote CogServer, enter the 
-                desired URL and port number here. For instructions on accessing remote servers 
-                via the REST API, refer to:
-                <a href="http://wiki.opencog.org/w/Web_interface#Default_Endpoint" 
-                    target="_blank">http://wiki.opencog.org/w/Web_interface#Default_Endpoint</a>.</p>
-            <p> After setting the CogServer address, hit the &quot;Connect/Refresh&quot; button to connect 
-                to the server and retrieve the atoms. By default, this will retrieve all atoms 
-                in the AtomSpace. If the number is very large, you will want to first set filter 
-                options, as described in the next section.</p>
-            <p> The &quot;Auto Update&quot; toggle button allows you to turn on automatic refreshes, so 
-                AtomSpace changes can be viewed in real time as they take place.</p>
-            <h2> <a name="Filter"></a>Filter Options</h2>
-            <p>
-                This allows you to filter the atoms by STI (short-term importance) range, or to 
-                view only those atoms in the attentional focus. Filters should be used whenever 
-                you have a large AtomSpace to reduce the atoms retrieved to a manageable number.</p>
-            <p>
-                Note that once configured, filter options remain active until cleared, so any 
-                subsequent updates will automatically apply the filters.</p>
-            <h2> <a name="Search"></a>Search Options</h2>
-            <p> You may search for specific atoms by name, handle, or type. Enter the value (case sensitive) and 
-                click the search icon button. Unlike filters, searches are one-time operations 
-                and do not affect subsequent updates. Therefore, you should be sure to turn off 
-                the &quot;Auto Update&quot; feature when searching, to avoid losing search results.</p>
-            <h2> <a name="Views"></a>Views</h2>
-            <h3> Graph</h3>
-            <p>
-                This view shows a force directed style graph of the atoms. Node type atoms are 
-                drawn with a circle, while Link atoms are drawn with a triangle.</p>
-            <p>
-                You may interact with the graph in the following ways:</p>
-            <ul>
-                <li>Zoom in or out, using the mouse wheel.</li>
-                <li>Mouse over an atom to quickly view its handle and type.</li>
-                <li>Drag atoms around to reposition them.</li>
-                <li>Drag the entire graph around the canvas.</li>
-                <li>Select a specific atom and view its details in the pane below the graph. The 
-                    currently selected atom will be shown as larger size, and clicking on the atom a 
-                    second time will clear the selection.</li>
-            </ul>
-            <h3> Table</h3>
-            <p>
-                Not yet implemented. Atoms will be displayed in a tabular style, similar to an 
-                object diagram.
-            </p>
-            <h3> Scheme</h3>
-            <p>
-                Not yet implemented. Atoms will be represented in Scheme, equivalent to the 
-                &quot;list -a&quot; CogServer console command.</p>
-            <h3> JSON</h3>
-            <p>
-                In this view, the Atoms are listed in JSON (<a 
-                    href="http://www.json.org/" target="_blank">JavaScript 
-                Object Notation</a>) format. This is the same format as returned by the REST 
-                API, and can be copied/pasted to other applications that understand JSON.</p>
-            <h2>
-                <a name="Analysis"></a>Analysis</h2>
-            <p>
-                Not yet implemented. This feature will provide useful statistical analysis of 
-                the AtomSpace.</p>
+            <h1>Help</h1>
+            <hr>
+            <h2>Terminal Commands </h2>
+            <table class="table">
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>connect</td>
+                <td>Connects to the server</td>
+              </tr>
+               <tr>
+                <td>select [id]</td>
+                <td>Selects a node from the graph</td>
+              </tr>
+               <tr>
+                <td>zoom [id]</td>
+                <td>Zooms at a specific node</td>
+              </tr>
+              <tr>
+                <td>fixed [id]</td>
+                <td>Makes a specific node fixed.</td>
+              </tr>
+               <tr>
+                <td>unfixed [id]</td>
+                <td>Makes a specific node unfixed.</td>
+              </tr>
+              <tr>
+                <td>view [d3,json,table,scheme]</td>
+                <td>Sets a specific view</td>
+              </tr>    
+            </table>
             <!-- END CONTENT -->
             </div>
 
@@ -486,8 +423,8 @@
         <a href="#"><i class="fa fa-times" id="terminalClose"></i></a>
       </span>
   </div>
-  <div id="terminalContent">
-    <textarea id="terminalText"></textarea>
+  <div id="terminalText">
+   
   </div>
 </div>
 
@@ -505,8 +442,7 @@
     <div class="toolboxIcon" title="Add new link" id="toolboxAddLink"><i class="fa fa-link"></i></div>
   </div>
 </div>
-
-
+ 
 <!-- DETAILS -->
 <div id="details">
     <div id="detailsBar">Details
@@ -514,26 +450,31 @@
           <a href="#"><i class="fa fa-times" id="detailsClose"></i></a>
         </span>
     </div>
-
-    
+  
     <div id="detailsLinkContent">
       <div class="row">
         <div class="col-lg-6">
            Source<br>
-            <input type="text" class="form-control atomDetailsForm input-sm" id="detailsLinkSource" name="detailsLinkSource"/> 
+            <div class="input-group">
+            <input type="text" class="form-control input-sm" id="detailsLinkSource" name="detailsLinkSource"/> 
+            <div id="detailsLinkSourceButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i> </div>
+          </div>
         </div>
          <div class="col-lg-6">
            Target<br>
-            <input type="text" class="form-control atomDetailsForm input-sm" id="detailsLinkTarget" name="detailsLinkTarget"/> 
+            <div class="input-group">
+            <input type="text" class="form-control input-sm" id="detailsLinkTarget" name="detailsLinkTarget"/> 
+            <div id="detailsLinkTargetButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i> </div>
+            </div>
         </div>
       </div>
       <br>
       <div class="row">
         <div class="col-lg-6">
-            <button style="width:100%" disabled="disabled" id="atomDetailsUpdate" class="btn btn-md btn-success">Update</button> 
+            <button style="width:100%" disabled="disabled" id="linkDetailsUpdate" class="btn btn-md btn-success">Update</button> 
         </div>
         <div class="col-lg-6">
-            <button style="width:100%" disabled="disabled" id="atomDetailsDelete" class="btn btn-md btn-danger">Delete</button> 
+            <button style="width:100%" disabled="disabled" id="linkDetailsDelete" class="btn btn-md btn-danger">Delete</button> 
         </div>
       </div>
       <br>
@@ -633,5 +574,7 @@
 <script src="media/js/visual-json.js"></script>
 <script src="media/js/visual-scheme.js"></script>
 <script src="media/js/functions.js"></script>
+<script src="media/js/terminal.js"></script>
+
 </body>
 </html>

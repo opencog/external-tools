@@ -171,6 +171,7 @@ hr
   top: 50px;
   background-color: #ddd;
   border: 1px solid #fff;
+  overflow: hidden;
 }
 #terminalBar 
 {
@@ -185,7 +186,7 @@ hr
 #terminalText
 {
    width:100%;
-   height:280px;
+   height:90%;
    border:none;
    size :none;
    resize:none;
@@ -215,9 +216,9 @@ hr
 }
 
 .link:hover {
-  stroke: #ddd;
-  stroke-width: 3px;
-  cursor: pointer;
+  stroke:  red;
+  stroke-width: 6px;
+  cursor: pointer; 
 }
 
 .node circle
@@ -227,13 +228,13 @@ hr
 }
 
 .node-active circle{
-  stroke: #f2f;
-  fill: #ded;
+  stroke: red;
+  fill: #321;
   stroke-width: 2px;
 }
  
 .link-active {
-  stroke-opacity: 1;
+  stroke-opacity: 1;stroke: red;
   stroke-width: 1px;
 }
 .fixed circle
@@ -246,7 +247,7 @@ hr
 }
 .selectedLink
 {
-  stroke:red;
+  stroke:red; stroke-width: 6px;
 }
 .text
 {
