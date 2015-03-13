@@ -1,7 +1,7 @@
 /*
  * av_d3graph.js
  *
- * This file contains the main application code, d3 graph drowing, etc.
+ * This file contains the main application code, d3 graph drawing, etc.
  *
  * Copyright (C) 2013, 2014 OpenCog Foundation
  * All Rights Reserved
