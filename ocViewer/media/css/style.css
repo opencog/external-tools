@@ -1,0 +1,407 @@
+/* STANDART TAGS */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+body 
+{
+  background-color: #f8f8f8;
+  display:none;
+  overflow: hidden;
+}
+hr
+{
+    margin:0;
+    padding:0;
+    height:0;
+}
+
+/* LAYOUT */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+#wrapper
+{
+   height:100%;  
+} 
+
+#leftMenu
+{   
+     background-color:#eee;
+     padding:0;
+}
+
+#mainContent
+{
+    
+    padding:0;
+}
+
+#atomDetails
+{
+  background-color: #ddd;
+  border:2px solid #ddd;
+}
+ 
+/* DETAILS */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+#details {
+  width: 240px;
+  height: 400px;
+  position: fixed;
+  border: 1px solid #111;
+  z-index: 399990;
+  right: 50px;
+  top: 50px;
+  background-color: #ddd;
+  font-size: 12px;
+}
+
+#detailsBar 
+{
+  background-color: #3366cc;
+  padding: 10px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  border-bottom: 1px solid #111;
+}
+
+#detailsPanel
+{
+    background-color:#666;
+}
+
+#detailsContent {
+  padding: 10px;
+  display:none;
+}
+#detailsContentNone
+{
+  padding:10px;
+  text-align: center;
+}
+#detailsLinkContent
+{
+   padding:10px;
+   display:none;
+
+}
+#detailsAtomHandle
+{
+  font-weight: bold;
+}
+/* TOOLBAR */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+#toolbox 
+{
+  width:120px;
+  height:300px;
+  position: fixed;
+  border: 1px solid #111;
+  z-index: 399990;
+  right: 50px;
+  top: 50px;
+  background-color: #ddd;
+  font-size: 12px;
+}
+#toolboxBar
+{
+  padding:10px;
+  font-size:12px;
+  font-weight: bold;
+  color:#fff;
+  background-color: #3366cc;
+  cursor:pointer;
+}
+#toolboxContent
+{
+  
+ 
+}
+.toolboxIcon
+{
+  border:1px solid #444;
+  float:left;
+  width:50px;
+  height:50px;
+  margin:2px;
+  text-align: center;
+  overflow: hidden;
+  font-size:30px;
+  background-color:#ddd;
+  cursor:pointer;
+}
+.toolbarIcon:hover
+{
+  background-color:#eee;
+}
+.toolboxIconSelected
+{
+  background-color: #d3d;
+}
+
+
+/* TERMINAL */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+#terminal
+{
+  width:320px;
+  height:320px;
+  position: fixed;
+  z-index: 399990;
+  right: 50px;
+  top: 50px;
+  background-color: #ddd;
+  border: 1px solid #fff;
+  overflow: hidden;
+}
+#terminalBar 
+{
+  padding:10px;
+  font-size:12px;
+  font-weight: bold;
+  color:#fff;
+  background-color: #3366cc;
+  cursor:pointer;
+}
+ 
+#terminalText
+{
+   width:100%;
+   height:90%;
+   border:none;
+   size :none;
+   resize:none;
+}
+
+/* VISUAL ELEMENTS */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+
+#visualizer
+{
+    padding:0;margin:0;background-color: #333;
+}
+
+#visualizerInner
+{
+    margin:0px;
+}
+
+.link {
+  stroke: #fff;
+  stroke-width: 1px;
+  stroke-opacity: 1.0;
+}
+
+.link:hover {
+  stroke:  red;
+  stroke-width: 6px;
+  cursor: pointer; 
+}
+
+.node circle
+{  
+  stroke: #fff;fill: #321;
+  stroke-width: 1px;  
+}
+
+.node-active circle{
+  stroke: red;
+  fill: #321;
+  stroke-width: 2px;
+}
+ 
+.link-active {
+  stroke-opacity: 1;stroke: red;
+  stroke-width: 1px;
+}
+.fixed circle
+{
+  fill:#424; stroke:#ddd;
+}
+.selectedNode circle
+{
+  fill:red; 
+}
+.selectedLink
+{
+  stroke:red; stroke-width: 6px;
+}
+.text
+{
+  fill:#ddd;
+  color:#ddd;
+  font-size:9px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+   user-select: none;
+  -webkit-user-select: none; /* Chrome/Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+  cursor: pointer;
+}
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+/* ACCORDION */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+.accordion-heading  
+{
+    padding:10px; 
+    border:1px solid #ddd;
+    border-top:none;
+}
+.accordion-heading:hover  
+{
+    background-color:#ccc;
+}
+.accordion-heading a:link  
+{
+    text-decoration: none;
+}
+.accordion-heading a:hover  
+{
+    text-decoration: none;
+}
+.accordion-inner  
+{
+    padding:10px;
+    padding-right:20px; 
+    background-color:#fff;
+}
+
+/* CONNECT PANEL */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+#ConnectConnectButton
+{
+    cursor: pointer;
+}
+
+#ConnectConnectButton:hover
+{
+    background-color:#5cb85c;
+    color:#fff;
+}
+#ConnectionStatus
+{
+    font-size:12px;
+    margin-top:2px;
+}
+
+
+/* SCREENS */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+
+#screen-d3
+{
+  background-color:#000;
+}
+#screen-json
+{
+    padding:20px;
+    background-color: #fff;
+    color:#000;
+    overflow:scroll;
+}
+#screen-table
+{
+    padding:20px;
+    background-color: #fff;
+    color:#000;
+    overflow:scroll;
+}
+#screen-scheme
+{
+    padding:20px;
+    background-color: #fff;
+    color:#000;
+    overflow:scroll;
+}
+#screen-import
+{
+    padding:20px;
+    background-color: #fff;
+    color:#000;
+}
+#screen-export
+{
+    padding:20px;
+    background-color: #fff;
+    color:#000;
+}
+#screen-help
+{
+    padding:20px;
+    background-color: #fff;
+    color:#000;
+    overflow:scroll;
+}
+#screen-about
+{
+    padding:20px;
+    background-color: #fff;
+    color:#000;
+
+}
+ 
+/* CLASSES */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+.success
+{
+    color:#5cb85c;
+}
+.fail
+{
+    color:red;
+}

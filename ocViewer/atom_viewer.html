@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- TITLE -->
+    <title>AtomSpace Viewer</title>
+
+    <!-- META -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Data Visualizer for OpenCog's AtomSpace">
+    <meta name="author" content="openCog skoumas">
+
+    <!-- CSS -->
+    <link href="media/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link href="media/css/jquery-ui.css" rel="stylesheet">
+    <link href="media/css/jquery-ui.structure.css" rel="stylesheet">
+    <link href="media/css/jquery-ui.theme.css" rel="stylesheet">
+    <link href="media/css/jquery.switchButton.css" rel="stylesheet">
+    <link rel="shortcut icon" href="media/images/favicon.png" type="image/x-icon"/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="media/css/jquery.terminal.css" rel="stylesheet">
+     
+</head>
+ 
+<body>
+
+<!-- TOP BAR -->
+<nav class="navbar navbar-default" id="navbarTop" style="margin-bottom:0;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" style="margin-left:-20px;margin-top:-5px" href="atom_viewer.html">
+        <img src="media/images/logo.png" alt="AtomSpace Viewer"/>
+      </a>
+    </div>
+    <div>
+ 
+    <!-- RIGHT MENU -->
+    <ul class="nav navbar-nav">
+
+        <!-- NAVBAR FILE -->
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-file"></i>  File <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#" id="FileImport" ><i class="fa fa-exchange"></i> Import</a></li>
+                <li><a href="#" id="FileExport" ><i class="fa fa-exchange"></i> Export</a></li>
+            </ul>
+        </li>
+
+        <!-- NAVBAR VIEW -->
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-eye"></i> View <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-header">Views</li>
+                <li><a href="#" viewer="d3"><i class="fa"></i> D3</a></li>
+                <li><a href="#" viewer="table"><i class="fa"></i> Table</a></li>
+                <li><a href="#" viewer="json"><i class="fa"></i> JSON</a></li>
+                <li><a href="#" viewer="scheme"><i class="fa"></i> Scheme</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Sidebars</li>
+                <li><a href="#" id="visibleLeftSideBar"><i id="visibleLeftSideBari" class="fa fa-square-o"></i> Left Sidebar</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Windows</li>
+                <li><a href="#" id="visibleAtomDetails"><i id="visibleAtomDetailsi" class="fa fa-square-o"></i> Atom Details</a></li>
+                <li><a href="#" id="visibleToolbox"><i id="visibleToolboxi" class="fa fa-square-o"></i> Toolbox</a></li>
+                <li><a href="#" id="visibleTerminal"><i id="visibleTerminali" class="fa fa-square-o"></i> Terminal</a></li>
+
+            </ul>
+        </li>
+
+        <!-- NAVBAR HELP -->
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-book"></i>  Help <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#" id="HelpHowToUse"><i class="fa fa-question"></i> How To Use</a></li>
+                <li><a href="#" id="HelpAbout"><i class="fa fa-info"></i> About</a></li>
+            </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- NAVBAR SEARCH -->
+     <ul class="nav navbar-nav collapse navbar-collapse navbar-right">
+        <form class="navbar-form hidden-sm" role="search">
+            <div class="input-group">
+                <input type="text" class="form-control" id="SearchField" placeholder="Search Atom Handler" name="q">
+                <div class="input-group-btn">
+                    <button class="btn btn-default" id="SearchButton" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </div>
+        </form>
+     </ul>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="container-fluid">
+    <div class="row" id="wrapper">
+        <div class="col-xs-3" id="leftMenu">
+            
+            <div id="leftMenuInner">
+            <!-- CONNECT -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#connectPanel">
+                    <i class="fa fa-globe"></i> Connect
+                  </a>
+                </div>
+                <div id="connectPanel" class="accordion-body collapse in">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                        <div class="form-group">
+                        <label for="CogServer">CogServer:</label>
+                        <div class="input-group">
+                        <input type="email" class="form-control" id="ConnectCogServer" placeholder="http://localhost:5000/">
+                        <div class="input-group-addon" disabled="disabled" id="ConnectConnectButton"><i class="fa fa-plug"></i></div>
+                        </div>
+                         
+                        <div class="pull-right" id="ConnectionStatus"> 
+                        </div>
+                        <br>
+
+                        <div class="pull-right">
+                            <div id="ConnectAutoConnect"></div> 
+                        </div>
+                        
+                        <br>
+
+                        </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+              <!-- FILTER -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#filterPanel">
+                    <i class="fa fa-filter"></i> Filter
+                  </a>
+                </div>
+                <div id="filterPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                    <div class="form-group">
+                        <input type="checkbox" id="FilterAttentionalFocusOnly"> <label for="FilterAttentionalFocusOnly">Attentional Focus Only</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>STI Range</label>
+                        <div id="FilterSTIRangeAmount">dd</div>
+                        <div id="FilterSTIRange"></div>
+                    </div>
+
+                    <div class="form-group">
+                         
+                        <label>TruthValue Minimums:</label>
+                         <div class="row">
+                         <div class="col-lg-4">
+                         Strength
+                         <input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueStrength"> 
+                         </div>
+                         <div class="col-lg-4">
+                         Confidence
+                         <input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueConfidence"> 
+                         </div>
+                         <div class="col-lg-4">
+                         Count
+                         <input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueCount"> 
+                         </div>
+                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                        <div class="col-lg-6">
+                        <label for="FilterAtomName">Atom Name</label> 
+                        <input type="text" class="form-control input-sm" id="FilterAtomName">
+                        </div>
+                        <div class="col-lg-6">
+                        <label for="FilterAtomType">Atom Type</label> 
+                        <select class="form-control input-sm" id="FilterAtomType">
+                           <!-- Dynamic Values -->
+                           <option value="0" id="FilterAtomTypeNoneValue">--None--</option>
+                        </select>
+                        </div>
+                        </div>   
+                    </div>
+                
+                    <div class="form-group">
+                        <div class="row">
+                        <div class="col-lg-6">
+                        <input type="checkbox" id="FilterIncomingSets"> 
+                        <label for="FilterIncomingSets">Incoming Sets</label>
+                        </div>
+                        <div class="col-lg-6">
+                        <input type="checkbox" id="FilterOutgoingSets">
+                        <label for="FilterOutgoingSets">Outcoming Sets</label>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+              <!-- ADVANCED FILTER -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#advancedFilterPanel">
+                    <i class="fa fa-globe"></i> Advanced Filter
+                  </a>
+                </div>
+                <div id="advancedFilterPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                        <div class="form-group">
+                        <label for="AdvancedFilterFilter">Advanced Filter</label>
+                        <textarea id="AdvancedFilterFilter" class="form-control"></textarea>
+                        <br>
+                        <label for="AdvancedFilterSavedfilters">Saved Advanced Filters</label>
+                        <select id="AdvancedFilterSavedFilters" class="form-control">
+                        </select>
+                        <br>
+                        <div class="pull-right">
+                            <button id="AdvancedFilterRemember" class="btn btn-success btn-xs" disabled="disabled">Remember</button>
+                            <button id="AdvancedFilterForget" class="btn btn-success btn-xs" disabled="disabled">Forget</button> 
+                            <button id="AdvancedFilterExecute" class="btn btn-success btn-xs" disabled="disabled">Execute</button>
+                        </div>
+                         
+                        </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- APPEREANCE -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#appearancePanel">
+                    <i class="fa fa-eye"></i> Appearance
+                  </a>
+                </div>
+                <div id="appearancePanel" class="accordion-body collapse ">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                        <div class="form-group" style="padding:10px">
+
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <label for="AppearanceforceAnimated">Animate d3?</label><br>
+                                    <div id="AppearanceforceAnimated"></div><br>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label for="AppearanceShowText">Show Text?</label><br>
+                                    <div id="AppearanceShowText"></div><br>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label for="AppearanceShowLinks">Show Links?</label><br>
+                                    <div id="AppearanceShowLinks"></div><br>
+                                </div>
+                            </div>
+ 
+                            <label id="appearanceChargeAmount" for="appearanceCharge">Charge</label>
+                            <div id="appearanceCharge"></div><br>
+
+                            <label id="appearanceFrictionAmount" for="appearanceFriction">Friction </label>
+                            <div id="appearanceFriction"></div><br>
+
+                            <label id="appearanceLinkStrengthAmount" for="appearanceLinkStrength">Link Strength</label>
+                            <div id="appearanceLinkStrength"></div><br>
+
+                            <label id="appearanceLinkDistanceAmount" for="appearanceLinkDistance">Link Distance</label>
+                            <div id="appearanceLinkDistance"></div>
+                        </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+ 
+              <!-- ANALYSE -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#analyzePanel">
+                    <i class="fa fa-bar-chart"></i> Analyse
+                  </a>
+                </div>
+                <div id="analyzePanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                    To be implemented...
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+ 
+              <!-- SETTINGS -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#settingsPanel">
+                    <i class="fa fa-cog"></i> Settings
+                  </a>
+                </div>
+                <div id="settingsPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                    <button id="SettingsClearPreferences" class="btn btn-success btn-xs">
+                        Clear Preferences
+                    </button>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+              </div>
+   
+        </div>
+
+        <div class="col-sm-9" id="mainContent">
+        <!-- MAIN SCREENS -->
+            <div id="screen-d3">
+            </div>
+  
+            <div id="screen-table">
+            </div>
+
+            <div id="screen-json">
+            </div>
+
+            <div id="screen-scheme">
+            </div>
+             
+            <div id="screen-import">
+            <!-- CONTENT -->
+                <form>
+                    <legend>Import Options</legend>
+                    <div class="form-group">
+                    <label for="export-type">Export Type</label>
+                    <select>
+                        <option>This</option>
+                        <option>That</option>
+                    </select>
+                    </div>
+                </form>
+            <!-- END CONTENT -->
+            </div>
+
+            <div id="screen-export">
+            <!-- CONTENT -->
+                <form>
+                    <legend>Export Options</legend>
+                    <div class="form-group">
+                    <label for="export-type">Export Type</label>
+                    <select>
+                        <option>This</option>
+                        <option>That</option>
+                    </select>
+                    </div>
+                </form>
+            <!-- END CONTENT -->
+            </div>
+
+            <div id="screen-about">
+            <!-- CONTENT -->
+                <h1> OpenCog AtomViewer</h1>
+                <hr>
+                <p>OpenCog AtomSpace Visualization Tool</p>
+                <p>Version: 1.1</p>
+                <p>Copyright (C) 2015 OpenCog Foundation</p>
+                <hr>
+                <button id="AboutCloseButton" class="btn btn-success">Close</button>
+            <!-- END CONTENT -->
+            </div>
+
+            <div id="screen-help">
+            <!-- CONTENT -->
+            <h1>Help</h1>
+            <hr>
+            <h2>Terminal Commands </h2>
+            <table class="table">
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>connect</td>
+                <td>Connects to the server</td>
+              </tr>
+               <tr>
+                <td>select [id]</td>
+                <td>Selects a node from the graph</td>
+              </tr>
+               <tr>
+                <td>zoom [id]</td>
+                <td>Zooms at a specific node</td>
+              </tr>
+              <tr>
+                <td>fixed [id]</td>
+                <td>Makes a specific node fixed.</td>
+              </tr>
+               <tr>
+                <td>unfixed [id]</td>
+                <td>Makes a specific node unfixed.</td>
+              </tr>
+              <tr>
+                <td>view [d3,json,table,scheme]</td>
+                <td>Sets a specific view</td>
+              </tr>    
+            </table>
+            <!-- END CONTENT -->
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- TERMINAL -->
+<div id="terminal">
+  <div id="terminalBar">Terminal
+      <span class="pull-right">
+        <a href="#"><i class="fa fa-times" id="terminalClose"></i></a>
+      </span>
+  </div>
+  <div id="terminalText">
+   
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div id="toolbox">
+  <div id="toolboxBar">Toolbox
+      <span class="pull-right">
+        <a href="#"><i class="fa fa-times" id="toolboxClose"></i></a>
+      </span>
+  </div>
+  <div id="toolboxContent">
+    <div class="toolboxIcon" title="Normal Pointer" id="toolboxPointer"><i class="fa fa-plus-circle"></i></div>
+    <div class="toolboxIcon" title="Add new node" id="toolboxAddNode"><i class="fa fa-plus-circle"></i></div>
+    <div class="toolboxIcon" title="Delete existing node..." id="toolboxRemoveNode"><i class="fa fa-minus-circle"></i></div>
+    <div class="toolboxIcon" title="Add new link" id="toolboxAddLink"><i class="fa fa-link"></i></div>
+  </div>
+</div>
+ 
+<!-- DETAILS -->
+<div id="details">
+    <div id="detailsBar">Details
+        <span class="pull-right">
+          <a href="#"><i class="fa fa-times" id="detailsClose"></i></a>
+        </span>
+    </div>
+  
+    <div id="detailsLinkContent">
+      <div class="row">
+        <div class="col-lg-6">
+           Source<br>
+            <div class="input-group">
+            <input type="text" class="form-control input-sm" id="detailsLinkSource" name="detailsLinkSource"/> 
+            <div id="detailsLinkSourceButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i> </div>
+          </div>
+        </div>
+         <div class="col-lg-6">
+           Target<br>
+            <div class="input-group">
+            <input type="text" class="form-control input-sm" id="detailsLinkTarget" name="detailsLinkTarget"/> 
+            <div id="detailsLinkTargetButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i> </div>
+            </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-lg-6">
+            <button style="width:100%" disabled="disabled" id="linkDetailsUpdate" class="btn btn-md btn-success">Update</button> 
+        </div>
+        <div class="col-lg-6">
+            <button style="width:100%" disabled="disabled" id="linkDetailsDelete" class="btn btn-md btn-danger">Delete</button> 
+        </div>
+      </div>
+      <br>
+
+    </div>
+
+    <div id="detailsContentNone">
+        (Nothing is currently selected.)
+    </div>
+
+    <div id="detailsContent">
+
+            <div class="row">
+                <div class="col-lg-4">
+                   Handle<br>
+                    <input type="text" disabled="disabled" class="form-control atomDetailsForm input-sm" id="detailsAtomHandle" name="atomName"/> 
+                </div>
+                <div class="col-lg-8">
+                    Type 
+
+                    <select class="form-control atomDetailsForm input-sm" id="detailsAtomType">
+                      <!-- Dynamic Values -->
+                      <option value="0" id="detailsAtomTypeNoneValue">--None--</option>
+                    </select> 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                   Name<br>
+                   <input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomName" name="atomName"/> 
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    LTI<br>
+                    <input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomLTI" name="detailsAtomLTI"/> 
+            
+                </div>
+                <div class="col-lg-4">
+                    STI<br>
+                    <input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomSTI" name="detailsAtomSTI"/>  
+                </div>
+                 <div class="col-lg-4">
+                    VLTI<br>
+                    <input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/> 
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-lg-4">
+                    Count<br>
+                    <input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomCount" id="detailsAtomCount" />
+                </div>
+                <div class="col-lg-4">
+                    Confidence<br>
+                    <input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomConfidence" id="detailsAtomConfidence"/> 
+                </div>
+                 <div class="col-lg-4">
+                    Strength<br>
+                    <input type="text" class="form-control atomDetailsForm input-sm" name="detailAtomStrength" id="detailsAtomStrength"/> 
+                </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-lg-12">
+                  Fixed<br>
+                  <div id="atomDetailsFixed"></div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-lg-6">
+                    <button style="width:100%" disabled="disabled" id="atomDetailsUpdate" class="btn btn-md btn-success">Update</button> 
+                </div>
+                <div class="col-lg-6">
+                    <button style="width:100%" disabled="disabled" id="atomDetailsDelete" class="btn btn-md btn-danger">Delete</button> 
+                </div>
+            </div>
+ 
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="media/js/jquery-ui.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="media/js/jquery.slimscroll.js" charset="utf-8"></script>
+<script src="media/js/jquery.switchButton.js" charset="utf-8"></script>
+<script src="media/js/jquery.terminal-0.8.8.js"></script>
+<script src="media/js/jquery.awesome-cursor.min.js"></script>
+ 
+<!-- NEW LIBS -->
+<script src="media/js/visual.js"></script>
+<script src="media/js/visual-table.js"></script>
+<script src="media/js/visual-json.js"></script>
+<script src="media/js/visual-scheme.js"></script>
+<script src="media/js/functions.js"></script>
+<script src="media/js/terminal.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,293 @@
+<html>
+<head>
+<title>OpenCog Demo</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<style>
+body
+{
+	background-color:#ddd;
+}
+#terminal
+{
+	height:720px;
+	width:100%;
+	border:1px solid #ddd;
+	font-family: courier;
+	background-color: #000;
+	color:#fff;
+	line-height: 20px;
+	padding:20px;
+}
+.container
+{
+	background-color:#fff;
+}
+
+</style>
+
+
+</head>
+
+<body>
+	
+
+	<div class="container" style="border:1px solid #ddd; margin-top:20px">
+		<h1><a href="demo.html">OpenCog RestApi Testing Demo</a></h1>
+		<hr>
+		<div class="row">
+			<div class="col-lg-6">
+				<button id="atomsDELETE" class="btn btn-danger">Test DELETE Atoms</button>
+				<br>
+				Removes an atom from AtomSpace<br>
+				<a href="http://opencog.github.io/rest-api-documentation/#!//delete">
+				http://opencog.github.io/rest-api-documentation/#!//delete</a>
+			 
+				<hr>
+
+				<button id="atomsGET" class="btn btn-info">Test GET Atoms</button>
+				<br>
+				Returns a list of atoms matching the specified criteria<br>
+				<a href="http://opencog.github.io/rest-api-documentation/#!//get">
+				http://opencog.github.io/rest-api-documentation/#!//get</a>
+				<hr>
+				<button id="atomsPUT" class="btn btn-success">Test POST Atoms</button>
+				<br>
+				Creates a new atom. If the atom already exists, it updates the atom.<br>
+				<a href="http://opencog.github.io/rest-api-documentation/#!//post">
+				http://opencog.github.io/rest-api-documentation/#!//post
+				</a>
+				<hr>
+				<button id="atomsPUT" class="btn btn-default">Test PUT Atoms</button>
+				<br>
+				Updates the AttentionValue (STI, LTI, VLTI) or TruthValue of an atom<br>
+				<a href="http://opencog.github.io/rest-api-documentation/#!//put">
+				http://opencog.github.io/rest-api-documentation/#!//put
+				</a>
+				<hr>
+				<button id="schemePOST" class="btn btn-success">Test POST Scheme</button><br>
+				<input type="text" id="command" value="(cog-new-node 'ConceptNode ""skoumas"""/>
+				<br>
+				Send a shell command to the cogserver<br>
+				<a href="http://opencog.github.io/rest-api-documentation/#!//post_0_1">
+				http://opencog.github.io/rest-api-documentation/#!//post_0_1
+				</a>
+				<hr>
+				<button id="shellPOST" class="btn btn-success">Test POST Shell</button><br>
+				<input type="text" id="commandshell" value="agend-stop"/>
+				<br>
+				Send a command to the Scheme interpreter<br>
+				<a href="http://opencog.github.io/rest-api-documentation/#!//post_0">
+				http://opencog.github.io/rest-api-documentation/#!//post_0
+				</a>
+				<hr>
+		 
+			</div>
+			<div class="col-lg-6">
+				<textarea id="terminal" disabled="disabled"></textarea>
+			</div>
+		</div>
+		
+	</div>
+
+
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>
+
+url = "http://localhost:5000/api/v1.1/";
+
+ 
+
+$("#atomsDELETE").click(function(e)
+{
+	echo("--------------------------------");
+	echo("Deleting Atom ");
+	echo("using: " + url + "/atoms/4");
+	echo("--------------------------------");
+	$.ajax({
+		url: url + "atoms",
+		data:{},
+		type:"DELETE"
+	})
+	.success(function(data)
+	{
+		 
+		echo("Successfully deleted!");
+	})
+	.error(function(data, textStatus, xhr)
+	{
+		echo(textStatus);
+	})
+	.always(function(data)
+	{
+		echo(data.status);
+		echo("--------------------------------");
+		echo("--------------------------------");
+	});
+});
+
+
+$("#atomsGET").click(function(e)
+{
+	echo("--------------------------------");
+	echo("Making Atoms GET Call at " + url);
+	echo("--------------------------------");
+	$.ajax({
+		url: url + "atoms",
+		data:{},
+		type:"GET"
+	})
+	.success(function(data)
+	{
+		echo("Received:" + JSON.stringify(data) );
+		echo("------------------");
+		echo("Successfully Received Data!");
+	})
+	.error(function(data, textStatus, xhr)
+	{
+		echo(textStatus);
+	})
+	.always(function(data)
+	{
+		echo(data.status);
+		echo("--------------------------------");
+		echo("--------------------------------");
+	});
+});
+
+$("#atomsPOST").click(function(e)
+{
+	 
+
+	echo("--------------------------------");
+	echo("Sending a POST request to atoms " + url + "atoms");
+	echo("--------------------------------");
+	$.ajax({
+		url: url + "atoms",
+		data:atom_update,
+		type:"POST"
+	})
+	.success(function(data)
+	{
+		 
+		echo("Atom created!");
+	})
+	.error(function(data)
+	{
+		echo("Failed");
+	})
+	.always(function(data)
+	{
+		echo("Request returned: " + data.status);
+		echo("--------------------------------");
+		echo("--------------------------------");
+	});
+});
+
+$("#atomsPUT").click(function(e)
+{
+	//DemoNodeUpdate
+	truthvalue = {'type': 'simple', 'details': {'strength': 0.006, 'count': 0.8}};
+	attentionvalue = {'sti': 5, 'lti': 3, 'vlti': true};
+	atom_update = {'truthvalue': truthvalue, 'attentionvalue': attentionvalue};
+
+	echo("--------------------------------");
+	echo("Sending a PUT request to atoms " + url + "atoms/4");
+	echo("--------------------------------");
+	$.ajax({
+		url: url + "atoms/4",
+		data:atom_update,
+		type:"PUT"
+	})
+	.success(function(data)
+	{
+		echo("Received:" + JSON.stringify(data) );
+		echo("------------------");
+		echo("Successfully updated Atom!");
+	})
+	.error(function(data)
+	{
+		echo("Failed");
+	})
+	.always(function(data)
+	{
+		echo("Request returned: " + data.status);
+		echo("--------------------------------");
+		echo("--------------------------------");
+	});
+});
+
+$("#schemePOST").click(function(e)
+{
+	echo("--------------------------------");
+	echo("--------------------------------");
+	$.ajax({
+		url: url + "scheme",
+		data:{command: $("#command").val()},
+		type:"POST"
+	})
+	.success(function(data)
+	{
+		echo("Received:" + JSON.stringify(data) );
+		echo("------------------");
+		echo("Successfully Received Data!");
+	})
+	.error(function(data)
+	{
+		echo("Error");
+	})
+	.always(function(data,textStatus,xhr)
+	{
+		echo("Request returned: " + xhr.statusCode + " " + textStatus);
+		echo("--------------------------------");
+		echo("--------------------------------");
+	});
+});
+$("#shellPOST").click(function(e)
+{
+	echo("--------------------------------");
+	echo("Sending shell command:" + $("#commandshell").val());
+	echo("at " + url+"shell");
+	echo("--------------------------------");
+	$.ajax({
+		url: url + "shell",
+		data:{command: $("#commandshell").val()},
+		type:"POST"
+	})
+	.success(function(data)
+	{
+		echo("Received:" + JSON.stringify(data) );
+		echo("------------------");
+		echo("Successfully Received Data!");
+	})
+	.error(function(data)
+	{
+		echo("Failed");
+	})
+	.always(function(data)
+	{
+		echo("Request returned: " + data.status);
+		echo("--------------------------------");
+		echo("--------------------------------");
+	});
+});
+
+$(document).ready(function(e)
+{
+	echo("OpenCog Testing...");
+})
+
+function echo(message)
+{
+	$("#terminal").val($("#terminal").val() + "\n" + message);
+
+	var textarea = document.getElementById('terminal');
+	textarea.scrollTop = textarea.scrollHeight;
+}
+
+
+</script>
+</body>
+</html>
