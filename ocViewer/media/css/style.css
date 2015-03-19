@@ -98,6 +98,10 @@ hr
    display:none;
 
 }
+#detailsAtomHandle
+{
+  font-weight: bold;
+}
 /* TOOLBAR */
 /*-----------------*/
 /*-----------------*/

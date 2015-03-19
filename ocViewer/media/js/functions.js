@@ -63,7 +63,6 @@ $(document).ready(function()
 		}
 	}).resizable();
 
-
 	//navbarTopHeight = $('#navbarTop')[0].offsetHeight;
     wh = $(window).height();
 	ww = $(window).width();
@@ -246,7 +245,6 @@ $("#ConnectConnectButton").click(function()
 	//cause we need to load the AtomTypes First!
 	retrieveAtomTypes(); 
 
-
 	//Connect
 	//ConnectToServer();
 });
@@ -314,7 +312,6 @@ $("[viewer]").click(function(){
 
 $("#HelpHowToUse").click(function()
 {	
- 
 	showScreen("help");
 });
 
@@ -410,10 +407,7 @@ $("#AdvancedFilterExecute").click(function()
 			$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> Connection Failed!</span>");
 		});
 	}
-	else
-	{
-		 
-	}
+	 
 });
 
 $("#AdvancedFilterFilter").keyup(function()
@@ -532,8 +526,9 @@ $("#AdvancedFilterSavedFilters").change(function()
 $("#atomDetailsUpdate").click(function()
 {
 	//UPDATING ATOM
-  	echo("[[b;white;black]Updating atom: ]"+selectedNode.handle + " " + selectedNode.name);
+  	echo("[[b;white;black]Updating atom: ]" + selectedNode.handle + " " + selectedNode.name);
     var node = new Object();
+    node.handle = selectedNode.handle;
     node.type = $("#detailsAtomType").val();
     node.name =  $("#detailsAtomName").val();
     var truthValue = new Object;
@@ -543,12 +538,18 @@ $("#atomDetailsUpdate").click(function()
     truthValueDetails.count = $("#detailsAtomCount").val();
     truthValue.details = truthValueDetails;
     node.truthValue = truthValue;
+	truthvalue = {'type': 'simple', 'details': {'strength': 0.006, 'count': 0.8}};
+	attentionvalue = {'sti': 5, 'lti': 3, 'vlti': true};
+	atom_update = {'truthvalue': truthvalue, 'attentionvalue': attentionvalue};
  
 	$.ajax(
 	{
-		url: preferences.cogserver + 'api/v1.1/atoms',
-		type: 'POST',
-    	data:selectedNode 
+		url: preferences.cogserver + 'api/v1.1/atoms/' + selectedNode.handle,
+		method: 'PUT',
+		type:'PUT',
+		data:atom_update 
+		//contentType:'application/x-www-form-urlencoded; charset=UTF-8'
+    	//data:selectedNode 
 	})
 	.success(function(dataset) 
 	{
@@ -564,9 +565,7 @@ $("#atomDetailsUpdate").click(function()
 	atomDetailsChanged = false;
 });
 
- 
-
-
+  
 $("#detailsLinkSourceButton").click(function()
 {
 	selectedNode  = selectedLink.source;
@@ -576,8 +575,7 @@ $("#detailsLinkSourceButton").click(function()
  	showSelectedLink(selectedLink.source);
 	 
 });
-
-
+ 
 $("#detailsLinkTargetButton").click(function()
 {
 	selectedNode  = selectedLink.target;
@@ -586,17 +584,13 @@ $("#detailsLinkTargetButton").click(function()
 	d3.select("#node_" + selectedLink.target.handle).classed("selectedNode",true);
 	showSelectedLink(selectedLink.target);
 });
-
-
-
-
+ 
 $("#atomDetailsDelete").click(function()
 {
 	//DELETING ATOM
 	deleteNode(selectedNode);
 });
-
-
+ 
 $(".atomDetailsForm").change(function()
 {
 	atomDetailsChanged = true;
@@ -609,8 +603,7 @@ $(".atomDetailsForm").keydown(function()
 
 	$("#atomDetailsUpdate").prop("disabled",false);
 });
-
-
+ 
 $("#terminalClose").click(function()
 {
 	savePreference("visibleTerminal",false);
@@ -631,14 +624,11 @@ $("#toolboxClose").click(function()
 	checkBoxLi("visibleToolboxi",false);
 	$("#toolbox").css("visibility","hidden");
 });
-
-
-
+ 
 function AppearanceforceAnimatedOn()
 {
 	if (drawedd3) node.classed("fixed", function (d){ d.fixed = false;});
 	savePreference("appearanceforceAnimated",true);
- 
 }
 
 function AppearanceforceAnimatedOff()
@@ -653,7 +643,6 @@ function AppearanceShowTextOn()
 		node.select("text").style("visibility", "visible");
 
 	savePreference("appearanceShowText",true);
-
 }
 
 function AppearanceShowTextOff()
@@ -726,11 +715,8 @@ function showScreen(screen)
 
 	
 	$("#screen-"+screen).show();
-
-	 
 }
  
-
 /*------------------------
 ------- FUNCTIONS --------
 --------------------------
@@ -1076,8 +1062,8 @@ function ConnectToServer()
 		type: 'GET',
     	dataType: "jsonp",
     	processData: false,
-    	crossDomain: true ,
-    	headers :
+    	crossDomain: true,
+    	headers:
     	{
     		"X-Requested-With" : ""
     	}
@@ -1138,7 +1124,7 @@ function retrieveAtomTypes()
 		type: 'GET',
     	dataType: "jsonp",
     	processData: false,
-    	crossDomain: true , 
+    	crossDomain: true, 
     	headers :
     	{
     		"X-Requested-With" : ""
@@ -1195,8 +1181,7 @@ function retrieveAtomTypes()
 
 function showSelectedLink(link)
 {
- 	 
-
+  
  	$("#detailsBar").html("Link: " + link.name);
 
 	$("#detailsContent").css("display","none");
@@ -1214,7 +1199,8 @@ function showSelectedLink(link)
 function showSelectedAtom(atom)
 {
  
- 
+ 	selectedNode = atom;
+
 	if (atom.fixed)
 		$("#atomDetailsFixed").switchButton({ checked: true });
 	else
@@ -1245,8 +1231,7 @@ function showSelectedAtom(atom)
 		+ "\nIncoming:" + atom.incoming 
 		+ "\nOutcoming:" + atom.outgoing 
 		+ "\n");
-
-
+ 
 }
   
 /*
