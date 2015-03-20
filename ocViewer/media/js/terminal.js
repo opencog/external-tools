@@ -18,6 +18,49 @@ function loadTerminal()
             showScreen("export");
     	else if (command.toUpperCase()=="CLEAR")
     		term.clear();
+        else if (command.toUpperCase().substring(0,3)=="ADD")
+        {
+            var newNodeName = command.split(" ")[1];
+            
+            if (newNodeName!="" && newNodeName!=null)
+                 d3g.addNode({id:newNodeName});
+    
+        }
+        else if (command.toUpperCase().substring(0,4)=="LINK")
+        {
+            var node1 = command.split(" ")[1];
+            var node2 = command.split(" ")[2];
+  
+            if ((node1!="" && node1!=null) && (node2!="" && node2!=null))
+                d3g.addLink(node1,node2);
+    
+        }
+        else if (command.toUpperCase().substring(0,3)=="FIX")
+        {
+            var select = command.split(" ")[1];
+            
+            if (select!="" && select!=null)
+            {
+                if ((select.toUpperCase().substring(0,3)=="ALL") || select=="*")
+                for(var i=0;i<count;i++)
+                {
+                    nodes[i].fixed = true;
+                }
+            }
+        }
+        else if (command.toUpperCase().substring(0,3)=="UNFIX")
+        {
+            var select = command.split(" ")[1];
+            
+            if (select!="" && select!=null)
+            {
+                if ((select.toUpperCase().substring(0,3)=="ALL") || select=="*")
+                for(var i=0;i<count;i++)
+                {
+                    nodes[i].fixed = false;
+                }
+            }
+        }
         else if (command.toUpperCase().substring(0,5)=="FIXED")
         {
             var select = command.split(" ")[1];

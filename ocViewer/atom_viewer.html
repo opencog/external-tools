@@ -21,7 +21,7 @@
     <link href="media/css/jquery-ui.theme.css" rel="stylesheet">
     <link href="media/css/jquery.switchButton.css" rel="stylesheet">
     <link rel="shortcut icon" href="media/images/favicon.png" type="image/x-icon"/>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="media/css/jquery.terminal.css" rel="stylesheet">
      
 </head>
@@ -109,13 +109,14 @@
                     <i class="fa fa-globe"></i> Connect
                   </a>
                 </div>
-                <div id="connectPanel" class="accordion-body collapse in">
+                <div id="connectPanel" class="accordion-body collapse">
                   <div class="accordion-inner">
                     <!-- CONTENT -->
                         <div class="form-group">
                         <label for="CogServer">CogServer:</label>
                         <div class="input-group">
                         <input type="email" class="form-control" id="ConnectCogServer" placeholder="http://localhost:5000/">
+                        <div class="input-group-addon" disabled="disabled" id="ConnectRefreshButton"><i class="fa fa-refresh"></i></div>
                         <div class="input-group-addon" disabled="disabled" id="ConnectConnectButton"><i class="fa fa-plug"></i></div>
                         </div>
                          
@@ -242,26 +243,37 @@
                     <i class="fa fa-eye"></i> Appearance
                   </a>
                 </div>
-                <div id="appearancePanel" class="accordion-body collapse ">
+                <div id="appearancePanel" class="accordion-body collapse">
                   <div class="accordion-inner">
                     <!-- CONTENT -->
-                        <div class="form-group" style="padding:10px">
+                        <div style="padding:10px">
 
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <label for="AppearanceforceAnimated">Animate d3?</label><br>
-                                    <div id="AppearanceforceAnimated"></div><br>
-                                </div>
-                                <div class="col-lg-4">
+                            <div class="row"> 
+                                <div class="col-lg-6">
                                     <label for="AppearanceShowText">Show Text?</label><br>
                                     <div id="AppearanceShowText"></div><br>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-6">
                                     <label for="AppearanceShowLinks">Show Links?</label><br>
                                     <div id="AppearanceShowLinks"></div><br>
                                 </div>
                             </div>
- 
+
+                            <hr>
+
+                            <div class="row"> 
+                                <div class="col-lg-6">
+                                    <label for="AppearanceShowText">Hover Connections?</label><br>
+                                    <div id="AppearanceHoverShowConnections"></div><br>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="AppearanceShowLinks">Show Links?</label><br>
+                                    <div id="AppearanceShowLinks"></div><br>
+                                </div>
+                            </div>
+
+                            <hr>
+  
                             <label id="appearanceChargeAmount" for="appearanceCharge">Charge</label>
                             <div id="appearanceCharge"></div><br>
 
@@ -273,6 +285,10 @@
 
                             <label id="appearanceLinkDistanceAmount" for="appearanceLinkDistance">Link Distance</label>
                             <div id="appearanceLinkDistance"></div>
+
+                            <hr>
+
+                            <button class="btn btn-danger" id="appearanceClearD3">Clear D3</button>
                         </div>
                     <!-- END CONTENT -->
                   </div>
@@ -320,6 +336,7 @@
         <div class="col-sm-9" id="mainContent">
         <!-- MAIN SCREENS -->
             <div id="screen-d3">
+              <button id="toggleForceStart" class="btn btn-success">Stop Animation</button>
             </div>
   
             <div id="screen-table">
@@ -333,16 +350,24 @@
              
             <div id="screen-import">
             <!-- CONTENT -->
-                <form>
+             
+               <form>
                     <legend>Import Options</legend>
                     <div class="form-group">
-                    <label for="export-type">Export Type</label>
-                    <select>
-                        <option>This</option>
-                        <option>That</option>
-                    </select>
+                    <label for="importFile">Import a scm file.</label>
+                        <input type="file" id="importFile"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="ImportClearAtomSpace"/>
+                    <label for="importFile">Clear atom space.</label>
                     </div>
                 </form>
+          
+            <hr>
+              <button class="btn btn-success">Import</button>
+             
+  
+               
             <!-- END CONTENT -->
             </div>
 
@@ -557,6 +582,7 @@
  
     </div>
 </div>
+
 
 <!-- SCRIPTS -->
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>

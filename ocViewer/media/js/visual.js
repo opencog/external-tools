@@ -1,459 +1,164 @@
-
-function updateD3Graph(json)
+function d3graph(element)
 {
-
-	if (!drawedd3) return;
  
-	if (json!=null)
-	{
+    var vis = this.vis = d3.select(element).append("svg:svg")
+        .attr("width", width)
+        .attr("height", height);
 
-		//UPDATE DATA
-		json = atomData;
-		 
-		if (json.length==0)
-			$("#screen-d3").html("");
-	 
-		links = fixLinks(json);
-	 
-		force.nodes(nodes)
-			.links(links)
-			.size([width, height])
-		 	.start();
-	}
- 
-	force.charge(preferences.appearanceCharge )
+    var force = d3.layout.force()
+    	.charge(preferences.appearanceCharge)
 		.gravity(0.1)
 		.linkDistance(preferences.appearanceLinkDistance)
 		.linkStrength(preferences.appearanceLinkStrength/100)
 		.friction(preferences.appearanceFriction/100)
-		.size([width,height])
-		.start();
+        .size([width, height]);
+
+    var nodes = force.nodes(),
+        links = force.links();
+
  
-}
+ /*--------------------------*/
+/*----------UPDATE---------*/
+/*--------------------------*/
+/*--------------------------*/
+/*--------------------------*/
 
+    var update = function () 
+    {
 
-function createD3GraphView(json) 
-{
+        var link = vis.selectAll("line.link")
+            .data(links, function(d) { return d.source.id + "-" + d.target.id; });
 
-  	var color = d3.color;
-	links = fixLinks(json);
-	link_length = links.length;
+        var linkEnter = link.enter().insert("line")
+            .attr("class", "link");
 
-	force = d3.layout.force()
-		.charge(preferences.appearanceCharge )
-		.gravity(0.1)
-		.linkDistance(preferences.appearanceLinkDistance)
-		.linkStrength(preferences.appearanceLinkStrength/100)
-		.friction(preferences.appearanceFriction/100)
-		.size([width,height]);
+        link.exit().remove();
 
-	zoom = d3.behavior.zoom().scaleExtent([0.05, 5]).on("zoom", zoomed);
+        var node = vis.selectAll("g.node")
+            .data(nodes, function(d) { return d.id;});
 
-	var drag = force.drag().on("dragstart", dragstarted)
-		//.origin(function(d) {return d;})
-		.on("drag", dragged)
-		.on("dragend", dragended);
+        var nodeEnter = node.enter().append("g")
+            .attr("class", "node")
+            .call(force.drag);
 
-	var svg = d3.select("#screen-d3")
-		.append("svg")	
-		.attr("width", width)
-		.attr("height", height)
-		.append("g")
-		.attr("id","visualizerInner")
-		.call(zoom).on("dblclick.zoom", null)
+        nodeEnter.append("circle")
+            .attr("class", "circle")
+            .attr("r", 23) 
+            .attr("x", "-8px")
+            .attr("y", "-8px")
+            .attr("width", "16px")
+            .attr("height", "16px");
+
+        nodeEnter.append("text")
+            .attr("class", "text")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function(d) {return d.id});
+
+        node.exit().remove();
+
+        force.on("tick", function() 
+        {
+          link
+          .attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+
+          node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        });
+
+        
+        force.start();
+    }
+
+    update();
+
+/*--------------------------*/
+/*--------FUNCTIONS---------*/
+/*--------------------------*/
+/*--------------------------*/
+/*--------------------------*/
  
-	var rect = svg.append("rect")
-		.attr("width", width)
-		.attr("height", height)
-		.style("fill", "none")
-		.style("pointer-events", "all");
-
-	container = svg.append("g");
-
-	d3.select('#visualizerInner') 
-	   	.attr('width', width)
-	   	.attr('height', height)
-  
-	force.nodes(nodes)
-		.links(links)
-		.size([width, height])
-		.start();
- 
-	link = container
-		.selectAll(".link")	
-		.data(links);
-
-	linkEnter = link.enter()
-		.append("line")
-		.attr("class", "links")
-		.attr("id",function(d){ return "link_" + d.handle})
-		.attr("class", "link")
-		.style("stroke-width", function(d) {return Math.sqrt(d.value);});
- 
-	node = container
-		.selectAll(".node")
-		.data(nodes);
-
-	nodeEnter = node.enter()
-		.append("g")
-		.attr("class", "node")
-		.attr("id",function(d){ return "node_" + d.handle})
-		.attr("handle",function(d){return d.handle;})
-		.style("fill", function(d) { return color(d.group); })
-		.attr("cx", function(d){ return d.x;})
-		.on("dblclick", dblclick)
-		.attr("cy", function(d){ return d.y;})
-		.call(drag);
- 
- 	nodeEnter.append("circle")
-		.attr("r", node_radius);
-
-    node.exit().remove();
-    link.exit().remove();
- 
-
-	//TEXT STUFF
-	textVisibillity =  preferences.appearanceShowText=="true"? "visible": "hidden";
-	nodeEnter.append("text").attr("class","text")
-	.style("visibility",textVisibillity)
-	.text(function(d) {if (d.name == "")return d.type;	else return d.name;	});
-	
-	//HOVER TITLE
-	node.append("title").text(function(d) 
+	this.update = function (id) 
 	{
-		if (d.name == "")
-			return "handleok: " + d.handle + "\n" + "type: " + d.type;
-		else
-			return "handle: " + d.handle + "\n" + "Name:" + d.name + "\n" + "type: " + d.type;
-	});
+        update();
+    }
 
-	//THE TICKING FUNCTION
-	force.on("tick", function() 
+    this.addNodes = function (newnodes) 
 	{
-		link
-		.attr("x1", function(d) {return d.source.x;})
-		.attr("y1", function(d) {return d.source.y;	})
-		.attr("x2", function(d) {return d.target.x;})
-		.attr("y2", function(d) {return d.target.y;});
+        nodes = newnodes;
+        update();
+    }
 
-		node.attr("transform", function(d)
+
+	this.addNode = function (newnode) 
+	{
+        nodes.push(newnode);
+        update();
+    }
+
+    this.removeNode = function (id) 
+    {
+        var i = 0;
+        var n = findNode(id);
+        while (i < links.length) 
+        {
+            if ((links[i]['source'] === n)||(links[i]['target'] == n)) 
+            	links.splice(i,1);
+            else i++;
+        }
+        var index = findNodeIndex(id);
+        if(index !== undefined) 
+        {
+            nodes.splice(index, 1);
+            update();
+        }
+    }
+
+    this.addLink = function (sourceId, targetId) 
+    {
+        var sourceNode = findNode(sourceId);
+        var targetNode = findNode(targetId);
+
+        if ((targetNode)==undefined)
 		{
-			return "translate(" + d.x + "," + d.y + ")";
-		});
-
-
-
-	});
- 
-   /*--------------------------
-   -----------EVENTS ----------
-   ---------------------------*/
-	node.on("mouseover", function(d)
-	{
-		node.classed("node-active", function(o) {
-			thisOpacity = isConnected(d, o) ? true : false;
-			this.setAttribute('fill-opacity', thisOpacity);
-			return thisOpacity;
-		});
-	 
-		link.classed("link-active", function(o) {
-			return o.source === d || o.target === d ? true : false;
-		});
-		 
-		d3.select(this).classed("node-active", true);
-		d3.select(this).select("circle").transition().duration(transitionSpeed).attr("r", function(d)
-		{
-			return 15;
-		});
-
-	})
-
-	.on("mouseout", function(d)
-	{
-		node.classed("node-active", false);
-		link.classed("link-active", false);
-
-		d3.select(this).select("circle").transition().duration(transitionSpeed).attr("r", function(d) 
-		{return node_radius(d); });
-		connectedNode.splice(0, connectedNode.length);
-	});
- 
-
-	svg.on("mousemove", function(d) 
-	{
-		dragging = true;
-	});
-
-	svg.on("mousedown", function(d) 
-	{
-		dragging = false;
-	});
-
-
-	svg.on("mouseup", function(d) 
-	{
-		if (dragging) return;
-
-		selectedNode = null;
-		clearAtomDetails();
-		if (preferences.selectedTool == "pointer")
-		{
-			d3.select(this).select("circle").transition().duration(transitionSpeed).attr("r", node_radius);
-			node.classed("selectedNode",false);
-			link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", 1);
-			node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", 1);
-			connectedNode.splice(0, connectedNode.length);
-		}
-		else if (preferences.selectedTool == "addNode")
-		{
-
-		}
-		
-	
-	});
-
-	link.on("click", function(d) 
-	{
-		if (dragging) return;
-		selectedLink = d;
-		showSelectedLink(d);
-		
-
-
-		link.classed("selectedLink",false);
-		d3.select(this).classed("selectedLink",true);
-	});
-
-	node.on("click", function(d) 
-	{
-
-		//if (d3.select(this).classed("dragging")){return;} 
-		if (nodeDragging) return;
- 	 
-		
-		d3.event.stopPropagation();
-		node.classed("selectedNode",false);
-		link.classed("selectedLink",false);
-		d3.select(this).classed("selectedNode",true);
-		if (atomDetailsChanged && d!=selectedNode)
-		{
-			if ( !confirm("Are you sure you want to select other atom without updating it's settings?") )
-				return;
-		}
-		
-		if (d!=selectedNode)
-		{
-			selectedNode = d;
-			showSelectedAtom(d);
-	 		atomDetailsChanged = false;
-	 		$("#atomDetailsUpdate").prop("disabled",true);
-	 		$("#atomDetailsDelete").prop("disabled",false);
- 		}
- 		 
-		var dcx = (width / 2 - d.x * zoom.scale());
-		var dcy = (height / 2 - d.y * zoom.scale());
-		/*zoom.translate([dcx, dcy]);
-		container.transition()
-		.duration(transitionSpeed)
-		.attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + zoom.scale() + ")");
-*/
-		if (preferences.selectedTool == "pointer")
-		{
-			d3.select(this).select("circle")
-			 .transition()
-			 .duration(transitionSpeed)
-			 .attr("r", function(d){ return 1.4 * node_radius(d);});
-	 
-			 //----FADE OUT EVERYTHING ELSE-----
-			 //----------------------------------
-			 //----------------------------------
-			node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", function(o)
-			{
-				return isConnected(d, o) ? 1.0 : 0.1;
-			})
-			.ease(Math.sqrt).attr("r", function(o)
-			{
-				return isConnected(d, o) ? node_radius(d) : 500;
-			});
-
-			link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", function(o)
-			{
-				for ( j = 0; j < connectedNode.length; j++) 
-				{
-					if (connectedNode[j].handle == o.source.handle)
-						return 1.0;
-					if (connectedNode[j].handle == o.target.handle)
-						return 1.0;
-				}
-				return 0.1;
-			});
-		}
-		else if (preferences.selectedTool == "removeNode")
-		{
-
-			deleteNode(selectedNode.handle);
-		}
-	});
- 
-	function dottype(d)
-	{
-		d.x = +d.x;
-		d.y = +d.y;
-		return d;
-	}
-
-	function zoomed()
-	{
-
-		container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-	}
-
- 
-	function dblclick(d) 
-	{
-		if (d.fixed==0)
-		{
-			d3.select(this).classed("fixed",true);
-			$("#atomDetailsFixed").switchButton({ checked: true });
-			d.fixed = true;
-		}
-		else
-		{
-			$("#atomDetailsFixed").switchButton({ checked: false });
-			d3.select(this).classed("fixed",false);
-			d.fixed =false;
-		}
- 	 
-	} 
-
-	function dragstarted(d)
-	{
-		d3.event.sourceEvent.stopPropagation();
-		//d3.select(this).classed("dragging", true);
-		//d3.select(this).classed("node-active", true);
-		//force.start();
-		nodeDragging = true;
-	}
-
-	function dragged(d)
-	{
-
-		//d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-	}
-
-	function dragended(d)
-	{
-		//d3.select(this).classed("dragging", false);
-		//d3.select(this).classed("node-active", false);
-		nodeDragging = false;
-	}
-
-	
-	//This sais that the graph was drawed once...
-	drawedd3 = true;
- 
-	/*--------------------------
-	 --------FUNCTIONS ---------
-	---------------------------*/
-
-	var connectedNode = [];
-	var allNode;
- 
-	function arrycontain(obj) 
-	{
-		var i = connectedNode.length;
-		while (i--)
-		{
-			if (connectedNode[i] === obj) 
-				return true;
-		}
-		return false;
-	}
-
-	function getnode(handle) 
-	{
-		for ( jnode = 0; jnode < json.length; jnode++)
-			if (handle == json[jnode].handle)
-				return json[jnode];
-	}
- 
-	function isConnected(a, b) 
-	{
-
-		if (!arrycontain(a))
-			connectedNode[connectedNode.length] = a;
- 
-		function recurse(node)
-		{
-			if (node.incoming.length > 0)
-				node.incoming.forEach(function(entry)
-				{
-					//finde better way
-					var currentNde = getnode(entry);
-					if (!arrycontain(currentNde)) {
-						connectedNode[connectedNode.length] = currentNde;
-						recurse(currentNde);
-					}
-				});
-			
-			if (node.outgoing.length > 0)
-				node.outgoing.forEach(function(entry)
-				{
-					//finde better way
-					var currentNde = getnode(entry);
-					if (!arrycontain(currentNde)) {
-						connectedNode[connectedNode.length] = currentNde;
-						recurse(currentNde);
-					}
-				});
- 
+			echo("Target node is missing");
+			return;
 		}
 
-		recurse(a);
+        if((sourceNode !== undefined) && (targetNode !== undefined)) 
+        {
+            links.push({"source": sourceNode, "target": targetNode});
+            update();
+        }
+        else
+        {
+        	echo("One of the connecting links have not been found");
+        }
+    }
 
-		if (!arrycontain(b))
-			return false;
-		else
-			return true;
-	}
+    var findNode = function (id) 
+    {
+        for (var i=0; i < nodes.length; i++) 
+        {
+            if (nodes[i].handle === id)
+                return nodes[i]
+        };
+        return null;
+    }
 
-	function node_radius(d)
-	{
-		if (d.name == "")
-			return 5.5;
-		else
-			return 10;
-	}
+    var findNodeIndex = function (id) 
+    {
+        for (var i=0; i < nodes.length; i++) 
+        {
+            if (nodes[i].handle === id)
+                return i
+        };
+        return null;
+    }
+
 
 }
 
-function fixLinks(json)
-{
-	var links = [];
-	for (var n = 0; n < json.length; n++) {
-		//console.log(json[n]);
-		if (json[n].outgoing.length > 0) {
-			for (var outindex = 0; outindex < json[n].outgoing.length; outindex++)
-			{
-				var templink = {};
-				
-				for (var i = 0; i < json.length; i++)
-				{
-					if (json[i].handle == json[n].outgoing[outindex])
-					{
-						templink["source"] = n;
-						templink["target"] = i;
-						templink["name"] = "linkname";
-						templink["type"] = "linktype";
-						links[index] = templink;
-						index++;
-						break;
-					}
-				}
-				
-			}
-		} 
-	}
-	return links;
-}
  

@@ -228,7 +228,8 @@ hr
 .node circle
 {  
   stroke: #fff;fill: #321;
-  stroke-width: 1px;  
+  stroke-width: 1px; 
+  cursor: pointer;
 }
 
 .node-active circle{
@@ -313,12 +314,12 @@ hr
 /*-----------------*/
 /*-----------------*/
 /*-----------------*/
-#ConnectConnectButton
+#ConnectConnectButton, #ConnectRefreshButton
 {
     cursor: pointer;
 }
 
-#ConnectConnectButton:hover
+#ConnectConnectButton:hover, #ConnectRefreshButton:hover
 {
     background-color:#5cb85c;
     color:#fff;
@@ -389,7 +390,25 @@ hr
     color:#000;
 
 }
- 
+
+/* CONTROL ANIMATION */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+#toggleForceStart
+{
+  display:none;
+  position:absolute;
+  right:10px;top:10px;
+}
+#screen-d3:hover > #toggleForceStart
+{
+  display:block;
+}
+
 /* CLASSES */
 /*-----------------*/
 /*-----------------*/
