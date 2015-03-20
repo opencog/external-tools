@@ -2,7 +2,13 @@
 ------- VARIABLES --------
 ------------------------*/
 
-var Accordions = [];
+//Default Data structure for atom
+var defaultAtom = {
+	handle:null
+}
+
+var Accordions = []; //Storing the accordions preferences
+
 
 var d3g = null; //Storing the whole d3 graph here
 
@@ -10,6 +16,9 @@ var svg; //The d3 graph is being stored here
 var width=800; //Graph starting Width. Dynamically calculated later through
 var height=800; ////Graph starting Height. Dynamically calculated later through
  
+var linkToolNode1 = null;
+var linkToolNode2 = null;
+
 var navbarTopHeight=65; //NavBarHeight. Dynamically calculated later through
 var wh,ww; //Window Width, Window Height
 var preferences; // LocalStorage preferences. This things remembers..
@@ -20,7 +29,7 @@ var atomDetailsChanged = false;
 
 var zoom;
 var container;
-
+var dragging ; 
 //Globals
 var atomData = null;
 var atomTypes = null;
@@ -99,7 +108,7 @@ $(document).ready(function()
       {
         $("#appearanceChargeAmount").html("Charge " + ui.values[0]);
       	savePreference("appearanceCharge",$("#appearanceCharge").slider("values",0));
-       	updateD3Graph();
+       	d3g.update();
        }
     });
 
@@ -111,7 +120,7 @@ $(document).ready(function()
       {
         $("#appearanceFrictionAmount").html("Friction " + ui.values[0]/100);
       	savePreference("appearanceFriction",$("#appearanceFriction").slider("values",0));
-       	updateD3Graph();
+       	d3g.update();
        }
     });
 
@@ -123,7 +132,7 @@ $(document).ready(function()
       {
         $("#appearanceLinkStrengthAmount").html("Link Strength " + ui.values[0]/100);
       	savePreference("appearanceLinkStrength",$("#appearanceLinkStrength").slider("values",0));
-       	updateD3Graph();
+       	d3g.update();
        }
     });
 
@@ -135,7 +144,7 @@ $(document).ready(function()
       {
         $("#appearanceLinkDistanceAmount").html("Link Distance " +  ui.values[0]);
       	savePreference("appearanceLinkDistance",$("#appearanceLinkDistance").slider("values",0));
-       	updateD3Graph();
+       	d3g.update();
        }
     });
 	  
@@ -187,6 +196,8 @@ $(document).ready(function()
     if (preferences.visibleTerminal)
 	   loadTerminal();
  
+ 	//getAtomTypes - without them nothing can actually work. They are a basis of declaring an atom.
+ 	//maybe store locally in the future if server fails to connect...
 	retrieveAtomTypes();
 
 	if(String2Boolean(preferences.ConnectAutoConnect))
@@ -529,7 +540,9 @@ $("#toolboxPointer").click(function()
 {
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
-	cursor = $('#screen-d3').awesomeCursor('sdfsdf');
+	cursor = null;
+	$('#screen-d3').css("cursor","default");
+	$('.node circle').css("cursor","pointer");
 	savePreference("selectedTool","pointer");
 });
 
@@ -538,6 +551,7 @@ $("#toolboxAddNode").click(function()
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
 	cursor = $('#screen-d3').awesomeCursor('fa fa-plus-circle', {color: 'white'});
+	$('.node circle').css("cursor","pointer");
 	savePreference("selectedTool","addNode");
 });
 
@@ -546,6 +560,7 @@ $("#toolboxRemoveNode").click(function()
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
 	cursor = $('#screen-d3').awesomeCursor('fa fa-minus-circle', {color: 'white'});
+	$('.node circle').css("cursor","pointer");
 	savePreference("selectedTool","removeNode");
 });
 
@@ -553,8 +568,16 @@ $("#toolboxAddLink").click(function()
 {
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
-	cursor = $('#screen-d3').awesomeCursor('fa fa-link', {color: 'white'});
+	$('.node circle').awesomeCursor('fa fa-link', {color: 'white'});
 	savePreference("selectedTool","addLink");
+});
+
+$("#toolboxRemoveLink").click(function()
+{
+	$(".toolboxIcon").removeClass("toolboxIconSelected");
+	$(this).addClass("toolboxIconSelected");
+	$('.link ').awesomeCursor('fa fa-unlink', {color: 'white'});
+	savePreference("selectedTool","removeLink");
 });
 
 $("#AdvancedFilterSavedFilters").change(function()
@@ -1179,12 +1202,11 @@ function getAtoms()
 	        	render();
 	        	d3g = new d3graph("#screen-d3");
 	        	showScreen(preferences.viewer);
-	        	d3g.addNode({handle:"2"});
-				d3g.addNode({handle:"1"});
-				d3g.addLink(1, 2);
-				d3g.addNode({handle:"3"});
-				d3g.addNode({handle:"4"});
-				d3g.addLink(3, 4);
+	        	//d3g.addNode({name:"skoumas"});
+	         
+	        	  
+				d3g.addNodes(atomData);	
+						 
 	    	}
 
 	    }
@@ -1273,7 +1295,7 @@ function retrieveAtomTypes()
 function showSelectedLink(link)
 {
   
- 	$("#detailsBar").html("Link: " + link.name);
+ 	$("#detailsBarTitle").html("Link: " + link.name);
 
 	$("#detailsContent").css("display","none");
 	$("#detailsContentNone").css("display","none");
@@ -1302,9 +1324,9 @@ function showSelectedAtom(atom)
 	$("#detailsContentNone").css("display","none");
 
 	if (atom.name!="")
-		$("#detailsBar").html("Atom: " + atom.name);
+		$("#detailsBarTitle").html("Atom: " + atom.name);
 	else
-		$("#detailsBar").html("Atom: " + atom.handle + " " + atom.type);
+		$("#detailsBarTitle").html("Atom: " + atom.handle + " " + atom.type);
 
 	$("#detailsAtomName").val(atom.name);
 	$("#detailsAtomType").val( atom.type);

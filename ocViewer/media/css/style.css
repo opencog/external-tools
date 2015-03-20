@@ -114,11 +114,11 @@ hr
   width:120px;
   height:300px;
   position: fixed;
-  border: 1px solid #111;
+  border: 1px solid #fff;
   z-index: 399990;
   right: 50px;
   top: 50px;
-  background-color: #ddd;
+  background-color: #333;
   font-size: 12px;
 }
 #toolboxBar
@@ -137,24 +137,33 @@ hr
 }
 .toolboxIcon
 {
-  border:1px solid #444;
+  border:1px solid #aaa;
+   
   float:left;
   width:50px;
   height:50px;
   margin:2px;
   text-align: center;
   overflow: hidden;
-  font-size:30px;
-  background-color:#ddd;
+  font-size:34px;
+  color:#ddd;
+  background-color:#222;
   cursor:pointer;
+}
+.toolBoxLine
+{
+  clear:left;
+  margin:10px;
+  height:2px;
+  background-color: #333;
 }
 .toolbarIcon:hover
 {
-  background-color:#eee;
+  background-color:#fff;
 }
 .toolboxIconSelected
 {
-  background-color: #d3d;
+  background-color: #118;
 }
 
 
@@ -217,6 +226,7 @@ hr
   stroke: #fff;
   stroke-width: 1px;
   stroke-opacity: 1.0;
+  z-index: 1;
 }
 
 .link:hover {
@@ -230,6 +240,7 @@ hr
   stroke: #fff;fill: #321;
   stroke-width: 1px; 
   cursor: pointer;
+  z-index:50;
 }
 
 .node-active circle{
@@ -245,6 +256,10 @@ hr
 .fixed circle
 {
   fill:#424; stroke:#ddd;
+}
+.linkToolNode circle
+{
+  fill:blue;
 }
 .selectedNode circle
 {

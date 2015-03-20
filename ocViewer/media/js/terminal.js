@@ -23,14 +23,27 @@ function loadTerminal()
             var newNodeName = command.split(" ")[1];
             
             if (newNodeName!="" && newNodeName!=null)
-                 d3g.addNode({id:newNodeName});
+                 d3g.addNode({handle:newNodeName});
+    
+        }
+        else if (command.toUpperCase().substring(0,6)=="DELETE")
+        {
+            var node2Delete = command.split(" ")[1];
+            
+            if (node2Delete!="" && node2Delete!=null)
+                 d3g.removeNode(node2Delete);
     
         }
         else if (command.toUpperCase().substring(0,4)=="LINK")
         {
             var node1 = command.split(" ")[1];
+            if (node1.toUpperCase().substring(0,3)=="ALL")
+            {
+                
+                return;
+            }
             var node2 = command.split(" ")[2];
-  
+
             if ((node1!="" && node1!=null) && (node2!="" && node2!=null))
                 d3g.addLink(node1,node2);
     
@@ -182,7 +195,7 @@ function loadTerminal()
                     var dcy = (0  );
                    
                     zoom.translate([dcx, dcy]).scale(1);;
-                    container.transition()
+                    vis.transition()
                         .duration(transitionSpeed)
                         .attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + 1 + ")");
                     return;
