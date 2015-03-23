@@ -80,11 +80,10 @@ function createD3GraphView(json)
 		.size([width, height])
 		.start();
  
-update();
+	update();
 
 function update()
 {
-
 
  	link = container
 		.selectAll(".link")	
@@ -120,7 +119,6 @@ function update()
 
     node.exit().remove();
     
-  
 	//TEXT STUFF
 	textVisibillity =  preferences.appearanceShowText=="true"? "visible": "hidden";
 	nodeEnter.append("text").attr("class","text")
@@ -157,7 +155,6 @@ function update()
 			return "translate(" + d.x + "," + d.y + ")";
 		});
  
-
 	});
  
    /*--------------------------
@@ -165,10 +162,8 @@ function update()
    ---------------------------*/
 	node.on("mouseover", function(d)
 	{
-		 if (!preferences.AppearanceHoverShowConnections) return;
+		if (!preferences.AppearanceHoverShowConnections) return;
 		 
-
-
 		node.classed("node-active", function(o) {
 			thisOpacity = isConnected(d, o) ? true : false;
 			this.setAttribute('fill-opacity', thisOpacity);
@@ -225,7 +220,6 @@ function update()
 
 		}
 		
-	
 	});
 
 	link.on("dblclick", function(d) 
@@ -257,7 +251,6 @@ function update()
 		//if (d3.select(this).classed("dragging")){return;} 
 		if (nodeDragging) return;
  	 
-		
 		d3.event.stopPropagation();
 		node.classed("selectedNode",false);
 		link.classed("selectedLink",false);
@@ -283,7 +276,7 @@ function update()
 		container.transition()
 		.duration(transitionSpeed)
 		.attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + zoom.scale() + ")");
-*/
+		*/
 		if (preferences.selectedTool == "pointer")
 		{
 			d3.select(this).select("circle")
@@ -350,7 +343,6 @@ function update()
 			d3.select(this).classed("fixed",false);
 			d.fixed =false;
 		}
- 	 
 	} 
 
 	function dragstarted(d)
@@ -364,7 +356,6 @@ function update()
 
 	function dragged(d)
 	{
-
 		//d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
 	}
 
@@ -382,7 +373,6 @@ function update()
 
 }
 	
- 
 	/*--------------------------
 	 --------FUNCTIONS ---------
 	---------------------------*/

@@ -23,7 +23,7 @@ function loadTerminal()
             var newNodeName = command.split(" ")[1];
             
             if (newNodeName!="" && newNodeName!=null)
-                 d3g.addNode({handle:newNodeName});
+                d3g.addNode({handle:newNodeName});
     
         }
         else if (command.toUpperCase().substring(0,6)=="DELETE")
@@ -31,17 +31,15 @@ function loadTerminal()
             var node2Delete = command.split(" ")[1];
             
             if (node2Delete!="" && node2Delete!=null)
-                 d3g.removeNode(node2Delete);
+                d3g.removeNode(node2Delete);
     
         }
         else if (command.toUpperCase().substring(0,4)=="LINK")
         {
             var node1 = command.split(" ")[1];
             if (node1.toUpperCase().substring(0,3)=="ALL")
-            {
-                
                 return;
-            }
+
             var node2 = command.split(" ")[2];
 
             if ((node1!="" && node1!=null) && (node2!="" && node2!=null))
@@ -92,9 +90,8 @@ function loadTerminal()
                   
             }
             else
-            {
                 echo("Nothing to select.");
-            }
+
         }
         else if (command.toUpperCase().substring(0,7)=="UNFIXED")
         {
@@ -114,9 +111,8 @@ function loadTerminal()
                   
             }
             else
-            {
                 echo("Nothing to select.");
-            }
+        
         }
         else if (command.toUpperCase().substring(0,6)=="SELECT")
         {
@@ -146,9 +142,8 @@ function loadTerminal()
 
             }
             else
-            {
                 echo("Nothing to select.");
-            }
+            
         }
         else if (command.toUpperCase().substring(0,5)=="NODES")
         {
@@ -175,9 +170,7 @@ function loadTerminal()
                 for (var i=0; i < tempSelectedAtom.incoming.length; i++)
                 {
                     tempNode = findNodebyHandle(tempSelectedAtom.incoming[i].handle);
-                    tempNode.classed("selectedNode",true);
-                    
-                      
+                    tempNode.classed("selectedNode",true); 
                 }
             }
 
@@ -249,7 +242,6 @@ function loadTerminal()
                 view = view.toUpperCase();
             else
                 showScreen(preferences.viewer);
-            
              
     		switch(view)
     		{
@@ -283,8 +275,6 @@ function loadTerminal()
     		links =[];
     		echo("pushing node");
     		force.nodes([]).links([]).start();
-     
-
     	}
     	else
     	{
@@ -302,14 +292,13 @@ function loadTerminal()
 				$.ajax(
 				{
 					url: preferences.cogserver + 'api/v1.1/scheme',
-					type: 'POST',
+				 
 					method:'POST',
-					dataType:'application/json',
-                    crossDomain: true ,
+					 
                     data:
 			    	{
                          
-			    		commanfd:commandtoSend
+			    		command:commandtoSend
 			    	}
 
 				})

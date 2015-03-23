@@ -3,12 +3,10 @@
 ------------------------*/
 
 //Default Data structure for atom
-var defaultAtom = {
-	handle:null
-}
+
 
 var Accordions = []; //Storing the accordions preferences
-
+var connectedNode = []; //The connected node
 
 var d3g = null; //Storing the whole d3 graph here
 
@@ -29,7 +27,8 @@ var atomDetailsChanged = false;
 
 var zoom;
 var container;
-var dragging ; 
+var dragging;
+
 //Globals
 var atomData = null;
 var atomTypes = null;
@@ -49,7 +48,7 @@ var advancedFilters = []; //Storing the advanced filters array here after conver
 var gui;
 var links = [];
 var index = 0;
- 
+  
 var ApperanceforceAnimated;
 
 var cursor = null;
@@ -162,7 +161,6 @@ $(document).ready(function()
   		off_callback: function(){preferences.ConnectAutoConnect=false} 
 	});
  
-     
     $("#AppearanceShowText").switchButton({
   		labels_placement: "right",
   		checked: String2Boolean(preferences.appearanceShowText),
@@ -184,7 +182,6 @@ $(document).ready(function()
   		off_callback: AppearanceHoverShowConnectionsOff
 	});
 
- 
     $("#atomDetailsFixed").switchButton({
   		labels_placement: "right",
   		checked: false,
@@ -292,7 +289,6 @@ $("#ConnectConnectButton").click(function()
 
 	}
 	//
- 
 });
 
 
@@ -363,11 +359,9 @@ $("[viewer]").click(function(){
 	showScreen(preferences.viewer);
 });
 
- 
 $("#toggleForceStart").click(function(){
 	 force.stop();
 })
-
 
 $("#HelpHowToUse").click(function()
 {	
@@ -441,7 +435,6 @@ $("#FilterOutgoingSets").click(function()
 	//filterData();
 });
 
-
 $("#AdvancedFilterExecute").click(function()
 {
 	
@@ -507,7 +500,6 @@ $("#AdvancedFilterRemember").click(function()
 	updateAdvancedFilters();
 });
 
-
 $("#AdvancedFilterForget").click(function()
 {	
 	if (preferences.AdvancedFilterSelected==null)
@@ -530,10 +522,7 @@ $("#AdvancedFilterForget").click(function()
 		$("#AdvancedFilterFilter").val("");
 		savePreference("advancedFilters",JSON.stringify(advancedFilters));
 		updateAdvancedFilters();
-
 	}
-	 
-  
 });
 
 $("#toolboxPointer").click(function()
@@ -600,7 +589,6 @@ $("#AdvancedFilterSavedFilters").change(function()
  	}
  
 });
- 
 
 $("#atomDetailsUpdate").click(function()
 {
@@ -644,7 +632,6 @@ $("#atomDetailsUpdate").click(function()
 	atomDetailsChanged = false;
 });
 
-  
 $("#detailsLinkSourceButton").click(function()
 {
 	selectedNode  = selectedLink.source;
@@ -703,7 +690,6 @@ $("#toolboxClose").click(function()
 	$("#toolbox").css("visibility","hidden");
 });
   
-
 function AppearanceShowTextOn()
 {
 	if (drawedd3) 
@@ -723,13 +709,11 @@ function AppearanceShowTextOff()
 function AppearanceShowLinksOn()
 {
 	savePreference("appearanceShowLinks",true);
- 
 }
 
 function AppearanceShowLinksOff()
 {
 	savePreference("appearanceShowLinks",false);
-	 
 }
 function AppearanceHoverShowConnectionsOn()
 {
@@ -755,8 +739,6 @@ function showScreen(screen)
 
 	//This function switchs between screens
 	$('div[id^="screen"]').hide();
-
-
 
 	if (preferences.visibleAtomDetails)
 	{
@@ -792,7 +774,6 @@ function showScreen(screen)
 		//d3.update();
 	//}
 
-	
 	$("#screen-"+screen).show();
 }
  
@@ -812,7 +793,6 @@ function loadPreferences()
 	else
 		Accordions = JSON.parse(preferences.Accordions);
 
-	 
 	//Defaults
 	if (!preferences.cogserver)
 	    preferences.cogserver = 'http://localhost:5000/';
@@ -1028,8 +1008,6 @@ function updateGUIPreferences()
 
  	$("#toolbox"+preferences.selectedTool).addClass("selectedIcon");
 
-
-
  	render(); //render stuff
 }
 
@@ -1189,6 +1167,9 @@ function getAtoms()
 	       $("#ConnectionStatus").html("The Cogserver returned no atoms for the given filter/search.");
 	       echo("The Cogserver returned no atoms for the given filter/search.");
 	       atomData = null;
+	       //Draw d3 graph anyway. Might add new nodes via toolbox!
+	       d3g = new d3graph("#screen-d3");
+	       showScreen(preferences.viewer);
 	    }
 	    else
 	    {
@@ -1203,15 +1184,10 @@ function getAtoms()
 	        	d3g = new d3graph("#screen-d3");
 	        	showScreen(preferences.viewer);
 	        	//d3g.addNode({name:"skoumas"});
-	         
-	        	  
-				d3g.addNodes(atomData);	
-						 
+	         	  
+				d3g.addNodes(atomData);					 
 	    	}
-
 	    }
-   
-	
 	})
 	.fail(function()
 	{ 
@@ -1285,12 +1261,56 @@ function retrieveAtomTypes()
 		$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> Could not get AtomTypes. Check connectivity with server</span>")
  
 	});
-  
 }
 
 /*----- ATOM HANDLING ----*/
 /*------------------------*/
 /*------------------------*/
+function defaultAtom()
+{
+	var tempAtom = 
+	{
+	    'handle': null,
+	    'name': '',
+	    'type': 'ConceptNode',
+	    'outgoing': [],
+	    'incoming': [],
+	    'fixed':false,
+	    'truthvalue':
+	    {
+			'type': 'simple',
+			'details':
+			{
+			    'count': '0',
+			    'confidence': '0',
+			    'strength': '0'
+			}
+	    },
+	    'attentionvalue':
+	    {
+			'lti': 0,
+			'sti': 0,
+			'vlti': false
+	    }
+	}
+
+	var tempAtom =  
+	{
+		'type': 'ConceptNode',
+		'name': 'Frog',
+		'truthvalue':
+		{
+			'type': 'simple',
+			'details':
+			{
+				'strength': 0,
+				'count': 0
+			}
+		}
+	}
+
+	return tempAtom;
+}
 
 function showSelectedLink(link)
 {
@@ -1304,9 +1324,7 @@ function showSelectedLink(link)
 	$("#detailsLinkSource").val(link.source.handle);
 	$("#detailsLinkTarget").val(link.target.handle);
 	
-
 	echo("\nSelected link: \n[[b;red;black]Name: " + link.name + "]\nSource:" + link.source.handle + "\nTarget:" + link.target.handle + "\n");
-  
 }
 
 function showSelectedAtom(atom)
@@ -1403,25 +1421,12 @@ function findNodebyHandle(handle)
 
 function deleteNode(node)
 {
-if (confirm("Are you sure that you want to delete node:" + node.name))
+	//if (confirm("Are you sure that you want to delete node:" + node.name))
 	{
-	
-		nodes.splice(findNode(node),1);
-	 	//d3.update();
-		//alert(findNode(node));
-		//ConnectToServer();
-/*
 		$.ajax(
 		{
-			url: preferences.cogserver + 'api/v1.1/scheme',
+			url: preferences.cogserver + 'api/v1.1/atoms/' + node.handle,
 			type: 'DELETE',
-			contentType:'json',
-			//access-control-request-method
-			headers: 
-			{
-				"Access-Control-Request-Method":"DELETE",
-				"X-Requested-With" : ""
-			},
 			dataType: "json",
 	    	processData: false,
 	    	crossDomain: true, 
@@ -1433,13 +1438,15 @@ if (confirm("Are you sure that you want to delete node:" + node.name))
 		})
 		.success(function(data)
 		{
-			ConnectToServer();
+			//removeNodeFromTheGraph
+			d3g.removeNode(node.index);
+			d3g.showAll();
 		})
 		.fail(function(data)
 		{
-			ConnectToServer();
+			//Failed
 		});
-	*/}
+	}
 
 }
 

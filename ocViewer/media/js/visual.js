@@ -35,10 +35,6 @@ function d3graph(element)
     var nodes = force.nodes(),
         links = force.links();
 
-   
- 
- 	
-
 	/*--------------------------*/
 	/*----------UPDATE----------*/
 	/*--------------------------*/
@@ -61,34 +57,34 @@ function d3graph(element)
 
         var node = container.selectAll("g.node")
             .data(nodes);
-
-        var nodeEnter = node.enter().append("g")
-            .attr("class", "node")
-            .attr("id",function(d){return d.index;})
-            .call(force.drag);
-
-        nodeEnter.append("circle")
-            .attr("class", "circle")
-            .attr("x",function(d){return d.x})
-            .attr("y",function(d){return d.y})
-            .attr("r", nodeRadius) 
-             
-        nodeEnter.append("text")
-            .attr("class", "text")
-            .text(nodeName);
-
+ 
         var link = container.selectAll(".link")
             .data(links );
 
         var linkEnter = link.enter().append("line")
             .attr("class", "link");
 
-        link.exit().remove();
+        var nodeEnter = node.enter().append("g")
+	        .attr("class", "node")
+	        .attr("id",function(d){return d.index;})
+	        .call(force.drag);
 
+    	nodeEnter.append("circle")
+	        .attr("class", "circle")
+	        .attr("x",function(d){return d.x})
+	        .attr("y",function(d){return d.y})
+	        .attr("r", nodeRadius) 
+
+        nodeEnter.append("text")
+	        .attr("class", "text")
+	        .text(nodeName);
+
+        link.exit().remove();
         node.exit().remove();
 
         force.on("tick", function() 
         {
+
           link
           .attr("x1", function(d) { return d.source.x; })
           .attr("y1", function(d) { return d.source.y; })
@@ -119,14 +115,28 @@ function d3graph(element)
 			}
 			else if (preferences.selectedTool == "addNode")
 			{
-				d3g.addNode({x:d3.mouse(this)[0],y:d3.mouse(this)[1]});
+				atomis = defaultAtom();
+				$.ajax(
+				{
+					url: preferences.cogserver + 'api/v1.1/atoms',
+					type: 'POST',
+					data: atomis
+				})
+				.success(function(data)
+				{
+					atomis["x"] = d3.mouse(this)[0];
+					atomis["y"] = d3.mouse(this)[1];
+					d3g.addNode(atomis);
+				})
+				.fail(function(data)
+				{
+					//Failed
+					atomis["x"] = d3.mouse(this)[0];
+					atomis["y"] = d3.mouse(this)[1];
+				});
 
 			}
- 
 		});
-
-		
-
 
 		link.on("click", function(d) 
 		{
@@ -170,17 +180,18 @@ function d3graph(element)
 	 	 	if (preferences.selectedTool == "pointer")
 			{
 				d3.select(this).select("circle")
-				 .transition()
-				 .duration(transitionSpeed)
-				 .attr("r", nodeRadius);
+					.transition()
+					.duration(transitionSpeed)
+					.attr("r", nodeRadius);
 		 
-				 //----FADE OUT EVERYTHING ELSE-----
-				 //----------------------------------
-				 //----------------------------------
+				//----FADE OUT EVERYTHING ELSE-----
+				//----------------------------------
+				//----------------------------------
 				node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", function(o)
 				{
 					return isConnected(d, o) ? 1.0 : 0.1;
 				})
+				
 				.ease(Math.sqrt).attr("r", function(o)
 				{
 					return isConnected(d, o) ? nodeRadius : 500;
@@ -200,7 +211,7 @@ function d3graph(element)
 			}
 			else if (preferences.selectedTool == "removeNode")
 			{
-				d3g.removeNode(d.index);
+				deleteNode(d) 
 				return;
 			}
 			else if (preferences.selectedTool == "addLink")
@@ -208,7 +219,6 @@ function d3graph(element)
 
 				if (linkToolNode1 == null)
 				{
-
 					d3.select(this).classed("linkToolNode",true);
 					linkToolNode1 = d.index;
 				 
@@ -222,8 +232,6 @@ function d3graph(element)
 					d3g.addLink(linkToolNode1, linkToolNode2 ) ;
 					linkToolNode1 = null;
 					linkToolNode2 = null;
-					 
-				 
 					return;
 				}
 			}
@@ -231,7 +239,6 @@ function d3graph(element)
 			{
 
 			}
-
 
 			d3.event.stopPropagation();
 			node.classed("selectedNode",false);
@@ -260,37 +267,34 @@ function d3graph(element)
 			.attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + zoom.scale() + ")");
 			*/
 
-
 		});
 
 
 		node.on("mouseover", function(d)
 		{
 
-
 			if ((preferences.selectedTool == "addLink") && (linkToolNode1!=null))
 			{
 				d3.select(this).classed("linkToolNode",true);
 				return;
 			}
-			 
-
+		 
 			if (!preferences.AppearanceHoverShowConnections) return;
 			 
-			node.classed("node-active", function(o) {
-			thisOpacity = isConnected(d, o) ? true : false;
-			this.setAttribute('fill-opacity', thisOpacity);
-			return thisOpacity;
-
+			node.classed("node-active", function(o) 
+			{
+				thisOpacity = isConnected(d, o) ? true : false;
+				this.setAttribute('fill-opacity', thisOpacity);
+				return thisOpacity;
 			});
 		 
-			link.classed("link-active", function(o) {
+			link.classed("link-active", function(o)
+			{
 				return o.source === d || o.target === d ? true : false;
 			});
 			 
 			d3.select(this).classed("node-active", true);
 			d3.select(this).select("circle").transition().duration(transitionSpeed).attr("r", nodeRadius);
-
 
 		})
 
@@ -298,24 +302,28 @@ function d3graph(element)
 		{
 			node.classed("node-active", false);
 			link.classed("link-active", false);
-
 			d3.select(this).select("circle").transition().duration(transitionSpeed).attr("r", nodeRadius);
 			connectedNode.splice(0, connectedNode.length);
 		});
 
-
-
-        force.start();
+	force.start();
+	       
     }
 
     update();
- 
+
 	/*--------------------------*/
 	/*--------FUNCTIONS---------*/
 	/*--------------------------*/
 	/*--------------------------*/
 	/*--------------------------*/
  
+ 	this.showAll = function()
+ 	{
+ 		//this.link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", 1);
+		//this.node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", 1);
+ 	}
+
 	this.update = function (id) 
 	{
         update();
@@ -325,9 +333,8 @@ function d3graph(element)
 	{
         
         for(var i=0;i<newnodes.length;i++)
-        {
         	nodes.push(newnodes[i]);	
-        }
+
         this.refreshLinks();
         update();
     }
@@ -339,7 +346,6 @@ function d3graph(element)
          
 	    	for (var li=0;li<nodes[i].incoming.length;li++)
 	    	{
-	    	 
 	    		links.push({"source": nodes[i], "target": findNodeByHandle(nodes[i].incoming[li]), "index": links.length});
 	    		console.log("incoming link");
 	    	}
@@ -381,16 +387,14 @@ function d3graph(element)
         var sourceNode = findNode(sourceId);
         var targetNode = findNode(targetId);
         
-     
         if((sourceNode !== null) && (targetNode !== null)) 
         {
             links.push({"source": sourceNode, "target": targetNode, "index": links.length});
             update();
         }
         else
-        {
         	echo("One of the connecting links have not been found");
-        }
+
     }
     
     this.removeLink = function (index) 
@@ -431,7 +435,6 @@ function d3graph(element)
         return null;
     }
 
-
 	/*------------------------------------*/
 	/*-------VARIOUS FUNCTIONS(?)---------*/
 	/*------------------------------------*/
@@ -441,12 +444,10 @@ function d3graph(element)
     {
     	if (d.incoming!=undefined)
     	{
-
-
-    	if (d.name!="")
-    		return d.incoming.length * 2 + 5;
-    	else
-    		return 5;
+	    	if (d.name!="")
+	    		return d.incoming.length * 2 + 5;
+	    	else
+	    		return 1;
     	}
     	return 10;
     }
@@ -462,7 +463,6 @@ function d3graph(element)
  
     function zoomed()
 	{
-
 		vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 	}
 
@@ -474,7 +474,6 @@ function d3graph(element)
 
 	function dragged(d)
 	{
-
 		//d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
 	}
 
@@ -483,7 +482,63 @@ function d3graph(element)
 		nodeDragging = false;
 	}
 
-	 
+	function arrycontain(obj) 
+	{
+		var i = connectedNode.length;
+		while (i--)
+		{
+			if (connectedNode[i] === obj) 
+				return true;
+		}
+		return false;
+	}
+
+	function getnode(handle) 
+	{
+		for ( jnode = 0; jnode < atomData.length; jnode++)
+			if (handle == atomData[jnode].handle)
+				return atomData[jnode];
+	}
+
+	function isConnected(a, b) 
+	{
+
+		if (!arrycontain(a))
+			connectedNode[connectedNode.length] = a;
+ 
+		function recurse(node)
+		{
+			if (node.incoming.length > 0)
+				node.incoming.forEach(function(entry)
+				{
+					//finde better way
+					var currentNde = getnode(entry);
+					if (!arrycontain(currentNde)) {
+						connectedNode[connectedNode.length] = currentNde;
+						recurse(currentNde);
+					}
+				});
+			
+			if (node.outgoing.length > 0)
+				node.outgoing.forEach(function(entry)
+				{
+					//finde better way
+					var currentNde = getnode(entry);
+					if (!arrycontain(currentNde)) {
+						connectedNode[connectedNode.length] = currentNde;
+						recurse(currentNde);
+					}
+				});
+ 
+		}
+
+		recurse(a);
+
+		if (!arrycontain(b))
+			return false;
+		else
+			return true;
+	}
 
 }
 

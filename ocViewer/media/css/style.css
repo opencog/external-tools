@@ -78,6 +78,11 @@ hr
   border-bottom: 1px solid #111;
 }
 
+#detailsBar:hover
+{
+  background-color: #4477dd;
+}
+
 #detailsPanel
 {
     background-color:#666;
@@ -102,6 +107,15 @@ hr
 {
   font-weight: bold;
 }
+.detailBarCloseButton a:link
+{
+  color:#fff!important;
+}
+.detailBarCloseButton a:hover
+{
+  color:#fff;
+}
+
 /* TOOLBAR */
 /*-----------------*/
 /*-----------------*/
@@ -130,6 +144,12 @@ hr
   background-color: #3366cc;
   cursor:pointer;
 }
+
+#toolboxBar:hover
+{
+  background-color: #4477dd;
+}
+
 #toolboxContent
 {
   
@@ -195,7 +215,12 @@ hr
   background-color: #3366cc;
   cursor:pointer;
 }
- 
+
+#terminalBar:hover
+{
+  background-color: #4477dd;
+}
+
 #terminalText
 {
    width:100%;
