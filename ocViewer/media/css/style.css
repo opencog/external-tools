@@ -177,9 +177,9 @@ hr
   height:2px;
   background-color: #333;
 }
-.toolbarIcon:hover
+.toolboxIcon:hover
 {
-  background-color:#fff;
+  background-color:#333;
 }
 .toolboxIconSelected
 {
@@ -237,16 +237,6 @@ hr
 /*-----------------*/
 /*-----------------*/
 
-#visualizer
-{
-    padding:0;margin:0;background-color: #333;
-}
-
-#visualizerInner
-{
-    margin:0px;
-}
-
 .link {
   stroke: #fff;
   stroke-width: 1px;
@@ -256,16 +246,22 @@ hr
 
 .link:hover {
   stroke:  red;
-  stroke-width: 6px;
+  stroke-width: 3px;
   cursor: pointer; 
 }
 
 .node circle
 {  
-  stroke: #fff;fill: #321;
+  stroke: #fff;
   stroke-width: 1px; 
   cursor: pointer;
   z-index:50;
+}
+
+.node circle:hover
+{  
+  stroke: #fff;
+  stroke-width: 3px; 
 }
 
 .node-active circle{
@@ -280,7 +276,8 @@ hr
 }
 .fixed circle
 {
-  fill:#424; stroke:#ddd;
+  stroke:#ddd;
+  stroke-width:4px;
 }
 .linkToolNode circle
 {
@@ -288,11 +285,11 @@ hr
 }
 .selectedNode circle
 {
-  fill:red; 
+  stroke-width:4px;
 }
 .selectedLink
 {
-  stroke:red; stroke-width: 6px;
+  stroke:red; stroke-width: 3px;
 }
 .text
 {
@@ -383,6 +380,17 @@ hr
 {
   background-color:#000;
 }
+ 
+#screen-3d
+{
+  background-color:#000;
+}
+
+#screen-sigma
+{
+  background-color:#000;
+}
+
 #screen-json
 {
     padding:20px;
@@ -390,6 +398,7 @@ hr
     color:#000;
     overflow:scroll;
 }
+
 #screen-table
 {
     padding:20px;
@@ -397,6 +406,7 @@ hr
     color:#000;
     overflow:scroll;
 }
+
 #screen-scheme
 {
     padding:20px;
@@ -404,18 +414,21 @@ hr
     color:#000;
     overflow:scroll;
 }
+
 #screen-import
 {
     padding:20px;
     background-color: #fff;
     color:#000;
 }
+
 #screen-export
 {
     padding:20px;
     background-color: #fff;
     color:#000;
 }
+
 #screen-help
 {
     padding:20px;
@@ -423,12 +436,19 @@ hr
     color:#000;
     overflow:scroll;
 }
+
 #screen-about
 {
     padding:20px;
     background-color: #fff;
     color:#000;
+}
 
+#screen-gexf
+{
+    padding:20px;
+    background-color: #fff;
+    color:#000;
 }
 
 /* CONTROL ANIMATION */

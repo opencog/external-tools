@@ -173,8 +173,7 @@ function loadTerminal()
                     tempNode.classed("selectedNode",true); 
                 }
             }
-
-
+ 
         }
         else if (command.toUpperCase().substring(0,4)=="ZOOM")
         {
@@ -292,12 +291,9 @@ function loadTerminal()
 				$.ajax(
 				{
 					url: preferences.cogserver + 'api/v1.1/scheme',
-				 
-					method:'POST',
-					 
+					type:'POST', 
                     data:
 			    	{
-                         
 			    		command:commandtoSend
 			    	}
 

@@ -56,9 +56,12 @@
             <ul class="dropdown-menu">
                 <li class="dropdown-header">Views</li>
                 <li><a href="#" viewer="d3"><i class="fa"></i> D3</a></li>
+                <li><a href="#" viewer="sigma"><i class="fa"></i> Sigma</a></li>
+                <li><a href="#" viewer="3d"><i class="fa"></i> 3D</a></li>
                 <li><a href="#" viewer="table"><i class="fa"></i> Table</a></li>
                 <li><a href="#" viewer="json"><i class="fa"></i> JSON</a></li>
                 <li><a href="#" viewer="scheme"><i class="fa"></i> Scheme</a></li>
+                <li><a href="#" viewer="gexf"><i class="fa"></i> GEXF</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Sidebars</li>
                 <li><a href="#" id="visibleLeftSideBar"><i id="visibleLeftSideBari" class="fa fa-square-o"></i> Left Sidebar</a></li>
@@ -155,8 +158,7 @@
                         <div id="FilterSTIRange"></div>
                     </div>
 
-                    <div class="form-group">
-                         
+                    <div class="form-group"> 
                         <label>TruthValue Minimums:</label>
                          <div class="row">
                          <div class="col-lg-4">
@@ -217,19 +219,18 @@
                   <div class="accordion-inner">
                     <!-- CONTENT -->
                         <div class="form-group">
-                        <label for="AdvancedFilterFilter">Advanced Filter</label>
-                        <textarea id="AdvancedFilterFilter" class="form-control"></textarea>
-                        <br>
-                        <label for="AdvancedFilterSavedfilters">Saved Advanced Filters</label>
-                        <select id="AdvancedFilterSavedFilters" class="form-control">
-                        </select>
-                        <br>
-                        <div class="pull-right">
-                            <button id="AdvancedFilterRemember" class="btn btn-success btn-xs" disabled="disabled">Remember</button>
-                            <button id="AdvancedFilterForget" class="btn btn-success btn-xs" disabled="disabled">Forget</button> 
-                            <button id="AdvancedFilterExecute" class="btn btn-success btn-xs" disabled="disabled">Execute</button>
-                        </div>
-                         
+                          <label for="AdvancedFilterFilter">Advanced Filter</label>
+                          <textarea id="AdvancedFilterFilter" class="form-control"></textarea>
+                          <br>
+                          <label for="AdvancedFilterSavedfilters">Saved Advanced Filters</label>
+                          <select id="AdvancedFilterSavedFilters" class="form-control">
+                          </select>
+                          <br>
+                          <div class="pull-right">
+                              <button id="AdvancedFilterRemember" class="btn btn-success btn-xs" disabled="disabled">Remember</button>
+                              <button id="AdvancedFilterForget" class="btn btn-success btn-xs" disabled="disabled">Forget</button> 
+                              <button id="AdvancedFilterExecute" class="btn btn-success btn-xs" disabled="disabled">Execute</button>
+                          </div>
                         </div>
                     <!-- END CONTENT -->
                   </div>
@@ -305,7 +306,7 @@
                 <div id="analyzePanel" class="accordion-body collapse">
                   <div class="accordion-inner">
                     <!-- CONTENT -->
-                    To be implemented...
+                      To be implemented...
                     <!-- END CONTENT -->
                   </div>
                 </div>
@@ -333,12 +334,20 @@
    
         </div>
 
-        <div class="col-sm-9" id="mainContent">
+        <div class="col-sm-9" id="mainContent"> 
         <!-- MAIN SCREENS -->
+
             <div id="screen-d3">
               <button id="toggleForceStart" class="btn btn-success">Stop Animation</button>
+              
             </div>
   
+            <div id="screen-3d">
+            </div>
+
+            <div id="screen-sigma">
+            </div>
+
             <div id="screen-table">
             </div>
 
@@ -346,6 +355,9 @@
             </div>
 
             <div id="screen-scheme">
+            </div>
+
+            <div id="screen-gexf"> 
             </div>
              
             <div id="screen-import">
@@ -365,9 +377,7 @@
           
             <hr>
               <button class="btn btn-success">Import</button>
-             
-  
-               
+ 
             <!-- END CONTENT -->
             </div>
 
@@ -375,13 +385,26 @@
             <!-- CONTENT -->
                 <form>
                     <legend>Export Options</legend>
-                    <div class="form-group">
-                    <label for="export-type">Export Type</label>
-                    <select>
-                        <option>This</option>
-                        <option>That</option>
-                    </select>
+                  
+                    <ul class="nav nav-tabs">
+                       <li role="presentation" class="active"><a href="#" id="exportOptionGefx" >Gefx - Graph Exchange XML Format</a></li>
+                      <li role="presentation"><a href="#" id="exportOptionScheme" >Scheme Format</a></li>
+                      <li role="presentation"><a href="#" id="exportOptionText">Text File</a></li>
+                    </ul>
+
+                    <div style="width:40%; padding:20px;">
+                      <div class="form-group">
+                        <label for="inputEmail">Creator</label>
+                        <input id="exportGefxCreator" type="text" class="form-control" id="inputEmail" placeholder="Creator">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEmail">Description</label>
+                        <input id="exportGefxDescription" type="text" class="form-control" id="inputEmail" placeholder="Description">
+                      </div>
+                    <hr>
+                    <button class="btn btn-success" type="button" id="exportExportButton" >Export</button>
                     </div>
+                    
                 </form>
             <!-- END CONTENT -->
             </div>
@@ -588,19 +611,77 @@
 
 <!-- SCRIPTS -->
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<!--<script src="http://adnanwahab.com/pathgl/dist/pathgl.min.js"></script>-->
 <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
 <script src="media/js/jquery-ui.js"></script>
+<script src="media/js/three.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script src="media/js/jquery.slimscroll.js" charset="utf-8"></script>
 <script src="media/js/jquery.switchButton.js" charset="utf-8"></script>
 <script src="media/js/jquery.terminal-0.8.8.js"></script>
 <script src="media/js/jquery.awesome-cursor.min.js"></script>
  
+
+<!-- SIGMA -->
+<script src="media/js/sigma.js-master/src/sigma.core.js"></script>
+<script src="media/js/sigma.js-master/src/conrad.js"></script>
+<script src="media/js/sigma.js-master/src/utils/sigma.utils.js"></script>
+<script src="media/js/sigma.js-master/src/utils/sigma.polyfills.js"></script>
+<script src="media/js/sigma.js-master/src/sigma.settings.js"></script>
+
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.dispatcher.js"></script>
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.configurable.js"></script>
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.graph.js"></script>
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.camera.js"></script>
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.quad.js"></script>
+<script src="media/js/sigma.js-master/src/captors/sigma.captors.mouse.js"></script>
+<script src="media/js/sigma.js-master/src/captors/sigma.captors.touch.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/sigma.renderers.canvas.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/sigma.renderers.webgl.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/sigma.renderers.svg.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/sigma.renderers.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="media/js/sigma.js-master/src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="media/js/sigma.js-master/src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="media/js/sigma.js-master/src/misc/sigma.misc.animation.js"></script>
+<script src="media/js/sigma.js-master/src/misc/sigma.misc.bindEvents.js"></script>
+<script src="media/js/sigma.js-master/src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="media/js/sigma.js-master/src/misc/sigma.misc.drawHovers.js"></script>
+ 
+<script src="media/js/sigma.js-master/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+<script src="media/js/sigma.js-master/plugins/sigma.layout.forceAtlas2/worker.js"></script>
+<script src="media/js/sigma.js-master/plugins/sigma.layout.forceAtlas2/supervisor.js"></script>
+
 <!-- NEW LIBS -->
 <script src="media/js/visual.js"></script>
 <script src="media/js/visual-table.js"></script>
 <script src="media/js/visual-json.js"></script>
 <script src="media/js/visual-scheme.js"></script>
+<script src="media/js/visual-sigma.js"></script>
+<script src="media/js/visual-gexf.js"></script>
+<script src="media/js/visual-3d.js"></script>
 <script src="media/js/functions.js"></script>
 <script src="media/js/terminal.js"></script>
 

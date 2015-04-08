@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "start": "node_modules/.bin/browserify -s ngraph index.js | uglifyjs > bundle.js"
+  },
+  "dependencies": {
+    "ngraph.generators": "~0.0",
+    "ngraph.three": "~0.0.11",
+    "query-string": "~0.1.1",
+    "ngraph.serialization": "0.0.3"
+  },
+  "devDependencies": {
+    "browserify": "~3.18.0",
+    "uglify-js": "^2.4.13"
+  }
+}
