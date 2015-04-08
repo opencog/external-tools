@@ -1,28 +1,41 @@
 /*------------------------
 ------- VARIABLES --------
 ------------------------*/
+
+//Default Data structure for atom
+var Accordions = []; //Storing the accordions preferences
+var connectedNode = []; //The connected node
+
+var d3g = null; //Storing the whole d3 graph here
+var graph = null; //Storing the graph Viewer
+var sigmag = null; //Storing the Sigma Viewer
+var tg = null;  //3D graph T(threeD)G(raph)
+
 var svg; //The d3 graph is being stored here
 var width=800; //Graph starting Width. Dynamically calculated later through
 var height=800; ////Graph starting Height. Dynamically calculated later through
-var detailsMinimized=false; //Details Window Minimized or not
+ 
+var linkToolNode1 = null;
+var linkToolNode2 = null;
+
 var navbarTopHeight=65; //NavBarHeight. Dynamically calculated later through
 var wh,ww; //Window Width, Window Height
 var preferences; // LocalStorage preferences. This things remembers..
 var connected = false; //Connected to the server?
 var drawedd3 = false; //This is true if the d3 graph has been drawed once
-
 var atomDetailsChanged = false;
 
 var zoom;
 var container;
+var dragging;
 
 //Globals
 var atomData = null;
 var atomTypes = null;
+var count = null //How many atoms?
 var filterQuery = new Object();
 
 var nodes = [],links = [];
-
 var terminal = null;
 
 var selectedNode = null;
@@ -34,15 +47,13 @@ var advancedFilters = []; //Storing the advanced filters array here after conver
 var gui;
 var links = [];
 var index = 0;
- 
+  
 var ApperanceforceAnimated;
-
 var cursor = null;
-
 var API_VER = "v1.1";
 
 $(document).ready(function()
-{
+{$( "#tabs" ).tabs();
     $("#details").draggable({
 		stop: function(e,ui) { 
 			savePreference("detailsLeft",ui.position.left);
@@ -66,8 +77,9 @@ $(document).ready(function()
 	//navbarTopHeight = $('#navbarTop')[0].offsetHeight;
     wh = $(window).height();
 	ww = $(window).width();
-    render(); //Render some gui elements having to do with height
+    
 	loadPreferences(); //Load user's options
+	showScreen(preferences.viewer);;
   	$("body").css("display","block"); //show the Body when everything has been calculater
  
   	//STI Range
@@ -93,7 +105,7 @@ $(document).ready(function()
       {
         $("#appearanceChargeAmount").html("Charge " + ui.values[0]);
       	savePreference("appearanceCharge",$("#appearanceCharge").slider("values",0));
-       	updateD3Graph();
+       	d3g.update();
        }
     });
 
@@ -105,7 +117,7 @@ $(document).ready(function()
       {
         $("#appearanceFrictionAmount").html("Friction " + ui.values[0]/100);
       	savePreference("appearanceFriction",$("#appearanceFriction").slider("values",0));
-       	updateD3Graph();
+       	d3g.update();
        }
     });
 
@@ -117,7 +129,7 @@ $(document).ready(function()
       {
         $("#appearanceLinkStrengthAmount").html("Link Strength " + ui.values[0]/100);
       	savePreference("appearanceLinkStrength",$("#appearanceLinkStrength").slider("values",0));
-       	updateD3Graph();
+       	d3g.update();
        }
     });
 
@@ -129,10 +141,10 @@ $(document).ready(function()
       {
         $("#appearanceLinkDistanceAmount").html("Link Distance " +  ui.values[0]);
       	savePreference("appearanceLinkDistance",$("#appearanceLinkDistance").slider("values",0));
-       	updateD3Graph();
+       	d3g.update();
        }
     });
-	 
+	  
     $("#FilterSTIRangeAmount").html(
     	"Min:" + $("#FilterSTIRange").slider("values",0) +
       " - Max:" + $("#FilterSTIRange").slider("values",1)
@@ -141,18 +153,11 @@ $(document).ready(function()
     $("#ConnectAutoConnect").switchButton({
   		labels_placement: "left",
   		checked: String2Boolean(preferences.ConnectAutoConnect),
-  		on_label: "AUTO CONNECT",	
-        off_label: "DO NOT AUTO CONNECT",
+  		on_label: "CONNECT ON LOAD",	
+        off_label: "DO NOT CONNECT ON LOAD",
   		on_callback: function(){preferences.ConnectAutoConnect=true} ,
   		off_callback: function(){preferences.ConnectAutoConnect=false} 
 	});
- 
-    $("#AppearanceforceAnimated").switchButton({
-  		labels_placement: "right",
-  		checked: String2Boolean(preferences.appearanceforceAnimated),
-  		on_callback: AppearanceforceAnimatedOn ,
-  		off_callback: AppearanceforceAnimatedOff
- 	});
  
     $("#AppearanceShowText").switchButton({
   		labels_placement: "right",
@@ -168,6 +173,13 @@ $(document).ready(function()
   		off_callback: AppearanceShowLinksOff
 	});
 
+    $("#AppearanceHoverShowConnections").switchButton({
+  		labels_placement: "right",
+  		checked: String2Boolean(preferences.appearanceHoverShowConnections),
+  		on_callback: AppearanceHoverShowConnectionsOn ,
+  		off_callback: AppearanceHoverShowConnectionsOff
+	});
+
     $("#atomDetailsFixed").switchButton({
   		labels_placement: "right",
   		checked: false,
@@ -178,8 +190,18 @@ $(document).ready(function()
     //Load Terminal
     if (preferences.visibleTerminal)
 	   loadTerminal();
+ 
+ 	//getAtomTypes - without them nothing can actually work. They are a basis of declaring an atom.
+ 	//maybe store locally in the future if server fails to connect...
+	retrieveAtomTypes();
 
-    showScreen(preferences.viewer);    
+	if(String2Boolean(preferences.ConnectAutoConnect))
+		getAtoms();
+
+	//render(); //Render some gui elements having to do with height
+    render(); 
+
+    //showScreen(preferences.viewer);    
  
 });
 
@@ -193,7 +215,9 @@ $(window).resize(function()
  
 function render()
 {
- 	 
+	wh = $(window).height();
+	ww = $(window).width();
+
  	$('#leftMenu').height(wh - navbarTopHeight);
  	$('#leftMenuInner').height(wh - navbarTopHeight);
  	$('#leftMenuInner').slimScroll({
@@ -215,7 +239,7 @@ function render()
 	   	.attr('width', width)
 	   	.attr('height', height)
   
-		force.size([width, height]);
+		//force.size([width, height]);
 			//.start();
 	}
 }
@@ -223,14 +247,33 @@ function render()
 /*------------------------
 -------- EVENTS ----------
 ------------------------*/
+$(".accordion-toggle").click(function()
+{
+	thisOpen = (!$($(this).attr("href")).hasClass("in"));
+
+	if (thisOpen)
+	{
+		Accordions.push($(this).attr("href").replace("#",""));
+		preferences.Accordions;
+	}
+	else
+	{
+    	index = Accordions.indexOf($(this).attr("href").replace("#",""));
+		Accordions.splice(index, 1);
+	}
+	savePreference("Accordions",JSON.stringify(Accordions));
+})
+
 $("#FileImport").click(function()
 {
 	showScreen("import");
+	savePreference("viewer","import");
 });
 
 $("#FileExport").click(function()
 {	
 	showScreen("export");
+	savePreference("viewer","export");
 });
 
 $("#ConnectConnectButton").keypress(function(e)
@@ -240,31 +283,38 @@ $("#ConnectConnectButton").keypress(function(e)
 
 $("#ConnectConnectButton").click(function()
 {
-	//Inside this Function we 
-	//Connect to the Server Afterwards 
-	//cause we need to load the AtomTypes First!
-	retrieveAtomTypes(); 
+	 
+	if (atomTypes==null)
+	{
+		retrieveAtomTypes();
+		getAtoms();
+	}
+	else
+	{
 
-	//Connect
-	//ConnectToServer();
+	}
+ 
+});
+
+
+$("#ConnectConnectButton").click(function()
+{
+	refresh();
 });
 
 $("#SearchButton").click(function()
 {
- 
 	SearchAtom($("#SearchField").val());
 });
 
 $("#visibleLeftSideBar").click(function()
 {
- 
 	if (preferences.visibleLeftSideBar==1)
 		savePreference("visibleLeftSideBar",0);
 	else
 		savePreference("visibleLeftSideBar",1);
 
 	updateGUIPreferences();
-	
 });
 
 $("#visibleAtomDetails").click(function()
@@ -310,6 +360,10 @@ $("[viewer]").click(function(){
 	showScreen(preferences.viewer);
 });
 
+$("#toggleForceStart").click(function(){
+	 force.stop();
+})
+
 $("#HelpHowToUse").click(function()
 {	
 	showScreen("help");
@@ -329,55 +383,61 @@ $("#AboutCloseButton").click(function()
 $("#FilterAttentionalFocusOnly").click(function()
 {	
 	savePreference("FilterAttentionalFocusOnly",eval($(this).prop('checked')));
-	filterData();
+	$("#ConnectConnectButton").prop("disabled",false);
+	//filterData();
 });
 
 $("#FilterTruthValueStrength").keyup(function()
 {	
 	savePreference("FilterTruthValueStrength",$("#FilterTruthValueStrength").val());
-	filterData();
+	$("#ConnectConnectButton").prop("disabled",false);
+	//filterData();
 });
 
 $("#FilterTruthValueConfidence").keyup(function()
 {	
 	savePreference("FilterTruthValueConfidence",$("#FilterTruthValueConfidence").val());
-	filterData();
+	$("#ConnectConnectButton").prop("disabled",false);
+	//filterData();
 });
 
 $("#FilterTruthValueCount").keyup(function()
 {	
 	savePreference("FilterTruthValueCount",$("#FilterTruthValueCount").val());
-	filterData();
+	$("#ConnectConnectButton").prop("disabled",false);
+	//filterData();
 });
 
 $("#FilterAtomName").keyup(function()
 {	
 	savePreference("FilterAtomName",$("#FilterAtomName").val());
-	filterData();
+	$("#ConnectConnectButton").prop("disabled",false);
+	//filterData();
 });
 
 $("#FilterAtomType").change(function()
 {	
 	savePreference("FilterAtomType",$("#FilterAtomType").val());
-	filterData();
+	$("#ConnectConnectButton").prop("disabled",false);
+	//filterData();
 });
 
 $("#FilterIncomingSets").click(function()
 {	
 	savePreference("FilterIncomingSets",eval($(this).prop('checked')));
-	filterData();
+	$("#ConnectConnectButton").prop("disabled",false);
+	//filterData();
 });
 
 $("#FilterOutgoingSets").click(function()
 {	
 	savePreference("FilterOutgoingSets",eval($(this).prop('checked')));
-	filterData();
+	$("#ConnectConnectButton").prop("disabled",false);
+	//filterData();
 });
 
-
 $("#AdvancedFilterExecute").click(function()
-{
-	
+{	
 	connected = true;
 	if (connected)
 	{
@@ -406,8 +466,7 @@ $("#AdvancedFilterExecute").click(function()
 			$("#ConnectConnectButton").prop('disabled', false);
 			$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> Connection Failed!</span>");
 		});
-	}
-	 
+	} 
 });
 
 $("#AdvancedFilterFilter").keyup(function()
@@ -426,7 +485,6 @@ $("#AdvancedFilterFilter").keyup(function()
 
 $("#AdvancedFilterRemember").click(function()
 {	
-
  	var advancedFilter = [];
  	var counter = advancedFilters.length;
  	advancedFilter[0] = counter; //id
@@ -439,7 +497,6 @@ $("#AdvancedFilterRemember").click(function()
 	$("#AdvancedFilterSavedFilters").val(title).change();
 	updateAdvancedFilters();
 });
-
 
 $("#AdvancedFilterForget").click(function()
 {	
@@ -463,17 +520,16 @@ $("#AdvancedFilterForget").click(function()
 		$("#AdvancedFilterFilter").val("");
 		savePreference("advancedFilters",JSON.stringify(advancedFilters));
 		updateAdvancedFilters();
-
 	}
-	 
-  
 });
 
 $("#toolboxPointer").click(function()
 {
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
-	cursor = $('#screen-d3').awesomeCursor('sdfsdf');
+	cursor = null;
+	$('#screen-d3').css("cursor","default");
+	$('.node circle').css("cursor","pointer");
 	savePreference("selectedTool","pointer");
 });
 
@@ -482,6 +538,7 @@ $("#toolboxAddNode").click(function()
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
 	cursor = $('#screen-d3').awesomeCursor('fa fa-plus-circle', {color: 'white'});
+	$('.node circle').css("cursor","pointer");
 	savePreference("selectedTool","addNode");
 });
 
@@ -489,7 +546,8 @@ $("#toolboxRemoveNode").click(function()
 {
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
-	cursor = $('#screen-d3').awesomeCursor('fa fa-minus-circle', {color: 'white'});
+	$('#screen-d3').awesomeCursor('fa fa-minus-circle', {color: 'white'});
+	$('.node circle').awesomeCursor('fa fa-minus-circle', {color: 'white'});
 	savePreference("selectedTool","removeNode");
 });
 
@@ -497,8 +555,16 @@ $("#toolboxAddLink").click(function()
 {
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
-	cursor = $('#screen-d3').awesomeCursor('fa fa-link', {color: 'white'});
+	$('.node circle').awesomeCursor('fa fa-link', {color: 'white'});
 	savePreference("selectedTool","addLink");
+});
+
+$("#toolboxRemoveLink").click(function()
+{
+	$(".toolboxIcon").removeClass("toolboxIconSelected");
+	$(this).addClass("toolboxIconSelected");
+	$('.link ').awesomeCursor('fa fa-unlink', {color: 'white'});
+	savePreference("selectedTool","removeLink");
 });
 
 $("#AdvancedFilterSavedFilters").change(function()
@@ -519,9 +585,7 @@ $("#AdvancedFilterSavedFilters").change(function()
 		$("#AdvancedFilterExecute").prop("disabled",true);
 		$("#AdvancedFilterRemember").prop("disabled",true);
  	}
- 
 });
- 
 
 $("#atomDetailsUpdate").click(function()
 {
@@ -565,7 +629,6 @@ $("#atomDetailsUpdate").click(function()
 	atomDetailsChanged = false;
 });
 
-  
 $("#detailsLinkSourceButton").click(function()
 {
 	selectedNode  = selectedLink.source;
@@ -573,7 +636,6 @@ $("#detailsLinkSourceButton").click(function()
 	link.classed("selectedLink",false);
 	d3.select("#node_" + selectedLink.source.handle).classed("selectedNode",true);
  	showSelectedLink(selectedLink.source);
-	 
 });
  
 $("#detailsLinkTargetButton").click(function()
@@ -600,7 +662,6 @@ $(".atomDetailsForm").change(function()
 $(".atomDetailsForm").keydown(function()
 {
 	atomDetailsChanged = true;
-
 	$("#atomDetailsUpdate").prop("disabled",false);
 });
  
@@ -624,43 +685,46 @@ $("#toolboxClose").click(function()
 	checkBoxLi("visibleToolboxi",false);
 	$("#toolbox").css("visibility","hidden");
 });
- 
-function AppearanceforceAnimatedOn()
-{
-	if (drawedd3) node.classed("fixed", function (d){ d.fixed = false;});
-	savePreference("appearanceforceAnimated",true);
-}
+  
+$("#exportExportButton").click(function()
+{ 
+	gefxObject = new updateGEFXView();
+	download ('data.gefx', gefxObject.generate(atomData));	
+});
 
-function AppearanceforceAnimatedOff()
-{
-	if (drawedd3) node.classed("fixed", function (d){ d.fixed = true;});
-	savePreference("appearanceforceAnimated",false);
-}
 
 function AppearanceShowTextOn()
 {
-	if (drawedd3) 
-		node.select("text").style("visibility", "visible");
-
+	d3.selectAll(".text").style("visibility", "visible");
 	savePreference("appearanceShowText",true);
 }
 
 function AppearanceShowTextOff()
 {
-	if (drawedd3)
-		node.select("text").style("visibility", "hidden");
-
+	d3.selectAll(".text").style("visibility", "hidden");
 	savePreference("appearanceShowText",false);  
 }
 
 function AppearanceShowLinksOn()
 {
+	d3.selectAll(".link").style("visibility", "visible");
 	savePreference("appearanceShowLinks",true);
 }
 
 function AppearanceShowLinksOff()
 {
+	d3.selectAll(".link").style("visibility", "hidden");
 	savePreference("appearanceShowLinks",false);
+}
+
+function AppearanceHoverShowConnectionsOn()
+{
+	savePreference("appearanceHoverShowConnections",true);
+}
+
+function AppearanceHoverShowConnectionsOff()
+{
+	savePreference("appearanceHoverShowConnections",false);
 }
 
 function atomDetailsFixedOn()
@@ -668,6 +732,7 @@ function atomDetailsFixedOn()
 	if (selectedNode!=null)
 		selectedNode.fixed = true;
 }
+
 function atomDetailsFixedOff()
 {
 	if (selectedNode!=null)
@@ -676,9 +741,60 @@ function atomDetailsFixedOff()
 
 function showScreen(screen)
 {
+  	//render();
+  	render();
+	$('div[id^="screen"]').css("display","none");
+	$("#screen-"+screen).css("display","block");
+ 	
+	if (screen=="d3")
+	{
+		d3g = new d3graph("#screen-d3");
+		d3g.addNodes(atomData);	 
+	}
+	else if (screen=="3d")
+	{
+		if (tg==null)
+			tg = new threedgraph("screen-3d");	 
+	}
+	else if (screen=="sigma")
+	{
+		render();
+		if (sigmag==null)
+			sigmag = new sigmaGraph("screen-sigma");  
+		else
+		{
+			gefxSigmaObject = new updateGEFXView();
+	    	//gefxData = gefxSigmaObject.generate(atomData);
+			//sigmag.parseGefx(gefxData);	
+			sigmag.addNodes(atomData);
+		}
+	}
+	else if (screen=="table")
+	{
+		updateTableView();
+		$("#details").hide();
+  		$("#toolbox").hide();
+	}
+	else if (screen=="scheme")
+	{
+		updateSchemeView();
+		$("#details").hide();
+  		$("#toolbox").hide(); 
+	}
+	else if (screen=="json")
+	{
+		updateJSONView();
+		$("#details").hide();
+  		$("#toolbox").hide(); 
+	}
+ 	else if (screen=="gexf")
+	{
 
-	//This function switchs between screens
-	$('div[id^="screen"]').hide();
+		gefxSigmaObject = new updateGEFXView();
+	    gefxData = gefxSigmaObject.generate(atomData); 
+	    console.log(gefxData);
+	    $("#screen-gexf").html("." + gefxData);
+	}
 
 	if (preferences.visibleAtomDetails)
 	{
@@ -686,35 +802,7 @@ function showScreen(screen)
 		$("#toolbox").show();
   		$("#terminal").show();
  	}
-
-	if (screen!="d3") 
-	{
-		if (drawedd3)
-			force.stop();
-
- 		//Save RAM :)
-    	$("#screen-json").html("");
-    	$("#screen-table").html("");
-    	$("#screen-scheme").html("");
-
-    	if (screen=="table")
-    		updateTableView()
-    	else if (screen=="scheme")
-    		updateSchemeView();
-    	else if (screen=="json")
-    		updateJSONView();
  
-  		$("#details").hide();
-  		$("#toolbox").hide();
-  		 
-	}
-	else
-	{
-		updateD3Graph();
-	}
-
-	
-	$("#screen-"+screen).show();
 }
  
 /*------------------------
@@ -727,6 +815,11 @@ function loadPreferences()
 { 
 	preferences = window.localStorage;
   
+	if (!preferences.Accordions)
+		preferences.Accordions = [];
+	else
+		Accordions = JSON.parse(preferences.Accordions);
+
 	//Defaults
 	if (!preferences.cogserver)
 	    preferences.cogserver = 'http://localhost:5000/';
@@ -776,6 +869,9 @@ function loadPreferences()
 	if (preferences.FilterOutgoingSets==undefined)
 	    preferences.FilterOutgoingSets = 0;
 	
+	if (preferences.appearanceAnimate==undefined)
+	    preferences.appearanceAnimate = 1;
+
 	if (preferences.appearanceShowText==undefined)
 	    preferences.appearanceShowText = true;
 
@@ -791,8 +887,11 @@ function loadPreferences()
 	if (preferences.appearanceLinkDistance==undefined)
 	    preferences.appearanceLinkDistance = 70;
 
-	if (preferences.appearanceforceAnimated==undefined)
-	    preferences.appearanceforceAnimated = true;
+	if (preferences.appearanceShowLinks==undefined)
+	    preferences.appearanceShowLinks = false;
+
+	if (preferences.appearanceHoverShowConnections==undefined)
+	    preferences.appearanceHoverShowConnections = false;
  
 	//if (preferences.selectedTool == undefined)
 		preferences.selectedTool = "pointer"; //always load the pointer at start...
@@ -820,7 +919,6 @@ function loadPreferences()
 
 	if (preferences.terminalTop == undefined)
 		preferences.terminalTop = 100;
- 
 
 	 if(!preferences.AdvancedFilterSelected)
 	 	preferences.AdvancedFilterSelected = null;
@@ -830,6 +928,13 @@ function loadPreferences()
 
 function updateGUIPreferences()
 {
+
+	//ACCORDEON
+	if (Accordions!=[])
+	{
+		for (var i=0;i<Accordions.length;i++)
+			$("#"+Accordions[i]).addClass("in");
+	}
 	//VIEW MENU 
 	if (preferences.visibleLeftSideBar==true)
 	{
@@ -926,7 +1031,7 @@ function updateGUIPreferences()
 
  	$("#toolbox"+preferences.selectedTool).addClass("selectedIcon");
 
- 	render(); //render stuff
+ 	//render stuff
 }
 
 function checkBoxLi(name,value)
@@ -990,7 +1095,7 @@ function SearchAtom(atomHandle)
 	if (connected)
 	{
 		selectedNodeIs = d3.select("#id_"+atomHandle);
-		SelectAtom(d3.select("#id_"+atomHandle));
+		SelectAtom(d3g.select("#id_"+atomHandle));
 	}
 	else
 		alert("Please connect first");
@@ -999,7 +1104,7 @@ function SearchAtom(atomHandle)
 /*---- CONNECTION -----*/
 /*---------------------*/
 /*---------------------*/
-function ConnectToServer()
+function getAtoms()
 {
 	//GUI Stuff
 	$("#ConnectConnectButton").disabled = true;
@@ -1079,6 +1184,8 @@ function ConnectToServer()
 		connected = true; 	
 	 	atomData =  dataset.result.atoms;
     	nodes = atomData;
+    	count = atomData.length;
+		
 	    if (atomData.length == 0)
 	    {
 	       $("#ConnectionStatus").html("The Cogserver returned no atoms for the given filter/search.");
@@ -1089,31 +1196,23 @@ function ConnectToServer()
 	    {
 	        $("#ConnectionStatus").html("<span class='success'><i class='fa fa-check-circle'></i> Successfully retrieved " + atomData.length.toString() + " atoms.</span>");
 	        echo("[[b;green;black]Successfully retrieved " + atomData.length.toString() + " atoms.]");
-	        if (drawedd3)
-	        	createD3GraphView(atomData);
-	        else
-	        { 
-	        	render();
-	        	showScreen(preferences.viewer);
-	        	createD3GraphView(atomData);
-	    	}
 	    }
-   
-	
+
+	     
+	    showScreen(preferences.viewer);
 	})
 	.fail(function()
 	{ 
- 
 		connected = false;
 		$("#ConnectConnectButton").prop('disabled', false);
 		$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> Connection Failed!</span>")
 	});
- 
+
 	//Remember Server
 	if ($("#ConnectCogServer").val()!="")
 		savePreference("cogserver",$("#ConnectCogServer").val());
-}
 
+}
 
 function retrieveAtomTypes()
 {
@@ -1141,7 +1240,6 @@ function retrieveAtomTypes()
     	{
     		$("<option />", {value: -1, text: "Empty"}).appendTo($("#FilterAtomType"));
     		$("#FilterAtomType").attr("disabled","disabled");
-
     	}
     	else
     	{
@@ -1158,31 +1256,74 @@ function retrieveAtomTypes()
 				$("#detailsAtomType").append($("<option></option>")
 				    .attr("value", key).text(key));
 
-
 				//if (preferences.FilterAtomType)
 					$("#FilterAtomType").val(preferences.FilterAtomType);
 			});
 		}
-		ConnectToServer();
-     
+		//getAtoms();
 	})
 	.fail(function()
 	{ 
+		echo("Could not get AtomTypes. Check connectivity with server");
 		connected = false;
-		$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> Connection Failed!</span>")
+		$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> Could not get AtomTypes. Check connectivity with server</span>")
  
 	});
-  
 }
 
 /*----- ATOM HANDLING ----*/
 /*------------------------*/
 /*------------------------*/
+function defaultAtom()
+{
+	
+	var tempAtom = 
+	{
+	    'handle': null,
+	    'name': '',
+	    'type': 'ConceptNode',
+	    'outgoing': [],
+	    'incoming': [],
+	    'fixed':false,
+	    'truthvalue':
+	    {
+			'type': 'simple',
+			'details':
+			{
+			    'count': '0',
+			    'confidence': '0',
+			    'strength': '0'
+			}
+	    },
+	    'attentionvalue':
+	    {
+			'lti': 0,
+			'sti': 0,
+			'vlti': false
+	    }
+	}
+
+	var tempAtom =  
+	{
+		'type': 'ConceptNode',
+		'name': 'Frog',
+		'truthvalue':
+		{
+			'type': 'simple',
+			'details':
+			{
+				'strength': 0.8,
+				'count': 0.2
+			}
+		}
+	}
+	return tempAtom;
+}
 
 function showSelectedLink(link)
 {
   
- 	$("#detailsBar").html("Link: " + link.name);
+ 	$("#detailsBarTitle").html("Link: " + link.name);
 
 	$("#detailsContent").css("display","none");
 	$("#detailsContentNone").css("display","none");
@@ -1191,9 +1332,7 @@ function showSelectedLink(link)
 	$("#detailsLinkSource").val(link.source.handle);
 	$("#detailsLinkTarget").val(link.target.handle);
 	
-
 	echo("\nSelected link: \n[[b;red;black]Name: " + link.name + "]\nSource:" + link.source.handle + "\nTarget:" + link.target.handle + "\n");
-  
 }
 
 function showSelectedAtom(atom)
@@ -1211,9 +1350,9 @@ function showSelectedAtom(atom)
 	$("#detailsContentNone").css("display","none");
 
 	if (atom.name!="")
-		$("#detailsBar").html("Atom: " + atom.name);
+		$("#detailsBarTitle").html("Atom: " + atom.name);
 	else
-		$("#detailsBar").html("Atom: " + atom.handle + " " + atom.type);
+		$("#detailsBarTitle").html("Atom: " + atom.handle + " " + atom.type);
 
 	$("#detailsAtomName").val(atom.name);
 	$("#detailsAtomType").val( atom.type);
@@ -1290,57 +1429,48 @@ function findNodebyHandle(handle)
 
 function deleteNode(node)
 {
-if (confirm("Are you sure that you want to delete node:" + node.name))
+	//if (confirm("Are you sure that you want to delete node:" + node.name))
 	{
-	
-		nodes.splice(findNode(node),1);
-	 	updateD3Graph(nodes);
-		//alert(findNode(node));
-		//ConnectToServer();
-/*
 		$.ajax(
 		{
-			url: preferences.cogserver + 'api/v1.1/scheme',
+			url: preferences.cogserver + 'api/v1.1/atoms/' + node.handle,
 			type: 'DELETE',
-			contentType:'json',
-			//access-control-request-method
-			headers: 
-			{
-				"Access-Control-Request-Method":"DELETE",
-				"X-Requested-With" : ""
-			},
 			dataType: "json",
 	    	processData: false,
 	    	crossDomain: true, 
 			data:
 			{
 				id: node.handle 
-			} 
-			 
+			} 	 
 		})
 		.success(function(data)
 		{
-			ConnectToServer();
+			//removeNodeFromTheGraph
+			d3g.removeNode(node.index);
+			d3g.showAll();
 		})
 		.fail(function(data)
 		{
-			ConnectToServer();
+			//Failed
 		});
-	*/}
-
+	}
 }
 
-function filterData()
+function refresh()
 {
 	 
 	//Clear All screens
+	$("#ConnectConnectButton").prop("disabled",true);
+	atomData = null;
+	selectedNode = null;
+	selectedatom = null;
 	//$("#screen-d3").html("");
 	$("#screen-json").html("");
 	$("#screen-table").html("");
 	$("#screen-scheme").html("");
 
 	//Resend query and do the new drawings etc
-	ConnectToServer();
+	getAtoms();
 }
 
 function String2Boolean(string)
@@ -1348,3 +1478,24 @@ function String2Boolean(string)
 	string = (string=="true") ?  true :  false;
 	return string;
 }
+
+function download(filename, text) 
+{
+	var pom = document.createElement('a');
+	pom.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(text));
+	pom.setAttribute('download', filename);
+	pom.style.display = 'none';
+	document.body.appendChild(pom);
+	pom.click();
+	document.body.removeChild(pom);
+}
+
+
+function handleError(evt) {
+    if (evt.message)
+      echo("Error: "+evt.message +"  at linenumber: "+evt.lineno+" of file: "+evt.filename);
+    else
+      echo("Error: "+evt.type+" from element: "+(evt.srcElement || evt.target));
+}
+
+window.addEventListener("error", handleError, true);

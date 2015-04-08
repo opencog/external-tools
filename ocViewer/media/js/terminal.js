@@ -18,6 +18,60 @@ function loadTerminal()
             showScreen("export");
     	else if (command.toUpperCase()=="CLEAR")
     		term.clear();
+        else if (command.toUpperCase().substring(0,3)=="ADD")
+        {
+            var newNodeName = command.split(" ")[1];
+            
+            if (newNodeName!="" && newNodeName!=null)
+                d3g.addNode({handle:newNodeName});
+    
+        }
+        else if (command.toUpperCase().substring(0,6)=="DELETE")
+        {
+            var node2Delete = command.split(" ")[1];
+            
+            if (node2Delete!="" && node2Delete!=null)
+                d3g.removeNode(node2Delete);
+    
+        }
+        else if (command.toUpperCase().substring(0,4)=="LINK")
+        {
+            var node1 = command.split(" ")[1];
+            if (node1.toUpperCase().substring(0,3)=="ALL")
+                return;
+
+            var node2 = command.split(" ")[2];
+
+            if ((node1!="" && node1!=null) && (node2!="" && node2!=null))
+                d3g.addLink(node1,node2);
+    
+        }
+        else if (command.toUpperCase().substring(0,3)=="FIX")
+        {
+            var select = command.split(" ")[1];
+            
+            if (select!="" && select!=null)
+            {
+                if ((select.toUpperCase().substring(0,3)=="ALL") || select=="*")
+                for(var i=0;i<count;i++)
+                {
+                    nodes[i].fixed = true;
+                }
+            }
+        }
+        else if (command.toUpperCase().substring(0,3)=="UNFIX")
+        {
+            var select = command.split(" ")[1];
+            
+            if (select!="" && select!=null)
+            {
+                if ((select.toUpperCase().substring(0,3)=="ALL") || select=="*")
+                for(var i=0;i<count;i++)
+                {
+                    nodes[i].fixed = false;
+                }
+            }
+        }
         else if (command.toUpperCase().substring(0,5)=="FIXED")
         {
             var select = command.split(" ")[1];
@@ -36,9 +90,8 @@ function loadTerminal()
                   
             }
             else
-            {
                 echo("Nothing to select.");
-            }
+
         }
         else if (command.toUpperCase().substring(0,7)=="UNFIXED")
         {
@@ -58,9 +111,8 @@ function loadTerminal()
                   
             }
             else
-            {
                 echo("Nothing to select.");
-            }
+        
         }
         else if (command.toUpperCase().substring(0,6)=="SELECT")
         {
@@ -90,9 +142,8 @@ function loadTerminal()
 
             }
             else
-            {
                 echo("Nothing to select.");
-            }
+            
         }
         else if (command.toUpperCase().substring(0,5)=="NODES")
         {
@@ -119,13 +170,10 @@ function loadTerminal()
                 for (var i=0; i < tempSelectedAtom.incoming.length; i++)
                 {
                     tempNode = findNodebyHandle(tempSelectedAtom.incoming[i].handle);
-                    tempNode.classed("selectedNode",true);
-                    
-                      
+                    tempNode.classed("selectedNode",true); 
                 }
             }
-
-
+ 
         }
         else if (command.toUpperCase().substring(0,4)=="ZOOM")
         {
@@ -139,7 +187,7 @@ function loadTerminal()
                     var dcy = (0  );
                    
                     zoom.translate([dcx, dcy]).scale(1);;
-                    container.transition()
+                    vis.transition()
                         .duration(transitionSpeed)
                         .attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + 1 + ")");
                     return;
@@ -193,7 +241,6 @@ function loadTerminal()
                 view = view.toUpperCase();
             else
                 showScreen(preferences.viewer);
-            
              
     		switch(view)
     		{
@@ -227,8 +274,6 @@ function loadTerminal()
     		links =[];
     		echo("pushing node");
     		force.nodes([]).links([]).start();
-     
-
     	}
     	else
     	{
@@ -246,14 +291,10 @@ function loadTerminal()
 				$.ajax(
 				{
 					url: preferences.cogserver + 'api/v1.1/scheme',
-					type: 'POST',
-					method:'POST',
-					dataType:'application/json',
-                    crossDomain: true ,
+					type:'POST', 
                     data:
 			    	{
-                         
-			    		commanfd:commandtoSend
+			    		command:commandtoSend
 			    	}
 
 				})

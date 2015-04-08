@@ -78,6 +78,11 @@ hr
   border-bottom: 1px solid #111;
 }
 
+#detailsBar:hover
+{
+  background-color: #4477dd;
+}
+
 #detailsPanel
 {
     background-color:#666;
@@ -102,6 +107,15 @@ hr
 {
   font-weight: bold;
 }
+.detailBarCloseButton a:link
+{
+  color:#fff!important;
+}
+.detailBarCloseButton a:hover
+{
+  color:#fff;
+}
+
 /* TOOLBAR */
 /*-----------------*/
 /*-----------------*/
@@ -114,11 +128,11 @@ hr
   width:120px;
   height:300px;
   position: fixed;
-  border: 1px solid #111;
+  border: 1px solid #fff;
   z-index: 399990;
   right: 50px;
   top: 50px;
-  background-color: #ddd;
+  background-color: #333;
   font-size: 12px;
 }
 #toolboxBar
@@ -130,6 +144,12 @@ hr
   background-color: #3366cc;
   cursor:pointer;
 }
+
+#toolboxBar:hover
+{
+  background-color: #4477dd;
+}
+
 #toolboxContent
 {
   
@@ -137,24 +157,33 @@ hr
 }
 .toolboxIcon
 {
-  border:1px solid #444;
+  border:1px solid #aaa;
+   
   float:left;
   width:50px;
   height:50px;
   margin:2px;
   text-align: center;
   overflow: hidden;
-  font-size:30px;
-  background-color:#ddd;
+  font-size:34px;
+  color:#ddd;
+  background-color:#222;
   cursor:pointer;
 }
-.toolbarIcon:hover
+.toolBoxLine
 {
-  background-color:#eee;
+  clear:left;
+  margin:10px;
+  height:2px;
+  background-color: #333;
+}
+.toolboxIcon:hover
+{
+  background-color:#333;
 }
 .toolboxIconSelected
 {
-  background-color: #d3d;
+  background-color: #118;
 }
 
 
@@ -186,7 +215,12 @@ hr
   background-color: #3366cc;
   cursor:pointer;
 }
- 
+
+#terminalBar:hover
+{
+  background-color: #4477dd;
+}
+
 #terminalText
 {
    width:100%;
@@ -203,32 +237,31 @@ hr
 /*-----------------*/
 /*-----------------*/
 
-#visualizer
-{
-    padding:0;margin:0;background-color: #333;
-}
-
-#visualizerInner
-{
-    margin:0px;
-}
-
 .link {
   stroke: #fff;
   stroke-width: 1px;
   stroke-opacity: 1.0;
+  z-index: 1;
 }
 
 .link:hover {
   stroke:  red;
-  stroke-width: 6px;
+  stroke-width: 3px;
   cursor: pointer; 
 }
 
 .node circle
 {  
-  stroke: #fff;fill: #321;
-  stroke-width: 1px;  
+  stroke: #fff;
+  stroke-width: 1px; 
+  cursor: pointer;
+  z-index:50;
+}
+
+.node circle:hover
+{  
+  stroke: #fff;
+  stroke-width: 3px; 
 }
 
 .node-active circle{
@@ -243,15 +276,20 @@ hr
 }
 .fixed circle
 {
-  fill:#424; stroke:#ddd;
+  stroke:#ddd;
+  stroke-width:4px;
+}
+.linkToolNode circle
+{
+  fill:blue;
 }
 .selectedNode circle
 {
-  fill:red; 
+  stroke-width:4px;
 }
 .selectedLink
 {
-  stroke:red; stroke-width: 6px;
+  stroke:red; stroke-width: 3px;
 }
 .text
 {
@@ -313,12 +351,12 @@ hr
 /*-----------------*/
 /*-----------------*/
 /*-----------------*/
-#ConnectConnectButton
+#ConnectConnectButton, #ConnectRefreshButton
 {
     cursor: pointer;
 }
 
-#ConnectConnectButton:hover
+#ConnectConnectButton:hover, #ConnectRefreshButton:hover
 {
     background-color:#5cb85c;
     color:#fff;
@@ -342,6 +380,17 @@ hr
 {
   background-color:#000;
 }
+ 
+#screen-3d
+{
+  background-color:#000;
+}
+
+#screen-sigma
+{
+  background-color:#000;
+}
+
 #screen-json
 {
     padding:20px;
@@ -349,6 +398,7 @@ hr
     color:#000;
     overflow:scroll;
 }
+
 #screen-table
 {
     padding:20px;
@@ -356,6 +406,7 @@ hr
     color:#000;
     overflow:scroll;
 }
+
 #screen-scheme
 {
     padding:20px;
@@ -363,18 +414,21 @@ hr
     color:#000;
     overflow:scroll;
 }
+
 #screen-import
 {
     padding:20px;
     background-color: #fff;
     color:#000;
 }
+
 #screen-export
 {
     padding:20px;
     background-color: #fff;
     color:#000;
 }
+
 #screen-help
 {
     padding:20px;
@@ -382,14 +436,39 @@ hr
     color:#000;
     overflow:scroll;
 }
+
 #screen-about
 {
     padding:20px;
     background-color: #fff;
     color:#000;
-
 }
- 
+
+#screen-gexf
+{
+    padding:20px;
+    background-color: #fff;
+    color:#000;
+}
+
+/* CONTROL ANIMATION */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+#toggleForceStart
+{
+  display:none;
+  position:absolute;
+  right:10px;top:10px;
+}
+#screen-d3:hover > #toggleForceStart
+{
+  display:block;
+}
+
 /* CLASSES */
 /*-----------------*/
 /*-----------------*/

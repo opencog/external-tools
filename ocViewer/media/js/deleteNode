@@ -1,0 +1,852 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object# article: http://ogp.me/ns/article# profile: http://ogp.me/ns/profile#">
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Language" content="en">
+    
+    
+    <title>VivaGraphJS/vivagraph.min.js at master · anvaka/VivaGraphJS</title>
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub">
+    <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-144.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144.png">
+    <meta property="fb:app_id" content="1401488693436528">
+
+      <meta content="@github" name="twitter:site" /><meta content="summary" name="twitter:card" /><meta content="anvaka/VivaGraphJS" name="twitter:title" /><meta content="VivaGraphJS - Graph drawing library for JavaScript" name="twitter:description" /><meta content="https://avatars0.githubusercontent.com/u/225407?v=3&amp;s=400" name="twitter:image:src" />
+      <meta content="GitHub" property="og:site_name" /><meta content="object" property="og:type" /><meta content="https://avatars0.githubusercontent.com/u/225407?v=3&amp;s=400" property="og:image" /><meta content="anvaka/VivaGraphJS" property="og:title" /><meta content="https://github.com/anvaka/VivaGraphJS" property="og:url" /><meta content="VivaGraphJS - Graph drawing library for JavaScript" property="og:description" />
+      <meta name="browser-stats-url" content="/_stats">
+    <link rel="assets" href="https://assets-cdn.github.com/">
+    <link rel="xhr-socket" href="/_sockets">
+    <meta name="pjax-timeout" content="1000">
+    <link rel="sudo-modal" href="/sessions/sudo_modal">
+
+    <meta name="msapplication-TileImage" content="/windows-tile.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="selected-link" value="repo_source" data-pjax-transient>
+      <meta name="google-analytics" content="UA-3769691-2">
+
+    <meta content="collector.githubapp.com" name="octolytics-host" /><meta content="collector-cdn.github.com" name="octolytics-script-host" /><meta content="github" name="octolytics-app-id" /><meta content="9E843A88:79C7:176816A:5518EFCC" name="octolytics-dimension-request_id" /><meta content="7967181" name="octolytics-actor-id" /><meta content="skoumas" name="octolytics-actor-login" /><meta content="95c1de9c028f3fff73ca30773145e37e415276d965023bfa509d86228f9973a1" name="octolytics-actor-hash" />
+    
+    <meta content="Rails, view, blob#show" name="analytics-event" />
+
+    
+    <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
+
+
+    <meta content="authenticity_token" name="csrf-param" />
+<meta content="kgFN2FIE3cuzWYkkJbusaHf1BAScBFrz+UklzHEJF+v8aA2/R0vvnHr0c1bMwOr36rFdFYbgyv6SnindPnYmKQ==" name="csrf-token" />
+
+    <link href="https://assets-cdn.github.com/assets/github-6337179a282bad7457c5b97336a91ca3743e26d9564ce4c54d4baef4163fc364.css" media="all" rel="stylesheet" />
+    <link href="https://assets-cdn.github.com/assets/github2-1b541813bef149ffc2f5118b0bfa467e9fe56083241b6a9f140d30ea692aefdc.css" media="all" rel="stylesheet" />
+    
+    
+
+
+    <meta http-equiv="x-pjax-version" content="f82dd05eac900f987444c3b4e32e7dab">
+
+      
+  <meta name="description" content="VivaGraphJS - Graph drawing library for JavaScript">
+  <meta name="go-import" content="github.com/anvaka/VivaGraphJS git https://github.com/anvaka/VivaGraphJS.git">
+
+  <meta content="225407" name="octolytics-dimension-user_id" /><meta content="anvaka" name="octolytics-dimension-user_login" /><meta content="3003488" name="octolytics-dimension-repository_id" /><meta content="anvaka/VivaGraphJS" name="octolytics-dimension-repository_nwo" /><meta content="true" name="octolytics-dimension-repository_public" /><meta content="false" name="octolytics-dimension-repository_is_fork" /><meta content="3003488" name="octolytics-dimension-repository_network_root_id" /><meta content="anvaka/VivaGraphJS" name="octolytics-dimension-repository_network_root_nwo" />
+  <link href="https://github.com/anvaka/VivaGraphJS/commits/master.atom" rel="alternate" title="Recent Commits to VivaGraphJS:master" type="application/atom+xml">
+
+  </head>
+
+
+  <body class="logged_in  env-production linux vis-public page-blob">
+    <a href="#start-of-content" tabindex="1" class="accessibility-aid js-skip-to-content">Skip to content</a>
+    <div class="wrapper">
+      
+      
+      
+
+
+        <div class="header header-logged-in true" role="banner">
+  <div class="container clearfix">
+
+    <a class="header-logo-invertocat" href="https://github.com/" data-hotkey="g d" aria-label="Homepage" data-ga-click="Header, go to dashboard, icon:logo">
+  <span class="mega-octicon octicon-mark-github"></span>
+</a>
+
+
+      <div class="site-search repo-scope js-site-search" role="search">
+          <form accept-charset="UTF-8" action="/anvaka/VivaGraphJS/search" class="js-site-search-form" data-global-search-url="/search" data-repo-search-url="/anvaka/VivaGraphJS/search" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+  <input type="text"
+    class="js-site-search-field is-clearable"
+    data-hotkey="s"
+    name="q"
+    placeholder="Search"
+    data-global-scope-placeholder="Search GitHub"
+    data-repo-scope-placeholder="Search"
+    tabindex="1"
+    autocapitalize="off">
+  <div class="scope-badge">This repository</div>
+</form>
+      </div>
+      <ul class="header-nav left" role="navigation">
+        <li class="header-nav-item explore">
+          <a class="header-nav-link" href="/explore" data-ga-click="Header, go to explore, text:explore">Explore</a>
+        </li>
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="https://gist.github.com" data-ga-click="Header, go to gist, text:gist">Gist</a>
+          </li>
+          <li class="header-nav-item">
+            <a class="header-nav-link" href="/blog" data-ga-click="Header, go to blog, text:blog">Blog</a>
+          </li>
+        <li class="header-nav-item">
+          <a class="header-nav-link" href="https://help.github.com" data-ga-click="Header, go to help, text:help">Help</a>
+        </li>
+      </ul>
+
+    
+<ul class="header-nav user-nav right" id="user-links">
+  <li class="header-nav-item dropdown js-menu-container">
+    <a class="header-nav-link name" href="/skoumas" data-ga-click="Header, go to profile, text:username">
+      <img alt="@skoumas" class="avatar" data-user="7967181" height="20" src="https://avatars3.githubusercontent.com/u/7967181?v=3&amp;s=40" width="20" />
+      <span class="css-truncate">
+        <span class="css-truncate-target">skoumas</span>
+      </span>
+    </a>
+  </li>
+
+  <li class="header-nav-item dropdown js-menu-container">
+    <a class="header-nav-link js-menu-target tooltipped tooltipped-s" href="#" aria-label="Create new..." data-ga-click="Header, create new, icon:add">
+      <span class="octicon octicon-plus"></span>
+      <span class="dropdown-caret"></span>
+    </a>
+
+    <div class="dropdown-menu-content js-menu-content">
+      
+<ul class="dropdown-menu">
+  <li>
+    <a href="/new" data-ga-click="Header, create new repository, icon:repo"><span class="octicon octicon-repo"></span> New repository</a>
+  </li>
+  <li>
+    <a href="/organizations/new" data-ga-click="Header, create new organization, icon:organization"><span class="octicon octicon-organization"></span> New organization</a>
+  </li>
+
+
+    <li class="dropdown-divider"></li>
+    <li class="dropdown-header">
+      <span title="anvaka/VivaGraphJS">This repository</span>
+    </li>
+      <li>
+        <a href="/anvaka/VivaGraphJS/issues/new" data-ga-click="Header, create new issue, icon:issue"><span class="octicon octicon-issue-opened"></span> New issue</a>
+      </li>
+</ul>
+
+    </div>
+  </li>
+
+  <li class="header-nav-item">
+        <a href="/notifications" aria-label="You have no unread notifications" class="header-nav-link notification-indicator tooltipped tooltipped-s" data-ga-click="Header, go to notifications, icon:read" data-hotkey="g n">
+        <span class="mail-status all-read"></span>
+        <span class="octicon octicon-inbox"></span>
+</a>
+  </li>
+
+  <li class="header-nav-item">
+    <a class="header-nav-link tooltipped tooltipped-s" href="/settings/profile" id="account_settings" aria-label="Settings" data-ga-click="Header, go to settings, icon:settings">
+      <span class="octicon octicon-gear"></span>
+    </a>
+  </li>
+
+  <li class="header-nav-item">
+    <form accept-charset="UTF-8" action="/logout" class="logout-form" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="PtDxybJt8TDrPkLt7NXJF9WYvvUz3MvaGwZAsrFpJYDfpKCjtIcIWTgOjktf28wWN3uuf2OSjQfXuvEDAyO+Qg==" /></div>
+      <button class="header-nav-link sign-out-button tooltipped tooltipped-s" aria-label="Sign out" data-ga-click="Header, sign out, icon:logout">
+        <span class="octicon octicon-sign-out"></span>
+      </button>
+</form>  </li>
+
+</ul>
+
+
+    
+  </div>
+</div>
+
+        
+
+        
+
+
+      <div id="start-of-content" class="accessibility-aid"></div>
+          <div class="site" itemscope itemtype="http://schema.org/WebPage">
+    <div id="js-flash-container">
+      
+    </div>
+    <div class="pagehead repohead instapaper_ignore readability-menu">
+      <div class="container">
+        
+<ul class="pagehead-actions">
+
+  <li>
+      <form accept-charset="UTF-8" action="/notifications/subscribe" class="js-social-container" data-autosubmit="true" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="GvWjF9Pg/ljwdhKE73A7yY/2BXocZAE8yVCIjBBgAzZ+4dGoLEmakAff956fubqDFjEiiG6hPerGgPeOaVP0ug==" /></div>    <input id="repository_id" name="repository_id" type="hidden" value="3003488" />
+
+      <div class="select-menu js-menu-container js-select-menu">
+        <a href="/anvaka/VivaGraphJS/subscription"
+          class="btn btn-sm btn-with-count select-menu-button js-menu-target" role="button" tabindex="0" aria-haspopup="true"
+          data-ga-click="Repository, click Watch settings, action:blob#show">
+          <span class="js-select-button">
+            <span class="octicon octicon-eye"></span>
+            Watch
+          </span>
+        </a>
+        <a class="social-count js-social-count" href="/anvaka/VivaGraphJS/watchers">
+          101
+        </a>
+
+        <div class="select-menu-modal-holder">
+          <div class="select-menu-modal subscription-menu-modal js-menu-content" aria-hidden="true">
+            <div class="select-menu-header">
+              <span class="select-menu-title">Notifications</span>
+              <span class="octicon octicon-x js-menu-close" role="button" aria-label="Close"></span>
+            </div>
+
+            <div class="select-menu-list js-navigation-container" role="menu">
+
+              <div class="select-menu-item js-navigation-item selected" role="menuitem" tabindex="0">
+                <span class="select-menu-item-icon octicon octicon-check"></span>
+                <div class="select-menu-item-text">
+                  <input checked="checked" id="do_included" name="do" type="radio" value="included" />
+                  <span class="select-menu-item-heading">Not watching</span>
+                  <span class="description">Be notified when participating or @mentioned.</span>
+                  <span class="js-select-button-text hidden-select-button-text">
+                    <span class="octicon octicon-eye"></span>
+                    Watch
+                  </span>
+                </div>
+              </div>
+
+              <div class="select-menu-item js-navigation-item " role="menuitem" tabindex="0">
+                <span class="select-menu-item-icon octicon octicon octicon-check"></span>
+                <div class="select-menu-item-text">
+                  <input id="do_subscribed" name="do" type="radio" value="subscribed" />
+                  <span class="select-menu-item-heading">Watching</span>
+                  <span class="description">Be notified of all conversations.</span>
+                  <span class="js-select-button-text hidden-select-button-text">
+                    <span class="octicon octicon-eye"></span>
+                    Unwatch
+                  </span>
+                </div>
+              </div>
+
+              <div class="select-menu-item js-navigation-item " role="menuitem" tabindex="0">
+                <span class="select-menu-item-icon octicon octicon-check"></span>
+                <div class="select-menu-item-text">
+                  <input id="do_ignore" name="do" type="radio" value="ignore" />
+                  <span class="select-menu-item-heading">Ignoring</span>
+                  <span class="description">Never be notified.</span>
+                  <span class="js-select-button-text hidden-select-button-text">
+                    <span class="octicon octicon-mute"></span>
+                    Stop ignoring
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+</form>
+  </li>
+
+  <li>
+    
+  <div class="js-toggler-container js-social-container starring-container ">
+
+    <form accept-charset="UTF-8" action="/anvaka/VivaGraphJS/unstar" class="js-toggler-form starred js-unstar-button" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="/YagSXWzs/Fo7hyT1zUJkaviiWyJjUqr272fDOcyOqRq+7hD1hgLzRILcvfMQNyGnpv5/tILyAn4mXotCPXblA==" /></div>
+      <button
+        class="btn btn-sm btn-with-count js-toggler-target"
+        aria-label="Unstar this repository" title="Unstar anvaka/VivaGraphJS"
+        data-ga-click="Repository, click unstar button, action:blob#show; text:Unstar">
+        <span class="octicon octicon-star"></span>
+        Unstar
+      </button>
+        <a class="social-count js-social-count" href="/anvaka/VivaGraphJS/stargazers">
+          1,277
+        </a>
+</form>
+    <form accept-charset="UTF-8" action="/anvaka/VivaGraphJS/star" class="js-toggler-form unstarred js-star-button" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="UCvEgF8JtUqCnXXvmUlsW9qv5bjkfszHnIFBjmbV+0j2VJygTciIWEM1jo6EGKczeJO5Um9r8iipVCHBeCdbfg==" /></div>
+      <button
+        class="btn btn-sm btn-with-count js-toggler-target"
+        aria-label="Star this repository" title="Star anvaka/VivaGraphJS"
+        data-ga-click="Repository, click star button, action:blob#show; text:Star">
+        <span class="octicon octicon-star"></span>
+        Star
+      </button>
+        <a class="social-count js-social-count" href="/anvaka/VivaGraphJS/stargazers">
+          1,277
+        </a>
+</form>  </div>
+
+  </li>
+
+        <li>
+          <form accept-charset="UTF-8" action="/anvaka/VivaGraphJS/fork" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="5QiFNcqx7Mb5LnT0eRnjY19oHeuat0iZRuTaAPfHrCn+kvk2SfRJniyPh8nxcV1NNKZK8ENSY8Y9hxgH+eieVg==" /></div>
+            <button
+                type="submit"
+                class="btn btn-sm btn-with-count"
+                data-ga-click="Repository, show fork modal, action:blob#show; text:Fork"
+                title="Fork your own copy of anvaka/VivaGraphJS to your account"
+                aria-label="Fork your own copy of anvaka/VivaGraphJS to your account">
+              <span class="octicon octicon-repo-forked"></span>
+              Fork
+            </button>
+            <a href="/anvaka/VivaGraphJS/network" class="social-count">169</a>
+</form>        </li>
+
+</ul>
+
+        <h1 itemscope itemtype="http://data-vocabulary.org/Breadcrumb" class="entry-title public">
+          <span class="mega-octicon octicon-repo"></span>
+          <span class="author"><a href="/anvaka" class="url fn" itemprop="url" rel="author"><span itemprop="title">anvaka</span></a></span><!--
+       --><span class="path-divider">/</span><!--
+       --><strong><a href="/anvaka/VivaGraphJS" class="js-current-repository" data-pjax="#js-repo-pjax-container">VivaGraphJS</a></strong>
+
+          <span class="page-context-loader">
+            <img alt="" height="16" src="https://assets-cdn.github.com/assets/spinners/octocat-spinner-32-e513294efa576953719e4e2de888dd9cf929b7d62ed8d05f25e731d02452ab6c.gif" width="16" />
+          </span>
+
+        </h1>
+      </div><!-- /.container -->
+    </div><!-- /.repohead -->
+
+    <div class="container">
+      <div class="repository-with-sidebar repo-container new-discussion-timeline  ">
+        <div class="repository-sidebar clearfix">
+            
+<nav class="sunken-menu repo-nav js-repo-nav js-sidenav-container-pjax js-octicon-loaders"
+     role="navigation"
+     data-pjax="#js-repo-pjax-container"
+     data-issue-count-url="/anvaka/VivaGraphJS/issues/counts">
+  <ul class="sunken-menu-group">
+    <li class="tooltipped tooltipped-w" aria-label="Code">
+      <a href="/anvaka/VivaGraphJS" aria-label="Code" class="selected js-selected-navigation-item sunken-menu-item" data-hotkey="g c" data-selected-links="repo_source repo_downloads repo_commits repo_releases repo_tags repo_branches /anvaka/VivaGraphJS">
+        <span class="octicon octicon-code"></span> <span class="full-word">Code</span>
+        <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/assets/spinners/octocat-spinner-32-e513294efa576953719e4e2de888dd9cf929b7d62ed8d05f25e731d02452ab6c.gif" width="16" />
+</a>    </li>
+
+      <li class="tooltipped tooltipped-w" aria-label="Issues">
+        <a href="/anvaka/VivaGraphJS/issues" aria-label="Issues" class="js-selected-navigation-item sunken-menu-item" data-hotkey="g i" data-selected-links="repo_issues repo_labels repo_milestones /anvaka/VivaGraphJS/issues">
+          <span class="octicon octicon-issue-opened"></span> <span class="full-word">Issues</span>
+          <span class="js-issue-replace-counter"></span>
+          <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/assets/spinners/octocat-spinner-32-e513294efa576953719e4e2de888dd9cf929b7d62ed8d05f25e731d02452ab6c.gif" width="16" />
+</a>      </li>
+
+    <li class="tooltipped tooltipped-w" aria-label="Pull requests">
+      <a href="/anvaka/VivaGraphJS/pulls" aria-label="Pull requests" class="js-selected-navigation-item sunken-menu-item" data-hotkey="g p" data-selected-links="repo_pulls /anvaka/VivaGraphJS/pulls">
+          <span class="octicon octicon-git-pull-request"></span> <span class="full-word">Pull requests</span>
+          <span class="js-pull-replace-counter"></span>
+          <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/assets/spinners/octocat-spinner-32-e513294efa576953719e4e2de888dd9cf929b7d62ed8d05f25e731d02452ab6c.gif" width="16" />
+</a>    </li>
+
+      <li class="tooltipped tooltipped-w" aria-label="Wiki">
+        <a href="/anvaka/VivaGraphJS/wiki" aria-label="Wiki" class="js-selected-navigation-item sunken-menu-item" data-hotkey="g w" data-selected-links="repo_wiki /anvaka/VivaGraphJS/wiki">
+          <span class="octicon octicon-book"></span> <span class="full-word">Wiki</span>
+          <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/assets/spinners/octocat-spinner-32-e513294efa576953719e4e2de888dd9cf929b7d62ed8d05f25e731d02452ab6c.gif" width="16" />
+</a>      </li>
+  </ul>
+  <div class="sunken-menu-separator"></div>
+  <ul class="sunken-menu-group">
+
+    <li class="tooltipped tooltipped-w" aria-label="Pulse">
+      <a href="/anvaka/VivaGraphJS/pulse" aria-label="Pulse" class="js-selected-navigation-item sunken-menu-item" data-selected-links="pulse /anvaka/VivaGraphJS/pulse">
+        <span class="octicon octicon-pulse"></span> <span class="full-word">Pulse</span>
+        <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/assets/spinners/octocat-spinner-32-e513294efa576953719e4e2de888dd9cf929b7d62ed8d05f25e731d02452ab6c.gif" width="16" />
+</a>    </li>
+
+    <li class="tooltipped tooltipped-w" aria-label="Graphs">
+      <a href="/anvaka/VivaGraphJS/graphs" aria-label="Graphs" class="js-selected-navigation-item sunken-menu-item" data-selected-links="repo_graphs repo_contributors /anvaka/VivaGraphJS/graphs">
+        <span class="octicon octicon-graph"></span> <span class="full-word">Graphs</span>
+        <img alt="" class="mini-loader" height="16" src="https://assets-cdn.github.com/assets/spinners/octocat-spinner-32-e513294efa576953719e4e2de888dd9cf929b7d62ed8d05f25e731d02452ab6c.gif" width="16" />
+</a>    </li>
+  </ul>
+
+
+</nav>
+
+              <div class="only-with-full-nav">
+                  
+<div class="clone-url open"
+  data-protocol-type="http"
+  data-url="/users/set_protocol?protocol_selector=http&amp;protocol_type=clone">
+  <h3><span class="text-emphasized">HTTPS</span> clone URL</h3>
+  <div class="input-group js-zeroclipboard-container">
+    <input type="text" class="input-mini input-monospace js-url-field js-zeroclipboard-target"
+           value="https://github.com/anvaka/VivaGraphJS.git" readonly="readonly">
+    <span class="input-group-button">
+      <button aria-label="Copy to clipboard" class="js-zeroclipboard btn btn-sm zeroclipboard-button" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
+    </span>
+  </div>
+</div>
+
+  
+<div class="clone-url "
+  data-protocol-type="ssh"
+  data-url="/users/set_protocol?protocol_selector=ssh&amp;protocol_type=clone">
+  <h3><span class="text-emphasized">SSH</span> clone URL</h3>
+  <div class="input-group js-zeroclipboard-container">
+    <input type="text" class="input-mini input-monospace js-url-field js-zeroclipboard-target"
+           value="git@github.com:anvaka/VivaGraphJS.git" readonly="readonly">
+    <span class="input-group-button">
+      <button aria-label="Copy to clipboard" class="js-zeroclipboard btn btn-sm zeroclipboard-button" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
+    </span>
+  </div>
+</div>
+
+  
+<div class="clone-url "
+  data-protocol-type="subversion"
+  data-url="/users/set_protocol?protocol_selector=subversion&amp;protocol_type=clone">
+  <h3><span class="text-emphasized">Subversion</span> checkout URL</h3>
+  <div class="input-group js-zeroclipboard-container">
+    <input type="text" class="input-mini input-monospace js-url-field js-zeroclipboard-target"
+           value="https://github.com/anvaka/VivaGraphJS" readonly="readonly">
+    <span class="input-group-button">
+      <button aria-label="Copy to clipboard" class="js-zeroclipboard btn btn-sm zeroclipboard-button" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
+    </span>
+  </div>
+</div>
+
+
+
+<p class="clone-options">You can clone with
+  <a href="#" class="js-clone-selector" data-protocol="http">HTTPS</a>, <a href="#" class="js-clone-selector" data-protocol="ssh">SSH</a>, or <a href="#" class="js-clone-selector" data-protocol="subversion">Subversion</a>.
+  <a href="https://help.github.com/articles/which-remote-url-should-i-use" class="help tooltipped tooltipped-n" aria-label="Get help on which URL is right for you.">
+    <span class="octicon octicon-question"></span>
+  </a>
+</p>
+
+
+
+                <a href="/anvaka/VivaGraphJS/archive/master.zip"
+                   class="btn btn-sm sidebar-button"
+                   aria-label="Download the contents of anvaka/VivaGraphJS as a zip file"
+                   title="Download the contents of anvaka/VivaGraphJS as a zip file"
+                   rel="nofollow">
+                  <span class="octicon octicon-cloud-download"></span>
+                  Download ZIP
+                </a>
+              </div>
+        </div><!-- /.repository-sidebar -->
+
+        <div id="js-repo-pjax-container" class="repository-content context-loader-container" data-pjax-container>
+          
+
+<a href="/anvaka/VivaGraphJS/blob/9c3c36e48fcd4202dba1218b45ee2fce9045e9b8/dist/vivagraph.min.js" class="hidden js-permalink-shortcut" data-hotkey="y">Permalink</a>
+
+<!-- blob contrib key: blob_contributors:v21:ceec4d7f3c8514113be258aadb05819e -->
+
+<div class="file-navigation js-zeroclipboard-container">
+  
+<div class="select-menu js-menu-container js-select-menu left">
+  <span class="btn btn-sm select-menu-button js-menu-target css-truncate" data-hotkey="w"
+    data-master-branch="master"
+    data-ref="master"
+    title="master"
+    role="button" aria-label="Switch branches or tags" tabindex="0" aria-haspopup="true">
+    <span class="octicon octicon-git-branch"></span>
+    <i>branch:</i>
+    <span class="js-select-button css-truncate-target">master</span>
+  </span>
+
+  <div class="select-menu-modal-holder js-menu-content js-navigation-container" data-pjax aria-hidden="true">
+
+    <div class="select-menu-modal">
+      <div class="select-menu-header">
+        <span class="select-menu-title">Switch branches/tags</span>
+        <span class="octicon octicon-x js-menu-close" role="button" aria-label="Close"></span>
+      </div>
+
+      <div class="select-menu-filters">
+        <div class="select-menu-text-filter">
+          <input type="text" aria-label="Filter branches/tags" id="context-commitish-filter-field" class="js-filterable-field js-navigation-enable" placeholder="Filter branches/tags">
+        </div>
+        <div class="select-menu-tabs">
+          <ul>
+            <li class="select-menu-tab">
+              <a href="#" data-tab-filter="branches" data-filter-placeholder="Filter branches/tags" class="js-select-menu-tab">Branches</a>
+            </li>
+            <li class="select-menu-tab">
+              <a href="#" data-tab-filter="tags" data-filter-placeholder="Find a tag…" class="js-select-menu-tab">Tags</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="branches">
+
+        <div data-filterable-for="context-commitish-filter-field" data-filterable-type="substring">
+
+
+            <a class="select-menu-item js-navigation-item js-navigation-open "
+               href="/anvaka/VivaGraphJS/blob/gh-pages/dist/vivagraph.min.js"
+               data-name="gh-pages"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="gh-pages">
+                gh-pages
+              </span>
+            </a>
+            <a class="select-menu-item js-navigation-item js-navigation-open "
+               href="/anvaka/VivaGraphJS/blob/globalNodeDecoupling/dist/vivagraph.min.js"
+               data-name="globalNodeDecoupling"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="globalNodeDecoupling">
+                globalNodeDecoupling
+              </span>
+            </a>
+            <a class="select-menu-item js-navigation-item js-navigation-open selected"
+               href="/anvaka/VivaGraphJS/blob/master/dist/vivagraph.min.js"
+               data-name="master"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="master">
+                master
+              </span>
+            </a>
+            <a class="select-menu-item js-navigation-item js-navigation-open "
+               href="/anvaka/VivaGraphJS/blob/svg-namespace-fix/dist/vivagraph.min.js"
+               data-name="svg-namespace-fix"
+               data-skip-pjax="true"
+               rel="nofollow">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <span class="select-menu-item-text css-truncate-target" title="svg-namespace-fix">
+                svg-namespace-fix
+              </span>
+            </a>
+        </div>
+
+          <div class="select-menu-no-results">Nothing to show</div>
+      </div>
+
+      <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tags">
+        <div data-filterable-for="context-commitish-filter-field" data-filterable-type="substring">
+
+
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.7.7/dist/vivagraph.min.js"
+                 data-name="v0.7.7"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.7.7">v0.7.7</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.7.6/dist/vivagraph.min.js"
+                 data-name="v0.7.6"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.7.6">v0.7.6</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.7.5/dist/vivagraph.min.js"
+                 data-name="v0.7.5"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.7.5">v0.7.5</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.7.4/dist/vivagraph.min.js"
+                 data-name="v0.7.4"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.7.4">v0.7.4</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.7.3/dist/vivagraph.min.js"
+                 data-name="v0.7.3"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.7.3">v0.7.3</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.7.2/dist/vivagraph.min.js"
+                 data-name="v0.7.2"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.7.2">v0.7.2</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.7.0/dist/vivagraph.min.js"
+                 data-name="v0.7.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.7.0">v0.7.0</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.6.3/dist/vivagraph.min.js"
+                 data-name="v0.6.3"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.6.3">v0.6.3</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.6.2/dist/vivagraph.min.js"
+                 data-name="v0.6.2"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.6.2">v0.6.2</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.6.0/dist/vivagraph.min.js"
+                 data-name="v0.6.0"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.6.0">v0.6.0</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v0.5.6/dist/vivagraph.min.js"
+                 data-name="v0.5.6"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v0.5.6">v0.5.6</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/v.0.4/dist/vivagraph.min.js"
+                 data-name="v.0.4"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="v.0.4">v.0.4</a>
+            </div>
+            <div class="select-menu-item js-navigation-item ">
+              <span class="select-menu-item-icon octicon octicon-check"></span>
+              <a href="/anvaka/VivaGraphJS/tree/0.5.8/dist/vivagraph.min.js"
+                 data-name="0.5.8"
+                 data-skip-pjax="true"
+                 rel="nofollow"
+                 class="js-navigation-open select-menu-item-text css-truncate-target"
+                 title="0.5.8">0.5.8</a>
+            </div>
+        </div>
+
+        <div class="select-menu-no-results">Nothing to show</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+  <div class="btn-group right">
+    <a href="/anvaka/VivaGraphJS/find/master"
+          class="js-show-file-finder btn btn-sm empty-icon tooltipped tooltipped-s"
+          data-pjax
+          data-hotkey="t"
+          aria-label="Quickly jump between files">
+      <span class="octicon octicon-list-unordered"></span>
+    </a>
+    <button aria-label="Copy file path to clipboard" class="js-zeroclipboard btn btn-sm zeroclipboard-button" data-copied-hint="Copied!" type="button"><span class="octicon octicon-clippy"></span></button>
+  </div>
+
+  <div class="breadcrumb js-zeroclipboard-target">
+    <span class='repo-root js-repo-root'><span itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/anvaka/VivaGraphJS" class="" data-branch="master" data-direction="back" data-pjax="true" itemscope="url"><span itemprop="title">VivaGraphJS</span></a></span></span><span class="separator">/</span><span itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/anvaka/VivaGraphJS/tree/master/dist" class="" data-branch="master" data-direction="back" data-pjax="true" itemscope="url"><span itemprop="title">dist</span></a></span><span class="separator">/</span><strong class="final-path">vivagraph.min.js</strong>
+  </div>
+</div>
+
+
+  <div class="commit file-history-tease">
+    <div class="file-history-tease-header">
+        <img alt="@anvaka" class="avatar" data-user="225407" height="24" src="https://avatars3.githubusercontent.com/u/225407?v=3&amp;s=48" width="24" />
+        <span class="author"><a href="/anvaka" rel="author">anvaka</a></span>
+        <time datetime="2015-03-25T05:25:33Z" is="relative-time">Mar 24, 2015</time>
+        <div class="commit-title">
+            <a href="/anvaka/VivaGraphJS/commit/3ee64d6d55749396489f1bc0245b842a4a9243f0" class="message" data-pjax="true" title="0.7.7 - Minor fixes, latest ngraph">0.7.7 - Minor fixes, latest ngraph</a>
+        </div>
+    </div>
+
+    <div class="participation">
+      <p class="quickstat">
+        <a href="#blob_contributors_box" rel="facebox">
+          <strong>3</strong>
+           contributors
+        </a>
+      </p>
+          <a class="avatar-link tooltipped tooltipped-s" aria-label="anvaka" href="/anvaka/VivaGraphJS/commits/master/dist/vivagraph.min.js?author=anvaka"><img alt="@anvaka" class="avatar" data-user="225407" height="20" src="https://avatars1.githubusercontent.com/u/225407?v=3&amp;s=40" width="20" /> </a>
+    <a class="avatar-link tooltipped tooltipped-s" aria-label="sgerard" href="/anvaka/VivaGraphJS/commits/master/dist/vivagraph.min.js?author=sgerard"><img alt="@sgerard" class="avatar" data-user="4698049" height="20" src="https://avatars3.githubusercontent.com/u/4698049?v=3&amp;s=40" width="20" /> </a>
+    <a class="avatar-link tooltipped tooltipped-s" aria-label="artsince" href="/anvaka/VivaGraphJS/commits/master/dist/vivagraph.min.js?author=artsince"><img alt="@artsince" class="avatar" data-user="216152" height="20" src="https://avatars2.githubusercontent.com/u/216152?v=3&amp;s=40" width="20" /> </a>
+
+
+    </div>
+    <div id="blob_contributors_box" style="display:none">
+      <h2 class="facebox-header">Users who have contributed to this file</h2>
+      <ul class="facebox-user-list">
+          <li class="facebox-user-list-item">
+            <img alt="@anvaka" data-user="225407" height="24" src="https://avatars3.githubusercontent.com/u/225407?v=3&amp;s=48" width="24" />
+            <a href="/anvaka">anvaka</a>
+          </li>
+          <li class="facebox-user-list-item">
+            <img alt="@sgerard" data-user="4698049" height="24" src="https://avatars1.githubusercontent.com/u/4698049?v=3&amp;s=48" width="24" />
+            <a href="/sgerard">sgerard</a>
+          </li>
+          <li class="facebox-user-list-item">
+            <img alt="@artsince" data-user="216152" height="24" src="https://avatars0.githubusercontent.com/u/216152?v=3&amp;s=48" width="24" />
+            <a href="/artsince">artsince</a>
+          </li>
+      </ul>
+    </div>
+  </div>
+
+<div class="file">
+  <div class="file-header">
+    <div class="file-actions">
+
+      <div class="btn-group">
+        <a href="/anvaka/VivaGraphJS/raw/master/dist/vivagraph.min.js" class="btn btn-sm " id="raw-url">Raw</a>
+          <a href="/anvaka/VivaGraphJS/blame/master/dist/vivagraph.min.js" class="btn btn-sm js-update-url-with-hash">Blame</a>
+        <a href="/anvaka/VivaGraphJS/commits/master/dist/vivagraph.min.js" class="btn btn-sm " rel="nofollow">History</a>
+      </div>
+
+
+            <form accept-charset="UTF-8" action="/anvaka/VivaGraphJS/edit/master/dist/vivagraph.min.js" class="inline-form" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="TG4ZzmwKZPJ76Xe6p19lRXj7Tc5HYD0YSmGv2ak7OM5m9lbl1WTiZhcHRgc3woxMOV5bEv/xNkGsKop/16cSdw==" /></div>
+              <button class="octicon-btn tooltipped tooltipped-n" type="submit" aria-label="Clicking this button will fork this project so you can edit the file" data-hotkey="e" data-disable-with>
+                <span class="octicon octicon-pencil"></span>
+              </button>
+</form>
+          <form accept-charset="UTF-8" action="/anvaka/VivaGraphJS/delete/master/dist/vivagraph.min.js" class="inline-form" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="4N5akUBCd7GBUJBxPOr+0z89d7VZdbnSdX6z6rp0kTAib2Wp5eKlhWRBeC05slaBGe7KILh7Gg1eS1O7B4d1JA==" /></div>
+            <button class="octicon-btn octicon-btn-danger tooltipped tooltipped-n" type="submit" aria-label="Fork this project and delete file" data-disable-with>
+              <span class="octicon octicon-trashcan"></span>
+            </button>
+</form>    </div>
+
+    <div class="file-info">
+        2 lines (2 sloc)
+        <span class="file-info-divider"></span>
+      62.076 kb
+    </div>
+  </div>
+  
+  <div class="blob-wrapper data type-javascript">
+      <table class="highlight tab-size-8 js-file-line-container">
+      <tr>
+        <td id="L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="LC1" class="blob-code js-file-line">!function(e){if(&quot;object&quot;==typeof exports&amp;&amp;&quot;undefined&quot;!=typeof module)module.exports=e();else if(&quot;function&quot;==typeof define&amp;&amp;define.amd)define([],e);else{var n;&quot;undefined&quot;!=typeof window?n=window:&quot;undefined&quot;!=typeof global?n=global:&quot;undefined&quot;!=typeof self&amp;&amp;(n=self),n.Viva=e()}}(function(){return function e(n,t,r){function o(a,u){if(!t[a]){if(!n[a]){var s=&quot;function&quot;==typeof require&amp;&amp;require;if(!u&amp;&amp;s)return s(a,!0);if(i)return i(a,!0);var f=new Error(&quot;Cannot find module &#39;&quot;+a+&quot;&#39;&quot;);throw f.code=&quot;MODULE_NOT_FOUND&quot;,f}var c=t[a]={exports:{}};n[a][0].call(c.exports,function(e){var t=n[a][1][e];return o(t?t:e)},c,c.exports,e,n,t,r)}return t[a].exports}for(var i=&quot;function&quot;==typeof require&amp;&amp;require,a=0;a&lt;r.length;a++)o(r[a]);return o}({1:[function(e,n){var t=e(&quot;ngraph.random&quot;),r={lazyExtend:function(){return e(&quot;ngraph.merge&quot;).apply(this,arguments)},randomIterator:function(){return t.randomIterator.apply(t,arguments)},random:function(){return t.random.apply(t,arguments)},events:e(&quot;ngraph.events&quot;)};r.Graph={version:e(&quot;./version.js&quot;),graph:e(&quot;ngraph.graph&quot;),serializer:function(){return{loadFromJSON:e(&quot;ngraph.fromjson&quot;),storeToJSON:e(&quot;ngraph.tojson&quot;)}},centrality:e(&quot;./Algorithms/centrality.js&quot;),operations:e(&quot;./Algorithms/operations.js&quot;),geom:function(){return{intersect:e(&quot;gintersect&quot;),intersectRect:e(&quot;./Utils/intersectRect.js&quot;)}},webgl:e(&quot;./WebGL/webgl.js&quot;),webglInputEvents:e(&quot;./WebGL/webglInputEvents.js&quot;),generator:function(){return e(&quot;ngraph.generators&quot;)},Input:{domInputManager:e(&quot;./Input/domInputManager.js&quot;),webglInputManager:e(&quot;./Input/webglInputManager.js&quot;)},Utils:{dragndrop:e(&quot;./Input/dragndrop.js&quot;),findElementPosition:e(&quot;./Utils/findElementPosition.js&quot;),timer:e(&quot;./Utils/timer.js&quot;),getDimension:e(&quot;./Utils/getDimensions.js&quot;),events:e(&quot;./Utils/backwardCompatibleEvents.js&quot;)},Layout:{forceDirected:function(n,t){var r=e(&quot;ngraph.forcelayout&quot;);return r(n,r.simulator(t))},constant:e(&quot;./Layout/constant.js&quot;)},View:{Texture:e(&quot;./WebGL/texture.js&quot;),webglAtlas:e(&quot;./WebGL/webglAtlas.js&quot;),webglImageNodeProgram:e(&quot;./WebGL/webglImageNodeProgram.js&quot;),webglLinkProgram:e(&quot;./WebGL/webglLinkProgram.js&quot;),webglNodeProgram:e(&quot;./WebGL/webglNodeProgram.js&quot;),webglLine:e(&quot;./WebGL/webglLine.js&quot;),webglSquare:e(&quot;./WebGL/webglSquare.js&quot;),webglImage:e(&quot;./WebGL/webglImage.js&quot;),webglGraphics:e(&quot;./View/webglGraphics.js&quot;),_webglUtil:{parseColor:e(&quot;./WebGL/parseColor.js&quot;)},svgGraphics:e(&quot;./View/svgGraphics.js&quot;),renderer:e(&quot;./View/renderer.js&quot;),cssGraphics:function(){throw new Error(&quot;cssGraphics is deprecated. Please use older version of vivagraph (&lt; 0.7) if you need it&quot;)},svgNodeFactory:function(){throw new Error(&quot;svgNodeFactory is deprecated. Please use older version of vivagraph (&lt; 0.7) if you need it&quot;)},community:function(){throw new Error(&quot;community is deprecated. Please use vivagraph &lt; 0.7 if you need it, or `https://github.com/anvaka/ngraph.slpa` module&quot;)}},Rect:e(&quot;./Utils/rect.js&quot;),svg:e(&quot;simplesvg&quot;),BrowserInfo:e(&quot;./Utils/browserInfo.js&quot;)},n.exports=r},{&quot;./Algorithms/centrality.js&quot;:33,&quot;./Algorithms/operations.js&quot;:34,&quot;./Input/domInputManager.js&quot;:35,&quot;./Input/dragndrop.js&quot;:36,&quot;./Input/webglInputManager.js&quot;:37,&quot;./Layout/constant.js&quot;:38,&quot;./Utils/backwardCompatibleEvents.js&quot;:39,&quot;./Utils/browserInfo.js&quot;:40,&quot;./Utils/findElementPosition.js&quot;:42,&quot;./Utils/getDimensions.js&quot;:43,&quot;./Utils/intersectRect.js&quot;:44,&quot;./Utils/rect.js&quot;:46,&quot;./Utils/timer.js&quot;:47,&quot;./View/renderer.js&quot;:49,&quot;./View/svgGraphics.js&quot;:50,&quot;./View/webglGraphics.js&quot;:51,&quot;./WebGL/parseColor.js&quot;:52,&quot;./WebGL/texture.js&quot;:53,&quot;./WebGL/webgl.js&quot;:54,&quot;./WebGL/webglAtlas.js&quot;:55,&quot;./WebGL/webglImage.js&quot;:56,&quot;./WebGL/webglImageNodeProgram.js&quot;:57,&quot;./WebGL/webglInputEvents.js&quot;:58,&quot;./WebGL/webglLine.js&quot;:59,&quot;./WebGL/webglLinkProgram.js&quot;:60,&quot;./WebGL/webglNodeProgram.js&quot;:61,&quot;./WebGL/webglSquare.js&quot;:62,&quot;./version.js&quot;:63,gintersect:2,&quot;ngraph.events&quot;:6,&quot;ngraph.forcelayout&quot;:7,&quot;ngraph.fromjson&quot;:22,&quot;ngraph.generators&quot;:23,&quot;ngraph.graph&quot;:24,&quot;ngraph.merge&quot;:25,&quot;ngraph.random&quot;:26,&quot;ngraph.tojson&quot;:27,simplesvg:28}],2:[function(e,n){function t(e,n,t,r,o,i,a,u){var s,f,c,d,l,p,v,g,h,m,y,x,w,b={x:0,y:0};return s=r-n,c=e-t,l=t*n-e*r,h=s*o+c*i+l,m=s*a+c*u+l,0!==h&amp;&amp;0!==m&amp;&amp;h&gt;=0==m&gt;=4?null:(f=u-i,d=o-a,p=a*i-o*u,v=f*e+d*n+p,g=f*t+d*r+p,0!==v&amp;&amp;0!==g&amp;&amp;v&gt;=0==g&gt;=0?null:(y=s*d-f*c,0===y?null:(x=0&gt;y?-y/2:y/2,x=0,w=c*p-d*l,b.x=(0&gt;w?w-x:w+x)/y,w=f*l-s*p,b.y=(0&gt;w?w-x:w+x)/y,b)))}n.exports=t},{}],3:[function(e,n){n.exports.degree=e(&quot;./src/degree.js&quot;),n.exports.betweenness=e(&quot;./src/betweenness.js&quot;)},{&quot;./src/betweenness.js&quot;:4,&quot;./src/degree.js&quot;:5}],4:[function(e,n){function t(e,n){function t(e){g[e]/=2}function r(e){g[e.id]=0}function o(e){s=e.id,u(s),i()}function i(){for(e.forEachNode(a);c.length;){for(var n=c.pop(),t=(1+v[n])/p[n],r=d[n],o=0;o&lt;r.length;++o){var i=r[o];v[i]+=p[i]*t}n!==s&amp;&amp;(g[n]+=v[n])}}function a(e){v[e.id]=0}function u(t){function r(e){i(e.id)}function o(e){var n=e.id;d[n]=[],l[n]=-1,p[n]=0}function i(e){-1===l[e]&amp;&amp;(l[e]=l[a]+1,f.push(e)),l[e]===l[a]+1&amp;&amp;(p[e]+=p[a],d[e].push(a))}for(e.forEachNode(o),l[t]=0,p[t]=1,f.push(t);f.length;){{var a=f.shift();Object.create(null)}c.push(a),e.forEachLinkedNode(a,r,n)}}var s,f=[],c=[],d=Object.create(null),l=Object.create(null),p=Object.create(null),v=Object.create(null),g=Object.create(null);return e.forEachNode(r),e.forEachNode(o),n||Object.keys(g).forEach(t),g}n.exports=t},{}],5:[function(e,n){function t(e,n){function t(n){var t=e.getLinks(n.id);u[n.id]=a(t,n.id)}var a,u=Object.create(null);if(n=(n||&quot;both&quot;).toLowerCase(),&quot;both&quot;===n||&quot;inout&quot;===n)a=i;else if(&quot;in&quot;===n)a=r;else{if(&quot;out&quot;!==n)throw new Error(&quot;Expected centrality degree kind is: in, out or both&quot;);a=o}return e.forEachNode(t),u}function r(e,n){for(var t=0,r=0;r&lt;e.length;r+=1)t+=e[r].toId===n?1:0;return t}function o(e,n){for(var t=0,r=0;r&lt;e.length;r+=1)t+=e[r].fromId===n?1:0;return t}function i(e){return e.length}n.exports=t},{}],6:[function(e,n){function t(e){var n=Object.create(null);return{on:function(t,r,o){if(&quot;function&quot;!=typeof r)throw new Error(&quot;callback is expected to be a function&quot;);var i=n[t];return i||(i=n[t]=[]),i.push({callback:r,ctx:o}),e},off:function(t,r){var o=&quot;undefined&quot;==typeof t;if(o)return n=Object.create(null),e;if(n[t]){var i=&quot;function&quot;!=typeof r;if(i)delete n[t];else for(var a=n[t],u=0;u&lt;a.length;++u)a[u].callback===r&amp;&amp;a.splice(u,1)}return e},fire:function(t){var r=n[t];if(!r)return e;var o;arguments.length&gt;1&amp;&amp;(o=Array.prototype.splice.call(arguments,1));for(var i=0;i&lt;r.length;++i){var a=r[i];a.callback.apply(a.ctx,o)}return e}}}function r(e){if(!e)throw new Error(&quot;Eventify cannot use falsy object as events subject&quot;);for(var n=[&quot;on&quot;,&quot;fire&quot;,&quot;off&quot;],t=0;t&lt;n.length;++t)if(e.hasOwnProperty(n[t]))throw new Error(&quot;Subject cannot be eventified, since it already has property &#39;&quot;+n[t]+&quot;&#39;&quot;)}n.exports=function(e){r(e);var n=t(e);return e.on=n.on,e.off=n.off,e.fire=n.fire,e}},{}],7:[function(e,n){function t(n,t){function i(e,t){var r;if(void 0===t)r=&quot;string&quot;==typeof e?e:e.id;else{var o=n.hasLink(e,t);if(!o)return;r=o.id}return b[r]}function a(e){return w[e]}function u(){n.on(&quot;changed&quot;,s)}function s(e){for(var n=0;n&lt;e.length;++n){var t=e[n];&quot;add&quot;===t.changeType?(t.node&amp;&amp;c(t.node.id),t.link&amp;&amp;l(t.link)):&quot;remove&quot;===t.changeType&amp;&amp;(t.node&amp;&amp;d(t.node),t.link&amp;&amp;p(t.link))}}function f(){n.forEachNode(function(e){c(e.id)}),n.forEachLink(l)}function c(e){var r=w[e];if(!r){var o=n.getNode(e);if(!o)throw new Error(&quot;initBody() was called with unknown node id&quot;);var i=o.position;if(!i){var a=v(o);i=t.getBestNewBodyPosition(a)}r=t.addBodyAt(i),w[e]=r,g(e),h(o)&amp;&amp;(r.isPinned=!0)}}function d(e){var n=e.id,r=w[n];r&amp;&amp;(w[n]=null,delete w[n],t.removeBody(r))}function l(e){g(e.fromId),g(e.toId);var n=w[e.fromId],r=w[e.toId],o=t.addSpring(n,r,e.length);E(e,o),b[e.id]=o}function p(e){var r=b[e.id];if(r){var o=n.getNode(e.fromId),i=n.getNode(e.toId);o&amp;&amp;g(o.id),i&amp;&amp;g(i.id),delete b[e.id],t.removeSpring(r)}}function v(e){var n=[];if(!e.links)return n;for(var t=Math.min(e.links.length,2),r=0;t&gt;r;++r){var o=e.links[r],i=o.fromId!==e.id?w[o.fromId]:w[o.toId];i&amp;&amp;i.pos&amp;&amp;n.push(i)}return n}function g(e){var n=w[e];n.mass=y(e)}function h(e){return e&amp;&amp;(e.isPinned||e.data&amp;&amp;e.data.isPinned)}function m(e){var n=w[e];return n||(c(e),n=w[e]),n}function y(e){return 1+n.getLinks(e).length/3}if(!n)throw new Error(&quot;Graph structure cannot be undefined&quot;);var x=e(&quot;ngraph.physics.simulator&quot;);t=t||x(),o(t,&quot;physicsSimulator&quot;).has(&quot;step&quot;,&quot;getBestNewBodyPosition&quot;,&quot;addBodyAt&quot;);var w=&quot;function&quot;==typeof Object.create?Object.create(null):{},b={},E=t.settings.springTransform||r;f(),u();var L={step:function(){return t.step()},getNodePosition:function(e){return m(e).pos},setNodePosition:function(e){var n=m(e);n.setPosition.apply(n,Array.prototype.slice.call(arguments,1))},getLinkPosition:function(e){var n=b[e];return n?{from:n.from.pos,to:n.to.pos}:void 0},getGraphRect:function(){return t.getBBox()},pinNode:function(e,n){var t=m(e.id);t.isPinned=!!n},isNodePinned:function(e){return m(e.id).isPinned},dispose:function(){n.off(&quot;changed&quot;,s)},getBody:a,getSpring:i,simulator:t};return L}function r(){}n.exports=t,n.exports.simulator=e(&quot;ngraph.physics.simulator&quot;);var o=e(&quot;varta&quot;)},{&quot;ngraph.physics.simulator&quot;:8,varta:21}],8:[function(e,n){function t(n){function t(){var e,n=l.length;if(n)for(v.insertBodies(l);n--;)e=l[n],e.force.reset(),v.updateBodyForce(e),m.update(e);for(n=p.length;n--;)h.update(p[n])}var r=e(&quot;./lib/spring&quot;),o=e(&quot;ngraph.expose&quot;),i=e(&quot;ngraph.merge&quot;);n=i(n,{springLength:30,springCoeff:8e-4,gravity:-1.2,theta:.8,dragCoeff:.02,timeStep:20,stableThreshold:.009});var a=n.createQuadTree||e(&quot;ngraph.quadtreebh&quot;),u=n.createBounds||e(&quot;./lib/bounds&quot;),s=n.createDragForce||e(&quot;./lib/dragForce&quot;),f=n.createSpringForce||e(&quot;./lib/springForce&quot;),c=n.integrator||e(&quot;./lib/eulerIntegrator&quot;),d=n.createBody||e(&quot;./lib/createBody&quot;),l=[],p=[],v=a(n),g=u(l,n),h=f(n),m=s(n),y={bodies:l,springs:p,settings:n,step:function(){t();var e=c(l,n.timeStep);return g.update(),e&lt;n.stableThreshold},addBody:function(e){if(!e)throw new Error(&quot;Body is required&quot;);return l.push(e),e},addBodyAt:function(e){if(!e)throw new Error(&quot;Body position is required&quot;);var n=d(e);return l.push(n),n},removeBody:function(e){if(e){var n=l.indexOf(e);if(!(0&gt;n))return l.splice(n,1),0===l.length&amp;&amp;g.reset(),!0}},addSpring:function(e,n,t,o,i){if(!e||!n)throw new Error(&quot;Cannot add null spring to force simulator&quot;);&quot;number&quot;!=typeof t&amp;&amp;(t=-1);var a=new r(e,n,t,i&gt;=0?i:-1,o);return p.push(a),a},removeSpring:function(e){if(e){var n=p.indexOf(e);return n&gt;-1?(p.splice(n,1),!0):void 0}},getBestNewBodyPosition:function(e){return g.getBestNewPosition(e)},getBBox:function(){return g.box},gravity:function(e){return void 0!==e?(n.gravity=e,v.options({gravity:e}),this):n.gravity},theta:function(e){return void 0!==e?(n.theta=e,v.options({theta:e}),this):n.theta}};return o(n,y),y}n.exports=t},{&quot;./lib/bounds&quot;:9,&quot;./lib/createBody&quot;:10,&quot;./lib/dragForce&quot;:11,&quot;./lib/eulerIntegrator&quot;:12,&quot;./lib/spring&quot;:13,&quot;./lib/springForce&quot;:14,&quot;ngraph.expose&quot;:15,&quot;ngraph.merge&quot;:25,&quot;ngraph.quadtreebh&quot;:17}],9:[function(e,n){n.exports=function(n,t){function r(){var e=n.length;if(0!==e){for(var t=Number.MAX_VALUE,r=Number.MAX_VALUE,o=Number.MIN_VALUE,a=Number.MIN_VALUE;e--;){var u=n[e];u.isPinned?(u.pos.x=u.prevPos.x,u.pos.y=u.prevPos.y):(u.prevPos.x=u.pos.x,u.prevPos.y=u.pos.y),u.pos.x&lt;t&amp;&amp;(t=u.pos.x),u.pos.x&gt;o&amp;&amp;(o=u.pos.x),u.pos.y&lt;r&amp;&amp;(r=u.pos.y),u.pos.y&gt;a&amp;&amp;(a=u.pos.y)}i.x1=t,i.x2=o,i.y1=r,i.y2=a}}var o=e(&quot;ngraph.random&quot;).random(42),i={x1:0,y1:0,x2:0,y2:0};return{box:i,update:r,reset:function(){i.x1=i.y1=0,i.x2=i.y2=0},getBestNewPosition:function(e){var n=i,r=0,a=0;if(e.length){for(var u=0;u&lt;e.length;++u)r+=e[u].pos.x,a+=e[u].pos.y;r/=e.length,a/=e.length}else r=(n.x1+n.x2)/2,a=(n.y1+n.y2)/2;var s=t.springLength;return{x:r+o.next(s)-s/2,y:a+o.next(s)-s/2}}}}},{&quot;ngraph.random&quot;:26}],10:[function(e,n){var t=e(&quot;ngraph.physics.primitives&quot;);n.exports=function(e){return new t.Body(e)}},{&quot;ngraph.physics.primitives&quot;:16}],11:[function(e,n){n.exports=function(n){var t=e(&quot;ngraph.merge&quot;),r=e(&quot;ngraph.expose&quot;);n=t(n,{dragCoeff:.02});var o={update:function(e){e.force.x-=n.dragCoeff*e.velocity.x,e.force.y-=n.dragCoeff*e.velocity.y}};return r(n,o,[&quot;dragCoeff&quot;]),o}},{&quot;ngraph.expose&quot;:15,&quot;ngraph.merge&quot;:25}],12:[function(e,n){function t(e,n){var t,r=0,o=0,i=0,a=0,u=e.length;for(t=0;u&gt;t;++t){var s=e[t],f=n/s.mass;s.velocity.x+=f*s.force.x,s.velocity.y+=f*s.force.y;var c=s.velocity.x,d=s.velocity.y,l=Math.sqrt(c*c+d*d);l&gt;1&amp;&amp;(s.velocity.x=c/l,s.velocity.y=d/l),r=n*s.velocity.x,i=n*s.velocity.y,s.pos.x+=r,s.pos.y+=i,o+=Math.abs(r),a+=Math.abs(i)}return(o*o+a*a)/e.length}n.exports=t},{}],13:[function(e,n){function t(e,n,t,r,o){this.from=e,this.to=n,this.length=t,this.coeff=r,this.weight=&quot;number&quot;==typeof o?o:1}n.exports=t},{}],14:[function(e,n){n.exports=function(n){var t=e(&quot;ngraph.merge&quot;),r=e(&quot;ngraph.random&quot;).random(42),o=e(&quot;ngraph.expose&quot;);n=t(n,{springCoeff:2e-4,springLength:80});var i={update:function(e){var t=e.from,o=e.to,i=e.length&lt;0?n.springLength:e.length,a=o.pos.x-t.pos.x,u=o.pos.y-t.pos.y,s=Math.sqrt(a*a+u*u);0===s&amp;&amp;(a=(r.nextDouble()-.5)/50,u=(r.nextDouble()-.5)/50,s=Math.sqrt(a*a+u*u));var f=s-i,c=(!e.coeff||e.coeff&lt;0?n.springCoeff:e.coeff)*f/s*e.weight;t.force.x+=c*a,t.force.y+=c*u,o.force.x-=c*a,o.force.y-=c*u}};return o(n,i,[&quot;springCoeff&quot;,&quot;springLength&quot;]),i}},{&quot;ngraph.expose&quot;:15,&quot;ngraph.merge&quot;:25,&quot;ngraph.random&quot;:26}],15:[function(e,n){function t(e,n,t){var o=&quot;[object Array]&quot;===Object.prototype.toString.call(t);if(o)for(var i=0;i&lt;t.length;++i)r(e,n,t[i]);else for(var a in e)r(e,n,a)}function r(e,n,t){if(e.hasOwnProperty(t)){if(&quot;function&quot;==typeof n[t])return;n[t]=function(r){return void 0!==r?(e[t]=r,n):e[t]}}}n.exports=t},{}],16:[function(e,n){function t(e,n){this.pos=new r(e,n),this.prevPos=new r(e,n),this.force=new r,this.velocity=new r,this.mass=1}function r(e,n){e&amp;&amp;&quot;number&quot;!=typeof e?(this.x=&quot;number&quot;==typeof e.x?e.x:0,this.y=&quot;number&quot;==typeof e.y?e.y:0):(this.x=&quot;number&quot;==typeof e?e:0,this.y=&quot;number&quot;==typeof n?n:0)}function o(e,n,t){this.pos=new i(e,n,t),this.prevPos=new i(e,n,t),this.force=new i,this.velocity=new i,this.mass=1}function i(e,n,t){e&amp;&amp;&quot;number&quot;!=typeof e?(this.x=&quot;number&quot;==typeof e.x?e.x:0,this.y=&quot;number&quot;==typeof e.y?e.y:0,this.z=&quot;number&quot;==typeof e.z?e.z:0):(this.x=&quot;number&quot;==typeof e?e:0,this.y=&quot;number&quot;==typeof n?n:0,this.z=&quot;number&quot;==typeof t?t:0)}n.exports={Body:t,Vector2d:r,Body3d:o,Vector3d:i},t.prototype.setPosition=function(e,n){this.prevPos.x=this.pos.x=e,this.prevPos.y=this.pos.y=n},r.prototype.reset=function(){this.x=this.y=0},o.prototype.setPosition=function(e,n,t){this.prevPos.x=this.pos.x=e,this.prevPos.y=this.pos.y=n,this.prevPos.z=this.pos.z=t},i.prototype.reset=function(){this.x=this.y=this.z=0}},{}],17:[function(e,n){function t(e,n){return 0===n?e.quad0:1===n?e.quad1:2===n?e.quad2:3===n?e.quad3:null}function r(e,n,t){0===n?e.quad0=t:1===n?e.quad1=t:2===n?e.quad2=t:3===n&amp;&amp;(e.quad3=t)}n.exports=function(n){n=n||{},n.gravity=&quot;number&quot;==typeof n.gravity?n.gravity:-1,n.theta=&quot;number&quot;==typeof n.theta?n.theta:.8;var o=e(&quot;ngraph.random&quot;).random(1984),i=e(&quot;./node&quot;),a=e(&quot;./insertStack&quot;),u=e(&quot;./isSamePosition&quot;),s=n.gravity,f=[],c=new a,d=n.theta,l=[],p=0,v=function(){var e=l[p];return e?(e.quad0=null,e.quad1=null,e.quad2=null,e.quad3=null,e.body=null,e.mass=e.massX=e.massY=0,e.left=e.right=e.top=e.bottom=0):(e=new i,l[p]=e),++p,e},g=v(),h=function(e){for(c.reset(),c.push(g,e);!c.isEmpty();){var n=c.pop(),i=n.node,a=n.body;if(i.body){var s=i.body;if(i.body=null,u(s.pos,a.pos)){var f=3;do{var d=o.nextDouble(),l=(i.right-i.left)*d,p=(i.bottom-i.top)*d;s.pos.x=i.left+l,s.pos.y=i.top+p,f-=1}while(f&gt;0&amp;&amp;u(s.pos,a.pos));if(0===f&amp;&amp;u(s.pos,a.pos))return}c.push(i,s),c.push(i,a)}else{var h=a.pos.x,m=a.pos.y;i.mass=i.mass+a.mass,i.massX=i.massX+a.mass*h,i.massY=i.massY+a.mass*m;var y=0,x=i.left,w=(i.right+x)/2,b=i.top,E=(i.bottom+b)/2;if(h&gt;w){y+=1;var L=x;x=w,w+=w-L}if(m&gt;E){y+=2;var P=b;b=E,E+=E-P}var N=t(i,y);N?c.push(N,a):(N=v(),N.left=x,N.top=b,N.right=w,N.bottom=E,N.body=a,r(i,y,N))}}},m=function(e){var n,t,r,i,a=f,u=0,c=0,l=1,p=0,v=1;for(a[0]=g;l;){var h=a[p],m=h.body;l-=1,p+=1;var y=m!==e;m&amp;&amp;y?(t=m.pos.x-e.pos.x,r=m.pos.y-e.pos.y,i=Math.sqrt(t*t+r*r),0===i&amp;&amp;(t=(o.nextDouble()-.5)/50,r=(o.nextDouble()-.5)/50,i=Math.sqrt(t*t+r*r)),n=s*m.mass*e.mass/(i*i*i),u+=n*t,c+=n*r):y&amp;&amp;(t=h.massX/h.mass-e.pos.x,r=h.massY/h.mass-e.pos.y,i=Math.sqrt(t*t+r*r),0===i&amp;&amp;(t=(o.nextDouble()-.5)/50,r=(o.nextDouble()-.5)/50,i=Math.sqrt(t*t+r*r)),(h.right-h.left)/i&lt;d?(n=s*h.mass*e.mass/(i*i*i),u+=n*t,c+=n*r):(h.quad0&amp;&amp;(a[v]=h.quad0,l+=1,v+=1),h.quad1&amp;&amp;(a[v]=h.quad1,l+=1,v+=1),h.quad2&amp;&amp;(a[v]=h.quad2,l+=1,v+=1),h.quad3&amp;&amp;(a[v]=h.quad3,l+=1,v+=1)))}e.force.x+=u,e.force.y+=c},y=function(e){var n,t=Number.MAX_VALUE,r=Number.MAX_VALUE,o=Number.MIN_VALUE,i=Number.MIN_VALUE,a=e.length;for(n=a;n--;){var u=e[n].pos.x,s=e[n].pos.y;t&gt;u&amp;&amp;(t=u),u&gt;o&amp;&amp;(o=u),r&gt;s&amp;&amp;(r=s),s&gt;i&amp;&amp;(i=s)}var f=o-t,c=i-r;for(f&gt;c?i=r+f:o=t+c,p=0,g=v(),g.left=t,g.right=o,g.top=r,g.bottom=i,n=a-1,n&gt;0&amp;&amp;(g.body=e[n]);n--;)h(e[n],g)};return{insertBodies:y,updateBodyForce:m,options:function(e){return e?(&quot;number&quot;==typeof e.gravity&amp;&amp;(s=e.gravity),&quot;number&quot;==typeof e.theta&amp;&amp;(d=e.theta),this):{gravity:s,theta:d}}}}},{&quot;./insertStack&quot;:18,&quot;./isSamePosition&quot;:19,&quot;./node&quot;:20,&quot;ngraph.random&quot;:26}],18:[function(e,n){function t(){this.stack=[],this.popIdx=0}function r(e,n){this.node=e,this.body=n}n.exports=t,t.prototype={isEmpty:function(){return 0===this.popIdx},push:function(e,n){var t=this.stack[this.popIdx];t?(t.node=e,t.body=n):this.stack[this.popIdx]=new r(e,n),++this.popIdx},pop:function(){return this.popIdx&gt;0?this.stack[--this.popIdx]:void 0},reset:function(){this.popIdx=0}}},{}],19:[function(e,n){n.exports=function(e,n){var t=Math.abs(e.x-n.x),r=Math.abs(e.y-n.y);return 1e-8&gt;t&amp;&amp;1e-8&gt;r}},{}],20:[function(e,n){n.exports=function(){this.body=null,this.quad0=null,this.quad1=null,this.quad2=null,this.quad3=null,this.mass=0,this.massX=0,this.massY=0,this.left=0,this.top=0,this.bottom=0,this.right=0}},{}],21:[function(e,n){function t(e,n){function t(){return o(e,n,arguments)}return n=n||&quot;Argument&quot;,{has:t}}function r(){function e(e,t){return o(e,t,n)}var n=arguments;return e}function o(e,n,t){if(void 0===e)throw new Error(n+&quot; is not defined&quot;);for(var r=0;r&lt;t.length;++r)if(void 0===e[t[r]])throw new Error(n+&quot; is expected to have a property `&quot;+t[r]+&quot;`&quot;);return!0}n.exports=t,n.exports.has=r},{}],22:[function(e,n){function t(e,n,t){var i;n=n||r,t=t||r,i=&quot;string&quot;==typeof e?JSON.parse(e):e;var a,u=o();if(void 0===i.links||void 0===i.nodes)throw new Error(&quot;Cannot load graph without links and nodes&quot;);for(a=0;a&lt;i.nodes.length;++a){var s=n(i.nodes[a]);if(!s.hasOwnProperty(&quot;id&quot;))throw new Error(&quot;Graph node format is invalid: Node id is missing&quot;);u.addNode(s.id,s.data)}for(a=0;a&lt;i.links.length;++a){var f=t(i.links[a]);if(!f.hasOwnProperty(&quot;fromId&quot;)||!f.hasOwnProperty(&quot;toId&quot;))throw new Error(&quot;Graph link format is invalid. Both fromId and toId are required&quot;);u.addLink(f.fromId,f.toId,f.data)}return u}function r(e){return e}n.exports=t;var o=e(&quot;ngraph.graph&quot;)},{&quot;ngraph.graph&quot;:24}],23:[function(e,n){function t(e){if(!e||0&gt;e)throw new Error(&quot;Invalid number of nodes&quot;);var n,t=l();for(n=0;e-1&gt;n;++n)t.addLink(n,n+1),t.addLink(e+n,e+n+1),t.addLink(n,e+n);return t.addLink(e-1,2*e-1),t}function r(e){if(!e||0&gt;e)throw new Error(&quot;Invalid number of nodes&quot;);var n=t(e);return n.addLink(0,e-1),n.addLink(e,2*e-1),n}function o(e){if(!e||1&gt;e)throw new Error(&quot;At least two nodes are expected for complete graph&quot;);var n,t,r=l();for(n=0;e&gt;n;++n)for(t=n+1;e&gt;t;++t)n!==t&amp;&amp;r.addLink(n,t);return r}function i(e,n){if(!e||!n||0&gt;e||0&gt;n)throw new Error(&quot;Graph dimensions are invalid. Number of nodes in each partition should be greater than 0&quot;);var t,r,o=l();for(t=0;e&gt;t;++t)for(r=e;e+n&gt;r;++r)o.addLink(t,r);return o}function a(e){if(!e||0&gt;e)throw new Error(&quot;Invalid number of nodes&quot;);var n,t=l();for(t.addNode(0),n=1;e&gt;n;++n)t.addLink(n-1,n);return t}function u(e,n){if(1&gt;e||1&gt;n)throw new Error(&quot;Invalid number of nodes in grid graph&quot;);var t,r,o=l();if(1===e&amp;&amp;1===n)return o.addNode(0),o;for(t=0;e&gt;t;++t)for(r=0;n&gt;r;++r){var i=t+r*e;t&gt;0&amp;&amp;o.addLink(i,t-1+r*e),r&gt;0&amp;&amp;o.addLink(i,t+(r-1)*e)}return o}function s(e,n,t){if(1&gt;e||1&gt;n||1&gt;t)throw new Error(&quot;Invalid number of nodes in grid3 graph&quot;);var r,o,i,a=l();if(1===e&amp;&amp;1===n&amp;&amp;1===t)return a.addNode(0),a;for(i=0;t&gt;i;++i)for(r=0;e&gt;r;++r)for(o=0;n&gt;o;++o){var u=i*e*n,s=r+o*e+u;r&gt;0&amp;&amp;a.addLink(s,r-1+o*e+u),o&gt;0&amp;&amp;a.addLink(s,r+(o-1)*e+u),i&gt;0&amp;&amp;a.addLink(s,r+o*e+(i-1)*e*n)}return a}function f(e){if(0&gt;e)throw new Error(&quot;Invalid number of nodes in balanced tree&quot;);var n,t=l(),r=Math.pow(2,e);for(0===e&amp;&amp;t.addNode(1),n=1;r&gt;n;++n){var o=n,i=2*o,a=2*o+1;t.addLink(o,i),t.addLink(o,a)}return t}function c(e){if(0&gt;e)throw new Error(&quot;Number of nodes shoul be &gt;= 0&quot;);var n,t=l();for(n=0;e&gt;n;++n)t.addNode(n);return t}function d(n,t,r,o){if(t&gt;=n)throw new Error(&quot;Choose smaller `k`. It cannot be larger than number of nodes `n`&quot;);var i,a,u=e(&quot;ngraph.random&quot;).random(o||42),s=l();for(i=0;n&gt;i;++i)s.addNode(i);for(var f=Math.floor(t/2+1),c=1;f&gt;c;++c)for(i=0;n&gt;i;++i)a=(c+i)%n,s.addLink(i,a);for(c=1;f&gt;c;++c)for(i=0;n&gt;i;++i)if(u.nextDouble()&lt;r){var d=i;a=(c+i)%n;var p=u.next(n),v=p===d||s.hasLink(d,p);if(v&amp;&amp;s.getLinks(d).length===n-1)continue;for(;v;)p=u.next(n),v=p===d||s.hasLink(d,p);var g=s.hasLink(d,a);s.removeLink(g),s.addLink(d,p)}return s}n.exports={ladder:t,complete:o,completeBipartite:i,balancedBinTree:f,path:a,circularLadder:r,grid:u,grid3:s,noLinks:c,wattsStrogatz:d};var l=e(&quot;ngraph.graph&quot;)},{&quot;ngraph.graph&quot;:24,&quot;ngraph.random&quot;:26}],24:[function(e,n){function t(e){function n(){function e(){return B=L,F=P,U=t,R=u,O.on=n,n.apply(O,arguments)}var n=O.on;O.on=e}function t(e,n){M.push({link:e,changeType:n})}function u(e,n){M.push({node:e,changeType:n})}function s(e,n){if(void 0===e)throw new Error(&quot;Invalid node identifier&quot;);B();var t=f(e);return t?R(t,&quot;update&quot;):(t=new o(e),T++,R(t,&quot;add&quot;)),t.data=n,j[e]=t,F(),t}function f(e){return j[e]}function c(e){var n=f(e);if(!n)return!1;for(B();n.links.length;){var t=n.links[0];g(t)}return delete j[e],T--,R(n,&quot;remove&quot;),F(),!0}function d(e,n,t){B();var r=f(e)||s(e),o=f(n)||s(n),i=D(e,n,t);return _.push(i),r.links.push(i),e!==n&amp;&amp;o.links.push(i),U(i,&quot;add&quot;),F(),i}function l(e,n,t){var r=e.toString()+n.toString();return new i(e,n,t,r)}function p(e,n,t){var r=e.toString()+&quot;👉 &quot;+n.toString(),o=I.hasOwnProperty(r);return(o||h(e,n))&amp;&amp;(o||(I[r]=0),r+=&quot;@&quot;+ ++I[r]),new i(e,n,t,r)}function v(e){var n=f(e);return n?n.links:null}function g(e){if(!e)return!1;var n=r(e,_);if(0&gt;n)return!1;B(),_.splice(n,1);var t=f(e.fromId),o=f(e.toId);return t&amp;&amp;(n=r(e,t.links),n&gt;=0&amp;&amp;t.links.splice(n,1)),o&amp;&amp;(n=r(e,o.links),n&gt;=0&amp;&amp;o.links.splice(n,1)),U(e,&quot;remove&quot;),F(),!0}function h(e,n){var t,r=f(e);if(!r)return null;for(t=0;t&lt;r.links.length;++t){var o=r.links[t];if(o.fromId===e&amp;&amp;o.toId===n)return o}return null}function m(){B(),S(function(e){c(e.id)}),F()}function y(e){var n,t;if(&quot;function&quot;==typeof e)for(n=0,t=_.length;t&gt;n;++n)e(_[n])}function x(e,n,t){var r=f(e);return r&amp;&amp;r.links&amp;&amp;&quot;function&quot;==typeof n?t?b(r.links,e,n):w(r.links,e,n):void 0}function w(e,n,t){for(var r,o=0;o&lt;e.length;++o){var i=e[o],a=i.fromId===n?i.toId:i.fromId;if(r=t(j[a],i))return!0}}function b(e,n,t){for(var r,o=0;o&lt;e.length;++o){var i=e[o];if(i.fromId===n&amp;&amp;(r=t(j[i.toId],i)))return!0}}function E(){}function L(){C+=1}function P(){C-=1,0===C&amp;&amp;M.length&gt;0&amp;&amp;(O.fire(&quot;changed&quot;,M),M.length=0)}function N(){return Object.keys?k:A}function k(e){if(&quot;function&quot;==typeof e)for(var n=Object.keys(j),t=0;t&lt;n.length;++t)if(e(j[n[t]]))return!0}function A(e){if(&quot;function&quot;==typeof e){var n;for(n in j)if(e(j[n]))return!0}}e=e||{},void 0===e.uniqueLinkId&amp;&amp;(e.uniqueLinkId=!0);var j=&quot;function&quot;==typeof Object.create?Object.create(null):{},_=[],I={},T=0,C=0,S=N(),D=e.uniqueLinkId?p:l,M=[],U=E,R=E,B=E,F=E,O={addNode:s,addLink:d,removeLink:g,removeNode:c,getNode:f,getNodesCount:function(){return T},getLinksCount:function(){return _.length},getLinks:v,forEachNode:S,forEachLinkedNode:x,forEachLink:y,beginUpdate:B,endUpdate:F,clear:m,hasLink:h,getLink:h};return a(O),n(),O}function r(e,n){if(n.indexOf)return n.indexOf(e);var t,r=n.length;for(t=0;r&gt;t;t+=1)if(n[t]===e)return t;return-1}function o(e){this.id=e,this.links=[],this.data=null}function i(e,n,t,r){this.fromId=e,this.toId=n,this.data=t,this.id=r}n.exports=t;var a=e(&quot;ngraph.events&quot;)},{&quot;ngraph.events&quot;:6}],25:[function(e,n){function t(e,n){var r;if(e||(e={}),n)for(r in n)if(n.hasOwnProperty(r)){var o=e.hasOwnProperty(r),i=typeof n[r],a=!o||typeof e[r]!==i;a?e[r]=n[r]:&quot;object&quot;===i&amp;&amp;(e[r]=t(e[r],n[r]))}return e}n.exports=t},{}],26:[function(e,n){function t(e){var n=&quot;number&quot;==typeof e?e:+new Date,t=function(){return n=n+2127912214+(n&lt;&lt;12)&amp;4294967295,n=4294967295&amp;(3345072700^n^n&gt;&gt;&gt;19),n=n+374761393+(n&lt;&lt;5)&amp;4294967295,n=4294967295&amp;(n+3550635116^n&lt;&lt;9),n=n+4251993797+(n&lt;&lt;3)&amp;4294967295,n=4294967295&amp;(3042594569^n^n&gt;&gt;&gt;16),(268435455&amp;n)/268435456};return{next:function(e){return Math.floor(t()*e)},nextDouble:function(){return t()}}}function r(e,n){var r=n||t();if(&quot;function&quot;!=typeof r.next)throw new Error(&quot;customRandom does not match expected API: next() function is missing&quot;);return{forEach:function(n){var t,o,i;for(t=e.length-1;t&gt;0;--t)o=r.next(t+1),i=e[o],e[o]=e[t],e[t]=i,n(i);e.length&amp;&amp;n(e[0])},shuffle:function(){var n,t,o;for(n=e.length-1;n&gt;0;--n)t=r.next(n+1),o=e[t],e[t]=e[n],e[n]=o;return e}}}n.exports={random:t,randomIterator:r}},{}],27:[function(e,n){function t(e,n,t){function r(e){u.nodes.push(s(e))}function o(e){u.links.push(f(e))}function i(e){var n={id:e.id};return void 0!==e.data&amp;&amp;(n.data=e.data),n}function a(e){var n={fromId:e.fromId,toId:e.toId};return void 0!==e.data&amp;&amp;(n.data=e.data),n}var u={nodes:[],links:[]},s=n||i,f=t||a;return e.forEachNode(r),e.forEachLink(o),JSON.stringify(u)}n.exports=t},{}],28:[function(e,n){function t(e,n){var t=r(e);if(void 0===n)return t;for(var o=Object.keys(n),i=0;i&lt;o.length;++i){var a=o[i],u=n[a];&quot;link&quot;===a?t.link(u):t.attr(a,u)}return t}function r(e){function n(e){return v||(v=o(p)),v.link(e),p}function r(e,n,t){return i.addEventListener(p,e,n,t),p}function s(e,n,t){return i.removeEventListener(p,e,n,t),p}function f(e){var n=t(e);return p.appendChild(n),n}function c(e,n){return 2===arguments.length?(null!==n?p.setAttributeNS(null,e,n):p.removeAttributeNS(null,e),p):p.getAttributeNS(null,e)}function d(e){return arguments.length?(p.setAttributeNS(u,&quot;xlink:href&quot;,e),p):p.getAttributeNS(u,&quot;xlink:href&quot;)}function l(e){return void 0!==e?(p.textContent=e,p):p.textContent}var p=e;if(&quot;string&quot;==typeof e)p=window.document.createElementNS(a,e);else if(e.simplesvg)return e;var v;return p.simplesvg=!0,p.attr=c,p.append=f,p.link=d,p.text=l,p.on=r,p.off=s,p.dataSource=n,p}n.exports=t,t.compile=e(&quot;./lib/compile&quot;);var o=t.compileTemplate=e(&quot;./lib/compile_template&quot;),i=e(&quot;add-event-listener&quot;),a=&quot;http://www.w3.org/2000/svg&quot;,u=&quot;http://www.w3.org/1999/xlink&quot;},{&quot;./lib/compile&quot;:29,&quot;./lib/compile_template&quot;:30,&quot;add-event-listener&quot;:32}],29:[function(e,n){function t(e){try{return e=r(e),i(o.parseFromString(e,&quot;text/xml&quot;).documentElement)}catch(n){throw n}}function r(e){if(e){var n=&#39;xmlns:svg=&quot;http://www.w3.org/2000/svg&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&#39;,t=e.match(/^&lt;\w+/);if(t){var r=t[0].length;return e.substr(0,r)+&quot; &quot;+n+&quot; &quot;+e.substr(r)}throw new Error(&quot;Cannot parse input text: invalid xml?&quot;)}}var o=e(&quot;./domparser.js&quot;),i=e(&quot;../&quot;);n.exports=t},{&quot;../&quot;:28,&quot;./domparser.js&quot;:31}],30:[function(e,n){function t(e){var n=Object.create(null);return r(e,n),{link:function(e){function t(n){n(e)}Object.keys(n).forEach(function(e){var r=n[e];r.forEach(t)})}}}function r(e,n){var t=e.nodeType,a=1===t||3===t;if(a){var u;if(e.hasChildNodes()){var s=e.childNodes;for(u=0;u&lt;s.length;++u)r(s[u],n)}if(3===t&amp;&amp;i(e,n),e.attributes){var f=e.attributes;for(u=0;u&lt;f.length;++u)o(f[u],e,n)}}}function o(e,n,t){function r(e){n.setAttributeNS(null,u,e[s])}var o=e.value;if(o){var i=o.match(a);if(i){var u=e.localName,s=i[1],f=s.indexOf(&quot;.&quot;)&lt;0;if(!f)throw new Error(&quot;simplesvg currently does not support nested bindings&quot;);var c=t[s];c?c.push(r):c=t[s]=[r]}}}function i(e,n){function t(n){e.nodeValue=n[i]}var r=e.nodeValue;if(r){var o=r.match(a);if(o){var i=o[1],u=(i.indexOf(&quot;.&quot;)&lt;0,n[i]);u?u.push(t):u=n[i]=[t]}}}n.exports=t;var a=/{{(.+?)}}/},{}],31:[function(e,n){function t(){return&quot;undefined&quot;==typeof DOMParser?{parseFromString:r}:new DOMParser}function r(){throw new Error(&quot;DOMParser is not supported by this platform. Please open issue here https://github.com/anvaka/simplesvg&quot;)}n.exports=t()},{}],32:[function(e,n){function t(e,n,t,r){return s=s||(document.addEventListener?{add:o,rm:i}:{add:a,rm:u}),s.add(e,n,t,r)}function r(e,n,t,r){return s=s||(document.addEventListener?{add:o,rm:i}:{add:a,rm:u}),s.rm(e,n,t,r)}function o(e,n,t,r){e.addEventListener(n,t,r)}function i(e,n,t,r){e.removeEventListener(n,t,r)}function a(e,n,t,r){if(r)throw new Error(&quot;cannot useCapture in oldIE&quot;);e.attachEvent(&quot;on&quot;+n,t)}function u(e,n,t){e.detachEvent(&quot;on&quot;+n,t)}t.removeEventListener=r,t.addEventListener=t,n.exports=t;var s=null},{}],33:[function(e,n){function t(){return{betweennessCentrality:r,degreeCentrality:o}}function r(e){var n=a.betweenness(e);return i(n)}function o(e,n){var t=a.degree(e,n);return i(t)}function i(e){function n(n,t){return e[t]-e[n]}function t(n){return{key:n,value:e[n]}}return Object.keys(e).sort(n).map(t)}var a=e(&quot;ngraph.centrality&quot;);n.exports=t},{&quot;ngraph.centrality&quot;:3}],34:[function(e,n){function t(){return{density:function(e,n){var t=e.getNodesCount();return 0===t?0/0:n?e.getLinksCount()/(t*(t-1)):2*e.getLinksCount()/(t*(t-1))}}}n.exports=t},{}],35:[function(e,n){function t(e,n){function t(e,t){var i;if(t){var a=n.getNodeUI(e.id);i=r(a),&quot;function&quot;==typeof t.onStart&amp;&amp;i.onStart(t.onStart),&quot;function&quot;==typeof t.onDrag&amp;&amp;i.onDrag(t.onDrag),&quot;function&quot;==typeof t.onStop&amp;&amp;i.onStop(t.onStop),o[e.id]=i}else(i=o[e.id])&amp;&amp;(i.release(),delete o[e.id])}var o={};return{bindDragNDrop:t}}n.exports=t;var r=e(&quot;./dragndrop.js&quot;)},{&quot;./dragndrop.js&quot;:36}],36:[function(e,n){function t(e){var n,t,a,u,s,f,c,d=0,l=0,p=!1,v=0,g=function(e){var n=0,t=0;return e=e||window.event,e.pageX||e.pageY?(n=e.pageX,t=e.pageY):(e.clientX||e.clientY)&amp;&amp;(n=e.clientX+window.document.body.scrollLeft+window.document.documentElement.scrollLeft,t=e.clientY+window.document.body.scrollTop+window.document.documentElement.scrollTop),[n,t]},h=function(e,n,r){t&amp;&amp;t(e,{x:n-d,y:r-l}),d=n,l=r},m=function(e){e.stopPropagation?e.stopPropagation():e.cancelBubble=!0},y=function(e){e.preventDefault&amp;&amp;e.preventDefault()},x=function(e){return m(e),!1},w=function(e){e=e||window.event,h(e,e.clientX,e.clientY)},b=function(e){if(e=e||window.event,p)return m(e),!1;var t=1===e.button&amp;&amp;null!==window.event||0===e.button;return t?(d=e.clientX,l=e.clientY,c=e.target||e.srcElement,n&amp;&amp;n(e,{x:d,y:l}),r.on(&quot;mousemove&quot;,w),r.on(&quot;mouseup&quot;,E),m(e),s=window.document.onselectstart,f=window.document.ondragstart,window.document.onselectstart=x,c.ondragstart=x,!1):void 0},E=function(e){e=e||window.event,r.off(&quot;mousemove&quot;,w),r.off(&quot;mouseup&quot;,E),window.document.onselectstart=s,c.ondragstart=f,c=null,a&amp;&amp;a(e)},L=function(n){if(&quot;function&quot;==typeof u){n=n||window.event,n.preventDefault&amp;&amp;n.preventDefault(),n.returnValue=!1;var t,r=g(n),o=i(e),a={x:r[0]-o[0],y:r[1]-o[1]};t=n.wheelDelta?n.wheelDelta/360:n.detail/-9,u(n,t,a)}},P=function(n){!u&amp;&amp;n?&quot;webkit&quot;===o.browser?e.addEventListener(&quot;mousewheel&quot;,L,!1):e.addEventListener(&quot;DOMMouseScroll&quot;,L,!1):u&amp;&amp;!n&amp;&amp;(&quot;webkit&quot;===o.browser?e.removeEventListener(&quot;mousewheel&quot;,L,!1):e.removeEventListener(&quot;DOMMouseScroll&quot;,L,!1)),u=n},N=function(e,n){return(e.clientX-n.clientX)*(e.clientX-n.clientX)+(e.clientY-n.clientY)*(e.clientY-n.clientY)},k=function(e){if(1===e.touches.length){m(e);var n=e.touches[0];h(e,n.clientX,n.clientY)}else if(2===e.touches.length){var t=N(e.touches[0],e.touches[1]),r=0;v&gt;t?r=-1:t&gt;v&amp;&amp;(r=1),u(e,r,{x:e.touches[0].clientX,y:e.touches[0].clientY}),v=t,m(e),y(e)}},A=function(e){p=!1,r.off(&quot;touchmove&quot;,k),r.off(&quot;touchend&quot;,A),r.off(&quot;touchcancel&quot;,A),c=null,a&amp;&amp;a(e)},j=function(e,t){m(e),y(e),d=t.clientX,l=t.clientY,c=e.target||e.srcElement,n&amp;&amp;n(e,{x:d,y:l}),p||(p=!0,r.on(&quot;touchmove&quot;,k),r.on(&quot;touchend&quot;,A),r.on(&quot;touchcancel&quot;,A))</td>
+      </tr>
+      <tr>
+        <td id="L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="LC2" class="blob-code js-file-line">},_=function(e){return 1===e.touches.length?j(e,e.touches[0]):void(2===e.touches.length&amp;&amp;(m(e),y(e),v=N(e.touches[0],e.touches[1])))};return e.addEventListener(&quot;mousedown&quot;,b),e.addEventListener(&quot;touchstart&quot;,_),{onStart:function(e){return n=e,this},onDrag:function(e){return t=e,this},onStop:function(e){return a=e,this},onScroll:function(e){return P(e),this},release:function(){e.removeEventListener(&quot;mousedown&quot;,b),e.removeEventListener(&quot;touchstart&quot;,_),r.off(&quot;mousemove&quot;,w),r.off(&quot;mouseup&quot;,E),r.off(&quot;touchmove&quot;,k),r.off(&quot;touchend&quot;,A),r.off(&quot;touchcancel&quot;,A),P(null)}}}n.exports=t;var r=e(&quot;../Utils/documentEvents.js&quot;),o=e(&quot;../Utils/browserInfo.js&quot;),i=e(&quot;../Utils/findElementPosition.js&quot;)},{&quot;../Utils/browserInfo.js&quot;:40,&quot;../Utils/documentEvents.js&quot;:41,&quot;../Utils/findElementPosition.js&quot;:42}],37:[function(e,n){function t(e,n){var t=r(n),o=null,i={},a={x:0,y:0};return t.mouseDown(function(e,n){o=e,a.x=n.clientX,a.y=n.clientY,t.mouseCapture(o);var r=i[e.id];return r&amp;&amp;r.onStart&amp;&amp;r.onStart(n,a),!0}).mouseUp(function(e){t.releaseMouseCapture(o),o=null;var n=i[e.id];return n&amp;&amp;n.onStop&amp;&amp;n.onStop(),!0}).mouseMove(function(e,n){if(o){var t=i[o.id];return t&amp;&amp;t.onDrag&amp;&amp;t.onDrag(n,{x:n.clientX-a.x,y:n.clientY-a.y}),a.x=n.clientX,a.y=n.clientY,!0}}),{bindDragNDrop:function(e,n){i[e.id]=n,n||delete i[e.id]}}}n.exports=t;var r=e(&quot;../WebGL/webglInputEvents.js&quot;)},{&quot;../WebGL/webglInputEvents.js&quot;:58}],38:[function(e,n){function t(e,n){function t(e){return d[e]}n=r(n,{maxX:1024,maxY:1024,seed:&quot;Deterministic randomness made me do this&quot;});var a=o(n.seed),u=new i(Number.MAX_VALUE,Number.MAX_VALUE,Number.MIN_VALUE,Number.MIN_VALUE),s={},f=function(){return{x:a.next(n.maxX),y:a.next(n.maxY)}},c=function(e,n){e.x&lt;n.x1&amp;&amp;(n.x1=e.x),e.x&gt;n.x2&amp;&amp;(n.x2=e.x),e.y&lt;n.y1&amp;&amp;(n.y1=e.y),e.y&gt;n.y2&amp;&amp;(n.y2=e.y)},d=&quot;function&quot;==typeof Object.create?Object.create(null):{},l=function(e){d[e.id]=f(e),c(d[e.id],u)},p=function(){0!==e.getNodesCount()&amp;&amp;(u.x1=Number.MAX_VALUE,u.y1=Number.MAX_VALUE,u.x2=Number.MIN_VALUE,u.y2=Number.MIN_VALUE,e.forEachNode(l))},v=function(e){s[e.id]=e},g=function(e){for(var n=0;n&lt;e.length;++n){var t=e[n];t.node&amp;&amp;(&quot;add&quot;===t.changeType?l(t.node):delete d[t.node.id]),t.link&amp;&amp;(&quot;add&quot;===t.changeType?v(t.link):delete s[t.link.id])}};return e.forEachNode(l),e.forEachLink(v),e.on(&quot;changed&quot;,g),{run:function(){this.step()},step:function(){return p(),!0},getGraphRect:function(){return u},dispose:function(){e.off(&quot;change&quot;,g)},isNodePinned:function(){return!0},pinNode:function(){},getNodePosition:t,getLinkPosition:function(e){var n=s[e];return{from:t(n.fromId),to:t(n.toId)}},setNodePosition:function(e,n,t){var r=d[e];r&amp;&amp;(r.x=n,r.y=t)},placeNode:function(e){return&quot;function&quot;==typeof e?(f=e,p(),this):f(e)}}}n.exports=t;var r=e(&quot;ngraph.merge&quot;),o=e(&quot;ngraph.random&quot;).random,i=e(&quot;../Utils/rect.js&quot;)},{&quot;../Utils/rect.js&quot;:46,&quot;ngraph.merge&quot;:25,&quot;ngraph.random&quot;:26}],39:[function(e,n){function t(e){function n(){var n=r(e);return n.addEventListener=n.on,n}if(console.log(&quot;This method is deprecated. Please use Viva.events() instead&quot;),!e)return e;var t=void 0!==e.on||void 0!==e.off||void 0!==e.fire;return t?{extend:function(){return e},on:e.on,stop:e.off}:{extend:n,on:e.on,stop:e.off}}var r=e(&quot;ngraph.events&quot;);n.exports=t},{&quot;ngraph.events&quot;:6}],40:[function(e,n){function t(){if(&quot;undefined&quot;==typeof window||!window.hasOwnProperty(&quot;navigator&quot;))return{browser:&quot;&quot;,version:&quot;0&quot;};var e=window.navigator.userAgent.toLowerCase(),n=/(webkit)[ \/]([\w.]+)/,t=/(opera)(?:.*version)?[ \/]([\w.]+)/,r=/(msie) ([\w.]+)/,o=/(mozilla)(?:.*? rv:([\w.]+))?/,i=n.exec(e)||t.exec(e)||r.exec(e)||e.indexOf(&quot;compatible&quot;)&lt;0&amp;&amp;o.exec(e)||[];return{browser:i[1]||&quot;&quot;,version:i[2]||&quot;0&quot;}}n.exports=t()},{}],41:[function(e,n){function t(){return void 0===typeof document?i:{on:r,off:o}}function r(e,n){document.addEventListener(e,n)}function o(e,n){document.removeEventListener(e,n)}var i=e(&quot;./nullEvents.js&quot;);n.exports=t()},{&quot;./nullEvents.js&quot;:45}],42:[function(e,n){function t(e){var n=0,t=0;if(e.offsetParent)do n+=e.offsetLeft,t+=e.offsetTop;while(null!==(e=e.offsetParent));return[n,t]}n.exports=t},{}],43:[function(e,n){function t(e){if(!e)throw{message:&quot;Cannot get dimensions of undefined container&quot;};var n=e.clientWidth,t=e.clientHeight;return{left:0,top:0,width:n,height:t}}n.exports=t},{}],44:[function(e,n){function t(e,n,t,o,i,a,u,s){return r(e,n,e,o,i,a,u,s)||r(e,o,t,o,i,a,u,s)||r(t,o,t,n,i,a,u,s)||r(t,n,e,n,i,a,u,s)}var r=e(&quot;gintersect&quot;);n.exports=t},{gintersect:2}],45:[function(e,n){function t(){return{on:r,off:r,stop:r}}function r(){}n.exports=t()},{}],46:[function(e,n){function t(e,n,t,r){this.x1=e||0,this.y1=n||0,this.x2=t||0,this.y2=r||0}n.exports=t},{}],47:[function(e,n){(function(e){function t(){function n(e){function n(){o=a.requestAnimationFrame(n),e()||t()}function t(){a.cancelAnimationFrame(o),o=0}function r(){o||n()}var o;return n(),{stop:t,restart:r}}function t(e){var n=(new Date).getTime(),t=Math.max(0,16-(n-u)),r=a.setTimeout(function(){e(n+t)},t);return u=n+t,r}function o(e){a.clearTimeout(e)}var i,a,u=0,s=[&quot;ms&quot;,&quot;moz&quot;,&quot;webkit&quot;,&quot;o&quot;];for(a=&quot;undefined&quot;!=typeof window?window:&quot;undefined&quot;!=typeof e?e:{setTimeout:r,clearTimeout:r},i=0;i&lt;s.length&amp;&amp;!a.requestAnimationFrame;++i){var f=s[i];a.requestAnimationFrame=a[f+&quot;RequestAnimationFrame&quot;],a.cancelAnimationFrame=a[f+&quot;CancelAnimationFrame&quot;]||a[f+&quot;CancelRequestAnimationFrame&quot;]}return a.requestAnimationFrame||(a.requestAnimationFrame=t),a.cancelAnimationFrame||(a.cancelAnimationFrame=o),n}function r(){}n.exports=t()}).call(this,&quot;undefined&quot;!=typeof global?global:&quot;undefined&quot;!=typeof self?self:&quot;undefined&quot;!=typeof window?window:{})},{}],48:[function(e,n){function t(){return void 0===typeof window?i:{on:r,off:o}}function r(e,n){window.addEventListener(e,n)}function o(e,n){window.removeEventListener(e,n)}var i=e(&quot;./nullEvents.js&quot;);n.exports=t()},{&quot;./nullEvents.js&quot;:45}],49:[function(e,n){function t(e,n){function t(e){return&quot;string&quot;==typeof y?y.indexOf(e)&gt;=0:&quot;boolean&quot;==typeof y?y:!0}var d=30;n=n||{};var l,p,v,g=n.layout,h=n.graphics,m=n.container,y=void 0!==n.interactive?n.interactive:!0,x=!1,w=!0,b=0,E=0,L=!1,P=!1,N=!1,k={x:0,y:0},A={offsetX:0,offsetY:0,scale:1},j=function(){m=m||window.document.body,g=g||o(e,o.simulator({springLength:80,springCoeff:2e-4})),h=h||i(e,{container:m}),n.hasOwnProperty(&quot;renderLinks&quot;)||(n.renderLinks=!0),n.prerender=n.prerender||0,l=(h.inputManager||u)(e,h)},_=r({}),I=function(){h.beginRender(),n.renderLinks&amp;&amp;h.renderLinks(),h.renderNodes(),h.endRender()},T=function(){return L=g.step()&amp;&amp;!P,I(),!L},C=function(e){return p?void(E+=e):void(e?(E+=e,p=s(function(){return T()},d)):(b=0,E=0,p=s(T,d)))},S=function(){N||(L=!1,p.restart())},D=function(){var e;if(&quot;number&quot;==typeof n.prerender&amp;&amp;n.prerender&gt;0)for(e=0;e&lt;n.prerender;e+=1)g.step()},M=function(){var e=g.getGraphRect(),n=f(m);k.x=k.y=0,A.offsetX=n.width/2-(e.x2+e.x1)/2,A.offsetY=n.height/2-(e.y2+e.y1)/2,h.graphCenterChanged(A.offsetX,A.offsetY),w=!1},U=function(e){var n=g.getNodePosition(e.id);h.addNode(e,n)},R=function(e){h.releaseNode(e)},B=function(e){var n=g.getLinkPosition(e.id);h.addLink(e,n)},F=function(e){h.releaseLink(e)},O=function(e){if(t(&quot;node&quot;)){var n=!1;l.bindDragNDrop(e,{onStart:function(){n=g.isNodePinned(e),g.pinNode(e,!0),P=!0,S()},onDrag:function(n,t){var r=g.getNodePosition(e.id);g.setNodePosition(e.id,r.x+t.x/A.scale,r.y+t.y/A.scale),P=!0,I()},onStop:function(){g.pinNode(e,n),P=!1}})}},G=function(e){l.bindDragNDrop(e,null)},z=function(){h.init(m),e.forEachNode(U),n.renderLinks&amp;&amp;e.forEachLink(B)},q=function(){h.release(m)},Y=function(n){var t=n.node;&quot;add&quot;===n.changeType?(U(t),O(t),w&amp;&amp;M()):&quot;remove&quot;===n.changeType?(G(t),R(t),0===e.getNodesCount()&amp;&amp;(w=!0)):&quot;update&quot;===n.changeType&amp;&amp;(G(t),R(t),U(t),O(t))},X=function(e){var t=e.link;if(&quot;add&quot;===e.changeType)n.renderLinks&amp;&amp;B(t);else if(&quot;remove&quot;===e.changeType)n.renderLinks&amp;&amp;F(t);else if(&quot;update&quot;===e.changeType)throw&quot;Update type is not implemented. TODO: Implement me!&quot;},V=function(e){var n,t;for(n=0;n&lt;e.length;n+=1)t=e[n],t.node?Y(t):t.link&amp;&amp;X(t);S()},W=function(){M(),T()},H=function(){v&amp;&amp;(v.release(),v=null)},J=function(){e.off(&quot;changed&quot;,V)},$=function(e,n){if(!n){var t=f(m);n={x:t.width/2,y:t.height/2}}var r=Math.pow(1.4,e?-.2:.2);return A.scale=h.scale(r,n),I(),_.fire(&quot;scale&quot;,A.scale),A.scale},K=function(){a.on(&quot;resize&quot;,W),H(),t(&quot;drag&quot;)&amp;&amp;(v=c(m),v.onDrag(function(e,n){k.x+=n.x,k.y+=n.y,h.translateRel(n.x,n.y),I()})),t(&quot;scroll&quot;)&amp;&amp;v.onScroll(function(e,n,t){$(0&gt;n,t)}),e.forEachNode(O),J(),e.on(&quot;changed&quot;,V)},Q=function(){x=!1,J(),H(),a.off(&quot;resize&quot;,W),_.off(),p.stop(),e.forEachLink(function(e){n.renderLinks&amp;&amp;F(e)}),e.forEachNode(function(e){G(e),R(e)}),g.dispose(),q()};return{run:function(e){return x||(j(),D(),M(),z(),K(),x=!0),C(e),this},reset:function(){h.resetScale(),M(),A.scale=1},pause:function(){N=!0,p.stop()},resume:function(){N=!1,p.restart()},rerender:function(){return I(),this},zoomOut:function(){return $(!0)},zoomIn:function(){return $(!1)},moveTo:function(e,n){h.graphCenterChanged(A.offsetX-e*A.scale,A.offsetY-n*A.scale),I()},getGraphics:function(){return h},dispose:function(){Q()},on:function(e,n){return _.addEventListener(e,n),this},off:function(e,n){return _.removeEventListener(e,n),this}}}n.exports=t;var r=e(&quot;ngraph.graph&quot;),o=e(&quot;ngraph.forcelayout&quot;),i=e(&quot;./svgGraphics.js&quot;),a=e(&quot;../Utils/windowEvents.js&quot;),u=e(&quot;../Input/domInputManager.js&quot;),s=e(&quot;../Utils/timer.js&quot;),f=e(&quot;../Utils/getDimensions.js&quot;),c=e(&quot;../Input/dragndrop.js&quot;)},{&quot;../Input/domInputManager.js&quot;:35,&quot;../Input/dragndrop.js&quot;:36,&quot;../Utils/getDimensions.js&quot;:43,&quot;../Utils/timer.js&quot;:47,&quot;../Utils/windowEvents.js&quot;:48,&quot;./svgGraphics.js&quot;:50,&quot;ngraph.forcelayout&quot;:7,&quot;ngraph.graph&quot;:24}],50:[function(e,n){function t(){function e(){var e=r(&quot;svg&quot;);return n=r(&quot;g&quot;).attr(&quot;buffered-rendering&quot;,&quot;dynamic&quot;),e.appendChild(n),e}var n,t,a,u,s,f=1,c={},d={},l=function(){return r(&quot;rect&quot;).attr(&quot;width&quot;,10).attr(&quot;height&quot;,10).attr(&quot;fill&quot;,&quot;#00a2e8&quot;)},p=function(e,n){e.attr(&quot;x&quot;,n.x-5).attr(&quot;y&quot;,n.y-5)},v=function(){return r(&quot;line&quot;).attr(&quot;stroke&quot;,&quot;#999&quot;)},g=function(e,n,t){e.attr(&quot;x1&quot;,n.x).attr(&quot;y1&quot;,n.y).attr(&quot;x2&quot;,t.x).attr(&quot;y2&quot;,t.y)},h=function(e){e.fire(&quot;rescaled&quot;)},m={x:0,y:0},y={x:0,y:0},x={x:0,y:0},w=function(){if(n){var e=&quot;matrix(&quot;+f+&quot;, 0, 0,&quot;+f+&quot;,&quot;+a+&quot;,&quot;+u+&quot;)&quot;;n.attr(&quot;transform&quot;,e)}};t=e();var b={getNodeUI:function(e){return c[e]},getLinkUI:function(e){return d[e]},node:function(e){return&quot;function&quot;==typeof e?(l=e,this):void 0},link:function(e){return&quot;function&quot;==typeof e?(v=e,this):void 0},placeNode:function(e){return p=e,this},placeLink:function(e){return g=e,this},beginRender:function(){},endRender:function(){},graphCenterChanged:function(e,n){a=e,u=n,w()},inputManager:i,translateRel:function(e,r){var o=t.createSVGPoint(),i=n.getCTM(),a=t.createSVGPoint().matrixTransform(i.inverse());o.x=e,o.y=r,o=o.matrixTransform(i.inverse()),o.x=(o.x-a.x)*i.a,o.y=(o.y-a.y)*i.d,i.e+=o.x,i.f+=o.y;var u=&quot;matrix(&quot;+i.a+&quot;, 0, 0,&quot;+i.d+&quot;,&quot;+i.e+&quot;,&quot;+i.f+&quot;)&quot;;n.attr(&quot;transform&quot;,u)},scale:function(e,r){var o=t.createSVGPoint();o.x=r.x,o.y=r.y,o=o.matrixTransform(n.getCTM().inverse());var i=t.createSVGMatrix().translate(o.x,o.y).scale(e).translate(-o.x,-o.y),s=n.getCTM().multiply(i);f=s.a,a=s.e,u=s.f;var c=&quot;matrix(&quot;+s.a+&quot;, 0, 0,&quot;+s.d+&quot;,&quot;+s.e+&quot;,&quot;+s.f+&quot;)&quot;;return n.attr(&quot;transform&quot;,c),h(this),f},resetScale:function(){f=1;var e=&quot;matrix(1, 0, 0, 1, 0, 0)&quot;;return n.attr(&quot;transform&quot;,e),h(this),this},init:function(e){e.appendChild(t),w(),&quot;function&quot;==typeof s&amp;&amp;s(t)},release:function(e){t&amp;&amp;e&amp;&amp;e.removeChild(t)},addLink:function(e,t){var r=v(e);if(r)return r.position=t,r.link=e,d[e.id]=r,n.childElementCount&gt;0?n.insertBefore(r,n.firstChild):n.appendChild(r),r},releaseLink:function(e){var t=d[e.id];t&amp;&amp;(n.removeChild(t),delete d[e.id])},addNode:function(e,t){var r=l(e);if(r)return r.position=t,r.node=e,c[e.id]=r,n.appendChild(r),r},releaseNode:function(e){var t=c[e.id];t&amp;&amp;(n.removeChild(t),delete c[e.id])},renderNodes:function(){for(var e in c)if(c.hasOwnProperty(e)){var n=c[e];m.x=n.position.x,m.y=n.position.y,p(n,m,n.node)}},renderLinks:function(){for(var e in d)if(d.hasOwnProperty(e)){var n=d[e];y.x=n.position.from.x,y.y=n.position.from.y,x.x=n.position.to.x,x.y=n.position.to.y,g(n,y,x,n.link)}},getGraphicsRoot:function(e){return&quot;function&quot;==typeof e&amp;&amp;(t?e(t):s=e),t},getSvgRoot:function(){return t}};return o(b),b}n.exports=t;var r=e(&quot;simplesvg&quot;),o=e(&quot;ngraph.events&quot;),i=e(&quot;../Input/domInputManager.js&quot;)},{&quot;../Input/domInputManager.js&quot;:35,&quot;ngraph.events&quot;:6,simplesvg:28}],51:[function(e,n){function t(e){e=f(e,{enableBlending:!0,preserveDrawingBuffer:!1,clearColor:!1,clearColorValue:{r:1,g:1,b:1,a:1}});var n,t,c,d,l,p,v,g,h=0,m=0,y=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],x=[],w=[],b={},E={},L=o(),P=i(),N=function(){return a()},k=function(){return u(3014898687)},A=function(){L.updateTransform(y),P.updateTransform(y)},j=function(){y=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]},_=function(){n&amp;&amp;t&amp;&amp;(d=t.width=Math.max(n.offsetWidth,1),l=t.height=Math.max(n.offsetHeight,1),c&amp;&amp;c.viewport(0,0,d,l),L&amp;&amp;L.updateSize(d/2,l/2),P&amp;&amp;P.updateSize(d/2,l/2))},I=function(e){e.fire(&quot;rescaled&quot;)};t=window.document.createElement(&quot;canvas&quot;);var T={getLinkUI:function(e){return E[e]},getNodeUI:function(e){return b[e]},node:function(e){return&quot;function&quot;==typeof e?(N=e,this):void 0},link:function(e){return&quot;function&quot;==typeof e?(k=e,this):void 0},placeNode:function(e){return p=e,this},placeLink:function(e){return v=e,this},inputManager:r,beginRender:function(){},endRender:function(){m&gt;0&amp;&amp;L.render(),h&gt;0&amp;&amp;P.render()},bringLinkToFront:function(e){var n,t,r=L.getFrontLinkId();L.bringToFront(e),r&gt;e.id&amp;&amp;(n=e.id,t=w[r],w[r]=w[n],w[r].id=r,w[n]=t,w[n].id=n)},graphCenterChanged:function(e,n){y[12]=2*e/d-1,y[13]=1-2*n/l,A()},addLink:function(e,n){var t=m++,r=k(e);return r.id=t,r.pos=n,L.createLink(r),w[t]=r,E[e.id]=r,r},addNode:function(e,n){var t=h++,r=N(e);return r.id=t,r.position=n,r.node=e,P.createNode(r),x[t]=r,b[e.id]=r,r},translateRel:function(e,n){y[12]+=2*y[0]*e/d/y[0],y[13]-=2*y[5]*n/l/y[5],A()},scale:function(e,n){var t=2*n.x/d-1,r=1-2*n.y/l;return t-=y[12],r-=y[13],y[12]+=t*(1-e),y[13]+=r*(1-e),y[0]*=e,y[5]*=e,A(),I(this),y[0]},resetScale:function(){return j(),c&amp;&amp;(_(),A()),this},init:function(r){var o={};if(e.preserveDrawingBuffer&amp;&amp;(o.preserveDrawingBuffer=!0),n=r,_(),j(),n.appendChild(t),c=t.getContext(&quot;experimental-webgl&quot;,o),!c){var i=&quot;Could not initialize WebGL. Seems like the browser doesn&#39;t support it.&quot;;throw window.alert(i),i}if(e.enableBlending&amp;&amp;(c.blendFunc(c.SRC_ALPHA,c.ONE_MINUS_SRC_ALPHA),c.enable(c.BLEND)),e.clearColor){var a=e.clearColorValue;c.clearColor(a.r,a.g,a.b,a.a),this.beginRender=function(){c.clear(c.COLOR_BUFFER_BIT)}}L.load(c),L.updateSize(d/2,l/2),P.load(c),P.updateSize(d/2,l/2),A(),&quot;function&quot;==typeof g&amp;&amp;g(t)},release:function(e){t&amp;&amp;e&amp;&amp;e.removeChild(t)},isSupported:function(){var e=window.document.createElement(&quot;canvas&quot;),n=e&amp;&amp;e.getContext&amp;&amp;e.getContext(&quot;experimental-webgl&quot;);return n},releaseLink:function(e){m&gt;0&amp;&amp;(m-=1);var n=E[e.id];delete E[e.id],L.removeLink(n);var t=n.id;if(m&gt;t){if(0===m||m===t)return;var r=w[m];w[t]=r,r.id=t}},releaseNode:function(e){h&gt;0&amp;&amp;(h-=1);var n=b[e.id];delete b[e.id],P.removeNode(n);var t=n.id;if(h&gt;t){if(0===h||h===t)return;var r=x[h];x[t]=r,r.id=t,P.replaceProperties(n,r)}},renderNodes:function(){for(var e={x:0,y:0},n=0;h&gt;n;++n){var t=x[n];e.x=t.position.x,e.y=-t.position.y,p&amp;&amp;p(t,e),P.position(t,e)}},renderLinks:function(){if(!this.omitLinksRendering)for(var e={x:0,y:0},n={x:0,y:0},t=0;m&gt;t;++t){var r=w[t],o=r.pos.from;n.x=o.x,n.y=-o.y,o=r.pos.to,e.x=o.x,e.y=-o.y,v&amp;&amp;v(r,n,e),L.position(r,n,e)}},getGraphicsRoot:function(e){return&quot;function&quot;==typeof e&amp;&amp;(t?e(t):g=e),t},setNodeProgram:function(e){if(!c&amp;&amp;e)P=e;else if(e)throw&quot;Not implemented. Cannot swap shader on the fly... Yet.&quot;},setLinkProgram:function(e){if(!c&amp;&amp;e)L=e;else if(e)throw&quot;Not implemented. Cannot swap shader on the fly... Yet.&quot;},transformClientToGraphCoordinates:function(e){return e.x=2*e.x/d-1,e.y=1-2*e.y/l,e.x=(e.x-y[12])/y[0],e.y=(e.y-y[13])/y[5],e.x*=d/2,e.y*=-l/2,e},getNodeAtClientPos:function(e,n){if(&quot;function&quot;!=typeof n)return null;this.transformClientToGraphCoordinates(e);for(var t=0;h&gt;t;++t)if(n(x[t],e.x,e.y))return x[t].node;return null}};return s(T),T}n.exports=t;var r=e(&quot;../Input/webglInputManager.js&quot;),o=e(&quot;../WebGL/webglLinkProgram.js&quot;),i=e(&quot;../WebGL/webglNodeProgram.js&quot;),a=e(&quot;../WebGL/webglSquare.js&quot;),u=e(&quot;../WebGL/webglLine.js&quot;),s=e(&quot;ngraph.events&quot;),f=e(&quot;ngraph.merge&quot;)},{&quot;../Input/webglInputManager.js&quot;:37,&quot;../WebGL/webglLine.js&quot;:59,&quot;../WebGL/webglLinkProgram.js&quot;:60,&quot;../WebGL/webglNodeProgram.js&quot;:61,&quot;../WebGL/webglSquare.js&quot;:62,&quot;ngraph.events&quot;:6,&quot;ngraph.merge&quot;:25}],52:[function(e,n){function t(e){var n=10414335;if(&quot;string&quot;==typeof e&amp;&amp;e)if(4===e.length&amp;&amp;(e=e.replace(/([^#])/g,&quot;$1$1&quot;)),9===e.length)n=parseInt(e.substr(1),16);else{if(7!==e.length)throw&#39;Color expected in hex format with preceding &quot;#&quot;. E.g. #00ff00. Got value: &#39;+e;n=parseInt(e.substr(1),16)&lt;&lt;8|255}else&quot;number&quot;==typeof e&amp;&amp;(n=e);return n}n.exports=t},{}],53:[function(e,n){function t(e){this.canvas=window.document.createElement(&quot;canvas&quot;),this.ctx=this.canvas.getContext(&quot;2d&quot;),this.isDirty=!1,this.canvas.width=this.canvas.height=e}n.exports=t},{}],54:[function(e,n){function t(e){function n(n,t){var r=e.createShader(t);if(e.shaderSource(r,n),e.compileShader(r),!e.getShaderParameter(r,e.COMPILE_STATUS)){var o=e.getShaderInfoLog(r);throw window.alert(o),o}return r}function t(t,r){var o=e.createProgram(),i=n(t,e.VERTEX_SHADER),a=n(r,e.FRAGMENT_SHADER);if(e.attachShader(o,i),e.attachShader(o,a),e.linkProgram(o),!e.getProgramParameter(o,e.LINK_STATUS)){var u=e.getShaderInfoLog(o);throw window.alert(u),u}return o}function i(e,n,t){if((n+1)*t&gt;e.length){var r=new Float32Array(e.length*t*2);return r.set(e),r}return e}function a(n,t){for(var r={},o=0;o&lt;t.length;++o){var i=t[o],a=-1;if(&quot;a&quot;===i[0]&amp;&amp;&quot;_&quot;===i[1]){if(a=e.getAttribLocation(n,i),-1===a)throw new Error(&quot;Program doesn&#39;t have required attribute: &quot;+i);r[i.slice(2)]=a}else{if(&quot;u&quot;!==i[0]||&quot;_&quot;!==i[1])throw new Error(&quot;Couldn&#39;t figure out your intent. All uniforms should start with &#39;u_&#39; prefix, and attributes with &#39;a_&#39;&quot;);if(a=e.getUniformLocation(n,i),null===a)throw new Error(&quot;Program doesn&#39;t have required uniform: &quot;+i);r[i.slice(2)]=a}}return r}return{createProgram:t,extendArray:i,copyArrayPart:r,swapArrayPart:o,getLocations:a,context:e}}function r(e,n,t,r){for(var o=0;r&gt;o;++o)e[n+o]=e[t+o]}function o(e,n,t,r){for(var o=0;r&gt;o;++o){var i=e[n+o];e[n+o]=e[t+o],e[t+o]=i}}n.exports=t},{}],55:[function(e,n){function t(e){function n(){var e;for(E.isDirty=!1,e=0;e&lt;w.length;++e)w[e].isDirty=!1}function t(e){var n=y[e];if(!n)return!1;if(delete y[e],m-=1,m===n.offset)return!0;var t=c(n.offset),r=c(m);p(r,t);var o=y[b[m]];return o.offset=n.offset,b[n.offset]=b[m],l(),!0}function i(){return w}function a(e){return y[e]}function u(e,n){if(y.hasOwnProperty(e))n(y[e]);else{var t=new window.Image,r=m;m+=1,t.crossOrigin=&quot;anonymous&quot;,t.onload=function(){l(),f(r,t,n)},t.src=e}}function s(){var e=new o(g*h);w.push(e)}function f(e,n,t){var r=c(e),o={offset:e};r.textureNumber&gt;=w.length&amp;&amp;s();var i=w[r.textureNumber];i.ctx.drawImage(n,r.col*h,r.row*h,h,h),b[e]=n.src,y[n.src]=o,i.isDirty=!0,t(o)}function c(n){var t=n/e&lt;&lt;0,r=n%e,o=r/g&lt;&lt;0,i=r%g;return{textureNumber:t,row:o,col:i}}function d(){E.isDirty=!0,x=0,v=null}function l(){v&amp;&amp;(window.clearTimeout(v),x+=1,v=null),x&gt;10?d():v=window.setTimeout(d,400)}function p(e,n){var t=w[e.textureNumber].canvas,r=w[n.textureNumber].ctx,o=n.col*h,i=n.row*h;r.drawImage(t,e.col*h,e.row*h,h,h,o,i,h,h),w[e.textureNumber].isDirty=!0,w[n.textureNumber].isDirty=!0}var v,g=Math.sqrt(e||1024)&lt;&lt;0,h=g,m=1,y={},x=0,w=[],b=[];if(!r(e))throw&quot;Tiles per texture should be power of two.&quot;;var E={isDirty:!1,clearDirty:n,remove:t,getTextures:i,getCoordinates:a,load:u};return E}function r(e){return 0===(e&amp;e-1)}var o=e(&quot;./texture.js&quot;);n.exports=t},{&quot;./texture.js&quot;:53}],56:[function(e,n){function t(e,n){return{_texture:0,_offset:0,size:&quot;number&quot;==typeof e?e:32,src:n}}n.exports=t},{}],57:[function(e,n){function t(){function e(e,n){e.nativeObject&amp;&amp;h.deleteTexture(e.nativeObject);var t=h.createTexture();h.activeTexture(h[&quot;TEXTURE&quot;+n]),h.bindTexture(h.TEXTURE_2D,t),h.texImage2D(h.TEXTURE_2D,0,h.RGBA,h.RGBA,h.UNSIGNED_BYTE,e.canvas),h.texParameteri(h.TEXTURE_2D,h.TEXTURE_MAG_FILTER,h.LINEAR),h.texParameteri(h.TEXTURE_2D,h.TEXTURE_MIN_FILTER,h.LINEAR_MIPMAP_NEAREST),h.generateMipmap(h.TEXTURE_2D),h.uniform1i(x[&quot;sampler&quot;+n],n),e.nativeObject=t}function n(){if(v.isDirty){var n,t=v.getTextures();for(n=0;n&lt;t.length;++n)(t[n].isDirty||!t[n].nativeObject)&amp;&amp;e(t[n],n);v.clearDirty()}}function t(e){h=e,y=a(e),v=new i(A),g=y.createProgram(k,N),h.useProgram(g),x=y.getLocations(g,[&quot;a_vertexPos&quot;,&quot;a_customAttributes&quot;,&quot;u_screenSize&quot;,&quot;u_transform&quot;,&quot;u_sampler0&quot;,&quot;u_sampler1&quot;,&quot;u_sampler2&quot;,&quot;u_sampler3&quot;,&quot;u_tilesPerTexture&quot;]),h.uniform1f(x.tilesPerTexture,A),h.enableVertexAttribArray(x.vertexPos),h.enableVertexAttribArray(x.customAttributes),m=h.createBuffer()}function u(e,n){var t=e.id*P;_[t]=n.x-e.size,_[t+1]=n.y-e.size,_[t+2]=4*e._offset,_[t+3]=n.x+e.size,_[t+4]=n.y-e.size,_[t+5]=4*e._offset+1,_[t+6]=n.x-e.size,_[t+7]=n.y+e.size,_[t+8]=4*e._offset+2,_[t+9]=n.x-e.size,_[t+10]=n.y+e.size,_[t+11]=4*e._offset+2,_[t+12]=n.x+e.size,_[t+13]=n.y-e.size,_[t+14]=4*e._offset+1,_[t+15]=n.x+e.size,_[t+16]=n.y+e.size,_[t+17]=4*e._offset+3}function s(e){_=y.extendArray(_,j,P),j+=1;var n=v.getCoordinates(e.src);n?e._offset=n.offset:(e._offset=0,v.load(e.src,function(n){e._offset=n.offset}))}function f(e){j&gt;0&amp;&amp;(j-=1),e.id&lt;j&amp;&amp;j&gt;0&amp;&amp;(e.src&amp;&amp;v.remove(e.src),y.copyArrayPart(_,e.id*P,j*P,P))}function c(e,n){n._offset=e._offset}function d(e){L=!0,E=e}function l(e,n){w=e,b=n,L=!0}function p(){h.useProgram(g),h.bindBuffer(h.ARRAY_BUFFER,m),h.bufferData(h.ARRAY_BUFFER,_,h.DYNAMIC_DRAW),L&amp;&amp;(L=!1,h.uniformMatrix4fv(x.transform,!1,E),h.uniform2f(x.screenSize,w,b)),h.vertexAttribPointer(x.vertexPos,2,h.FLOAT,!1,3*Float32Array.BYTES_PER_ELEMENT,0),h.vertexAttribPointer(x.customAttributes,1,h.FLOAT,!1,3*Float32Array.BYTES_PER_ELEMENT,8),n(),h.drawArrays(h.TRIANGLES,0,6*j)}var v,g,h,m,y,x,w,b,E,L,P=18,N=r(),k=o(),A=1024,j=0,_=new Float32Array(64);return{load:t,position:u,createNode:s,removeNode:f,replaceProperties:c,updateTransform:d,updateSize:l,render:p}}function r(){return[&quot;precision mediump float;&quot;,&quot;varying vec4 color;&quot;,&quot;varying vec3 vTextureCoord;&quot;,&quot;uniform sampler2D u_sampler0;&quot;,&quot;uniform sampler2D u_sampler1;&quot;,&quot;uniform sampler2D u_sampler2;&quot;,&quot;uniform sampler2D u_sampler3;&quot;,&quot;void main(void) {&quot;,&quot;   if (vTextureCoord.z == 0.) {&quot;,&quot;     gl_FragColor = texture2D(u_sampler0, vTextureCoord.xy);&quot;,&quot;   } else if (vTextureCoord.z == 1.) {&quot;,&quot;     gl_FragColor = texture2D(u_sampler1, vTextureCoord.xy);&quot;,&quot;   } else if (vTextureCoord.z == 2.) {&quot;,&quot;     gl_FragColor = texture2D(u_sampler2, vTextureCoord.xy);&quot;,&quot;   } else if (vTextureCoord.z == 3.) {&quot;,&quot;     gl_FragColor = texture2D(u_sampler3, vTextureCoord.xy);&quot;,&quot;   } else { gl_FragColor = vec4(0, 1, 0, 1); }&quot;,&quot;}&quot;].join(&quot;\n&quot;)}function o(){return[&quot;attribute vec2 a_vertexPos;&quot;,&quot;attribute float a_customAttributes;&quot;,&quot;uniform vec2 u_screenSize;&quot;,&quot;uniform mat4 u_transform;&quot;,&quot;uniform float u_tilesPerTexture;&quot;,&quot;varying vec3 vTextureCoord;&quot;,&quot;void main(void) {&quot;,&quot;   gl_Position = u_transform * vec4(a_vertexPos/u_screenSize, 0, 1);&quot;,&quot;float corner = mod(a_customAttributes, 4.);&quot;,&quot;float tileIndex = mod(floor(a_customAttributes / 4.), u_tilesPerTexture);&quot;,&quot;float tilesPerRow = sqrt(u_tilesPerTexture);&quot;,&quot;float tileSize = 1./tilesPerRow;&quot;,&quot;float tileColumn = mod(tileIndex, tilesPerRow);&quot;,&quot;float tileRow = floor(tileIndex/tilesPerRow);&quot;,&quot;if(corner == 0.0) {&quot;,&quot;  vTextureCoord.xy = vec2(0, 1);&quot;,&quot;} else if(corner == 1.0) {&quot;,&quot;  vTextureCoord.xy = vec2(1, 1);&quot;,&quot;} else if(corner == 2.0) {&quot;,&quot;  vTextureCoord.xy = vec2(0, 0);&quot;,&quot;} else {&quot;,&quot;  vTextureCoord.xy = vec2(1, 0);&quot;,&quot;}&quot;,&quot;vTextureCoord *= tileSize;&quot;,&quot;vTextureCoord.x += tileColumn * tileSize;&quot;,&quot;vTextureCoord.y += tileRow * tileSize;&quot;,&quot;vTextureCoord.z = floor(floor(a_customAttributes / 4.)/u_tilesPerTexture);&quot;,&quot;}&quot;].join(&quot;\n&quot;)}var i=e(&quot;./webglAtlas.js&quot;),a=e(&quot;./webgl.js&quot;);n.exports=t},{&quot;./webgl.js&quot;:54,&quot;./webglAtlas.js&quot;:55}],58:[function(e,n){function t(e){function n(){x=null}function t(e){x=e}function o(e){return&quot;function&quot;==typeof e&amp;&amp;k.push(e),j}function i(e){return&quot;function&quot;==typeof e&amp;&amp;N.push(e),j}function a(e){return&quot;function&quot;==typeof e&amp;&amp;P.push(e),j}function u(e){return&quot;function&quot;==typeof e&amp;&amp;L.push(e),j}function s(e){return&quot;function&quot;==typeof e&amp;&amp;E.push(e),j}function f(e){return&quot;function&quot;==typeof e&amp;&amp;b.push(e),j}function c(e){return&quot;function&quot;==typeof e&amp;&amp;w.push(e),j}function d(e,n,t){if(e&amp;&amp;e.size){var r=e.position,o=e.size;return r.x-o&lt;n&amp;&amp;n&lt;r.x+o&amp;&amp;r.y-o&lt;t&amp;&amp;t&lt;r.y+o}return!0}function l(n){return e.getNodeAtClientPos(n,d)}function p(e){e.stopPropagation?e.stopPropagation():e.cancelBubble=!0}function v(e){return p(e),!1}function g(e,n){var t,r;for(t=0;t&lt;e.length;t+=1)if(r=e[t].apply(void 0,n))return!0}function h(e){var n={x:0,y:0},t=null,o=1,i=+new Date,a=function(e){g(P,[t,e]),n.x=e.clientX,n.y=e.clientY},u=function(){r.off(&quot;mousemove&quot;,a),r.off(&quot;mouseup&quot;,u)},s=function(){y=e.getBoundingClientRect()};window.addEventListener(&quot;resize&quot;,s),s(),e.addEventListener(&quot;mousemove&quot;,function(e){if(!x){o++%7===0&amp;&amp;(s(),o=1);var r,i=!1;n.x=e.clientX-y.left,n.y=e.clientY-y.top,r=l(n),r&amp;&amp;t!==r?(t=r,i=i||g(w,[t])):null===r&amp;&amp;t!==r&amp;&amp;(i=i||g(b,[t]),t=null),i&amp;&amp;p(e)}}),e.addEventListener(&quot;mousedown&quot;,function(e){var o,i=!1;s(),n.x=e.clientX-y.left,n.y=e.clientY-y.top,o=[l(n),e],o[0]?(i=g(E,o),r.on(&quot;mousemove&quot;,a),r.on(&quot;mouseup&quot;,u),m=window.document.onselectstart,window.document.onselectstart=v,t=o[0]):t=null,i&amp;&amp;p(e)}),e.addEventListener(&quot;mouseup&quot;,function(e){var r,o=+new Date;n.x=e.clientX-y.left,n.y=e.clientY-y.top,r=[l(n),e],r[0]&amp;&amp;(window.document.onselectstart=m,400&gt;o-i&amp;&amp;r[0]===t?g(k,r):g(N,r),i=o,g(L,r)&amp;&amp;p(e))})}if(e.webglInputEvents)return e.webglInputEvents;var m,y,x=null,w=[],b=[],E=[],L=[],P=[],N=[],k=[],A=e.getGraphicsRoot();h(A);var j={mouseEnter:c,mouseLeave:f,mouseDown:s,mouseUp:u,mouseMove:a,click:i,dblClick:o,mouseCapture:t,releaseMouseCapture:n};return e.webglInputEvents=j,j}var r=e(&quot;../Utils/documentEvents.js&quot;);n.exports=t},{&quot;../Utils/documentEvents.js&quot;:41}],59:[function(e,n){function t(e){return{color:r(e)}}var r=e(&quot;./parseColor.js&quot;);n.exports=t},{&quot;./parseColor.js&quot;:52}],60:[function(e,n){function t(){var e,n,t,o,i,a,u,s,f,c,d=6,l=2*(2*Float32Array.BYTES_PER_ELEMENT+Uint32Array.BYTES_PER_ELEMENT),p=[&quot;precision mediump float;&quot;,&quot;varying vec4 color;&quot;,&quot;void main(void) {&quot;,&quot;   gl_FragColor = color;&quot;,&quot;}&quot;].join(&quot;\n&quot;),v=[&quot;attribute vec2 a_vertexPos;&quot;,&quot;attribute vec4 a_color;&quot;,&quot;uniform vec2 u_screenSize;&quot;,&quot;uniform mat4 u_transform;&quot;,&quot;varying vec4 color;&quot;,&quot;void main(void) {&quot;,&quot;   gl_Position = u_transform * vec4(a_vertexPos/u_screenSize, 0.0, 1.0);&quot;,&quot;   color = a_color.abgr;&quot;,&quot;}&quot;].join(&quot;\n&quot;),g=0,h=new ArrayBuffer(16*l),m=new Float32Array(h),y=new Uint32Array(h),x=function(){if((g+1)*l&gt;h.byteLength){var e=new ArrayBuffer(2*h.byteLength),n=new Float32Array(e),t=new Uint32Array(e);t.set(y),m=n,y=t,h=e}};return{load:function(a){n=a,o=r(a),e=o.createProgram(v,p),n.useProgram(e),i=o.getLocations(e,[&quot;a_vertexPos&quot;,&quot;a_color&quot;,&quot;u_screenSize&quot;,&quot;u_transform&quot;]),n.enableVertexAttribArray(i.vertexPos),n.enableVertexAttribArray(i.color),t=n.createBuffer()},position:function(e,n,t){var r=e.id,o=r*d;m[o]=n.x,m[o+1]=n.y,y[o+2]=e.color,m[o+3]=t.x,m[o+4]=t.y,y[o+5]=e.color},createLink:function(e){x(),g+=1,a=e.id},removeLink:function(e){g&gt;0&amp;&amp;(g-=1),e.id&lt;g&amp;&amp;g&gt;0&amp;&amp;o.copyArrayPart(y,e.id*d,g*d,d)},updateTransform:function(e){c=!0,f=e},updateSize:function(e,n){u=e,s=n,c=!0},render:function(){n.useProgram(e),n.bindBuffer(n.ARRAY_BUFFER,t),n.bufferData(n.ARRAY_BUFFER,h,n.DYNAMIC_DRAW),c&amp;&amp;(c=!1,n.uniformMatrix4fv(i.transform,!1,f),n.uniform2f(i.screenSize,u,s)),n.vertexAttribPointer(i.vertexPos,2,n.FLOAT,!1,3*Float32Array.BYTES_PER_ELEMENT,0),n.vertexAttribPointer(i.color,4,n.UNSIGNED_BYTE,!0,3*Float32Array.BYTES_PER_ELEMENT,8),n.drawArrays(n.LINES,0,2*g),a=g-1},bringToFront:function(e){a&gt;e.id&amp;&amp;o.swapArrayPart(m,e.id*d,a*d,d),a&gt;0&amp;&amp;(a-=1)},getFrontLinkId:function(){return a}}}var r=e(&quot;./webgl.js&quot;);n.exports=t},{&quot;./webgl.js&quot;:54}],61:[function(e,n){function t(){function e(){if((k+1)*w&gt;=L.byteLength){var e=new ArrayBuffer(2*L.byteLength),n=new Float32Array(e),t=new Uint32Array(e);t.set(N),P=n,N=t,L=e}}function n(e){d=e,v=r(e),c=v.createProgram(E,b),d.useProgram(c),p=v.getLocations(c,[&quot;a_vertexPos&quot;,&quot;a_color&quot;,&quot;u_screenSize&quot;,&quot;u_transform&quot;]),d.enableVertexAttribArray(p.vertexPos),d.enableVertexAttribArray(p.color),l=d.createBuffer()}function t(e,n){var t=e.id;P[t*x]=n.x,P[t*x+1]=n.y,P[t*x+2]=e.size,N[t*x+3]=e.color}function o(e){y=!0,m=e}function i(e,n){g=e,h=n,y=!0}function a(e){k&gt;0&amp;&amp;(k-=1),e.id&lt;k&amp;&amp;k&gt;0&amp;&amp;v.copyArrayPart(N,e.id*x,k*x,x)}function u(){e(),k+=1}function s(){}function f(){d.useProgram(c),d.bindBuffer(d.ARRAY_BUFFER,l),d.bufferData(d.ARRAY_BUFFER,L,d.DYNAMIC_DRAW),y&amp;&amp;(y=!1,d.uniformMatrix4fv(p.transform,!1,m),d.uniform2f(p.screenSize,g,h)),d.vertexAttribPointer(p.vertexPos,3,d.FLOAT,!1,x*Float32Array.BYTES_PER_ELEMENT,0),d.vertexAttribPointer(p.color,4,d.UNSIGNED_BYTE,!0,x*Float32Array.BYTES_PER_ELEMENT,12),d.drawArrays(d.POINTS,0,k)}var c,d,l,p,v,g,h,m,y,x=4,w=3*Float32Array.BYTES_PER_ELEMENT+Uint32Array.BYTES_PER_ELEMENT,b=[&quot;precision mediump float;&quot;,&quot;varying vec4 color;&quot;,&quot;void main(void) {&quot;,&quot;   gl_FragColor = color;&quot;,&quot;}&quot;].join(&quot;\n&quot;),E=[&quot;attribute vec3 a_vertexPos;&quot;,&quot;attribute vec4 a_color;&quot;,&quot;uniform vec2 u_screenSize;&quot;,&quot;uniform mat4 u_transform;&quot;,&quot;varying vec4 color;&quot;,&quot;void main(void) {&quot;,&quot;   gl_Position = u_transform * vec4(a_vertexPos.xy/u_screenSize, 0, 1);&quot;,&quot;   gl_PointSize = a_vertexPos.z * u_transform[0][0];&quot;,&quot;   color = a_color.abgr;&quot;,&quot;}&quot;].join(&quot;\n&quot;),L=new ArrayBuffer(16*w),P=new Float32Array(L),N=new Uint32Array(L),k=0;return{load:n,position:t,updateTransform:o,updateSize:i,removeNode:a,createNode:u,replaceProperties:s,render:f}}var r=e(&quot;./webgl.js&quot;);n.exports=t},{&quot;./webgl.js&quot;:54}],62:[function(e,n){function t(e,n){return{size:&quot;number&quot;==typeof e?e:10,color:r(n)}}var r=e(&quot;./parseColor.js&quot;);n.exports=t},{&quot;./parseColor.js&quot;:52}],63:[function(e,n){n.exports=&quot;0.7.7&quot;},{}]},{},[1])(1)});</td>
+      </tr>
+</table>
+
+  </div>
+
+</div>
+
+<a href="#jump-to-line" rel="facebox[.linejump]" data-hotkey="l" style="display:none">Jump to Line</a>
+<div id="jump-to-line" style="display:none">
+  <form accept-charset="UTF-8" action="" class="js-jump-to-line-form" method="get"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+    <input class="linejump-input js-jump-to-line-field" type="text" placeholder="Jump to line&hellip;" autofocus>
+    <button type="submit" class="btn">Go</button>
+</form></div>
+
+        </div>
+
+      </div><!-- /.repo-container -->
+      <div class="modal-backdrop"></div>
+    </div><!-- /.container -->
+  </div><!-- /.site -->
+
+
+    </div><!-- /.wrapper -->
+
+      <div class="container">
+  <div class="site-footer" role="contentinfo">
+    <ul class="site-footer-links right">
+        <li><a href="https://status.github.com/" data-ga-click="Footer, go to status, text:status">Status</a></li>
+      <li><a href="https://developer.github.com" data-ga-click="Footer, go to api, text:api">API</a></li>
+      <li><a href="https://training.github.com" data-ga-click="Footer, go to training, text:training">Training</a></li>
+      <li><a href="https://shop.github.com" data-ga-click="Footer, go to shop, text:shop">Shop</a></li>
+        <li><a href="https://github.com/blog" data-ga-click="Footer, go to blog, text:blog">Blog</a></li>
+        <li><a href="https://github.com/about" data-ga-click="Footer, go to about, text:about">About</a></li>
+
+    </ul>
+
+    <a href="https://github.com" aria-label="Homepage">
+      <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+</a>
+    <ul class="site-footer-links">
+      <li>&copy; 2015 <span title="0.04682s from github-fe123-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
+        <li><a href="https://github.com/site/terms" data-ga-click="Footer, go to terms, text:terms">Terms</a></li>
+        <li><a href="https://github.com/site/privacy" data-ga-click="Footer, go to privacy, text:privacy">Privacy</a></li>
+        <li><a href="https://github.com/security" data-ga-click="Footer, go to security, text:security">Security</a></li>
+        <li><a href="https://github.com/contact" data-ga-click="Footer, go to contact, text:contact">Contact</a></li>
+    </ul>
+  </div>
+</div>
+
+
+    <div class="fullscreen-overlay js-fullscreen-overlay" id="fullscreen_overlay">
+  <div class="fullscreen-container js-suggester-container">
+    <div class="textarea-wrap">
+      <textarea name="fullscreen-contents" id="fullscreen-contents" class="fullscreen-contents js-fullscreen-contents" placeholder=""></textarea>
+      <div class="suggester-container">
+        <div class="suggester fullscreen-suggester js-suggester js-navigation-container"></div>
+      </div>
+    </div>
+  </div>
+  <div class="fullscreen-sidebar">
+    <a href="#" class="exit-fullscreen js-exit-fullscreen tooltipped tooltipped-w" aria-label="Exit Zen Mode">
+      <span class="mega-octicon octicon-screen-normal"></span>
+    </a>
+    <a href="#" class="theme-switcher js-theme-switcher tooltipped tooltipped-w"
+      aria-label="Switch themes">
+      <span class="octicon octicon-color-mode"></span>
+    </a>
+  </div>
+</div>
+
+
+
+    
+    
+
+    <div id="ajax-error-message" class="flash flash-error">
+      <span class="octicon octicon-alert"></span>
+      <a href="#" class="octicon octicon-x flash-close js-ajax-error-dismiss" aria-label="Dismiss error"></a>
+      Something went wrong with that request. Please try again.
+    </div>
+
+
+      <script crossorigin="anonymous" src="https://assets-cdn.github.com/assets/frameworks-d22b59d0085e83b7549ba4341ec9e68f80c2f29c8e49213ee182003dc8d568c6.js"></script>
+      <script async="async" crossorigin="anonymous" src="https://assets-cdn.github.com/assets/github-d869f6edeea2dbd9c7c3595e2f31cf8a1530bd36eaa84707461f65c5ee848853.js"></script>
+      
+      
+
+  </body>
+</html>
+
