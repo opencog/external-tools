@@ -1021,7 +1021,7 @@ function updateGUIPreferences()
  	
 	//SIDEBAR
 	//CONNECTION
-	$("#ConnectCogServer").attr("placeholder",preferences.cogserver);
+	$("#ConnectCogServer").attr("value",preferences.cogserver);
  	//sshowScreen(preferences.viewer); //get the last user prefered viewer
 
  	//Load stored positions of GUI enviroment etc
