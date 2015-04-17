@@ -48,7 +48,7 @@ function d3graph(element)
     var update = function () 
     {
  		
-
+ 
   		textVisibillity =  preferences.appearanceShowText=="true" ? "visible": "hidden";
 		linksVisibillity = preferences.appearanceShowLinks=="true" ? "visible" : "hidden";
 	 
@@ -82,13 +82,21 @@ function d3graph(element)
 	        .attr("id",function(d){return d.index;})
 	        .call(force.drag);
 
-    	nodeEnter.append("circle")
+    	nodeEnter.filter(function(d) { return d.type.search("Link")!=-1 })
+	        .append("rect")
+	        .attr("class", "linkNode")
+	        .attr("height", "5")
+	        .attr("width", "5");
+
+    	nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
+    		.append("circle")
 	        .attr("class", "circle")
 	        .attr("fill",function(d){ return "" + color(d.incoming.length); })
 	        .attr("x",function(d){return d.x})
 	        .attr("y",function(d){return d.y})
-	        .attr("r", nodeRadius) 
-
+	        .attr("fixed",function(d){return d.incoming.length > 5})
+	        .attr("r", nodeRadius);
+ 
         nodeEnter.append("text")
 	        .attr("class", "text")
 	        .style("visibility",textVisibillity)
@@ -109,6 +117,7 @@ function d3graph(element)
 			}  
 
           node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
         });
  
 	    /*------------------------------------*/
@@ -293,23 +302,8 @@ function d3graph(element)
 				return;
 			}
 		 
-			if (!preferences.AppearanceHoverShowConnections) return;
-			 
-			node.classed("node-active", function(o) 
-			{
-				thisOpacity = isConnected(d, o) ? true : false;
-				this.setAttribute('fill-opacity', thisOpacity);
-				return thisOpacity;
-			});
+		  
 		 
-			link.classed("link-active", function(o)
-			{
-				return o.source === d || o.target === d ? true : false;
-			});
-			 
-			d3.select(this).classed("node-active", true);
-			d3.select(this).select("circle").transition().duration(transitionSpeed).attr("r", nodeRadius);
-
 		})
 
 		node.on("mouseout", function(d)
@@ -338,24 +332,29 @@ function d3graph(element)
 		//this.node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", 1);
  	}
 
-	this.update = function (id) 
+	this.updateForce = function()
 	{
-        update();
-    }
+
+		force.charge(preferences.appearanceCharge)
+			.gravity(0.1)
+			.linkDistance(preferences.appearanceLinkDistance)
+			.linkStrength(preferences.appearanceLinkStrength/100)
+			.friction(preferences.appearanceFriction/100)
+	        .size([width, height]);
+
+	    force.start();
+	}
 
     this.addNodes = function(newnodes) 
 	{
+		
         if (newnodes==null)return;
-
- 		if (newnodes.length>400)
- 			length = 400;
- 		else
- 			length = newnodes.length;
 
         for(var i=0;i<newnodes.length;i++)
         	nodes.push(newnodes[i]);	
  
         this.refreshLinks();
+
         update();
     }
 
@@ -483,10 +482,10 @@ function d3graph(element)
     	if (d.name!="")
     		return d.name.substring(1,6);
     	else if (d.type!="") 
-    		if(d.type!="InheritanceLink")
+    		if(d.type.search("Link")==-1)
     			return d.type;
     	else
-    		if(d.type!="InheritanceLink")
+    		if(d.type.search("Link")==-1)
     			return d.handle;
     }
  

@@ -1,16 +1,16 @@
 function updateTableView()
 {
-  
-    if (atomData != null)
-      $("#screen-table").html(AtomsTableView(atomData));
-    else
-        $("#screen-table").html("<h3>Table view</h3><hr>No Data. Please connect to server and specify your filter data.");
  
+  if (atomData != null)
+    $("#screen-table").html(AtomsTableView(atomData));
+  else
+    $("#screen-table").html("<h3>Table view</h3><hr>No Data. Please connect to server and specify your filter data.");
+
 }
-
-
+ 
 function AtomsTableView(atoms)
 {
+ 
   var table= "<table class='table table table-bordered'>";
   table+="<tr><th class='atomTableHeader'> total </th><th class='atomTableHeader' style='text-align:left;'>"+ atoms.length.toString()+"</th></tr>";	
   table+="<tr><td class='cellId' style='vertical-align:text-top;' > atoms </td><td class='cellId'>"+upperTables(atoms)+"</td></tr></table>";

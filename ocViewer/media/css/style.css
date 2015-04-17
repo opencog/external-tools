@@ -272,7 +272,13 @@ hr
   fill: #321;
   stroke-width: 2px;
 }
- 
+.linkNode
+{
+  stroke:red;
+  stroke-width:1px;
+  fill:red;
+} 
+
 .link-active
 {
   stroke-opacity: 1;stroke: red;

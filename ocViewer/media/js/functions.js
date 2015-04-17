@@ -42,6 +42,9 @@ var filterQuery = new Object();
 var nodes = [],links = [];
 var terminal = null;
 
+var connectionSuccess = 0;
+var connectionFails = 0;
+
 var selectedNode = null;
 var selectedLink = null;
 var transitionSpeed = 500;
@@ -102,14 +105,15 @@ $(document).ready(function()
     });
  
     $("#appearanceCharge").slider({
-      min: -800,
+      min: -1500,
       max: 0,
       values: [preferences.appearanceCharge],
       change: function(event, ui) 
       {
-        $("#appearanceChargeAmount").html("Charge " + ui.values[0]);
+      	
+        $("#appearanceChargeAmount").html("Charge " + ui.values[0] *-1 );
       	savePreference("appearanceCharge",$("#appearanceCharge").slider("values",0));
-       	d3g.update();
+       	d3g.updateForce();
        }
     });
 
@@ -121,7 +125,7 @@ $(document).ready(function()
       {
         $("#appearanceFrictionAmount").html("Friction " + ui.values[0]/100);
       	savePreference("appearanceFriction",$("#appearanceFriction").slider("values",0));
-       	d3g.update();
+       	d3g.updateForce();
        }
     });
 
@@ -133,19 +137,19 @@ $(document).ready(function()
       {
         $("#appearanceLinkStrengthAmount").html("Link Strength " + ui.values[0]/100);
       	savePreference("appearanceLinkStrength",$("#appearanceLinkStrength").slider("values",0));
-       	d3g.update();
+       	d3g.updateForce();
        }
     });
 
     $("#appearanceLinkDistance").slider({
 	  min: 1,
-      max: 150,
+      max: 200,
       values: [preferences.appearanceLinkDistance],
       change: function(event, ui) 
       {
         $("#appearanceLinkDistanceAmount").html("Link Distance " +  ui.values[0]);
       	savePreference("appearanceLinkDistance",$("#appearanceLinkDistance").slider("values",0));
-       	d3g.update();
+       	d3g.updateForce();
        }
     });
 	  
@@ -408,68 +412,61 @@ $("#FilterAttentionalFocusOnly").click(function()
 {	
 	savePreference("FilterAttentionalFocusOnly",eval($(this).prop('checked')));
 	$("#ConnectConnectButton").prop("disabled",false);
-	//filterData();
+	getAtoms();
 });
 
 $("#FilterTruthValueStrength").keyup(function()
 {	
 	savePreference("FilterTruthValueStrength",$("#FilterTruthValueStrength").val());
-	$("#ConnectConnectButton").prop("disabled",false);
-	//filterData();
+	getAtoms();
 });
 
 $("#FilterTruthValueConfidence").keyup(function()
 {	
 	savePreference("FilterTruthValueConfidence",$("#FilterTruthValueConfidence").val());
-	$("#ConnectConnectButton").prop("disabled",false);
-	//filterData();
+	getAtoms();
 });
 
 $("#FilterTruthValueCount").keyup(function()
 {	
 	savePreference("FilterTruthValueCount",$("#FilterTruthValueCount").val());
-	$("#ConnectConnectButton").prop("disabled",false);
-	//filterData();
+	getAtoms();
 });
 
 $("#FilterAtomName").keyup(function()
 {	
 	savePreference("FilterAtomName",$("#FilterAtomName").val());
-	$("#ConnectConnectButton").prop("disabled",false);
-	//filterData();
+	getAtoms();
 });
 
 $("#FilterAtomType").change(function()
 {	
 	savePreference("FilterAtomType",$("#FilterAtomType").val());
-	$("#ConnectConnectButton").prop("disabled",false);
-	//filterData();
+	getAtoms();
 });
 
 $("#FilterIncomingSets").click(function()
 {	
 	savePreference("FilterIncomingSets",eval($(this).prop('checked')));
-	$("#ConnectConnectButton").prop("disabled",false);
-	//filterData();
+	getAtoms();
 });
 
 $("#FilterOutgoingSets").click(function()
 {	
 	savePreference("FilterOutgoingSets",eval($(this).prop('checked')));
-	$("#ConnectConnectButton").prop("disabled",false);
-	//filterData();
+	getAtoms();
 });
 
 $("#FilterLimit").keyup(function()
 {	
 	savePreference("FilterLimit",$(this).val());
-	//filterData();
+	getAtoms();
 });
 
 $("#appearanceSigmaCircularView").click(function()
 {	
 	//alert("Circular");
-	//filterData();
+	filterData();
 	sigmag.view("circular");
 });
 
@@ -804,11 +801,11 @@ function showScreen(screen)
 {
   	//render(); 
   	$('#loading').show();
-  	 
+  	clearViews();
   	render();
 	$('div[id^="screen"]').css("display","none");
 	$("#screen-"+screen).css("display","block");
- 	
+
  	if (d3g!=null)	d3g.stop();
 
 	if (screen=="d3")
@@ -1109,7 +1106,7 @@ function updateGUIPreferences()
  	
 	//SIDEBAR
 	//CONNECTION
-	$("#ConnectCogServer").attr("placeholder",preferences.cogserver);
+	$("#ConnectCogServer").attr("value",preferences.cogserver);
  	//sshowScreen(preferences.viewer); //get the last user prefered viewer
 
  	//Load stored positions of GUI enviroment etc
@@ -1123,6 +1120,25 @@ function updateGUIPreferences()
  	$("#toolboxPointer").addClass("toolboxIconSelected");
 
  	//render stuff
+}
+
+function clearViews()
+{
+
+	if (sigmag!=null)
+	{
+		sigmag.clear();
+
+	}
+
+	$("#screen-d3").remove();
+	//$("#screen-sigma").remove();
+	$("#screen-table").remove();
+	$("#screen-json").remove();
+	$("<div>", {id: "screen-d3" }).appendTo($("#mainContent"));
+	//$("<div>", {id: "screen-sigma" }).appendTo($("#mainContent"));
+	$("<div>", {id: "screen-table" }).appendTo($("#mainContent"));
+	$("<div>", {id: "screen-json" }).appendTo($("#mainContent"));
 }
 
 function checkBoxLi(name,value)
@@ -1198,6 +1214,20 @@ function SearchAtom(atomHandle)
 /*---------------------*/
 function getAtoms()
 {
+
+
+	if (atomData!= null)
+	{
+		if (atomData.length > 0)
+		{
+			
+			if (!confirm("You already connected to the server. Refresh will clear the current view"))
+				return;
+		}
+	}
+
+	
+
 	//GUI Stuff
 	$('#loading').show();
 	$("#ConnectConnectButton").disabled = true;
@@ -1275,7 +1305,7 @@ function getAtoms()
 	{
 		//GUI Stuff
 		$("#ConnectCogServer").disabled = true;	
-		$("#ConnectCogServer").prop('disabled', true);
+		//$("#ConnectCogServer").prop('disabled', true);
 	 	$("#ConnectionStatus").html("<span class='success'><i class='fa fa-check-circle'></i> Connected!</span>")
 		echo("[[b;green;black]Connected]");
 
@@ -1305,14 +1335,21 @@ function getAtoms()
 	        }
         
 	    }
-
+	    connectionSuccess++;
+	    clearViews();
 	    showScreen(preferences.viewer);
 	})
-	.fail(function()
+	.error(function(jqXHR, status, err)
 	{ 
 		connected = false;
 		$("#ConnectConnectButton").prop('disabled', false);
 		$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> Connection Failed!</span>")
+		connectionFails++;
+		$('#loading').hide();
+	})
+	.complete(function(jqXHR, status, err)
+	{
+		$('#loading').hide();
 	});
 
 	//Remember Server
@@ -1352,7 +1389,7 @@ function retrieveAtomTypes()
     	{
     		$("#FilterAtomType").removeAttr("disabled");
     		$("#FilterAtomTypeNoneValue").remove();
-		 	$("#FilterAtomType").append($("<option></option>")
+		 	$("#FilterAtomType").append($("<option style='background-color:#red;'></option>")
 				    .attr("value", 0).text("--None--"));
 
 			$.each(atomTypes.types, function(value,key)

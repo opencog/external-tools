@@ -125,6 +125,11 @@ function sigmaGraph(element)
   		});
 
 	}
+	this.clear = function()
+	{
+		alert("clear");
+		s.graph.clear();
+	}
 
 	this.addNodes = function(newnodes)
 	{ 
