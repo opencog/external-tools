@@ -1,10 +1,11 @@
 function updateTableView()
 {
- 
+  
     if (atomData != null)
       $("#screen-table").html(AtomsTableView(atomData));
     else
         $("#screen-table").html("<h3>Table view</h3><hr>No Data. Please connect to server and specify your filter data.");
+ 
 }
 
 

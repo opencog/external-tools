@@ -28,6 +28,11 @@
  
 <body>
 
+<!-- LOADING SCREEN -->
+<div id="loading">
+<div id="loadingInner"><i class="fa fa-spin fa-spinner"></i> Please wait</div>
+</div>
+
 <!-- TOP BAR -->
 <nav class="navbar navbar-default" id="navbarTop" style="margin-bottom:0;">
   <div class="container-fluid">
@@ -57,20 +62,31 @@
                 <li class="dropdown-header">Views</li>
                 <li><a href="#" viewer="d3"><i class="fa"></i> D3</a></li>
                 <li><a href="#" viewer="sigma"><i class="fa"></i> Sigma</a></li>
+                <!--
                 <li><a href="#" viewer="3d"><i class="fa"></i> 3D</a></li>
+                -->
                 <li><a href="#" viewer="table"><i class="fa"></i> Table</a></li>
                 <li><a href="#" viewer="json"><i class="fa"></i> JSON</a></li>
                 <li><a href="#" viewer="scheme"><i class="fa"></i> Scheme</a></li>
-                <li><a href="#" viewer="gexf"><i class="fa"></i> GEXF</a></li>
+             
                 <li class="divider"></li>
                 <li class="dropdown-header">Sidebars</li>
                 <li><a href="#" id="visibleLeftSideBar"><i id="visibleLeftSideBari" class="fa fa-square-o"></i> Left Sidebar</a></li>
+
                 <li class="divider"></li>
                 <li class="dropdown-header">Windows</li>
                 <li><a href="#" id="visibleAtomDetails"><i id="visibleAtomDetailsi" class="fa fa-square-o"></i> Atom Details</a></li>
                 <li><a href="#" id="visibleToolbox"><i id="visibleToolboxi" class="fa fa-square-o"></i> Toolbox</a></li>
                 <li><a href="#" id="visibleTerminal"><i id="visibleTerminali" class="fa fa-square-o"></i> Terminal</a></li>
 
+            </ul>
+        </li>
+
+         <!-- NAVBAR ANALYZE -->
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-book"></i>  Analyze <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#" id="AnalyzeStatistics"><i class="fa fa-question"></i> Statistics</a></li>
             </ul>
         </li>
 
@@ -118,7 +134,7 @@
                         <div class="form-group">
                         <label for="CogServer">CogServer:</label>
                         <div class="input-group">
-                        <input type="email" class="form-control" id="ConnectCogServer" value="">
+                        <input type="email" class="form-control" id="ConnectCogServer" placeholder="http://localhost:5000/">
                         <div class="input-group-addon" disabled="disabled" id="ConnectRefreshButton"><i class="fa fa-refresh"></i></div>
                         <div class="input-group-addon" disabled="disabled" id="ConnectConnectButton"><i class="fa fa-plug"></i></div>
                         </div>
@@ -191,6 +207,15 @@
                         </div>
                         </div>   
                     </div>
+
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-lg-12">
+                        <label for="FilterAtomName">Limit</label> 
+                        <input type="text" class="form-control input-sm" id="FilterLimit">
+                        </div>
+                      </div>   
+                    </div>
                 
                     <div class="form-group">
                         <div class="row">
@@ -208,8 +233,11 @@
                   </div>
                 </div>
               </div>
+
+
+
               <!-- ADVANCED FILTER -->
-              <div class="accordion-group">
+              <div class="accordion-group" style="display:none">
                 <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#advancedFilterPanel">
                     <i class="fa fa-globe"></i> Advanced Filter
@@ -237,6 +265,8 @@
                 </div>
               </div>
 
+
+
               <!-- APPEREANCE -->
               <div class="accordion-group">
                 <div class="accordion-heading">
@@ -247,49 +277,61 @@
                 <div id="appearancePanel" class="accordion-body collapse">
                   <div class="accordion-inner">
                     <!-- CONTENT -->
-                        <div style="padding:10px">
+                        <div id="AppearanceInner-d3">
+                          <div style="padding:10px">
 
-                            <div class="row"> 
-                                <div class="col-lg-6">
-                                    <label for="AppearanceShowText">Show Text?</label><br>
-                                    <div id="AppearanceShowText"></div><br>
-                                </div>
-                                <div class="col-lg-6">
-                                    <label for="AppearanceShowLinks">Show Links?</label><br>
-                                    <div id="AppearanceShowLinks"></div><br>
-                                </div>
-                            </div>
+                              <div class="row"> 
+                                  <div class="col-lg-6">
+                                      <label for="AppearanceShowText">Show Text?</label><br>
+                                      <div id="AppearanceShowText"></div><br>
+                                  </div>
+                                  <div class="col-lg-6">
+                                      <label for="AppearanceShowLinks">Show Links?</label><br>
+                                      <div id="AppearanceShowLinks"></div><br>
+                                  </div>
+                              </div>
+                              <!--
+                              <hr>
 
-                            <hr>
+                              <div class="row"> 
+                                  <div class="col-lg-6">
+                                      <label for="AppearanceShowText">Hover Connections?</label><br>
+                                      <div id="AppearanceHoverShowConnections"></div><br>
+                                  </div>
+                                  <div class="col-lg-6">
+                                      <label for="AppearanceShowLinks">Show Links?</label><br>
+                                      <div id="AppearanceShowLinks"></div><br>
+                                  </div>
+                              </div>
+                              -->
+                              <hr>
+    
+                              <label id="appearanceChargeAmount" for="appearanceCharge">Charge</label>
+                              <div id="appearanceCharge"></div><br>
 
-                            <div class="row"> 
-                                <div class="col-lg-6">
-                                    <label for="AppearanceShowText">Hover Connections?</label><br>
-                                    <div id="AppearanceHoverShowConnections"></div><br>
-                                </div>
-                                <div class="col-lg-6">
-                                    <label for="AppearanceShowLinks">Show Links?</label><br>
-                                    <div id="AppearanceShowLinks"></div><br>
-                                </div>
-                            </div>
+                              <label id="appearanceFrictionAmount" for="appearanceFriction">Friction </label>
+                              <div id="appearanceFriction"></div><br>
 
-                            <hr>
-  
-                            <label id="appearanceChargeAmount" for="appearanceCharge">Charge</label>
-                            <div id="appearanceCharge"></div><br>
+                              <label id="appearanceLinkStrengthAmount" for="appearanceLinkStrength">Link Strength</label>
+                              <div id="appearanceLinkStrength"></div><br>
 
-                            <label id="appearanceFrictionAmount" for="appearanceFriction">Friction </label>
-                            <div id="appearanceFriction"></div><br>
+                              <label id="appearanceLinkDistanceAmount" for="appearanceLinkDistance">Link Distance</label>
+                              <div id="appearanceLinkDistance"></div>
 
-                            <label id="appearanceLinkStrengthAmount" for="appearanceLinkStrength">Link Strength</label>
-                            <div id="appearanceLinkStrength"></div><br>
+                              <hr>
 
-                            <label id="appearanceLinkDistanceAmount" for="appearanceLinkDistance">Link Distance</label>
-                            <div id="appearanceLinkDistance"></div>
+                              <button class="btn btn-danger" id="appearanceClearD3">Clear D3</button>
+                          </div>
+                        </div>
 
-                            <hr>
+                        <div id="AppearanceInner-sigma">
+                          <button id="appearanceSigmaCircularView" class="btn btn-md btn-success">Circular View</button>
+                          <button id="appearanceSigmaGridView" class="btn btn-md btn-success">Grid View</button> 
+                          <button id="appearanceSigmaClusterView" class="btn btn-md btn-success">Cluster View</button> 
+                        </div>
 
-                            <button class="btn btn-danger" id="appearanceClearD3">Clear D3</button>
+                        <div id="AppearanceInner-none">
+                          Please select a visualizing view such as D3 or Sigma.
                         </div>
                     <!-- END CONTENT -->
                   </div>
@@ -297,7 +339,7 @@
               </div>
  
               <!-- ANALYSE -->
-              <div class="accordion-group">
+              <div class="accordion-group" style="display:none">
                 <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#analyzePanel">
                     <i class="fa fa-bar-chart"></i> Analyse
@@ -338,8 +380,7 @@
         <!-- MAIN SCREENS -->
 
             <div id="screen-d3">
-              <button id="toggleForceStart" class="btn btn-success">Stop Animation</button>
-              
+              <button id="toggleFixNodes" class="btn btn-success">Fix Nodes</button>  
             </div>
   
             <div id="screen-3d">
@@ -356,13 +397,14 @@
 
             <div id="screen-scheme">
             </div>
-
-            <div id="screen-gexf"> 
+            
+            <div id="screen-statistics">
+            
             </div>
-             
+
             <div id="screen-import">
             <!-- CONTENT -->
-             
+            
                <form>
                     <legend>Import Options</legend>
                     <div class="form-group">
@@ -490,6 +532,8 @@
     <div class="toolBoxLine"></div>
     <div class="toolboxIcon" title="Add new link" id="toolboxAddLink"><i class="fa fa-link"></i></div>
     <div class="toolboxIcon" title="Remove link" id="toolboxRemoveLink"><i class="fa fa-unlink"></i></div>
+    <div class="toolBoxLine"></div>
+    <div class="toolboxIcon" title="Highlight" id="toolboxHighlight"><i class="fa fa-search-plus"></i></div>
   </div>
 </div>
  
@@ -611,7 +655,6 @@
 
 <!-- SCRIPTS -->
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<!--<script src="http://adnanwahab.com/pathgl/dist/pathgl.min.js"></script>-->
 <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
 <script src="media/js/jquery-ui.js"></script>
 <script src="media/js/three.min.js"></script>
@@ -620,8 +663,7 @@
 <script src="media/js/jquery.switchButton.js" charset="utf-8"></script>
 <script src="media/js/jquery.terminal-0.8.8.js"></script>
 <script src="media/js/jquery.awesome-cursor.min.js"></script>
- 
-
+  
 <!-- SIGMA -->
 <script src="media/js/sigma.js-master/src/sigma.core.js"></script>
 <script src="media/js/sigma.js-master/src/conrad.js"></script>
@@ -670,9 +712,9 @@
 <script src="media/js/sigma.js-master/src/misc/sigma.misc.bindDOMEvents.js"></script>
 <script src="media/js/sigma.js-master/src/misc/sigma.misc.drawHovers.js"></script>
  
+<script src="media/js/sigma.js-master/plugins/sigma.plugins.animate/sigma.plugins.animate.js"></script>
 <script src="media/js/sigma.js-master/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
-<script src="media/js/sigma.js-master/plugins/sigma.layout.forceAtlas2/worker.js"></script>
-<script src="media/js/sigma.js-master/plugins/sigma.layout.forceAtlas2/supervisor.js"></script>
+ 
 
 <!-- NEW LIBS -->
 <script src="media/js/visual.js"></script>
@@ -682,6 +724,7 @@
 <script src="media/js/visual-sigma.js"></script>
 <script src="media/js/visual-gexf.js"></script>
 <script src="media/js/visual-3d.js"></script>
+<script src="media/js/visual-statistics.js"></script>
 <script src="media/js/functions.js"></script>
 <script src="media/js/terminal.js"></script>
 

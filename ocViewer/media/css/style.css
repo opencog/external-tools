@@ -18,6 +18,7 @@ hr
     height:0;
 }
 
+
 /* LAYOUT */
 /*-----------------*/
 /*-----------------*/
@@ -179,11 +180,13 @@ hr
 }
 .toolboxIcon:hover
 {
-  background-color:#333;
+  background-color:#ddd;
+  color:#333;
 }
 .toolboxIconSelected
 {
-  background-color: #118;
+  background-color: #ddd;
+  color:#333;
 }
 
 
@@ -239,8 +242,8 @@ hr
 
 .link {
   stroke: #fff;
-  stroke-width: 1px;
-  stroke-opacity: 1.0;
+  stroke-width:0.5px;
+  stroke-opacity: 0.2;
   z-index: 1;
 }
 
@@ -260,8 +263,8 @@ hr
 
 .node circle:hover
 {  
-  stroke: #fff;
-  stroke-width: 3px; 
+  stroke: red;
+  stroke-width: 2px; 
 }
 
 .node-active circle{
@@ -270,32 +273,39 @@ hr
   stroke-width: 2px;
 }
  
-.link-active {
+.link-active
+{
   stroke-opacity: 1;stroke: red;
   stroke-width: 1px;
 }
+
 .fixed circle
 {
-  stroke:#ddd;
-  stroke-width:4px;
+  stroke:red;
+  stroke-width:2px;
 }
+
 .linkToolNode circle
 {
   fill:blue;
 }
+
 .selectedNode circle
 {
-  stroke-width:4px;
+  stroke-width:2px;
+  stroke:red;
 }
+
 .selectedLink
 {
   stroke:red; stroke-width: 3px;
 }
+
 .text
 {
   fill:#ddd;
   color:#ddd;
-  font-size:9px;
+  font-size:7px;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -306,8 +316,12 @@ hr
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
   cursor: pointer;
+  margin-left:10px;
+  margin-top:10px;
 }
-.overlay {
+
+.overlay
+{
   fill: none;
   pointer-events: all;
 }
@@ -325,18 +339,22 @@ hr
     border:1px solid #ddd;
     border-top:none;
 }
+
 .accordion-heading:hover  
 {
     background-color:#ccc;
 }
+
 .accordion-heading a:link  
 {
     text-decoration: none;
 }
+
 .accordion-heading a:hover  
 {
     text-decoration: none;
 }
+
 .accordion-inner  
 {
     padding:10px;
@@ -361,6 +379,7 @@ hr
     background-color:#5cb85c;
     color:#fff;
 }
+
 #ConnectionStatus
 {
     font-size:12px;
@@ -415,6 +434,12 @@ hr
     overflow:scroll;
 }
 
+#screen-statistics
+{
+  padding:20px;
+  overflow:scroll;
+}
+
 #screen-import
 {
     padding:20px;
@@ -451,6 +476,8 @@ hr
     color:#000;
 }
 
+ 
+
 /* CONTROL ANIMATION */
 /*-----------------*/
 /*-----------------*/
@@ -458,13 +485,14 @@ hr
 /*-----------------*/
 /*-----------------*/
 /*-----------------*/
-#toggleForceStart
+#toggleFixNodes
 {
   display:none;
   position:absolute;
   right:10px;top:10px;
 }
-#screen-d3:hover > #toggleForceStart
+
+#screen-d3:hover > #toggleFixNodes
 {
   display:block;
 }
@@ -480,7 +508,30 @@ hr
 {
     color:#5cb85c;
 }
+
 .fail
 {
     color:red;
+}
+
+#loading
+{
+  background-color:#000;
+  opacity: 0.8;
+  width:100%;
+  height:100%;
+  position: absolute;
+  z-index:100000;
+}
+
+#loadingInner
+{
+  width:300px;
+  margin-top:100px;
+  margin-left:auto;
+  margin-right:auto;
+  color:#fff;
+  padding:50px;
+  font-size:18px;
+  text-align: center;
 }

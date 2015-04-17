@@ -7,9 +7,11 @@ var Accordions = []; //Storing the accordions preferences
 var connectedNode = []; //The connected node
 
 var d3g = null; //Storing the whole d3 graph here
-var graph = null; //Storing the graph Viewer
+//var graph = null; //Storing the graph Viewer
 var sigmag = null; //Storing the Sigma Viewer
-var tg = null;  //3D graph T(threeD)G(raph)
+//var tg = null;  //3D graph T(threeD)G(raph)
+
+var fixedNodes = false;
 
 var svg; //The d3 graph is being stored here
 var width=800; //Graph starting Width. Dynamically calculated later through
@@ -32,6 +34,8 @@ var dragging;
 //Globals
 var atomData = null;
 var atomTypes = null;
+var atomTypesUsed = [];
+
 var count = null //How many atoms?
 var filterQuery = new Object();
 
@@ -360,9 +364,29 @@ $("[viewer]").click(function(){
 	showScreen(preferences.viewer);
 });
 
-$("#toggleForceStart").click(function(){
-	 force.stop();
+$("#toggleFixNodes").click(function(){
+	if (fixedNodes)
+	{
+		for(var i=0;i<count;i++)
+	    	nodes[i].fixed = false;
+		fixedNodes = false;
+		$(this).html("Fix Nodes");
+	}
+	else
+	{
+		for(var i=0;i<count;i++)
+	    	nodes[i].fixed = true;
+	    fixedNodes = true;
+	    $(this).html("Unfix Nodes");
+	}
 })
+
+$("#AnalyzeStatistics").click(function()
+{
+	savePreference("viewer","statistics");
+	updateGUIPreferences();
+	showScreen(preferences.viewer);
+});
 
 $("#HelpHowToUse").click(function()
 {	
@@ -434,6 +458,33 @@ $("#FilterOutgoingSets").click(function()
 	savePreference("FilterOutgoingSets",eval($(this).prop('checked')));
 	$("#ConnectConnectButton").prop("disabled",false);
 	//filterData();
+});
+
+$("#FilterLimit").keyup(function()
+{	
+	savePreference("FilterLimit",$(this).val());
+	//filterData();
+});
+
+$("#appearanceSigmaCircularView").click(function()
+{	
+	//alert("Circular");
+	//filterData();
+	sigmag.view("circular");
+});
+
+$("#appearanceSigmaGridView").click(function()
+{	
+	//alert("grid");
+	//filterData();
+	sigmag.view("grid");
+});
+
+$("#appearanceSigmaClusterView").click(function()
+{	
+	//alert("cluster");
+	//filterData();
+	sigmag.view("cluster");
 });
 
 $("#AdvancedFilterExecute").click(function()
@@ -567,6 +618,16 @@ $("#toolboxRemoveLink").click(function()
 	savePreference("selectedTool","removeLink");
 });
 
+$("#toolboxHighlight").click(function()
+{
+	$(".toolboxIcon").removeClass("toolboxIconSelected");
+	$(this).addClass("toolboxIconSelected");
+	$('.node').awesomeCursor('fa fa-search-plus', {color: 'white'});
+	$('rect').awesomeCursor('fa fa-search-plus', {color: 'white'});
+	savePreference("selectedTool","Highlight");
+});
+
+ 
 $("#AdvancedFilterSavedFilters").change(function()
 {
 	if ($(this).val()!=-1)
@@ -741,15 +802,20 @@ function atomDetailsFixedOff()
 
 function showScreen(screen)
 {
-  	//render();
+  	//render(); 
+  	$('#loading').show();
+  	 
   	render();
 	$('div[id^="screen"]').css("display","none");
 	$("#screen-"+screen).css("display","block");
  	
+ 	if (d3g!=null)	d3g.stop();
+
 	if (screen=="d3")
 	{
 		d3g = new d3graph("#screen-d3");
-		d3g.addNodes(atomData);	 
+		if (atomData!=null)
+			d3g.addNodes(atomData);
 	}
 	else if (screen=="3d")
 	{
@@ -795,6 +861,10 @@ function showScreen(screen)
 	    console.log(gefxData);
 	    $("#screen-gexf").html("." + gefxData);
 	}
+	else if (screen=="statistics")
+	{
+		updateStats();
+	}
 
 	if (preferences.visibleAtomDetails)
 	{
@@ -803,6 +873,20 @@ function showScreen(screen)
   		$("#terminal").show();
  	}
  
+ 
+ 	if ($("#AppearanceInner-"+screen).length>0)
+ 	{
+ 		$('div[id^="AppearanceInner"]').css("display","none");
+		$("#AppearanceInner-"+screen).css("display","block");
+	}
+	else
+	{
+		$('div[id^="AppearanceInner"]').css("display","none");
+		$('#AppearanceInner-none').css("display","block");
+	}
+
+	$('#loading').hide();
+	
 }
  
 /*------------------------
@@ -869,6 +953,9 @@ function loadPreferences()
 	if (preferences.FilterOutgoingSets==undefined)
 	    preferences.FilterOutgoingSets = 0;
 	
+	if (preferences.FilterLimit == undefined)
+		preferences.FilterLimit = 1000;
+
 	if (preferences.appearanceAnimate==undefined)
 	    preferences.appearanceAnimate = 1;
 
@@ -1003,7 +1090,8 @@ function updateGUIPreferences()
 	$("#FilterAtomType").val(preferences.FilterAtomType);
 	$("#FilterIncomingSets").prop("checked",eval(preferences.FilterIncomingSets));
 	$("#FilterOutgoingSets").prop("checked",eval(preferences.FilterOutgoingSets));
-
+	$("#FilterLimit").val(preferences.FilterLimit);
+ 
 	//ADVANCED FILTERS
  	updateAdvancedFilters();
  
@@ -1021,7 +1109,7 @@ function updateGUIPreferences()
  	
 	//SIDEBAR
 	//CONNECTION
-	$("#ConnectCogServer").attr("value",preferences.cogserver);
+	$("#ConnectCogServer").attr("placeholder",preferences.cogserver);
  	//sshowScreen(preferences.viewer); //get the last user prefered viewer
 
  	//Load stored positions of GUI enviroment etc
@@ -1030,6 +1118,9 @@ function updateGUIPreferences()
  	$("#terminal").css("left",preferences.terminalLeft+"px").css("top",preferences.terminalTop+"px");
 
  	$("#toolbox"+preferences.selectedTool).addClass("selectedIcon");
+
+
+ 	$("#toolboxPointer").addClass("toolboxIconSelected");
 
  	//render stuff
 }
@@ -1087,6 +1178,7 @@ function updateAdvancedFilters()
 	}
 }
 
+
 /*---- GUI-D3 CONNECTION -----*/
 /*----------------------------*/
 /*----------------------------*/
@@ -1107,6 +1199,7 @@ function SearchAtom(atomHandle)
 function getAtoms()
 {
 	//GUI Stuff
+	$('#loading').show();
 	$("#ConnectConnectButton").disabled = true;
 	$("#ConnectionStatus").html("Establishing Connection...")
  	echo("Establishing Connection...");
@@ -1151,7 +1244,12 @@ function getAtoms()
     	filterQuery.type = null;
  
     filterQuery.includeIncoming = $("#FilterIncomingSets").prop("checked");
-    filterQuery.includeOutgoing = $("#FilterOutgoingSets").prop("checked"); 
+    filterQuery.includeOutgoing = $("#FilterOutgoingSets").prop("checked");
+    
+    if (($("#FilterLimit").val() != null) && ($("#FilterLimit").val() != "")) 
+    	filterQuery.limit= $("#FilterLimit").val();
+	else
+		filterQuery.limit= null;
 
     var ret = [];
     
@@ -1188,17 +1286,26 @@ function getAtoms()
 		
 	    if (atomData.length == 0)
 	    {
-	       $("#ConnectionStatus").html("The Cogserver returned no atoms for the given filter/search.");
-	       echo("The Cogserver returned no atoms for the given filter/search.");
-	       atomData = null;
+	    	$("#ConnectionStatus").html("The Cogserver returned no atoms for the given filter/search.");
+	    	echo("The Cogserver returned no atoms for the given filter/search.");
+	    	atomData = null;
+	    	//atomTypesUsed = [];
 	    }
 	    else
 	    {
+	    	var atomTypesUsed = [];
 	        $("#ConnectionStatus").html("<span class='success'><i class='fa fa-check-circle'></i> Successfully retrieved " + atomData.length.toString() + " atoms.</span>");
 	        echo("[[b;green;black]Successfully retrieved " + atomData.length.toString() + " atoms.]");
+	    	
+	        //See what node types are used in the graph
+	        for (var i=0; i < atomData.length; i++)
+	        {
+	        	if ($.inArray(atomData[i].type,atomTypesUsed)==-1)
+	        		atomTypesUsed.push(atomData[i].type);
+	        }
+        
 	    }
 
-	     
 	    showScreen(preferences.viewer);
 	})
 	.fail(function()
