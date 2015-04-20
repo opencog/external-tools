@@ -1,8 +1,11 @@
+var nodeDragging = false;
+var nodeClicked = false;
+
 function d3graph(element)
 {
  
  	zoom = d3.behavior.zoom().scaleExtent([0.05, 5]).on("zoom", zoomed);
- 
+
     var vis = this.vis = d3.select(element).append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -14,7 +17,8 @@ function d3graph(element)
 		.attr("width", width)
 		.attr("height", height)
 		.style("fill", "none")
-		.style("pointer-events", "all");
+		.style("pointer-events", "all")
+		.style("cursor","default");
  
 	container = vis.append("g");
 
@@ -34,6 +38,7 @@ function d3graph(element)
     var nodes = force.nodes(),
         links = force.links();
 
+
 	/*--------------------------*/
 	/*----------UPDATE----------*/
 	/*--------------------------*/
@@ -42,11 +47,11 @@ function d3graph(element)
 
     var update = function () 
     {
-  
+ 		
+ 
   		textVisibillity =  preferences.appearanceShowText=="true" ? "visible": "hidden";
 		linksVisibillity = preferences.appearanceShowLinks=="true" ? "visible" : "hidden";
 	 
-
     	force.charge(preferences.appearanceCharge)
 			.gravity(0.1)
 			.linkDistance(preferences.appearanceLinkDistance)
@@ -56,7 +61,7 @@ function d3graph(element)
 
         var color = d3.scale.linear()
 		    .domain([ 0, 10])
-		    .range(["green", "red"]);
+		    .range(["#333", "#366"]);
 
         d3.select('#visualizerInner') 
 	   	.attr('width', width)
@@ -77,14 +82,21 @@ function d3graph(element)
 	        .attr("id",function(d){return d.index;})
 	        .call(force.drag);
 
-    	nodeEnter.append("circle")
+    	nodeEnter.filter(function(d) { return d.type.search("Link")!=-1 })
+	        .append("rect")
+	        .attr("class", "linkNode")
+	        .attr("height", "5")
+	        .attr("width", "5");
+
+    	nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
+    		.append("circle")
 	        .attr("class", "circle")
 	        .attr("fill",function(d){ return "" + color(d.incoming.length); })
 	        .attr("x",function(d){return d.x})
 	        .attr("y",function(d){return d.y})
-	        .attr("r", nodeRadius) 
-
-
+	        .attr("fixed",function(d){return d.incoming.length > 5})
+	        .attr("r", nodeRadius);
+ 
         nodeEnter.append("text")
 	        .attr("class", "text")
 	        .style("visibility",textVisibillity)
@@ -95,13 +107,17 @@ function d3graph(element)
 
         force.on("tick", function() 
         {
-          link
-          .attr("x1", function(d) { return d.source.x; })
-          .attr("y1", function(d) { return d.source.y; })
-          .attr("x2", function(d) { return d.target.x; })
-          .attr("y2", function(d) { return d.target.y; });
+	        if (preferences.appearanceShowLinks)
+	        {
+	          link
+	          .attr("x1", function(d) { return d.source.x; })
+	          .attr("y1", function(d) { return d.source.y; })
+	          .attr("x2", function(d) { return d.target.x; })
+	          .attr("y2", function(d) { return d.target.y; });
+			}  
 
           node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
         });
  
 	    /*------------------------------------*/
@@ -109,6 +125,15 @@ function d3graph(element)
 		/*------------------------------------*/
 		/*------------------------------------*/
 		/*------------------------------------*/
+		rect.on("mouseover", function(d) 
+		{
+			if ((preferences.selectedTool == "Highlight"))
+			{
+				link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", 1);
+				node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", 1);
+			}
+		});
+
 		vis.on("mouseup", function(d) 
 		{
 			//if (dragging) return;
@@ -180,50 +205,26 @@ function d3graph(element)
 				d.fixed =false;
 			}
 		});
-
-		node.on("click", function(d) 
+		 
+		node.on("click",function(d)
 		{
 
-			//if (d3.select(this).classed("dragging")){return;} 
-			if (nodeDragging) return;
-	 	 
 	 	 	if (preferences.selectedTool == "pointer")
 			{
-				d3.select(this).select("circle")
-					.transition()
-					.duration(transitionSpeed)
-					.attr("r", nodeRadius);
-		 
-				//----FADE OUT EVERYTHING ELSE-----
-				//----------------------------------
-				//----------------------------------
-				node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", function(o)
+ 
+				if (d!=selectedNode)
 				{
-					return isConnected(d, o) ? 1.0 : 0.1;
-				})
+					selectedNode = d;
+					showSelectedAtom(d);
+			 		atomDetailsChanged = false;
+			 		$("#atomDetailsUpdate").prop("disabled",true);
+			 		$("#atomDetailsDelete").prop("disabled",false);
+	 			}
 
-				/*
-				.ease(Math.sqrt).attr("r", function(o)
-				{
-					return isConnected(d, o) ? nodeRadius : 500;
-				});
-				*/
-
-				link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", function(o)
-				{
-					for ( j = 0; j < connectedNode.length; j++) 
-					{
-						if (connectedNode[j].handle == o.source.handle)
-							return 1.0;
-						if (connectedNode[j].handle == o.target.handle)
-							return 1.0;
-					}
-					return 0.1;
-				});
 			}
 			else if (preferences.selectedTool == "removeNode")
 			{
-				deleteNode(d) 
+				deleteNode(d);
 				return;
 			}
 			else if (preferences.selectedTool == "addLink")
@@ -238,8 +239,7 @@ function d3graph(element)
 				}
 				else
 				{ 
-					linkToolNode2 = d.index;
-					 
+					linkToolNode2 = d.index;				 
 					node.classed("linkToolNode",false);
 					d3g.addLink(linkToolNode1, linkToolNode2 ) ;
 					linkToolNode1 = null;
@@ -261,16 +261,7 @@ function d3graph(element)
 				if ( !confirm("Are you sure you want to select other atom without updating it's settings?") )
 					return;
 			}
-			
-			if (d!=selectedNode)
-			{
-				selectedNode = d;
-				showSelectedAtom(d);
-		 		atomDetailsChanged = false;
-		 		$("#atomDetailsUpdate").prop("disabled",true);
-		 		$("#atomDetailsDelete").prop("disabled",false);
-	 		}
-	 		 
+			 
 			var dcx = (width / 2 - d.x * zoom.scale());
 			var dcy = (height / 2 - d.y * zoom.scale());
 			/*zoom.translate([dcx, dcy]);
@@ -283,6 +274,27 @@ function d3graph(element)
 
 		node.on("mouseover", function(d)
 		{
+ 
+			if ((preferences.selectedTool == "Highlight"))
+			{
+				node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", function(o)
+				{
+					return isConnected(d, o) ? 1.0 : 0.1;
+				})
+	 
+				link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", function(o)
+				{
+					for ( j = 0; j < connectedNode.length; j++) 
+					{
+						if (connectedNode[j].handle == o.source.handle)
+							return 1.0;
+						if (connectedNode[j].handle == o.target.handle)
+							return 1.0;
+					}
+					return 0.1;
+				});
+				return;
+			}
 
 			if ((preferences.selectedTool == "addLink") && (linkToolNode1!=null))
 			{
@@ -290,23 +302,8 @@ function d3graph(element)
 				return;
 			}
 		 
-			if (!preferences.AppearanceHoverShowConnections) return;
-			 
-			node.classed("node-active", function(o) 
-			{
-				thisOpacity = isConnected(d, o) ? true : false;
-				this.setAttribute('fill-opacity', thisOpacity);
-				return thisOpacity;
-			});
+		  
 		 
-			link.classed("link-active", function(o)
-			{
-				return o.source === d || o.target === d ? true : false;
-			});
-			 
-			d3.select(this).classed("node-active", true);
-			d3.select(this).select("circle").transition().duration(transitionSpeed).attr("r", nodeRadius);
-
 		})
 
 		node.on("mouseout", function(d)
@@ -322,7 +319,7 @@ function d3graph(element)
     }
 
     update();
-
+ 
 	/*--------------------------*/
 	/*--------FUNCTIONS---------*/
 	/*--------------------------*/
@@ -335,18 +332,29 @@ function d3graph(element)
 		//this.node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", 1);
  	}
 
-	this.update = function (id) 
+	this.updateForce = function()
 	{
-        update();
-    }
+
+		force.charge(preferences.appearanceCharge)
+			.gravity(0.1)
+			.linkDistance(preferences.appearanceLinkDistance)
+			.linkStrength(preferences.appearanceLinkStrength/100)
+			.friction(preferences.appearanceFriction/100)
+	        .size([width, height]);
+
+	    force.start();
+	}
 
     this.addNodes = function(newnodes) 
 	{
+		
         if (newnodes==null)return;
+
         for(var i=0;i<newnodes.length;i++)
         	nodes.push(newnodes[i]);	
-
+ 
         this.refreshLinks();
+
         update();
     }
 
@@ -356,11 +364,13 @@ function d3graph(element)
         {
 	    	for (var li=0;li<nodes[i].incoming.length;li++)
 	    	{
-	    		links.push({"source": nodes[i], "target": findNodeByHandle(nodes[i].incoming[li]), "index": links.length});
+	    		if(findNodeByHandle(nodes[i].incoming[li]))
+	    			links.push({"source": nodes[i], "target": findNodeByHandle(nodes[i].incoming[li]), "index": links.length});
 	    	}
 	    	for (var lo=0;lo<nodes[i].outgoing.length;lo++)
 	    	{
-	    		links.push({"source": findNodeByHandle(nodes[i].outgoing[lo]), "target": nodes[i], "index": links.length});
+	    		if(findNodeByHandle(nodes[i].outgoing[lo]))
+	    			links.push({"source": findNodeByHandle(nodes[i].outgoing[lo]), "target": nodes[i], "index": links.length});
 	    	}
     	}
     }
@@ -409,6 +419,16 @@ function d3graph(element)
         update();
     }
 
+    this.update = function ()
+    {
+    	links = [];
+    	nodes = [];
+    }
+    this.stop = function()
+    {
+    	force.stop();
+    }
+
     var findNodeByHandle = function (handle) 
     {
         for (var i=0; i < nodes.length; i++) 
@@ -444,12 +464,14 @@ function d3graph(element)
 	/*------------------------------------*/
 	/*------------------------------------*/
 	/*------------------------------------*/
+	 
+
     function nodeRadius(d)
     {
     	if (d.incoming!=undefined)
     	{
 	    	if (d.name!="")
-	    		return d.incoming.length * 1 + 5;
+	    		return d.incoming.length /2 + 5;
 	    	else
 	    		return 1;
     	}
@@ -458,32 +480,38 @@ function d3graph(element)
     function nodeName(d)
     {
     	if (d.name!="")
-    		return d.name;
-    	else if (d.type!="")
-    		return d.type;
-    	else 
-    		return d.handle;
+    		return d.name.substring(1,6);
+    	else if (d.type!="") 
+    		if(d.type.search("Link")==-1)
+    			return d.type;
+    	else
+    		if(d.type.search("Link")==-1)
+    			return d.handle;
     }
  
     function zoomed()
 	{
-		vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+		container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 	}
 
 	function dragstarted(d)
 	{
 		d3.event.sourceEvent.stopPropagation();
 		nodeDragging = true;
+		//console.log("dragStarted");
 	}
 
 	function dragged(d)
 	{
 		//d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+		nodeDragging = true;
+
 	}
 
 	function dragended(d)
 	{
 		nodeDragging = false;
+		//console.log("Drag Ended");
 	}
 
 	function arrycontain(obj) 
@@ -545,5 +573,3 @@ function d3graph(element)
 	}
 
 }
-
- 
