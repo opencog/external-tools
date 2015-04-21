@@ -34,14 +34,14 @@ hr
 
 #leftMenu
 {   
-     background-color:#eee;
-     padding:0;
+  background-color:#777;
+  padding:0;
 }
 
 #mainContent
 {
     
-    padding:0;
+  padding:0;
 }
 
 #atomDetails
@@ -57,7 +57,8 @@ hr
 /*-----------------*/
 /*-----------------*/
 /*-----------------*/
-#details {
+#details
+{
   width: 240px;
   height: 400px;
   position: fixed;
@@ -86,11 +87,11 @@ hr
 
 #detailsPanel
 {
-    background-color:#666;
+   
 }
 
 #detailsContent {
-  padding: 10px;
+  padding: 0px;
   display:none;
 }
 #detailsContentNone
@@ -256,7 +257,7 @@ hr
 .node circle
 {  
   stroke: #fff;
-  stroke-width: 1px; 
+   stroke-width: 0;
   cursor: pointer;
   z-index:50;
 }
@@ -311,7 +312,9 @@ hr
 {
   fill:#ddd;
   color:#ddd;
-  font-size:7px;
+  font-size:8px;
+  padding:10px;
+  background-color: #ddd;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -322,8 +325,8 @@ hr
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
   cursor: pointer;
-  margin-left:10px;
-  margin-top:10px;
+  margin-left:20px;
+  margin-top:20px;
 }
 
 .overlay
@@ -377,19 +380,19 @@ hr
 /*-----------------*/
 #ConnectConnectButton, #ConnectRefreshButton
 {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #ConnectConnectButton:hover, #ConnectRefreshButton:hover
 {
-    background-color:#5cb85c;
-    color:#fff;
+  background-color:#5cb85c;
+  color:#fff;
 }
 
 #ConnectionStatus
 {
-    font-size:12px;
-    margin-top:2px;
+  font-size:12px;
+  margin-top:2px;
 }
 
 
@@ -403,7 +406,7 @@ hr
 
 #screen-d3
 {
-  background-color:#000;
+  background-color:#333;
 }
  
 #screen-3d
@@ -540,4 +543,57 @@ hr
   padding:50px;
   font-size:18px;
   text-align: center;
+}
+
+
+/* DISPLAY */
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+/*-----------------*/
+.table-settings
+{
+  border:1px solid #ddd;
+  margin:0px!important;
+}
+.table-settings td
+{
+  border:1px solid #ddd;
+}
+
+#display-none
+{
+  padding:10px;
+}
+
+.accordion-heading
+{
+  background-color: #777!important;
+  border: none;
+}
+
+.accordion-heading:hover
+{
+  background-color: #333!important;   
+}
+
+.accordion-group
+{
+  border:none;
+}
+
+.accordion-heading a:link
+{
+  color:#fff!important;
+}
+.accordion-inner
+{
+  padding:0;
+  background-color: #efefef;
+}
+#FilterSTIRangeAmount
+{
+  font-size: 10px;
 }

@@ -130,25 +130,27 @@
                 <div id="connectPanel" class="accordion-body collapse">
                   <div class="accordion-inner">
                     <!-- CONTENT -->
-                        <div class="form-group">
-                        <label for="CogServer">CogServer:</label>
-                        <div class="input-group">
-                        <input type="email" class="form-control" id="ConnectCogServer" placeholder="http://localhost:5000/">
-                        <div class="input-group-addon" disabled="disabled" id="ConnectRefreshButton"><i class="fa fa-refresh"></i></div>
-                        <div class="input-group-addon" disabled="disabled" id="ConnectConnectButton"><i class="fa fa-plug"></i></div>
-                        </div>
-                         
-                        <div class="pull-right" id="ConnectionStatus"> 
-                        </div>
-                        <br>
+                     <table class="table table-settings">
+                        <tr>
+                          <td width="30%">Server</td>
+                          <td><input type="text" class="form-control" id="ConnectCogServer" placeholder="http://localhost:5000/"></td>
+                        </tr>
+                        <tr>
+                          <td>Autoconnect</td>
+                          <td><div id="ConnectAutoConnect"></div></td>
+                        </tr>
+                        <tr>
 
-                        <div class="pull-right">
-                            <div id="ConnectAutoConnect"></div> 
-                        </div>
-                        
-                        <br>
+                          <td colspan="2" align=right style="padding:0">
+                             
+                          <button class="btn btn-success" style="width:100%" id="ConnectConnectButton"><i class="fa fa-plug"></i> Connect</button>
+                          </td>
+                           
+                        </tr>
+                      </table>
 
-                        </div>
+                      </table>
+                       
                     <!-- END CONTENT -->
                   </div>
                 </div>
@@ -163,71 +165,60 @@
                 <div id="filterPanel" class="accordion-body collapse">
                   <div class="accordion-inner">
                     <!-- CONTENT -->
-                    <div class="form-group">
-                        <input type="checkbox" id="FilterAttentionalFocusOnly"> <label for="FilterAttentionalFocusOnly">Attentional Focus Only</label>
-                    </div>
-
-                    <div class="form-group">
-                        <label>STI Range</label>
-                        <div id="FilterSTIRangeAmount">dd</div>
-                        <div id="FilterSTIRange"></div>
-                    </div>
-
-                    <div class="form-group"> 
-                        <label>TruthValue Minimums:</label>
-                         <div class="row">
-                         <div class="col-lg-4">
-                         Strength
-                         <input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueStrength"> 
-                         </div>
-                         <div class="col-lg-4">
-                         Confidence
-                         <input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueConfidence"> 
-                         </div>
-                         <div class="col-lg-4">
-                         Count
-                         <input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueCount"> 
-                         </div>
-                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                        <div class="col-lg-6">
-                        <label for="FilterAtomName">Atom Name</label> 
-                        <input type="text" class="form-control input-sm" id="FilterAtomName">
-                        </div>
-                        <div class="col-lg-6">
-                        <label for="FilterAtomType">Atom Type</label> 
-                        <select class="form-control input-sm" id="FilterAtomType">
+                     <table class="table table-settings">
+                        <tr>
+                          <td width="40%">Attentional Focus Only</td>
+                          <td><input type="checkbox" id="FilterAttentionalFocusOnly"></td>
+                        </tr>
+                        <tr>
+                          <td>STI Range <span id="FilterSTIRangeAmount"> </span></td>
+                          <td><div id="FilterSTIRange"></div></td>
+                        </tr>
+                        <tr>
+                          <td>TruthValue Strength</td>
+                          <td><input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueStrength"> </td>
+                        </tr>
+                         <tr>
+                          <td>TruthValue Confidence</td>
+                          <td><input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueConfidence"></td>
+                        </tr>
+                         <tr>
+                          <td>TruthValue Count</td>
+                          <td><input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueCount"> </td>
+                        </tr>
+                         <tr>
+                          <td>Atom Name</td>
+                          <td><input type="text" class="form-control input-sm" id="FilterAtomName"></td>
+                        </tr>
+                        <tr>
+                          <td>Atom Type</td>
+                          <td><select class="form-control input-sm" id="FilterAtomType">
                            <!-- Dynamic Values -->
                            <option value="0" id="FilterAtomTypeNoneValue">--None--</option>
-                        </select>
-                        </div>
-                        </div>   
-                    </div>
+                        </select></td>
+                        </tr>
+                         <tr>
+                          <td>Limit</td>
+                          <td><input type="text" class="form-control input-sm" id="FilterLimit"></td>
+                        </tr>
+                         <tr>
+                          <td>Incoming Sets</td>
+                          <td> <input type="checkbox" id="FilterIncomingSets"> </td>
+                        </tr>
+                         <tr>
+                          <td>Outcoming Sets</td>
+                          <td><input type="checkbox" id="FilterOutgoingSets"></td>
+                        </tr>
+                        <tr>
+                        <td colspan="2" style="padding:0">
+                          <button class="btn btn-info" style="width:100%" id="ConnectRefreshButton"><i class="fa fa-plug"></i> Refresh</button>
+                        </td>
+                        </tr>
+                    </table>
 
-                    <div class="form-group">
-                      <div class="row">
-                        <div class="col-lg-12">
-                        <label for="FilterAtomName">Limit</label> 
-                        <input type="text" class="form-control input-sm" id="FilterLimit">
-                        </div>
-                      </div>   
-                    </div>
-                
-                    <div class="form-group">
-                        <div class="row">
-                        <div class="col-lg-6">
-                        <input type="checkbox" id="FilterIncomingSets"> 
-                        <label for="FilterIncomingSets">Incoming Sets</label>
-                        </div>
-                        <div class="col-lg-6">
-                        <input type="checkbox" id="FilterOutgoingSets">
-                        <label for="FilterOutgoingSets">Outcoming Sets</label>
-                        </div>
-                        </div>
-                    </div>
+
+                   
+                 
                     <!-- END CONTENT -->
                   </div>
                 </div>
@@ -266,7 +257,7 @@
 
 
 
-              <!-- APPEREANCE -->
+              <!-- APPEARANCE -->
               <div class="accordion-group">
                 <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#appearancePanel">
@@ -274,21 +265,40 @@
                   </a>
                 </div>
                 <div id="appearancePanel" class="accordion-body collapse">
-                  <div class="accordion-inner">
+                  <div class="accordion-inner" style="padding:0px">
                     <!-- CONTENT -->
-                        <div id="AppearanceInner-d3">
-                          <div style="padding:10px">
-
-                              <div class="row"> 
-                                  <div class="col-lg-6">
-                                      <label for="AppearanceShowText">Show Text?</label><br>
-                                      <div id="AppearanceShowText"></div><br>
-                                  </div>
-                                  <div class="col-lg-6">
-                                      <label for="AppearanceShowLinks">Show Links?</label><br>
-                                      <div id="AppearanceShowLinks"></div><br>
-                                  </div>
-                              </div>
+                        <div id="AppearanceInner-d3" style="padding:0px">
+                          <table class="table table-settings">
+                            <tr>
+                              <td>Show Text?</td>
+                              <td><div id="AppearanceShowText"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Show Links?</td>
+                              <td><div id="AppearanceShowLinks"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Charge</td>
+                              <td><div id="appearanceCharge"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Friction</td>
+                              <td><div id="appearanceFriction"></div></td>
+                            </tr>
+                              <tr>
+                              <td>Link Strength</td>
+                              <td><div id="appearanceLinkStrength"></div></td>
+                            </tr>
+                              <tr>
+                              <td>Link Distance</td>
+                              <td><div id="appearanceLinkDistance"></div></td>
+                            </tr>
+                            <tr>
+                              <td> <button class="btn btn-danger" id="appearanceClearD3">Clear D3</button> </td>
+                              <td></td>
+                            </tr>
+                          </table>
+                          
                               <!--
                               <hr>
 
@@ -303,24 +313,8 @@
                                   </div>
                               </div>
                               -->
-                              <hr>
-    
-                              <label id="appearanceChargeAmount" for="appearanceCharge">Charge</label>
-                              <div id="appearanceCharge"></div><br>
-
-                              <label id="appearanceFrictionAmount" for="appearanceFriction">Friction </label>
-                              <div id="appearanceFriction"></div><br>
-
-                              <label id="appearanceLinkStrengthAmount" for="appearanceLinkStrength">Link Strength</label>
-                              <div id="appearanceLinkStrength"></div><br>
-
-                              <label id="appearanceLinkDistanceAmount" for="appearanceLinkDistance">Link Distance</label>
-                              <div id="appearanceLinkDistance"></div>
-
-                              <hr>
-
-                              <button class="btn btn-danger" id="appearanceClearD3">Clear D3</button>
-                          </div>
+                              
+ 
                         </div>
 
                         <div id="AppearanceInner-sigma">
@@ -329,7 +323,7 @@
                           <button id="appearanceSigmaClusterView" class="btn btn-md btn-success">Cluster View</button> 
                         </div>
 
-                        <div id="AppearanceInner-none">
+                        <div id="AppearanceInner-none" style="padding:10px">
                           Please select a visualizing view such as D3 or Sigma.
                         </div>
                     <!-- END CONTENT -->
@@ -341,14 +335,52 @@
                <!-- ADVANCED FILTER -->
               <div class="accordion-group">
                 <div class="accordion-heading">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#colorsPanel">
-                    <i class="fa fa-paint-brush"></i> Colors
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#displayPanel">
+                    <i class="fa fa-paint-brush"></i> Display
                   </a>
                 </div>
-                <div id="colorsPanel" class="accordion-body collapse">
-                  <div class="accordion-inner">
+                <div id="displayPanel" class="accordion-body collapse">
+                  <div class="accordion-inner" style="padding:0">
                     <!-- CONTENT -->
-                        
+                    <div id="display-d3">
+                    <table class="table table-settings">
+                      <tr>
+                        <td width="50%">Radius Relative to:</td>
+                        <td>
+                          <select id="displayRadiusBasedOn">
+                            <option value="Fixed">Fixed</option>
+                            <option value="Incoming">Incoming</option>
+                            <option value="Outgoing">Outgoing</option>
+                            <option value="IncomingOutgoing">Incoming + Outgoing</option>
+                            <option value="AtomType">AtomType</option>
+                            <option value="STi">STi</option>
+                            <option value="LTi">LTi</option>
+                            <option value="LTi">LTi</option>
+                          </select>
+                        </td>
+                      </tr>
+                       <tr>
+                        <td width="50%">Fixed Radius:</td>
+                        <td>
+                           <input type="text" value="5"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="50%">Radius Relative to:</td>
+                        <td>
+                          <select>
+                            <option value="volvo">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="mercedes">Mercedes</option>
+                            <option value="audi">Audi</option>
+                          </select>
+                        </td>
+                      </tr>
+
+                    </table>
+                  </div><div id="display-none">
+                    Please select d3 or Sigma view to view extra display options.
+                  </div>
                     <!-- END CONTENT -->
                   </div>
                 </div>
@@ -378,7 +410,7 @@
                   </a>
                 </div>
                 <div id="settingsPanel" class="accordion-body collapse">
-                  <div class="accordion-inner">
+                  <div class="accordion-inner" style="padding:10px;">
                     <!-- CONTENT -->
                     <button id="SettingsClearPreferences" class="btn btn-success btn-xs">
                         Clear Preferences
@@ -596,71 +628,72 @@
     </div>
 
     <div id="detailsContent">
+       <table class="table   table-settings">
+          <tr>
+          <td>Handle</td>
+          <td><input type="text" disabled="disabled" class="form-control atomDetailsForm input-sm" id="detailsAtomHandle" name="atomName"/> </td>
+        </tr>
+        <tr>
+          <td>Type</td>
+          <td>
+          <select class="form-control atomDetailsForm input-sm" id="detailsAtomType">
+          <option value="0" id="detailsAtomTypeNoneValue">--None--</option>
+          </select></td>
+        </tr>
+        <tr>
+          <td>Name</td>
+          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomName" name="atomName"/></td>
+        </tr>
+        <tr>
+          <td>LTI</td>
+          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomLTI" name="detailsAtomLTI"/> </td>
+        </tr>
+        <tr>
+          <td>STI</td>
+          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomSTI" name="detailsAtomSTI"/>  </td>
+        </tr>
+        <tr>
+          <td>VLTI</td>
+          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/></td>
+        </tr>
+        <tr>
+          <td>VLTI</td>
+          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/></td>
+        </tr>
 
-            <div class="row">
-                <div class="col-lg-4">
-                   Handle<br>
-                    <input type="text" disabled="disabled" class="form-control atomDetailsForm input-sm" id="detailsAtomHandle" name="atomName"/> 
-                </div>
-                <div class="col-lg-8">
-                    Type 
-
-                    <select class="form-control atomDetailsForm input-sm" id="detailsAtomType">
-                      <!-- Dynamic Values -->
-                      <option value="0" id="detailsAtomTypeNoneValue">--None--</option>
-                    </select> 
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                   Name<br>
-                   <input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomName" name="atomName"/> 
-                </div>
-            </div>
+      </table>
+             
+           
             
+           
             <div class="row">
-                <div class="col-lg-4">
-                    LTI<br>
-                    <input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomLTI" name="detailsAtomLTI"/> 
-            
-                </div>
-                <div class="col-lg-4">
-                    STI<br>
-                    <input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomSTI" name="detailsAtomSTI"/>  
-                </div>
-                 <div class="col-lg-4">
-                    VLTI<br>
-                    <input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/> 
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-lg-4">
+                <div class="col-xs-4">
                     Count<br>
                     <input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomCount" id="detailsAtomCount" />
                 </div>
-                <div class="col-lg-4">
+                <div class="col-xs-4">
                     Confidence<br>
                     <input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomConfidence" id="detailsAtomConfidence"/> 
                 </div>
-                 <div class="col-lg-4">
+                 <div class="col-xs-4">
                     Strength<br>
                     <input type="text" class="form-control atomDetailsForm input-sm" name="detailAtomStrength" id="detailsAtomStrength"/> 
                 </div>
             </div>
-            <br>
+         
+
             <div class="row">
-              <div class="col-lg-12">
+              <div class="col-xs-12">
                   Fixed<br>
                   <div id="atomDetailsFixed"></div>
               </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-xs-6">
                     <button style="width:100%" disabled="disabled" id="atomDetailsUpdate" class="btn btn-md btn-success">Update</button> 
                 </div>
-                <div class="col-lg-6">
+                <div class="col-xs-6">
                     <button style="width:100%" disabled="disabled" id="atomDetailsDelete" class="btn btn-md btn-danger">Delete</button> 
                 </div>
             </div>

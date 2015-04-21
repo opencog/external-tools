@@ -54,7 +54,7 @@ var advancedFilters = []; //Storing the advanced filters array here after conver
 var gui;
 var links = [];
 var index = 0;
-  
+   
 var ApperanceforceAnimated;
 var cursor = null;
 var API_VER = "v1.1";
@@ -159,7 +159,7 @@ $(document).ready(function()
      );
  
     $("#ConnectAutoConnect").switchButton({
-  		labels_placement: "left",
+  		labels_placement: "right",
   		checked: String2Boolean(preferences.ConnectAutoConnect),
   		on_label: "CONNECT ON LOAD",	
         off_label: "DO NOT CONNECT ON LOAD",
@@ -203,8 +203,8 @@ $(document).ready(function()
  	//maybe store locally in the future if server fails to connect...
 	retrieveAtomTypes();
 
-	if(String2Boolean(preferences.ConnectAutoConnect))
-		getAtoms();
+	//if(String2Boolean(preferences.ConnectAutoConnect))
+	//	getAtoms();
 
 	//render(); //Render some gui elements having to do with height
     render(); 
@@ -645,6 +645,16 @@ $("#AdvancedFilterSavedFilters").change(function()
  	}
 });
 
+
+$("#displayRadiusBasedOn").change(function(d)
+{
+	radiusBased = ($(this).val());
+	savePreference("radiusBased",radiusBased);
+	
+	
+ 	d3g.changeRadius();
+})
+
 $("#atomDetailsUpdate").click(function()
 {
 	//UPDATING ATOM
@@ -875,13 +885,26 @@ function showScreen(screen)
  	{
  		$('div[id^="AppearanceInner"]').css("display","none");
 		$("#AppearanceInner-"+screen).css("display","block");
+
 	}
 	else
 	{
 		$('div[id^="AppearanceInner"]').css("display","none");
 		$('#AppearanceInner-none').css("display","block");
 	}
+	if ($("#display-"+screen).length>0)
+ 	{
+ 		$('div[id^="display-"]').css("display","none");
+		$("#display-"+screen).css("display","block");
 
+	}
+	else
+	{
+		$('div[id^="display-"]').css("display","none");
+		$('#display-none').css("display","block");
+	}
+
+	 
 	$('#loading').hide();
 	
 }
@@ -977,6 +1000,9 @@ function loadPreferences()
 	if (preferences.appearanceHoverShowConnections==undefined)
 	    preferences.appearanceHoverShowConnections = false;
  
+ 	if (preferences.radiusBased == undefined)
+		preferences.radiusBased = "Fixed";
+
 	//if (preferences.selectedTool == undefined)
 		preferences.selectedTool = "pointer"; //always load the pointer at start...
 	// pointer	// addNode	// removeNode	// addLink
@@ -1089,6 +1115,8 @@ function updateGUIPreferences()
 	$("#FilterOutgoingSets").prop("checked",eval(preferences.FilterOutgoingSets));
 	$("#FilterLimit").val(preferences.FilterLimit);
  
+	
+
 	//ADVANCED FILTERS
  	updateAdvancedFilters();
  
@@ -1098,6 +1126,10 @@ function updateGUIPreferences()
 	$("#appearanceFrictionAmount").html("Friction " + preferences.appearanceFriction/100);
 	$("#appearanceLinkDistanceAmount").html("Link Distance " + preferences.appearanceLinkDistance);
  	
+ 	//Display
+ 	$("#displayRadiusBasedOn").val(preferences.radiusBased);
+
+
  	//Viewer
 	$("[viewer]").children().addClass("fa-square-o");
 	$("[viewer]").children().removeClass("fa-check-square-o");
@@ -1215,18 +1247,16 @@ function SearchAtom(atomHandle)
 function getAtoms()
 {
 
+	savePreference("cogserver",$("#ConnectCogServer").val());
 
 	if (atomData!= null)
 	{
 		if (atomData.length > 0)
 		{
-			
 			if (!confirm("You already connected to the server. Refresh will clear the current view"))
 				return;
 		}
 	}
-
-	
 
 	//GUI Stuff
 	$('#loading').show();
@@ -1509,11 +1539,12 @@ function showSelectedAtom(atom)
 	$("#detailsAtomStrength").val(atom.truthvalue.details.strength);
 
 
-	echo("\nSelected atom: \n[[b;red;black]id: " + atom.handle 
+	/*echo("\nSelected atom: \n[[b;red;black]id: " + atom.handle 
 		+ "]\nName: " + atom.name 
 		+ "\nIncoming:" + atom.incoming 
 		+ "\nOutcoming:" + atom.outgoing 
 		+ "\n");
+	*/
  
 }
   

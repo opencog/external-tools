@@ -61,7 +61,7 @@ function d3graph(element)
 
         var color = d3.scale.linear()
 		    .domain([ 0, 10])
-		    .range(["#333", "#366"]);
+		    .range(["green", "red"]);
 
         d3.select('#visualizerInner') 
 	   	.attr('width', width)
@@ -116,7 +116,17 @@ function d3graph(element)
 	          .attr("y2", function(d) { return d.target.y; });
 			}  
 
-          node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+          node.attr("transform", function(d) { 
+
+
+          	if (d.type.search("Link")==-1)
+          	{
+				return "translate(" + d.x + "," + d.y + ")"; 
+          	}
+
+          	
+
+          });
 
         });
  
@@ -144,7 +154,7 @@ function d3graph(element)
 			{
 				//d3.select(this).select("circle").transition().duration(transitionSpeed).attr("r", nodeRadius);
 				node.classed("selectedNode",false);
-				link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", 1);
+				link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", 0.2);
 				node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", 1);
 				connectedNode.splice(0, connectedNode.length);
 			}
@@ -429,6 +439,12 @@ function d3graph(element)
     	force.stop();
     }
 
+    this.changeRadius = function()
+    {
+    	d3.selectAll("circle").transition().duration(transitionSpeed).attr("r", nodeRadius);
+    }
+
+
     var findNodeByHandle = function (handle) 
     {
         for (var i=0; i < nodes.length; i++) 
@@ -468,19 +484,54 @@ function d3graph(element)
 
     function nodeRadius(d)
     {
-    	if (d.incoming!=undefined)
+    	
+    	if (preferences.radiusBased=="Incoming")
     	{
-	    	if (d.name!="")
-	    		return d.incoming.length /2 + 5;
-	    	else
-	    		return 1;
+	    	if (d.incoming!=undefined)
+	    	{
+		    	if (d.name!="")
+		    		return d.incoming.length  + 2;
+		    	else
+		    		return 1;
+	    	}
+	    	return 10;
+	    }
+    	else if (preferences.radiusBased=="Outgoing")
+    	{
+    		if (d.outgoing!=undefined)
+	    	{
+		    	if (d.name!="")
+		    		return d.outgoing.length  + 2;
+		    	else
+		    		return 1;
+	    	}
+	    	return 10;
     	}
-    	return 10;
+    	else if (preferences.radiusBased=="IncomingOutgoing")
+    	{
+    		if (d.name!="")
+		    		return (d.outgoing.length + d.incoming.length)  + 2;
+		    	else
+		    		return 1;
+    	}
+    	else if (preferences.radiusBased=="AtomType")
+    	{
+    		return 3;
+    	}
+    	else if (preferences.radiusBased=="Fixed")
+    	{
+    		return 5;
+    	}
+    	else if (preferences.radiusBased=="Random")
+    	{
+    		return Math.random() * 10;
+    	}
+
     }
     function nodeName(d)
     {
     	if (d.name!="")
-    		return d.name.substring(1,6);
+    		return d.name.substring(0,7);
     	else if (d.type!="") 
     		if(d.type.search("Link")==-1)
     			return d.type;
