@@ -100,6 +100,8 @@
       </ul>
     </div>
 
+   
+
     <!-- NAVBAR SEARCH -->
      <ul class="nav navbar-nav collapse navbar-collapse navbar-right">
         <form class="navbar-form hidden-sm" role="search">
@@ -111,14 +113,25 @@
             </div>
         </form>
      </ul>
+ 
+    <ul class="nav navbar-nav collapse navbar-collapse navbar-right" >
+      <div id="navbarTools-d3" style="display:none">
+        <button id="snapshotButton" class="btn btn-default navbar-btn"><i class="fa fa-camera"></i> Snapshot</button>  
+        <button id="toggleFixNodes" class="btn btn-default navbar-btn">Fix Nodes</button> 
+      </div>
+    </ul>
+
   </div>
+
+
 </nav>
+
+
 
 <!-- LAYOUT -->
 <div class="container-fluid">
     <div class="row" id="wrapper">
         <div class="col-xs-3" id="leftMenu">
-            
             <div id="leftMenuInner">
             <!-- CONNECT -->
               <div class="accordion-group">
@@ -140,21 +153,16 @@
                           <td><div id="ConnectAutoConnect"></div></td>
                         </tr>
                         <tr>
-
-                          <td colspan="2" align=right style="padding:0">
-                             
-                          <button class="btn btn-success" style="width:100%" id="ConnectConnectButton"><i class="fa fa-plug"></i> Connect</button>
-                          </td>
-                           
+                          <td colspan="2" align="right"  >
+                          <button class="btn btn-success" id="ConnectConnectButton"><i class="fa fa-plug"></i> Connect</button>
+                          </td>   
                         </tr>
                       </table>
-
-                      </table>
-                       
                     <!-- END CONTENT -->
                   </div>
                 </div>
               </div>
+
               <!-- FILTER -->
               <div class="accordion-group">
                 <div class="accordion-heading">
@@ -210,15 +218,14 @@
                           <td><input type="checkbox" id="FilterOutgoingSets"></td>
                         </tr>
                         <tr>
-                        <td colspan="2" style="padding:0">
-                          <button class="btn btn-info" style="width:100%" id="ConnectRefreshButton"><i class="fa fa-plug"></i> Refresh</button>
+                        <td colspan="2" align="right" >
+                          <button class="btn btn-info"  id="ConnectRefreshButton">
+                            <i class="fa fa-plug"></i> Refresh
+                          </button>
                         </td>
                         </tr>
                     </table>
-
-
-                   
-                 
+ 
                     <!-- END CONTENT -->
                   </div>
                 </div>
@@ -293,10 +300,6 @@
                               <td>Link Distance</td>
                               <td><div id="appearanceLinkDistance"></div></td>
                             </tr>
-                            <tr>
-                              <td> <button class="btn btn-danger" id="appearanceClearD3">Clear D3</button> </td>
-                              <td></td>
-                            </tr>
                           </table>
                           
                               <!--
@@ -344,7 +347,19 @@
                     <!-- CONTENT -->
                     <div id="display-d3">
                     <table class="table table-settings">
-                      <tr>
+                    <tr>
+                      <td>Nodes Shape
+                      </td>
+                      <td>
+                      <select id="displayNodeShape">
+                        <option value="none">--None--</option>
+                        <option value="triangle">Triangle</option>
+                        <option value="rectangle">Rectangle</option>
+                        <option value="circle">Circle</option>
+                      </select>
+                    </td>
+                    </tr>
+                     <tr>
                         <td width="50%">Radius Relative to:</td>
                         <td>
                           <select id="displayRadiusBasedOn">
@@ -353,30 +368,24 @@
                             <option value="Outgoing">Outgoing</option>
                             <option value="IncomingOutgoing">Incoming + Outgoing</option>
                             <option value="AtomType">AtomType</option>
-                            <option value="STi">STi</option>
-                            <option value="LTi">LTi</option>
-                            <option value="LTi">LTi</option>
+                            <option value="Random">Random</option>
+                            <option value="sti">sti</option>
+                            <option value="lti">lti</option>
                           </select>
                         </td>
                       </tr>
                        <tr>
-                        <td width="50%">Fixed Radius:</td>
+                        <td width="50%">Radius Multiplier:</td>
                         <td>
-                           <input type="text" value="5"/>
+                          <div id="displayRadiusMultiplier"></div>
                         </td>
                       </tr>
-                      <tr>
-                        <td width="50%">Radius Relative to:</td>
+                      <tr> 
+                        <td width="50%">Show Link Handles:</td>
                         <td>
-                          <select>
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
-                            <option value="mercedes">Mercedes</option>
-                            <option value="audi">Audi</option>
-                          </select>
+                        <div id="displayShowLinkHandles"></div>  
                         </td>
                       </tr>
-
                     </table>
                   </div><div id="display-none">
                     Please select d3 or Sigma view to view extra display options.
@@ -415,6 +424,9 @@
                     <button id="SettingsClearPreferences" class="btn btn-success btn-xs">
                         Clear Preferences
                     </button>
+                    <button class="btn btn-danger" id="appearanceClearD3">
+                      Clear D3
+                    </button>           
                     <!-- END CONTENT -->
                   </div>
                 </div>
@@ -428,7 +440,7 @@
         <!-- MAIN SCREENS -->
 
             <div id="screen-d3">
-              <button id="toggleFixNodes" class="btn btn-success">Fix Nodes</button>  
+
             </div>
   
             <div id="screen-3d">
@@ -599,14 +611,14 @@
            Source<br>
             <div class="input-group">
             <input type="text" class="form-control input-sm" id="detailsLinkSource" name="detailsLinkSource"/> 
-            <div id="detailsLinkSourceButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i> </div>
+            <div id="detailsLinkSourceButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i></div>
           </div>
         </div>
          <div class="col-lg-6">
            Target<br>
             <div class="input-group">
             <input type="text" class="form-control input-sm" id="detailsLinkTarget" name="detailsLinkTarget"/> 
-            <div id="detailsLinkTargetButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i> </div>
+            <div id="detailsLinkTargetButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i></div>
             </div>
         </div>
       </div>
@@ -662,10 +674,7 @@
         </tr>
 
       </table>
-             
-           
-            
-           
+  
             <div class="row">
                 <div class="col-xs-4">
                     Count<br>

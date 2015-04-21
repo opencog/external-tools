@@ -486,26 +486,6 @@ hr
 }
 
  
-
-/* CONTROL ANIMATION */
-/*-----------------*/
-/*-----------------*/
-/*-----------------*/
-/*-----------------*/
-/*-----------------*/
-/*-----------------*/
-#toggleFixNodes
-{
-  display:none;
-  position:absolute;
-  right:10px;top:10px;
-}
-
-#screen-d3:hover > #toggleFixNodes
-{
-  display:block;
-}
-
 /* CLASSES */
 /*-----------------*/
 /*-----------------*/

@@ -1,5 +1,6 @@
 var nodeDragging = false;
 var nodeClicked = false;
+var fps = 0;
 
 function d3graph(element)
 {
@@ -37,6 +38,9 @@ function d3graph(element)
 
     var nodes = force.nodes(),
         links = force.links();
+
+    fpsf = null;
+    fpsf = setInterval(function () { ffps = fps; console.log(ffps); fps=0; }, 1000);
 
 
 	/*--------------------------*/
@@ -82,21 +86,52 @@ function d3graph(element)
 	        .attr("id",function(d){return d.index;})
 	        .call(force.drag);
 
+
     	nodeEnter.filter(function(d) { return d.type.search("Link")!=-1 })
-	        .append("rect")
+	        .append("path")
+      		.attr("d", d3.svg.symbol().type("triangle-up"))
 	        .attr("class", "linkNode")
 	        .attr("height", "5")
 	        .attr("width", "5");
 
+	    if (preferences.displayNodeShape == "circle")
+	    {
     	nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
     		.append("circle")
-	        .attr("class", "circle")
+	        .attr("class", "node")
 	        .attr("fill",function(d){ return "" + color(d.incoming.length); })
 	        .attr("x",function(d){return d.x})
 	        .attr("y",function(d){return d.y})
 	        .attr("fixed",function(d){return d.incoming.length > 5})
 	        .attr("r", nodeRadius);
- 
+ 		}
+ 		else if (preferences.displayNodeShape=="rectangle")
+ 		{
+ 			nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
+	    		.append("rect")
+		        .attr("class", "node")
+		        .attr("fill",function(d){ return "" + color(d.incoming.length); })
+		        .attr("x",function(d){return d.x})
+		        .attr("y",function(d){return d.y})
+		        .attr("fixed",function(d){return d.incoming.length > 5})
+		        .attr("r", nodeRadius);
+ 		}
+ 		else if(preferences.displayNodeShape=="triangle")
+ 		{
+ 			nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
+	    		.append("path")
+	      		.attr("d", d3.svg.symbol().type("triangle-up"))
+		        .attr("class", "node")
+		        .attr("fill",function(d){ return "" + color(d.incoming.length); })
+		        .attr("x",function(d){return d.x})
+		        .attr("y",function(d){return d.y})
+		        .attr("fixed",function(d){return d.incoming.length > 5})
+		        .attr("r", nodeRadius);
+ 		}
+ 		else if(preferences.displayNodeShape=="none")
+ 		{
+ 		}
+
         nodeEnter.append("text")
 	        .attr("class", "text")
 	        .style("visibility",textVisibillity)
@@ -107,6 +142,7 @@ function d3graph(element)
 
         force.on("tick", function() 
         {
+
 	        if (preferences.appearanceShowLinks)
 	        {
 	          link
@@ -116,18 +152,18 @@ function d3graph(element)
 	          .attr("y2", function(d) { return d.target.y; });
 			}  
 
-          node.attr("transform", function(d) { 
+          	node.attr("transform", function(d) { 
 
-
-          	if (d.type.search("Link")==-1)
-          	{
-				return "translate(" + d.x + "," + d.y + ")"; 
-          	}
-
-          	
+	        if (String2Boolean(preferences.displayShowLinkHandles))
+	         	return "translate(" + d.x + "," + d.y + ")"; 
+	        else
+	        {
+		        if (d.type.search("Link")==-1)
+		         	return "translate(" + d.x + "," + d.y + ")";          	
+	        }
 
           });
-
+          fps++;
         });
  
 	    /*------------------------------------*/
@@ -490,7 +526,7 @@ function d3graph(element)
 	    	if (d.incoming!=undefined)
 	    	{
 		    	if (d.name!="")
-		    		return d.incoming.length  + 2;
+		    		return d.incoming.length * (preferences.displayRadiusMultiplier/10) + 2;
 		    	else
 		    		return 1;
 	    	}
@@ -501,7 +537,7 @@ function d3graph(element)
     		if (d.outgoing!=undefined)
 	    	{
 		    	if (d.name!="")
-		    		return d.outgoing.length  + 2;
+		    		return d.outgoing.length * (preferences.displayRadiusMultiplier/10) + 2;
 		    	else
 		    		return 1;
 	    	}
@@ -510,22 +546,31 @@ function d3graph(element)
     	else if (preferences.radiusBased=="IncomingOutgoing")
     	{
     		if (d.name!="")
-		    		return (d.outgoing.length + d.incoming.length)  + 2;
+		    		return (d.outgoing.length + d.incoming.length) * (preferences.displayRadiusMultiplier/10) + 2;
 		    	else
 		    		return 1;
     	}
     	else if (preferences.radiusBased=="AtomType")
     	{
-    		return 3;
+    		return preferences.displayRadiusMultiplier;
     	}
     	else if (preferences.radiusBased=="Fixed")
     	{
-    		return 5;
+    		return preferences.displayRadiusMultiplier;
     	}
     	else if (preferences.radiusBased=="Random")
     	{
-    		return Math.random() * 10;
+    		return Math.random() * preferences.displayRadiusMultiplier;
     	}
+    	else if (preferences.radiusBased=="sti")
+    	{
+    		return  d.attentionvalue.sti * preferences.displayRadiusMultiplier;
+    	}
+    	else if (preferences.radiusBased=="lti")
+    	{
+    		return  d.attentionvalue.lti * preferences.displayRadiusMultiplier;
+    	}
+     
 
     }
     function nodeName(d)

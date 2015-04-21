@@ -12,6 +12,7 @@ var sigmag = null; //Storing the Sigma Viewer
 //var tg = null;  //3D graph T(threeD)G(raph)
 
 var fixedNodes = false;
+var fpsf = null;
 
 var svg; //The d3 graph is being stored here
 var width=800; //Graph starting Width. Dynamically calculated later through
@@ -110,7 +111,6 @@ $(document).ready(function()
       values: [preferences.appearanceCharge],
       change: function(event, ui) 
       {
-      	
         $("#appearanceChargeAmount").html("Charge " + ui.values[0] *-1 );
       	savePreference("appearanceCharge",$("#appearanceCharge").slider("values",0));
        	d3g.updateForce();
@@ -152,7 +152,19 @@ $(document).ready(function()
        	d3g.updateForce();
        }
     });
-	  
+	
+    $("#displayRadiusMultiplier").slider({
+	  min: 1,
+      max: 50,
+      values: [preferences.displayRadiusMultiplier],
+      change: function(event, ui) 
+      {
+        //$("#displayRadiusMultiplierValue").html(  ui.values[0]);
+      	savePreference("displayRadiusMultiplier",$("#displayRadiusMultiplier").slider("values",0));
+       	d3g.changeRadius();
+       }
+    });
+
     $("#FilterSTIRangeAmount").html(
     	"Min:" + $("#FilterSTIRange").slider("values",0) +
       " - Max:" + $("#FilterSTIRange").slider("values",1)
@@ -188,6 +200,13 @@ $(document).ready(function()
   		off_callback: AppearanceHoverShowConnectionsOff
 	});
 
+    $("#displayShowLinkHandles").switchButton({
+		labels_placement: "right",
+		checked: String2Boolean(preferences.displayShowLinkHandles),
+		on_callback: displayShowLinkHandlesOn ,
+		off_callback: displayShowLinkHandlesOff
+	});
+ 
     $("#atomDetailsFixed").switchButton({
   		labels_placement: "right",
   		checked: false,
@@ -310,8 +329,9 @@ $("#ConnectConnectButton").click(function()
 	refresh();
 });
 
-$("#SearchButton").click(function()
+$("#SearchButton").click(function(e)
 {
+	e.preventDefault();
 	SearchAtom($("#SearchField").val());
 });
 
@@ -650,10 +670,17 @@ $("#displayRadiusBasedOn").change(function(d)
 {
 	radiusBased = ($(this).val());
 	savePreference("radiusBased",radiusBased);
-	
-	
  	d3g.changeRadius();
 })
+
+$("#displayNodeShape").change(function(d)
+{
+	savePreference("displayNodeShape",($(this).val()));
+	d3g.update();
+})
+
+
+
 
 $("#atomDetailsUpdate").click(function()
 {
@@ -794,6 +821,15 @@ function AppearanceHoverShowConnectionsOff()
 {
 	savePreference("appearanceHoverShowConnections",false);
 }
+function displayShowLinkHandlesOn()
+{
+	savePreference("displayShowLinkHandles",true);
+}
+
+function displayShowLinkHandlesOff()
+{
+	savePreference("displayShowLinkHandles",false);
+}
 
 function atomDetailsFixedOn()
 {
@@ -892,6 +928,7 @@ function showScreen(screen)
 		$('div[id^="AppearanceInner"]').css("display","none");
 		$('#AppearanceInner-none').css("display","block");
 	}
+
 	if ($("#display-"+screen).length>0)
  	{
  		$('div[id^="display-"]').css("display","none");
@@ -903,8 +940,20 @@ function showScreen(screen)
 		$('div[id^="display-"]').css("display","none");
 		$('#display-none').css("display","block");
 	}
+	
+	if ($("#navbarTools-"+screen).length>0)
+ 	{
+ 		$('div[id^="navbarTools-"]').css("display","none");
+		$("#navbarTools-"+screen).css("display","block");
 
+	}
+	else
+	{
+		$('div[id^="navbarTools-"]').css("display","none");
+		$('#navbarTools-none').css("display","block");
+	}
 	 
+
 	$('#loading').hide();
 	
 }
@@ -999,7 +1048,10 @@ function loadPreferences()
 
 	if (preferences.appearanceHoverShowConnections==undefined)
 	    preferences.appearanceHoverShowConnections = false;
- 
+ 	
+ 	if (preferences.displayRadiusMultiplier == undefined)
+		preferences.displayRadiusMultiplier = 1;
+
  	if (preferences.radiusBased == undefined)
 		preferences.radiusBased = "Fixed";
 
@@ -1128,6 +1180,7 @@ function updateGUIPreferences()
  	
  	//Display
  	$("#displayRadiusBasedOn").val(preferences.radiusBased);
+ 	$("#displayNodeShape").val(preferences.displayNodeShape);
 
 
  	//Viewer
@@ -1168,6 +1221,8 @@ function clearViews()
 	$("#screen-table").remove();
 	$("#screen-json").remove();
 	$("<div>", {id: "screen-d3" }).appendTo($("#mainContent"));
+	//$("#screen-d3").html("<button id='snapshotButton' class='btn btn-success'><i class='fa fa-camera'></i> 		Snapshot</button><button id='toggleFixNodes' class='btn btn-success'>Fix Nodes</button>");
+
 	//$("<div>", {id: "screen-sigma" }).appendTo($("#mainContent"));
 	$("<div>", {id: "screen-table" }).appendTo($("#mainContent"));
 	$("<div>", {id: "screen-json" }).appendTo($("#mainContent"));
