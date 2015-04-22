@@ -68,8 +68,8 @@ function d3graph(element)
 		    .range(["green", "red"]);
 
         d3.select('#visualizerInner') 
-	   	.attr('width', width)
-	   	.attr('height', height)
+	   		.attr('width', width)
+	   		.attr('height', height)
 
         var node = container.selectAll(".node")
             .data(nodes);

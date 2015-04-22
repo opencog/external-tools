@@ -173,8 +173,6 @@ $(document).ready(function()
     $("#ConnectAutoConnect").switchButton({
   		labels_placement: "right",
   		checked: String2Boolean(preferences.ConnectAutoConnect),
-  		on_label: "CONNECT ON LOAD",	
-        off_label: "DO NOT CONNECT ON LOAD",
   		on_callback: function(){preferences.ConnectAutoConnect=true} ,
   		off_callback: function(){preferences.ConnectAutoConnect=false} 
 	});
@@ -246,6 +244,7 @@ function render()
 	ww = $(window).width();
 
  	$('#leftMenu').height(wh - navbarTopHeight);
+ 	$('#rightMenu').height(wh - navbarTopHeight);
  	$('#leftMenuInner').height(wh - navbarTopHeight);
  	$('#leftMenuInner').slimScroll({
 	    position: 'right',
@@ -309,18 +308,12 @@ $("#ConnectConnectButton").keypress(function(e)
 });
 
 $("#ConnectConnectButton").click(function()
-{
-	 
+{ 
 	if (atomTypes==null)
 	{
 		retrieveAtomTypes();
 		getAtoms();
 	}
-	else
-	{
-
-	}
- 
 });
 
 
@@ -341,6 +334,16 @@ $("#visibleLeftSideBar").click(function()
 		savePreference("visibleLeftSideBar",0);
 	else
 		savePreference("visibleLeftSideBar",1);
+
+	updateGUIPreferences();
+});
+
+$("#visibleRightSideBar").click(function()
+{
+	if (preferences.visibleRightSideBar==1)
+		savePreference("visibleRightSideBar",0);
+	else
+		savePreference("visibleRightSideBar",1);
 
 	updateGUIPreferences();
 });
@@ -388,7 +391,15 @@ $("[viewer]").click(function(){
 	showScreen(preferences.viewer);
 });
 
-$("#toggleFixNodes").click(function(){
+$("#snapshotButton").click(function(e)
+{
+	$("#snapshotFlash").fadeIn('fast', function(){ $("#snapshotFlash").fadeOut('fast'); });
+	console.log($("#screen-d3").html())
+	download("ocViewerSnapshot.png","data:image/svg+xml;base64,"+$("#screen-d3").html(),"image/png");
+})
+
+$("#toggleFixNodes").click(function()
+{
 	if (fixedNodes)
 	{
 		for(var i=0;i<count;i++)
@@ -644,7 +655,6 @@ $("#toolboxHighlight").click(function()
 	savePreference("selectedTool","Highlight");
 });
 
- 
 $("#AdvancedFilterSavedFilters").change(function()
 {
 	if ($(this).val()!=-1)
@@ -665,7 +675,6 @@ $("#AdvancedFilterSavedFilters").change(function()
  	}
 });
 
-
 $("#displayRadiusBasedOn").change(function(d)
 {
 	radiusBased = ($(this).val());
@@ -678,9 +687,6 @@ $("#displayNodeShape").change(function(d)
 	savePreference("displayNodeShape",($(this).val()));
 	d3g.update();
 })
-
-
-
 
 $("#atomDetailsUpdate").click(function()
 {
@@ -784,7 +790,7 @@ $("#toolboxClose").click(function()
 $("#exportExportButton").click(function()
 { 
 	gefxObject = new updateGEFXView();
-	download ('data.gefx', gefxObject.generate(atomData));	
+	download ('data.gefx', gefxObject.generate(atomData),"text/xml");	
 });
 
 
@@ -940,7 +946,7 @@ function showScreen(screen)
 		$('div[id^="display-"]').css("display","none");
 		$('#display-none').css("display","block");
 	}
-	
+
 	if ($("#navbarTools-"+screen).length>0)
  	{
  		$('div[id^="navbarTools-"]').css("display","none");
@@ -982,6 +988,9 @@ function loadPreferences()
 
 	if (preferences.visibleLeftSideBar==undefined)
 	    preferences.visibleLeftSideBar = 1;
+
+	if (preferences.visibleRightSideBar==undefined)
+	    preferences.visibleRightSideBar = 1;
 
 	if (preferences.visibleAtomDetails==undefined)
 	    preferences.visibleAtomDetails = false;
@@ -1090,7 +1099,7 @@ function loadPreferences()
 
 function updateGUIPreferences()
 {
-
+	full = 12;
 	//ACCORDEON
 	if (Accordions!=[])
 	{
@@ -1102,16 +1111,31 @@ function updateGUIPreferences()
 	{
 		checkBoxLi("visibleLeftSideBari",true)
 		$("#leftMenu").css("display","block");
-		$("#mainContent").addClass("col-sm-9");
-		$("#mainContent").removeClass("col-sm-12");
+		full = full -3;
 	}
 	else
 	{
 		checkBoxLi("visibleLeftSideBari",false)
 		$("#leftMenu").css("display","none");
-		$("#mainContent").addClass("col-sm-12");
-		$("#mainContent").removeClass("col-sm-9");
 	}
+
+	//VIEW MENU 
+	if (preferences.visibleRightSideBar==true)
+	{
+		checkBoxLi("visibleRightSideBari",true)
+		$("#rightMenu").css("display","block");
+		full = full -2;
+	}
+	else
+	{
+		checkBoxLi("visibleRightSideBari",false)
+		$("#rightMenu").css("display","none");
+	}
+
+	$("#mainContent").removeClass("col-sm-12 col-sm-10 col-sm-9 col-sm-8 col-sm-7");
+	$("#mainContent").addClass("col-sm-" + full);
+	 
+
 
 	if (preferences.visibleAtomDetails==true)
 	{
@@ -1403,6 +1427,7 @@ function getAtoms()
 	    {
 	    	$("#ConnectionStatus").html("The Cogserver returned no atoms for the given filter/search.");
 	    	echo("The Cogserver returned no atoms for the given filter/search.");
+	    	
 	    	atomData = null;
 	    	//atomTypesUsed = [];
 	    }
@@ -1422,6 +1447,7 @@ function getAtoms()
 	    }
 	    connectionSuccess++;
 	    clearViews();
+	    updateStats();
 	    showScreen(preferences.viewer);
 	})
 	.error(function(jqXHR, status, err)
@@ -1552,11 +1578,17 @@ function defaultAtom()
 function showSelectedLink(link)
 {
   
+    $("#detailsPanelTitle").html("Link: " + link.name);
  	$("#detailsBarTitle").html("Link: " + link.name);
 
 	$("#detailsContent").css("display","none");
 	$("#detailsContentNone").css("display","none");
 	$("#detailsLinkContent").css("display","block");
+
+	$("#detailsPanelContentNone").css("display","none");
+	$("#detailsPanelLinkContent").css("display","block");
+	$("#detailsPanelNodeContent").css("display","none");
+
 
 	$("#detailsLinkSource").val(link.source.handle);
 	$("#detailsLinkTarget").val(link.target.handle);
@@ -1578,10 +1610,22 @@ function showSelectedAtom(atom)
 	$("#detailsLinkContent").css("display","none");
 	$("#detailsContentNone").css("display","none");
 
+	$("#detailsPanelNodeContent").css("display","block");
+	$("#detailsPanelContentNone").css("display","none");
+	$("#detailsPanelLinkContent").css("display","none");
+
 	if (atom.name!="")
+	{
 		$("#detailsBarTitle").html("Atom: " + atom.name);
+		$("#detailsPanelTitle").html("Atom: " + atom.name);
+	}
+		
 	else
+	{
+		$("#detailsPanelTitle").html("Atom: " + atom.handle + " " + atom.type);
 		$("#detailsBarTitle").html("Atom: " + atom.handle + " " + atom.type);
+	}
+		
 
 	$("#detailsAtomName").val(atom.name);
 	$("#detailsAtomType").val( atom.type);
@@ -1619,6 +1663,10 @@ function clearAtomDetails()
 	$("#detailsContent").css("display","none");
 	$("#detailsLinkContent").css("display","none");
 	$("#detailsContentNone").css("display","block");
+
+	$("#detailsPanelNodeContent").css("display","none");
+	$("#detailsPanelLinkContent").css("display","none");
+	$("#detailsPanelContentNone").css("display","block");
 }
 
 /*
@@ -1709,10 +1757,11 @@ function String2Boolean(string)
 	return string;
 }
 
-function download(filename, text) 
+function download(filename, data, dataType) 
 {
+	if (dataType==null){dataType="text/plain";}
 	var pom = document.createElement('a');
-	pom.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(text));
+	pom.setAttribute('href', 'data:' + dataType +';charset=utf-8,' + encodeURIComponent(data));
 	pom.setAttribute('download', filename);
 	pom.style.display = 'none';
 	document.body.appendChild(pom);
@@ -1727,5 +1776,7 @@ function handleError(evt) {
     else
       echo("Error: "+evt.type+" from element: "+(evt.srcElement || evt.target));
 }
+
+
 
 window.addEventListener("error", handleError, true);

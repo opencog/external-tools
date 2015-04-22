@@ -71,7 +71,7 @@
                 <li class="divider"></li>
                 <li class="dropdown-header">Sidebars</li>
                 <li><a href="#" id="visibleLeftSideBar"><i id="visibleLeftSideBari" class="fa fa-square-o"></i> Left Sidebar</a></li>
-
+                <li><a href="#" id="visibleRightSideBar"><i id="visibleRightSideBari" class="fa fa-square-o"></i> Right Sidebar</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Windows</li>
                 <li><a href="#" id="visibleAtomDetails"><i id="visibleAtomDetailsi" class="fa fa-square-o"></i> Atom Details</a></li>
@@ -116,16 +116,23 @@
  
     <ul class="nav navbar-nav collapse navbar-collapse navbar-right" >
       <div id="navbarTools-d3" style="display:none">
+
+        <button class="btn btn-default navbar-btn" title="Normal Pointer" id="toolboxPointer"><i class="fa fa-hand-o-up"></i></button>
+        <button class="btn btn-default navbar-btn" title="Add new node" id="toolboxAddNode"><i class="fa fa-plus-circle"></i></button>
+        <button class="btn btn-default navbar-btn" title="Delete existing node..." id="toolboxRemoveNode"><i class="fa fa-minus-circle"></i></button>
+         
+        <button class="btn btn-default navbar-btn" title="Add new link" id="toolboxAddLink"><i class="fa fa-link"></i></button>
+        <button class="btn btn-default navbar-btn" title="Remove link" id="toolboxRemoveLink"><i class="fa fa-unlink"></i></button>
+         
+        <button class="btn btn-default navbar-btn" title="Highlight" id="toolboxHighlight"><i class="fa fa-search-plus"></i></button>
+ 
         <button id="snapshotButton" class="btn btn-default navbar-btn"><i class="fa fa-camera"></i> Snapshot</button>  
         <button id="toggleFixNodes" class="btn btn-default navbar-btn">Fix Nodes</button> 
       </div>
     </ul>
 
   </div>
-
-
 </nav>
-
 
 
 <!-- LAYOUT -->
@@ -421,7 +428,7 @@
                 <div id="settingsPanel" class="accordion-body collapse">
                   <div class="accordion-inner" style="padding:10px;">
                     <!-- CONTENT -->
-                    <button id="SettingsClearPreferences" class="btn btn-success btn-xs">
+                    <button id="SettingsClearPreferences" class="btn btn-success">
                         Clear Preferences
                     </button>
                     <button class="btn btn-danger" id="appearanceClearD3">
@@ -436,11 +443,13 @@
    
         </div>
 
-        <div class="col-sm-9" id="mainContent"> 
+        <div class="col-sm-7" id="mainContent"> 
         <!-- MAIN SCREENS -->
 
+            <div id="snapshotFlash">
+            </div>
+            
             <div id="screen-d3">
-
             </div>
   
             <div id="screen-3d">
@@ -563,6 +572,117 @@
 
 
         </div>
+         <div class="col-sm-2" id="rightMenu"  >
+          <!-- STATS -->
+           <div class="accordion-group" >
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#statsPanel">
+                    <i class="fa fa-globe"></i> <span id=""> Stats </span>
+                  </a>
+                </div>
+                <div id="statsPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                      <table class="table table-settings">
+                        <tr>
+                          <td>Atomspace Name</td>
+                          <td>To be implemented...</td>
+                        </tr>
+                        <tr>
+                          <td>Atoms Loaded</td>
+                          <td><span id="statsAtomsLoaded"></span></td>
+                        </tr>
+                        <tr>
+                          <td>Atoms Loaded</td>
+                          <td><span id="statsAtomsLoaded"></span></td>
+                        </tr>
+                      </table>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+            
+          <!-- DETAILS -->
+           <div class="accordion-group" >
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#detailsPanel">
+                    <i class="fa fa-globe"></i> <span id="detailsPanelTitle"> Details </span>
+                  </a>
+                </div>
+                <div id="detailsPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                    <div id="detailsPanelNodeContent">
+                         <table class="table table-settings">
+                          <tr>
+                          <td>Handle</td>
+                          <td><input type="text" disabled="disabled" class="form-control atomDetailsForm input-sm" id="detailsAtomHandle" name="atomName"/> </td>
+                        </tr>
+                        <tr>
+                          <td>Type</td>
+                          <td>
+                          <select class="form-control atomDetailsForm input-sm" id="detailsAtomType">
+                          <option value="0" id="detailsAtomTypeNoneValue">--None--</option>
+                          </select></td>
+                        </tr>
+                        <tr>
+                          <td>Name</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomName" name="atomName"/></td>
+                        </tr>
+                        <tr>
+                          <td>LTI</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomLTI" name="detailsAtomLTI"/> </td>
+                        </tr>
+                        <tr>
+                          <td>STI</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomSTI" name="detailsAtomSTI"/>  </td>
+                        </tr>
+                        <tr>
+                          <td>VLTI</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/></td>
+                        </tr>
+                        <tr>
+                          <td>Count</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomCount" id="detailsAtomCount" /></td>
+                        </tr>
+                        <tr>
+                          <td>Confidence</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomConfidence" id="detailsAtomConfidence"/></td>
+                        </tr>
+                        <tr>
+                          <td>Strength</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" name="detailAtomStrength" id="detailsAtomStrength"/> </td>
+                        </tr>
+                        <tr>
+                          <td>Fixed</td>
+                          <td><div id="atomDetailsFixed"></div></td>
+                        </tr>
+                        <tr>
+                          <td>VLTI</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/></td>
+                        </tr>
+                         <tr>
+                          <td colspan="2">
+                            <button disabled="disabled" id="atomDetailsUpdate" class="btn btn-md btn-success">Update</button> 
+                            <button disabled="disabled" id="atomDetailsDelete" class="btn btn-md btn-danger">Delete</button>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                    <div id="detailsPanelLinkContent">
+                    </div>
+                    <div id="detailsPanelMultipleContent">
+                    </div>
+                    <div id="detailsPanelContentNone">
+                      (Nothing is currently selected)
+                    </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+            
+        </div>
     </div>
 </div>
 
@@ -640,73 +760,8 @@
     </div>
 
     <div id="detailsContent">
-       <table class="table   table-settings">
-          <tr>
-          <td>Handle</td>
-          <td><input type="text" disabled="disabled" class="form-control atomDetailsForm input-sm" id="detailsAtomHandle" name="atomName"/> </td>
-        </tr>
-        <tr>
-          <td>Type</td>
-          <td>
-          <select class="form-control atomDetailsForm input-sm" id="detailsAtomType">
-          <option value="0" id="detailsAtomTypeNoneValue">--None--</option>
-          </select></td>
-        </tr>
-        <tr>
-          <td>Name</td>
-          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomName" name="atomName"/></td>
-        </tr>
-        <tr>
-          <td>LTI</td>
-          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomLTI" name="detailsAtomLTI"/> </td>
-        </tr>
-        <tr>
-          <td>STI</td>
-          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomSTI" name="detailsAtomSTI"/>  </td>
-        </tr>
-        <tr>
-          <td>VLTI</td>
-          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/></td>
-        </tr>
-        <tr>
-          <td>VLTI</td>
-          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/></td>
-        </tr>
-
-      </table>
-  
-            <div class="row">
-                <div class="col-xs-4">
-                    Count<br>
-                    <input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomCount" id="detailsAtomCount" />
-                </div>
-                <div class="col-xs-4">
-                    Confidence<br>
-                    <input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomConfidence" id="detailsAtomConfidence"/> 
-                </div>
-                 <div class="col-xs-4">
-                    Strength<br>
-                    <input type="text" class="form-control atomDetailsForm input-sm" name="detailAtomStrength" id="detailsAtomStrength"/> 
-                </div>
-            </div>
-         
-
-            <div class="row">
-              <div class="col-xs-12">
-                  Fixed<br>
-                  <div id="atomDetailsFixed"></div>
-              </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-xs-6">
-                    <button style="width:100%" disabled="disabled" id="atomDetailsUpdate" class="btn btn-md btn-success">Update</button> 
-                </div>
-                <div class="col-xs-6">
-                    <button style="width:100%" disabled="disabled" id="atomDetailsDelete" class="btn btn-md btn-danger">Delete</button> 
-                </div>
-            </div>
- 
+       
+   
     </div>
 </div>
 
