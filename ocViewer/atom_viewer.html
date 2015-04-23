@@ -67,7 +67,6 @@
                 <li><a href="#" viewer="table"><i class="fa"></i> Table</a></li>
                 <li><a href="#" viewer="json"><i class="fa"></i> JSON</a></li>
                 <li><a href="#" viewer="scheme"><i class="fa"></i> Scheme</a></li>
-             
                 <li class="divider"></li>
                 <li class="dropdown-header">Sidebars</li>
                 <li><a href="#" id="visibleLeftSideBar"><i id="visibleLeftSideBari" class="fa fa-square-o"></i> Left Sidebar</a></li>
@@ -77,13 +76,12 @@
                 <li><a href="#" id="visibleAtomDetails"><i id="visibleAtomDetailsi" class="fa fa-square-o"></i> Atom Details</a></li>
                 <li><a href="#" id="visibleToolbox"><i id="visibleToolboxi" class="fa fa-square-o"></i> Toolbox</a></li>
                 <li><a href="#" id="visibleTerminal"><i id="visibleTerminali" class="fa fa-square-o"></i> Terminal</a></li>
-
             </ul>
         </li>
 
          <!-- NAVBAR ANALYZE -->
         <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-book"></i>  Analyze <span class="caret"></span></a>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-book"></i> Analyze <span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li><a href="#" id="AnalyzeStatistics"><i class="fa fa-question"></i> Statistics</a></li>
             </ul>
@@ -91,7 +89,7 @@
 
         <!-- NAVBAR HELP -->
         <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-book"></i>  Help <span class="caret"></span></a>
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-book"></i> Help <span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li><a href="#" id="HelpHowToUse"><i class="fa fa-question"></i> How To Use</a></li>
                 <li><a href="#" id="HelpAbout"><i class="fa fa-info"></i> About</a></li>
@@ -99,8 +97,6 @@
         </li>
       </ul>
     </div>
-
-   
 
     <!-- NAVBAR SEARCH -->
      <ul class="nav navbar-nav collapse navbar-collapse navbar-right">
@@ -134,7 +130,6 @@
   </div>
 </nav>
 
-
 <!-- LAYOUT -->
 <div class="container-fluid">
     <div class="row" id="wrapper">
@@ -153,7 +148,20 @@
                      <table class="table table-settings">
                         <tr>
                           <td width="30%">Server</td>
-                          <td><input type="text" class="form-control" id="ConnectCogServer" placeholder="http://localhost:5000/"></td>
+                          <td>
+                          <div class="input-group">
+                           <input type="text" class="form-control" id="ConnectCogServer" placeholder="http://localhost:5000/">
+                           <span class="input-group-btn">
+                              <button id="ConnectSaveCogServerModalButton" class="btn btn-default" type="button"><i class="fa fa-floppy-o"></i></button>
+                              <button id="ConnectListCogServerModalButton" class="btn btn-default" type="button">...</button>
+                           </span>
+                        </div>
+                          </td>
+                        </tr>
+                         <tr>
+                          <td width="30%">Status</td>
+                          <td><span id="ConnectionStatus">Not connected yet.</span>
+                          </td>
                         </tr>
                         <tr>
                           <td>Autoconnect</td>
@@ -161,6 +169,7 @@
                         </tr>
                         <tr>
                           <td colspan="2" align="right"  >
+                          <button class="btn btn-info" id="ConnectGetAtomTypesButton"><i class="fa fa-plug"></i> Get Atom Types</button>
                           <button class="btn btn-success" id="ConnectConnectButton"><i class="fa fa-plug"></i> Connect</button>
                           </td>   
                         </tr>
@@ -208,7 +217,6 @@
                         <tr>
                           <td>Atom Type</td>
                           <td><select class="form-control input-sm" id="FilterAtomType">
-                           <!-- Dynamic Values -->
                            <option value="0" id="FilterAtomTypeNoneValue">--None--</option>
                         </select></td>
                         </tr>
@@ -226,19 +234,16 @@
                         </tr>
                         <tr>
                         <td colspan="2" align="right" >
-                          <button class="btn btn-info"  id="ConnectRefreshButton">
+                          <button disabled="disabled" class="btn btn-info"  id="FilterRefreshButton">
                             <i class="fa fa-plug"></i> Refresh
                           </button>
                         </td>
                         </tr>
                     </table>
- 
                     <!-- END CONTENT -->
                   </div>
                 </div>
               </div>
-
-
 
               <!-- ADVANCED FILTER -->
               <div class="accordion-group" style="display:none">
@@ -259,17 +264,15 @@
                           </select>
                           <br>
                           <div class="pull-right">
-                              <button id="AdvancedFilterRemember" class="btn btn-success btn-xs" disabled="disabled">Remember</button>
-                              <button id="AdvancedFilterForget" class="btn btn-success btn-xs" disabled="disabled">Forget</button> 
-                              <button id="AdvancedFilterExecute" class="btn btn-success btn-xs" disabled="disabled">Execute</button>
+                            <button id="AdvancedFilterRemember" class="btn btn-success btn-xs" disabled="disabled">Remember</button>
+                            <button id="AdvancedFilterForget" class="btn btn-success btn-xs" disabled="disabled">Forget</button> 
+                            <button id="AdvancedFilterExecute" class="btn btn-success btn-xs" disabled="disabled">Execute</button>
                           </div>
                         </div>
                     <!-- END CONTENT -->
                   </div>
                 </div>
               </div>
-
-
 
               <!-- APPEARANCE -->
               <div class="accordion-group">
@@ -284,12 +287,18 @@
                         <div id="AppearanceInner-d3" style="padding:0px">
                           <table class="table table-settings">
                             <tr>
-                              <td>Show Text?</td>
+                              <td width="30%">Show Text?</td>
                               <td><div id="AppearanceShowText"></div></td>
                             </tr>
                             <tr>
                               <td>Show Links?</td>
                               <td><div id="AppearanceShowLinks"></div></td>
+                            </tr>
+                            <tr> 
+                              <td>Show Link Handles:</td>
+                              <td>
+                              <div id="displayShowLinkHandles"></div>  
+                              </td>
                             </tr>
                             <tr>
                               <td>Charge</td>
@@ -307,24 +316,59 @@
                               <td>Link Distance</td>
                               <td><div id="appearanceLinkDistance"></div></td>
                             </tr>
+                            <tr>
+                            <td>Nodes Shape
+                            </td>
+                            <td>
+                            <select id="displayNodeShape">
+                              <option value="none">--None--</option>
+                              <option value="triangle">Triangle</option>
+                              <option value="rectangle">Rectangle</option>
+                              <option value="circle">Circle</option>
+                            </select>
+                            </td>
+                            </tr>
+                            <tr>
+                              <td>Radius Relative to:</td>
+                              <td>
+                                <select id="displayRadiusBasedOn">
+                                  <option value="Fixed">Fixed</option>
+                                  <option value="Incoming">Incoming</option>
+                                  <option value="Outgoing">Outgoing</option>
+                                  <option value="IncomingOutgoing">Incoming + Outgoing</option>
+                                  <option value="AtomType">AtomType</option>
+                                  <option value="Random">Random</option>
+                                  <option value="sti">sti</option>
+                                  <option value="lti">lti</option>
+                                </select>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Radius Multiplier:</td>
+                              <td>
+                                <div id="displayRadiusMultiplier"></div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Link Handle Shape</td>
+                              <td>
+                                 
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Link Handle Radius:</td>
+                              <td>
+                                <div id="displayRadiusMultiplier"></div>
+                              </td>
+                            </tr>
+                             <tr>
+                              <td>Link Width:</td>
+                              <td>
+                                <div id="displayLinkWidth"></div>
+                              </td>
+                            </tr>
                           </table>
-                          
-                              <!--
-                              <hr>
 
-                              <div class="row"> 
-                                  <div class="col-lg-6">
-                                      <label for="AppearanceShowText">Hover Connections?</label><br>
-                                      <div id="AppearanceHoverShowConnections"></div><br>
-                                  </div>
-                                  <div class="col-lg-6">
-                                      <label for="AppearanceShowLinks">Show Links?</label><br>
-                                      <div id="AppearanceShowLinks"></div><br>
-                                  </div>
-                              </div>
-                              -->
-                              
- 
                         </div>
 
                         <div id="AppearanceInner-sigma">
@@ -343,7 +387,7 @@
  
 
                <!-- ADVANCED FILTER -->
-              <div class="accordion-group">
+              <div class="accordion-group" style="display:none">
                 <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#displayPanel">
                     <i class="fa fa-paint-brush"></i> Display
@@ -354,45 +398,7 @@
                     <!-- CONTENT -->
                     <div id="display-d3">
                     <table class="table table-settings">
-                    <tr>
-                      <td>Nodes Shape
-                      </td>
-                      <td>
-                      <select id="displayNodeShape">
-                        <option value="none">--None--</option>
-                        <option value="triangle">Triangle</option>
-                        <option value="rectangle">Rectangle</option>
-                        <option value="circle">Circle</option>
-                      </select>
-                    </td>
-                    </tr>
-                     <tr>
-                        <td width="50%">Radius Relative to:</td>
-                        <td>
-                          <select id="displayRadiusBasedOn">
-                            <option value="Fixed">Fixed</option>
-                            <option value="Incoming">Incoming</option>
-                            <option value="Outgoing">Outgoing</option>
-                            <option value="IncomingOutgoing">Incoming + Outgoing</option>
-                            <option value="AtomType">AtomType</option>
-                            <option value="Random">Random</option>
-                            <option value="sti">sti</option>
-                            <option value="lti">lti</option>
-                          </select>
-                        </td>
-                      </tr>
-                       <tr>
-                        <td width="50%">Radius Multiplier:</td>
-                        <td>
-                          <div id="displayRadiusMultiplier"></div>
-                        </td>
-                      </tr>
-                      <tr> 
-                        <td width="50%">Show Link Handles:</td>
-                        <td>
-                        <div id="displayShowLinkHandles"></div>  
-                        </td>
-                      </tr>
+                    
                     </table>
                   </div><div id="display-none">
                     Please select d3 or Sigma view to view extra display options.
@@ -473,7 +479,6 @@
 
             <div id="screen-import">
             <!-- CONTENT -->
-            
                <form>
                     <legend>Import Options</legend>
                     <div class="form-group">
@@ -488,7 +493,6 @@
           
             <hr>
               <button class="btn btn-success">Import</button>
- 
             <!-- END CONTENT -->
             </div>
 
@@ -569,10 +573,9 @@
             </table>
             <!-- END CONTENT -->
             </div>
-
-
         </div>
-         <div class="col-sm-2" id="rightMenu"  >
+
+         <div class="col-sm-2" id="rightMenu">
           <!-- STATS -->
            <div class="accordion-group" >
                 <div class="accordion-heading">
@@ -680,8 +683,6 @@
                   </div>
                 </div>
               </div>
-
-            
         </div>
     </div>
 </div>
@@ -752,7 +753,6 @@
         </div>
       </div>
       <br>
-
     </div>
 
     <div id="detailsContentNone">
@@ -760,10 +760,85 @@
     </div>
 
     <div id="detailsContent">
-       
-   
     </div>
+
 </div>
+
+
+
+<!-- MODALS -->
+<div class="modal fade" id="CogServerModalSave" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Save Cogserver</h4>
+      </div>
+      <div class="modal-body">
+         <table class="table">
+          <tr>
+            <td>Location</td>
+            <td><input id="CogServerModalSaveLocation" class="form-control" type="text"/></td>
+          </tr>
+          <tr>
+            <td>Description <small>(optional)</small></td>
+            <td><input class="form-control" type="text"/></tD>
+          </tr>
+         </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="CogServerModalSaveSaveButton" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="CogServerModalList" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">List Cogserver</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover ">
+          <thead>
+            <tr>
+              <th> Name</th>
+              <th> Location</th>
+              <th> Actions </th>
+            </tr>
+          </thead>
+          <tr>
+            <td>Default</td>
+            <td>http://144.76.153.5:5020/</td>
+            <td>
+              <button class="btn btn-sm btn-info">...</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Default</td>
+            <td>http://localhost:5000/</td>
+            <td>
+              <button class="btn btn-sm btn-info">...</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Default</td>
+            <td>http://localhost:5000/</td>
+            <td>
+              <button class="btn btn-sm btn-info">...</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
 
 
 <!-- SCRIPTS -->

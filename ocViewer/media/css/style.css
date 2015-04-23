@@ -417,8 +417,7 @@ hr
 
 #ConnectionStatus
 {
-  font-size:12px;
-  margin-top:2px;
+   
 }
 
 
@@ -520,7 +519,11 @@ hr
     color:#000;
 }
 
- 
+#visualizerInner
+{
+  width:100%;
+}
+
 /* CLASSES */
 /*-----------------*/
 /*-----------------*/
@@ -633,3 +636,4 @@ border-left-color: #111111;
       display: none;
   }
 }
+ 

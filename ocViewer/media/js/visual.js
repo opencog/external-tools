@@ -1,6 +1,7 @@
 var nodeDragging = false;
 var nodeClicked = false;
 var fps = 0;
+var currentShape = null;
 
 function d3graph(element)
 {
@@ -40,7 +41,7 @@ function d3graph(element)
         links = force.links();
 
     fpsf = null;
-    fpsf = setInterval(function () { ffps = fps; console.log(ffps); fps=0; }, 1000);
+    fpsf = setInterval(function () { ffps = fps;   fps=0; }, 1000);
 
 
 	/*--------------------------*/
@@ -86,6 +87,7 @@ function d3graph(element)
 	        .attr("id",function(d){return d.index;})
 	        .call(force.drag);
 
+	     
 
     	nodeEnter.filter(function(d) { return d.type.search("Link")!=-1 })
 	        .append("path")
@@ -96,36 +98,37 @@ function d3graph(element)
 
 	    if (preferences.displayNodeShape == "circle")
 	    {
-    	nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
-    		.append("circle")
-	        .attr("class", "node")
-	        .attr("fill",function(d){ return "" + color(d.incoming.length); })
-	        .attr("x",function(d){return d.x})
-	        .attr("y",function(d){return d.y})
-	        .attr("fixed",function(d){return d.incoming.length > 5})
-	        .attr("r", nodeRadius);
+	    	nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
+		        .attr("fixed",function(d){return d.incoming.length > 5})
+	    		.append("circle")
+	    		.attr("class", "nodein")
+		        .attr("fill",function(d){ return "" + color(d.incoming.length); })
+		        .attr("x",function(d){return d.x})
+		        .attr("y",function(d){return d.y})
+		        .attr("r", nodeRadius);
  		}
  		else if (preferences.displayNodeShape=="rectangle")
  		{
  			nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
 	    		.append("rect")
-		        .attr("class", "node")
+ 				.attr("class", "nodein")
 		        .attr("fill",function(d){ return "" + color(d.incoming.length); })
-		        .attr("x",function(d){return d.x})
-		        .attr("y",function(d){return d.y})
 		        .attr("fixed",function(d){return d.incoming.length > 5})
-		        .attr("r", nodeRadius);
+		        .attr("x",function(d) { return (d.x - nodeRadius); })
+		        .attr("y",function(d) { return (d.y - nodeRadius); })
+		        .attr("width", nodeRadius)
+		        .attr("height", nodeRadius);
  		}
  		else if(preferences.displayNodeShape=="triangle")
  		{
  			nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
+		        .attr("fixed",function(d){return d.incoming.length > 5})
 	    		.append("path")
+ 				.attr("class", "nodein")
 	      		.attr("d", d3.svg.symbol().type("triangle-up"))
-		        .attr("class", "node")
 		        .attr("fill",function(d){ return "" + color(d.incoming.length); })
 		        .attr("x",function(d){return d.x})
 		        .attr("y",function(d){return d.y})
-		        .attr("fixed",function(d){return d.incoming.length > 5})
 		        .attr("r", nodeRadius);
  		}
  		else if(preferences.displayNodeShape=="none")
@@ -348,8 +351,6 @@ function d3graph(element)
 				return;
 			}
 		 
-		  
-		 
 		})
 
 		node.on("mouseout", function(d)
@@ -475,11 +476,23 @@ function d3graph(element)
     	force.stop();
     }
 
-    this.changeRadius = function()
+    this.updateDisplay = function()
     {
-    	d3.selectAll("circle").transition().duration(transitionSpeed).attr("r", nodeRadius);
-    }
+    	
 
+    	if (currentShape!=preferences.displayNodeShape)
+    	{
+    		d3.selectAll(".nodein").remove();
+    		d3.selectAll(".node").append("circle").attr("class","nodein").attr("r",nodeRadius);
+    		currentShape = preferences.displayNodeShape;
+    		
+    	}
+
+    	d3.selectAll(".nodein").transition().duration(transitionSpeed)
+	    	.attr("r", nodeRadius)
+	    	.attr("width", nodeRadius)
+	    	.attr("height", nodeRadius);
+    }
 
     var findNodeByHandle = function (handle) 
     {
@@ -601,7 +614,6 @@ function d3graph(element)
 	{
 		//d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
 		nodeDragging = true;
-
 	}
 
 	function dragended(d)

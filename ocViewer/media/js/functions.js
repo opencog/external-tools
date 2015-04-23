@@ -50,8 +50,9 @@ var selectedNode = null;
 var selectedLink = null;
 var transitionSpeed = 500;
 
-var advancedFilters = []; //Storing the advanced filters array here after converting from localstorage String with JSON parser.
- 
+var advancedFilters = []; 
+var connectCogServers = [];
+
 var gui;
 var links = [];
 var index = 0;
@@ -101,7 +102,7 @@ $(document).ready(function()
         $("#FilterSTIRangeAmount").html("Min:" + ui.values[0]/100 + " - Max:" + ui.values[1]/100);
       	savePreference("FilterSTIMin",$("#FilterSTIRange").slider("values",0));
 		savePreference("FilterSTIMax",$("#FilterSTIRange").slider("values",1));
-		filterData();
+		$("#FilterRefreshButton").prop('disabled',false);
       }
     });
  
@@ -161,7 +162,19 @@ $(document).ready(function()
       {
         //$("#displayRadiusMultiplierValue").html(  ui.values[0]);
       	savePreference("displayRadiusMultiplier",$("#displayRadiusMultiplier").slider("values",0));
-       	d3g.changeRadius();
+       	d3g.updateDisplay();
+       }
+    });
+
+    $("#displayLinkWidth").slider({
+	  min: 1,
+      max: 100,
+      values: [preferences.appearanceLinkDistance],
+      change: function(event, ui) 
+      {
+        //$("#displayLinkWidth").html("Link Distance " +  ui.values[0]);
+      	savePreference("displayLinkWidth",$("#displayLinkWidth").slider("values",0));
+       	d3g.updateDisplay();
        }
     });
 
@@ -176,7 +189,9 @@ $(document).ready(function()
   		on_callback: function(){preferences.ConnectAutoConnect=true} ,
   		off_callback: function(){preferences.ConnectAutoConnect=false} 
 	});
- 
+
+ 	
+
     $("#AppearanceShowText").switchButton({
   		labels_placement: "right",
   		checked: String2Boolean(preferences.appearanceShowText),
@@ -220,8 +235,10 @@ $(document).ready(function()
  	//maybe store locally in the future if server fails to connect...
 	retrieveAtomTypes();
 
-	//if(String2Boolean(preferences.ConnectAutoConnect))
-	//	getAtoms();
+	if(String2Boolean(preferences.ConnectAutoConnect))
+		getAtoms();
+
+	currentShape=preferences.displayNodeShape;
 
 	//render(); //Render some gui elements having to do with height
     render(); 
@@ -259,15 +276,7 @@ function render()
  
 	$('div[id^="screen"]').height(wh - navbarTopHeight);
  
-	if (drawedd3)
-	{	
-		d3.select('#visualizerInner') 
-	   	.attr('width', width)
-	   	.attr('height', height)
-  
-		//force.size([width, height]);
-			//.start();
-	}
+	 
 }
 
 /*------------------------
@@ -309,15 +318,16 @@ $("#ConnectConnectButton").keypress(function(e)
 
 $("#ConnectConnectButton").click(function()
 { 
+	getAtoms();
 	if (atomTypes==null)
 	{
-		retrieveAtomTypes();
-		getAtoms();
+		//retrieveAtomTypes();
+	
 	}
 });
 
 
-$("#ConnectConnectButton").click(function()
+$("#FilterRefreshButton").click(function()
 {
 	refresh();
 });
@@ -443,55 +453,64 @@ $("#FilterAttentionalFocusOnly").click(function()
 {	
 	savePreference("FilterAttentionalFocusOnly",eval($(this).prop('checked')));
 	$("#ConnectConnectButton").prop("disabled",false);
-	getAtoms();
+	$("#FilterRefreshButton").prop('disabled',false);
+	//getAtoms();
 });
 
 $("#FilterTruthValueStrength").keyup(function()
 {	
 	savePreference("FilterTruthValueStrength",$("#FilterTruthValueStrength").val());
-	getAtoms();
+	$("#FilterRefreshButton").prop('disabled',false);
+	//getAtoms();
 });
 
 $("#FilterTruthValueConfidence").keyup(function()
 {	
 	savePreference("FilterTruthValueConfidence",$("#FilterTruthValueConfidence").val());
-	getAtoms();
+	$("#FilterRefreshButton").prop('disabled',false);
+	//getAtoms();
 });
 
 $("#FilterTruthValueCount").keyup(function()
 {	
 	savePreference("FilterTruthValueCount",$("#FilterTruthValueCount").val());
-	getAtoms();
+	$("#FilterRefreshButton").prop('disabled',false);
+	//getAtoms();
 });
 
 $("#FilterAtomName").keyup(function()
 {	
 	savePreference("FilterAtomName",$("#FilterAtomName").val());
-	getAtoms();
+	$("#FilterRefreshButton").prop('disabled',false);
+	//getAtoms();
 });
 
 $("#FilterAtomType").change(function()
 {	
 	savePreference("FilterAtomType",$("#FilterAtomType").val());
-	getAtoms();
+	$("#FilterRefreshButton").prop('disabled',false);
+	//getAtoms();
 });
 
 $("#FilterIncomingSets").click(function()
 {	
 	savePreference("FilterIncomingSets",eval($(this).prop('checked')));
-	getAtoms();
+	$("#FilterRefreshButton").prop('disabled',false);
+	//getAtoms();
 });
 
 $("#FilterOutgoingSets").click(function()
 {	
 	savePreference("FilterOutgoingSets",eval($(this).prop('checked')));
-	getAtoms();
+	$("#FilterRefreshButton").prop('disabled',false);
+	//getAtoms();
 });
 
 $("#FilterLimit").keyup(function()
 {	
 	savePreference("FilterLimit",$(this).val());
-	getAtoms();
+	$("#FilterRefreshButton").prop('disabled',false);
+	//getAtoms();
 });
 
 $("#appearanceSigmaCircularView").click(function()
@@ -679,13 +698,13 @@ $("#displayRadiusBasedOn").change(function(d)
 {
 	radiusBased = ($(this).val());
 	savePreference("radiusBased",radiusBased);
- 	d3g.changeRadius();
+ 	d3g.updateDisplay();
 })
 
 $("#displayNodeShape").change(function(d)
 {
 	savePreference("displayNodeShape",($(this).val()));
-	d3g.update();
+	d3g.updateDisplay();
 })
 
 $("#atomDetailsUpdate").click(function()
@@ -792,6 +811,23 @@ $("#exportExportButton").click(function()
 	gefxObject = new updateGEFXView();
 	download ('data.gefx', gefxObject.generate(atomData),"text/xml");	
 });
+
+$("#ConnectSaveCogServerModalButton").click(function()
+{
+	$("#CogServerModalSaveLocation").val($("#ConnectCogServer").val());
+	$('#CogServerModalSave').modal();
+});
+
+$("#ConnectListCogServerModalButton").click(function()
+{
+	$('#CogServerModalList').modal();
+});
+
+$("#CogServerModalSaveSaveButton").click(function()
+{
+	//Save Cog Server
+});
+
 
 
 function AppearanceShowTextOn()
@@ -1073,6 +1109,11 @@ function loadPreferences()
 	else
 		advancedFilters = JSON.parse(preferences.advancedFilters);
 
+	if (!preferences.connectCogServers)
+	    preferences.connectCogServers = [];
+	else
+		connectCogServers = JSON.parse(preferences.connectCogServers);
+
 	if (preferences.detailsLeft == undefined)
 		preferences.detailsLeft = 100;
 
@@ -1132,10 +1173,11 @@ function updateGUIPreferences()
 		$("#rightMenu").css("display","none");
 	}
 
+
 	$("#mainContent").removeClass("col-sm-12 col-sm-10 col-sm-9 col-sm-8 col-sm-7");
 	$("#mainContent").addClass("col-sm-" + full);
 	 
-
+	render();
 
 	if (preferences.visibleAtomDetails==true)
 	{
@@ -1405,6 +1447,7 @@ function getAtoms()
     	dataType: "jsonp",
     	processData: false,
     	crossDomain: true,
+    	timeout: 2000,
     	headers:
     	{
     		"X-Requested-With" : ""
@@ -1425,8 +1468,8 @@ function getAtoms()
 		
 	    if (atomData.length == 0)
 	    {
-	    	$("#ConnectionStatus").html("The Cogserver returned no atoms for the given filter/search.");
-	    	echo("The Cogserver returned no atoms for the given filter/search.");
+	    	$("#ConnectionStatus").html("<span class='fail'>The Cogserver returned no atoms for the given filter/search.");
+	    	echo("The Cogserver returned no atoms for the given filter/search.</span>");
 	    	
 	    	atomData = null;
 	    	//atomTypesUsed = [];
@@ -1450,7 +1493,7 @@ function getAtoms()
 	    updateStats();
 	    showScreen(preferences.viewer);
 	})
-	.error(function(jqXHR, status, err)
+	.error(function()
 	{ 
 		connected = false;
 		$("#ConnectConnectButton").prop('disabled', false);
@@ -1458,7 +1501,7 @@ function getAtoms()
 		connectionFails++;
 		$('#loading').hide();
 	})
-	.complete(function(jqXHR, status, err)
+	.complete(function()
 	{
 		$('#loading').hide();
 	});
@@ -1478,7 +1521,8 @@ function retrieveAtomTypes()
 		type: 'GET',
     	dataType: "jsonp",
     	processData: false,
-    	crossDomain: true, 
+    	crossDomain: true,
+    	timeout:2000, 
     	headers :
     	{
     		"X-Requested-With" : ""
@@ -1517,7 +1561,7 @@ function retrieveAtomTypes()
 		}
 		//getAtoms();
 	})
-	.fail(function()
+	.error(function()
 	{ 
 		echo("Could not get AtomTypes. Check connectivity with server");
 		connected = false;
@@ -1736,17 +1780,6 @@ function deleteNode(node)
 
 function refresh()
 {
-	 
-	//Clear All screens
-	$("#ConnectConnectButton").prop("disabled",true);
-	atomData = null;
-	selectedNode = null;
-	selectedatom = null;
-	//$("#screen-d3").html("");
-	$("#screen-json").html("");
-	$("#screen-table").html("");
-	$("#screen-scheme").html("");
-
 	//Resend query and do the new drawings etc
 	getAtoms();
 }
