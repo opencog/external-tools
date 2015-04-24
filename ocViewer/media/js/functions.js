@@ -190,8 +190,6 @@ $(document).ready(function()
   		off_callback: function(){preferences.ConnectAutoConnect=false} 
 	});
 
- 	
-
     $("#AppearanceShowText").switchButton({
   		labels_placement: "right",
   		checked: String2Boolean(preferences.appearanceShowText),
@@ -276,7 +274,6 @@ function render()
  
 	$('div[id^="screen"]').height(wh - navbarTopHeight);
  
-	 
 }
 
 /*------------------------
@@ -319,13 +316,7 @@ $("#ConnectConnectButton").keypress(function(e)
 $("#ConnectConnectButton").click(function()
 { 
 	getAtoms();
-	if (atomTypes==null)
-	{
-		//retrieveAtomTypes();
-	
-	}
 });
-
 
 $("#FilterRefreshButton").click(function()
 {
@@ -815,20 +806,47 @@ $("#exportExportButton").click(function()
 $("#ConnectSaveCogServerModalButton").click(function()
 {
 	$("#CogServerModalSaveLocation").val($("#ConnectCogServer").val());
+	$("#CogServerModalDescription").val("");
 	$('#CogServerModalSave').modal();
 });
 
 $("#ConnectListCogServerModalButton").click(function()
 {
+	updateGUIPreferences();
 	$('#CogServerModalList').modal();
 });
 
 $("#CogServerModalSaveSaveButton").click(function()
 {
 	//Save Cog Server
+	for (var i=0;i<connectCogServers.length;i++)
+	{
+		if (connectCogServers[i][0]==$("#CogServerModalSaveLocation").val())
+		{
+			alert("Location already exists");
+			return;
+		}
+	}
+	connectCogServers.push([$("#CogServerModalSaveLocation").val(),$("#CogServerModalDescription").val()]);
+	savePreference("connectCogServers", JSON.stringify(connectCogServers));
+	$('#CogServerModalSave').modal("hide");
 });
 
+$("body").on("click",".CogServerModalListLoad",function()
+{ 
+	$("#ConnectCogServer").val(connectCogServers[$(this).attr("id")][0]);
+	savePreference("ConnectCogServer",connectCogServers[$(this).attr("id")][0]);
+	$('#CogServerModalList').modal("hide");
+	getAtoms();
+})
 
+$("body").on("click",".CogServerModalListDelete",function()
+{ 
+	connectCogServers.splice($(this).attr("id"),1);
+	savePreference("connectCogServers",JSON.stringify(connectCogServers));
+	updateGUIPreferences(); 
+})
+ 
 
 function AppearanceShowTextOn()
 {
@@ -1232,8 +1250,7 @@ function updateGUIPreferences()
 	$("#FilterIncomingSets").prop("checked",eval(preferences.FilterIncomingSets));
 	$("#FilterOutgoingSets").prop("checked",eval(preferences.FilterOutgoingSets));
 	$("#FilterLimit").val(preferences.FilterLimit);
- 
-	
+  
 
 	//ADVANCED FILTERS
  	updateAdvancedFilters();
@@ -1259,7 +1276,26 @@ function updateGUIPreferences()
 	//CONNECTION
 	$("#ConnectCogServer").attr("value",preferences.cogserver);
  	//sshowScreen(preferences.viewer); //get the last user prefered viewer
-
+ 	console.log(connectCogServers);
+ 	if (connectCogServers.length>0)
+ 	{
+ 		html = '<table class="table table-hover"><tr><th>Location </th><th>Name</th><th>Actions</th></tr>';
+ 		for (var i=connectCogServers.length-1; i>-1; i--)
+ 		{
+ 			console.log(i);
+ 			html = html + '<tr><td>' + connectCogServers[i][0] 
+ 			+ '</td><td>' + connectCogServers[i][1]
+ 			+ '</td><td>' + '<button class="btn btn-info CogServerModalListLoad" id="'+ i +'">Load</button> <button class="btn btn-danger CogServerModalListDelete" id="'+ i +'">Delete</button>'
+ 			+ '</td></tr>'; 
+ 		}
+ 		html = html + '</table>';
+ 		$("#CogServerModalListBody").html(html);
+ 	}
+ 	else
+ 	{
+ 		$("#CogServerModalListBody").html("No saved servers so far.");
+ 	}
+ 	
  	//Load stored positions of GUI enviroment etc
  	$("#details").css("left",preferences.detailsLeft+"px").css("top",preferences.detailsTop+"px");
  	$("#toolbox").css("left",preferences.toolBoxLeft+"px").css("top",preferences.toolBoxTop+"px");
@@ -1379,6 +1415,9 @@ function getAtoms()
 		}
 	}
 
+
+	
+	
 	//GUI Stuff
 	$('#loading').show();
 	$("#ConnectConnectButton").disabled = true;
@@ -1440,9 +1479,12 @@ function getAtoms()
     
     queryString =  "?" + ret.join("&");
 
+    add = "";
+	if (preferences.cogserver.slice(-1)!="/") add="/";
+
 	$.ajax(
 	{
-		url: preferences.cogserver + 'api/v1.1/atoms' + queryString,
+		url: preferences.cogserver + add +  'api/v1.1/atoms' + queryString,
 		type: 'GET',
     	dataType: "jsonp",
     	processData: false,
@@ -1514,10 +1556,12 @@ function getAtoms()
 
 function retrieveAtomTypes()
 {
-    
+    add = "";
+	if (preferences.cogserver.slice(-1)!="/") add="/";
+	
     $.ajax(
 	{
-		url: preferences.cogserver + 'api/'+API_VER+'/types',
+		url: preferences.cogserver + add + 'api/'+API_VER+'/types',
 		type: 'GET',
     	dataType: "jsonp",
     	processData: false,

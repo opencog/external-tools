@@ -531,6 +531,8 @@
                 <p>OpenCog AtomSpace Visualization Tool</p>
                 <p>Version: 1.1</p>
                 <p>Copyright (C) 2015 OpenCog Foundation</p>
+                <p> GUI Development and partial Visualization Development by skoumas.</p>
+                <p><a href="http://www.skoumas.com">www.skoumas.com</a></p>
                 <hr>
                 <button id="AboutCloseButton" class="btn btn-success">Close</button>
             <!-- END CONTENT -->
@@ -575,7 +577,10 @@
             </div>
         </div>
 
+
+
          <div class="col-sm-2" id="rightMenu">
+
           <!-- STATS -->
            <div class="accordion-group" >
                 <div class="accordion-heading">
@@ -765,7 +770,6 @@
 </div>
 
 
-
 <!-- MODALS -->
 <div class="modal fade" id="CogServerModalSave" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
   <div class="modal-dialog">
@@ -782,7 +786,7 @@
           </tr>
           <tr>
             <td>Description <small>(optional)</small></td>
-            <td><input class="form-control" type="text"/></tD>
+            <td><input id="CogServerModalDescription" class="form-control" type="text"/></tD>
           </tr>
          </table>
       </div>
@@ -801,13 +805,16 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">List Cogserver</h4>
       </div>
-      <div class="modal-body">
-        <table class="table table-hover ">
+      <div class="modal-body" id="CogServerModalListBody">
+        No saved servers so far.
+        
+        <!-- 
+        <table class="table table-hover">
           <thead>
             <tr>
-              <th> Name</th>
-              <th> Location</th>
-              <th> Actions </th>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Actions </th>
             </tr>
           </thead>
           <tr>
@@ -817,28 +824,14 @@
               <button class="btn btn-sm btn-info">...</button>
             </td>
           </tr>
-          <tr>
-            <td>Default</td>
-            <td>http://localhost:5000/</td>
-            <td>
-              <button class="btn btn-sm btn-info">...</button>
-            </td>
-          </tr>
-          <tr>
-            <td>Default</td>
-            <td>http://localhost:5000/</td>
-            <td>
-              <button class="btn btn-sm btn-info">...</button>
-            </td>
-          </tr>
         </table>
+      -->
+
       </div>
       
     </div>
   </div>
 </div>
-
-
 
 
 <!-- SCRIPTS -->
