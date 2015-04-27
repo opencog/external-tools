@@ -37,6 +37,11 @@ hr
   background-color:#777;
   padding:0;
 }
+#rightMenu
+{
+  padding:0;
+  background-color: #777;
+}
 
 #mainContent
 {
@@ -90,32 +95,52 @@ hr
    
 }
 
-#detailsContent {
+#detailsContent
+{
   padding: 0px;
   display:none;
 }
+
 #detailsContentNone
 {
   padding:10px;
   text-align: center;
 }
+
 #detailsLinkContent
 {
    padding:10px;
    display:none;
-
 }
+
 #detailsAtomHandle
 {
   font-weight: bold;
 }
+
 .detailBarCloseButton a:link
 {
   color:#fff!important;
 }
+
 .detailBarCloseButton a:hover
 {
   color:#fff;
+}
+
+#detailsPanelNodeContent
+{
+  display:none;
+}
+
+#detailsPanelLinkContent
+{
+  display:none;
+}
+
+#detailsPanelContentNone
+{
+  padding:10px;
 }
 
 /* TOOLBAR */
@@ -243,22 +268,22 @@ hr
 
 .link {
   stroke: #fff;
-  stroke-width:0.5px;
-  stroke-opacity: 0.2;
+  stroke-width:0.2px;
+  stroke-opacity: 0.8;
   z-index: 1;
 }
 
 .link:hover {
   stroke:  red;
   stroke-width: 3px;
-  cursor: pointer; 
+  cursor: default;
 }
 
 .node circle
 {  
   stroke: #fff;
-   stroke-width: 0;
-  cursor: pointer;
+  stroke-width: 0;
+  cursor: default;
   z-index:50;
 }
 
@@ -290,6 +315,7 @@ hr
 {
   stroke:red;
   stroke-width:2px;
+  box-shadow: 2px 2px 2px #ddd;
 }
 
 .linkToolNode circle
@@ -324,9 +350,13 @@ hr
   -webkit-user-select: none; /* Chrome/Safari */        
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
-  cursor: pointer;
+  cursor: default;
   margin-left:20px;
   margin-top:20px;
+}
+.text:hover
+{
+   fill:#fff;
 }
 
 .overlay
@@ -391,8 +421,7 @@ hr
 
 #ConnectionStatus
 {
-  font-size:12px;
-  margin-top:2px;
+   
 }
 
 
@@ -403,6 +432,15 @@ hr
 /*-----------------*/
 /*-----------------*/
 /*-----------------*/
+#snapshotFlash
+{
+  background-color: #fff;
+  width:100%;
+  height:100%;
+  display:none;
+  z-index: 100;
+  position:absolute;
+}
 
 #screen-d3
 {
@@ -421,26 +459,26 @@ hr
 
 #screen-json
 {
-    padding:20px;
-    background-color: #fff;
-    color:#000;
-    overflow:scroll;
+  padding:20px;
+  background-color: #fff;
+  color:#000;
+  overflow:scroll;
 }
 
 #screen-table
 {
-    padding:20px;
-    background-color: #fff;
-    color:#000;
-    overflow:scroll;
+  padding:20px;
+  background-color: #fff;
+  color:#000;
+  overflow:scroll;
 }
 
 #screen-scheme
 {
-    padding:20px;
-    background-color: #fff;
-    color:#000;
-    overflow:scroll;
+  padding:20px;
+  background-color: #fff;
+  color:#000;
+  overflow:scroll;
 }
 
 #screen-statistics
@@ -485,7 +523,11 @@ hr
     color:#000;
 }
 
- 
+#visualizerInner
+{
+  width:100%;
+}
+
 /* CLASSES */
 /*-----------------*/
 /*-----------------*/
@@ -577,3 +619,25 @@ hr
 {
   font-size: 10px;
 }
+
+.navbar .divider-vertical
+{
+height: 50px;
+margin: 0 9px;
+border-right: 1px solid #ffffff;
+border-left: 1px solid #f2f2f2;
+}
+
+.navbar-inverse .divider-vertical
+{
+border-right-color: #222222;
+border-left-color: #111111;
+}
+
+@media (max-width: 767px) {
+  .navbar-collapse .nav > .divider-vertical
+  {
+      display: none;
+  }
+}
+ 
