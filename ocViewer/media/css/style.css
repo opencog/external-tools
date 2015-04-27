@@ -268,22 +268,22 @@ hr
 
 .link {
   stroke: #fff;
-  stroke-width:0.5px;
-  stroke-opacity: 0.2;
+  stroke-width:0.2px;
+  stroke-opacity: 0.8;
   z-index: 1;
 }
 
 .link:hover {
   stroke:  red;
   stroke-width: 3px;
-  cursor: pointer; 
+  cursor: default;
 }
 
 .node circle
 {  
   stroke: #fff;
-   stroke-width: 0;
-  cursor: pointer;
+  stroke-width: 0;
+  cursor: default;
   z-index:50;
 }
 
@@ -350,9 +350,13 @@ hr
   -webkit-user-select: none; /* Chrome/Safari */        
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
-  cursor: pointer;
+  cursor: default;
   margin-left:20px;
   margin-top:20px;
+}
+.text:hover
+{
+   fill:#fff;
 }
 
 .overlay

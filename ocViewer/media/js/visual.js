@@ -8,6 +8,7 @@ function d3graph(element)
  
  	zoom = d3.behavior.zoom().scaleExtent([0.05, 5]).on("zoom", zoomed);
 
+
     var vis = this.vis = d3.select(element).append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -32,6 +33,11 @@ function d3graph(element)
 		.friction(preferences.appearanceFriction/100)
         .size([width, height]);
 
+	var color = d3.scale.linear()
+	    .domain([ 0, 10])
+	    .range(["green", "red"]);
+		    
+
     var drag = force.drag()
 		.on("dragstart", dragstarted)	 
 		.on("drag", dragged)
@@ -39,7 +45,7 @@ function d3graph(element)
 
     var nodes = force.nodes(),
         links = force.links();
-
+ 		 
     fpsf = null;
     fpsf = setInterval(function () { ffps = fps;   fps=0; }, 1000);
 
@@ -52,7 +58,7 @@ function d3graph(element)
 
     var update = function () 
     {
- 		
+
  
   		textVisibillity =  preferences.appearanceShowText=="true" ? "visible": "hidden";
 		linksVisibillity = preferences.appearanceShowLinks=="true" ? "visible" : "hidden";
@@ -84,11 +90,11 @@ function d3graph(element)
 
         var nodeEnter = node.enter().append("g")
 	        .attr("class", "node")
+	        .attr("class",function(d){return d.type})
 	        .attr("id",function(d){return d.index;})
 	        .call(force.drag);
 
-	     
-
+ 
     	nodeEnter.filter(function(d) { return d.type.search("Link")!=-1 })
 	        .append("path")
       		.attr("d", d3.svg.symbol().type("triangle-up"))
@@ -135,10 +141,10 @@ function d3graph(element)
  		{
  		}
 
-        nodeEnter.append("text")
+        text = nodeEnter.append("text")
 	        .attr("class", "text")
 	        .style("visibility",textVisibillity)
-	        .text(nodeName);
+	        .text(function(d){return nodeName(d,false);});
 
         link.exit().remove();
         node.exit().remove();
@@ -183,6 +189,20 @@ function d3graph(element)
 			}
 		});
 
+		text.on("click",function(d)
+		{
+			if (d3.select(this).classed("fullName")==false)
+			{
+				d3.select(this).text(function(d){return nodeName(d,true)});
+				d3.select(this).classed("fullName",true);
+			}
+			else
+			{
+				d3.select(this).text(function(d){return nodeName(d,false)});
+				d3.select(this).classed("fullName",false);	
+			}
+		});
+
 		vis.on("mouseup", function(d) 
 		{
 			//if (dragging) return;
@@ -193,7 +213,7 @@ function d3graph(element)
 			{
 				//d3.select(this).select("circle").transition().duration(transitionSpeed).attr("r", nodeRadius);
 				node.classed("selectedNode",false);
-				link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", 0.2);
+				link.transition(transitionSpeed).duration(transitionSpeed).style("stroke-opacity", 0.8);
 				node.transition(transitionSpeed).duration(transitionSpeed).style("opacity", 1);
 				connectedNode.splice(0, connectedNode.length);
 			}
@@ -241,6 +261,7 @@ function d3graph(element)
 		
 		node.on("dblclick", function(d)
 		{
+
 			if (d.fixed==0)
 			{
 				d3.select(this).classed("fixed",true);
@@ -363,10 +384,11 @@ function d3graph(element)
 
 		force.start(); 
 	    drawedd3 = true;
+	    
     }
 
     update();
- 
+ 	
 	/*--------------------------*/
 	/*--------FUNCTIONS---------*/
 	/*--------------------------*/
@@ -476,22 +498,49 @@ function d3graph(element)
     	force.stop();
     }
 
-    this.updateDisplay = function()
+    this.showFullText = function()
     {
-    	
+    	d3.selectAll(".text").classed("fullName",true).text(function(d){return nodeName(d,true)}) ;
+    }
 
+ 	this.showAbbrevatedText = function()
+    {
+    	d3.selectAll(".text").classed("fullName",false).text(function(d){return nodeName(d,false)}) ;
+    }
+    
+   
+	this.updateDisplay = function()
+    {
     	if (currentShape!=preferences.displayNodeShape)
     	{
     		d3.selectAll(".nodein").remove();
     		d3.selectAll(".node").append("circle").attr("class","nodein").attr("r",nodeRadius);
     		currentShape = preferences.displayNodeShape;
-    		
     	}
+ 
+
+		rect.style("background-color",preferences.ColorBackgroundColor)
+			.attr("fill",preferences.ColorBackgroundColor);
+
+		d3.select("#screen-d3").style("background-color",preferences.ColorBackgroundColor)
+			.attr("fill",preferences.ColorBackgroundColor);
 
     	d3.selectAll(".nodein").transition().duration(transitionSpeed)
 	    	.attr("r", nodeRadius)
 	    	.attr("width", nodeRadius)
 	    	.attr("height", nodeRadius);
+
+	    //COLORS
+	    if ($("#ColorColorMethod").val()=="simple")	
+	    	d3.selectAll(".nodein").attr("fill",preferences.ColorSimpleColor)	
+    	
+     	d3.selectAll(".nodein").style("opacity",preferences.colorSimpleTransparency/100);
+
+    }
+
+    this.changeColor = function()
+    {
+
     }
 
     var findNodeByHandle = function (handle) 
@@ -586,17 +635,27 @@ function d3graph(element)
      
 
     }
-    function nodeName(d)
+    function nodeName(d,hover)
     {
-    	if (d.name!="")
-    		return d.name.substring(0,7);
-    	else if (d.type!="") 
-    		if(d.type.search("Link")==-1)
-    			return d.type;
+    	if (hover)
+    	{
+    		return d.name;
+    	}
     	else
-    		if(d.type.search("Link")==-1)
-    			return d.handle;
+    	{
+	    	if (d.name!="")
+	    		return d.name.substring(0,10);
+	    	else if (d.type!="") 
+	    		if(d.type.search("Link")==-1)
+	    			return d.type;
+	    	else
+	    		if(d.type.search("Link")==-1)
+	    			return d.handle;
+	    }
     }
+
+
+
  
     function zoomed()
 	{
@@ -678,6 +737,23 @@ function d3graph(element)
 			return false;
 		else
 			return true;
+	}
+
+
+
+	// Returns a list of all nodes under the root.
+	function flatten(root) {
+	  var nodes = [], i = 0;
+
+	  function recurse(node)
+	  {
+	    if (node.incoming) node.incoming.forEach(recurse);
+	    if (!node.handle) node.handle = ++i;
+	    nodes.push(node);
+	  }
+
+	  recurse(root);
+	  return nodes;
 	}
 
 }

@@ -22,7 +22,8 @@
     <link href="media/css/jquery.switchButton.css" rel="stylesheet">
     <link rel="shortcut icon" href="media/images/favicon.png" type="image/x-icon"/>
     <link href="media/css/jquery.terminal.css" rel="stylesheet">
-     
+    <link href="media/css/spectrum.css" rel="stylesheet">
+
 </head>
  
 <body>
@@ -349,6 +350,7 @@
                                 <div id="displayRadiusMultiplier"></div>
                               </td>
                             </tr>
+                            <!--
                             <tr>
                               <td>Link Handle Shape</td>
                               <td>
@@ -367,6 +369,7 @@
                                 <div id="displayLinkWidth"></div>
                               </td>
                             </tr>
+                          -->
                           </table>
 
                         </div>
@@ -386,27 +389,107 @@
               </div>
  
 
-               <!-- ADVANCED FILTER -->
-              <div class="accordion-group" style="display:none">
+              <!-- COLORS -->
+              <div class="accordion-group">
                 <div class="accordion-heading">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#displayPanel">
-                    <i class="fa fa-paint-brush"></i> Display
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#colorsPanel">
+                    <i class="fa fa-paint-brush"></i> Colors
                   </a>
                 </div>
-                <div id="displayPanel" class="accordion-body collapse">
+                <div id="colorsPanel" class="accordion-body collapse">
                   <div class="accordion-inner" style="padding:0">
                     <!-- CONTENT -->
-                    <div id="display-d3">
-                    <table class="table table-settings">
-                    
+                    <table class="table table-settings" id="colorOptionTable">
+                      <tr option="simple">
+                        <td>Background Color</td>
+                        <td> 
+                            <input type="color" id="ColorBackgroundColor" value=""  class="form-control" />
+                        </td>
+                      </tr>
+                      <tr id="option">
+                        <td width="30%">Coloring Method</td>
+                        <td>
+                          <select id="ColorColorMethod">
+                            <option value="simple">Simple</option>
+                            <option value="incoming">Incoming </option>
+                            <option value="outgoing">Outgoing </option>
+                            <option value="atomtype">By AtomType </option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr option="simple">
+                        <td>Color</td>
+                        <td> 
+                            <input  type="color" id="ColorSimpleColor" value=""  class="form-control" />
+                        </td>
+                      </tr>
+                      <tr option="simple">
+                        <td>Transparency</td>
+                        <td><div id="colorSimpleTransparency"></div></td>
+                      </tr>
+                       <!--
+                      <tr option="incoming">
+                        <td>Range From:</td>
+                        <td> 
+                          <div class="input-group" id="ColorSimpleColor">
+                              <input type="text" value=""  class="form-control" />
+                              <span class="input-group-addon"><i></i></span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr option="incoming">
+                        <td>Range To:</td>
+                        <td> 
+                          <div class="input-group" id="ColorSimpleColor">
+                              <input type="text" value=""  class="form-control" />
+                              <span class="input-group-addon"><i></i></span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr option="atomtype">
+                        <td colspan=2><div id="colorsAtomTypeDiv">sdfsdf</div></td>
+                        
+                      </tr>
+                    -->
                     </table>
-                  </div><div id="display-none">
-                    Please select d3 or Sigma view to view extra display options.
-                  </div>
                     <!-- END CONTENT -->
                   </div>
                 </div>
               </div>
+
+
+                 <!-- TEXT -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#textPanel">
+                    <i class="fa fa-font"></i> Text
+                  </a>
+                </div>
+                <div id="textPanel" class="accordion-body collapse">
+                  <div class="accordion-inner" style="padding:0">
+                    <!-- CONTENT -->
+                    <table class="table table-settings">
+                      <tr>
+                        <td colspan=2>
+                          <button id="textFullTextsButton" class="btn btn-success">Show Full Texts</button>
+                          <button id="textAbbreviatedTextsButton" class="btn btn-success">Show AbbrevatedText Texts</button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td width="30%">Abbreviation Style</td>
+                        <td>
+                          <select>
+                            <option> Coming Soon.... </option>
+                           
+                          </select>
+                      </tr>
+                    </table>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+              
 
               <!-- ANALYSE -->
               <div class="accordion-group" style="display:none">
@@ -581,34 +664,7 @@
 
          <div class="col-sm-2" id="rightMenu">
 
-          <!-- STATS -->
-           <div class="accordion-group" >
-                <div class="accordion-heading">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#statsPanel">
-                    <i class="fa fa-globe"></i> <span id=""> Stats </span>
-                  </a>
-                </div>
-                <div id="statsPanel" class="accordion-body collapse">
-                  <div class="accordion-inner">
-                    <!-- CONTENT -->
-                      <table class="table table-settings">
-                        <tr>
-                          <td>Atomspace Name</td>
-                          <td>To be implemented...</td>
-                        </tr>
-                        <tr>
-                          <td>Atoms Loaded</td>
-                          <td><span id="statsAtomsLoaded"></span></td>
-                        </tr>
-                        <tr>
-                          <td>Atoms Loaded</td>
-                          <td><span id="statsAtomsLoaded"></span></td>
-                        </tr>
-                      </table>
-                    <!-- END CONTENT -->
-                  </div>
-                </div>
-              </div>
+           
             
           <!-- DETAILS -->
            <div class="accordion-group" >
@@ -806,33 +862,28 @@
         <h4 class="modal-title" id="myModalLabel">List Cogserver</h4>
       </div>
       <div class="modal-body" id="CogServerModalListBody">
-        No saved servers so far.
-        
-        <!-- 
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Actions </th>
-            </tr>
-          </thead>
-          <tr>
-            <td>Default</td>
-            <td>http://144.76.153.5:5020/</td>
-            <td>
-              <button class="btn btn-sm btn-info">...</button>
-            </td>
-          </tr>
-        </table>
-      -->
-
+        No saved servers so far.   
       </div>
       
     </div>
   </div>
 </div>
 
+
+<div class="modal fade" id="colorsAtomType" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">ColorNodes by AtomType</h4>
+      </div>
+      <div class="modal-body" id="colorsAtomTypeBody">
+         
+      </div>
+      
+    </div>
+  </div>
+</div>
 
 <!-- SCRIPTS -->
 <script src="media/js/d3.min.js" charset="utf-8"></script>
@@ -844,6 +895,7 @@
 <script src="media/js/jquery.switchButton.js" charset="utf-8"></script>
 <script src="media/js/jquery.terminal-0.8.8.js"></script>
 <script src="media/js/jquery.awesome-cursor.min.js"></script>
+<script src="media/js/spectrum.js"></script>
   
 <!-- SIGMA -->
 <script src="media/js/sigma.js-master/src/sigma.core.js"></script>
