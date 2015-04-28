@@ -274,6 +274,13 @@ $(document).ready(function()
   		on_callback: atomDetailsFixedOn ,
   		off_callback: atomDetailsFixedOff
 	});
+    $("#textShowLinkTypeName").switchButton({
+  		labels_placement: "right",
+  		checked: String2Boolean(preferences.textShowLinkTypeName),
+  		on_callback: textShowLinkTypeNameOn ,
+  		off_callback: textShowLinkTypeNameOff
+	});
+
 
     //Load Terminal
     if (preferences.visibleTerminal)
@@ -980,6 +987,7 @@ function AppearanceHoverShowConnectionsOn()
 function AppearanceHoverShowConnectionsOff()
 {
 	savePreference("appearanceHoverShowConnections",false);
+
 }
 function displayShowLinkHandlesOn()
 {
@@ -990,6 +998,20 @@ function displayShowLinkHandlesOff()
 {
 	savePreference("displayShowLinkHandles",false);
 }
+
+
+function textShowLinkTypeNameOn()
+{
+	savePreference("textShowLinkTypeName",true);
+	d3g.updateDisplay();
+}
+
+function textShowLinkTypeNameOff()
+{
+	savePreference("textShowLinkTypeName",false);
+	d3g.updateDisplay();
+}
+
 
 function atomDetailsFixedOn()
 {
@@ -1266,6 +1288,11 @@ function loadPreferences()
 	 if(!preferences.AdvancedFilterSelected)
 	 	preferences.AdvancedFilterSelected = null;
  
+
+	if(preferences.textShowLinkTypeName == undefined)
+	 	preferences.textShowLinkTypeName = false;
+ 	
+
 
 	updateGUIPreferences();
 }

@@ -143,6 +143,7 @@ function d3graph(element)
 
         text = nodeEnter.append("text")
 	        .attr("class", "text")
+	        .attr("class",function(d) { if (d.type.search("Link")!=-1) return "textLink text"; else return "text"; })
 	        .style("visibility",textVisibillity)
 	        .text(function(d){return nodeName(d,false);});
 
@@ -501,7 +502,7 @@ function d3graph(element)
     this.showFullText = function()
     {
     	d3.selectAll(".text").classed("fullName",true).text(function(d){return nodeName(d,true)}) ;
-    }
+    } 
 
  	this.showAbbrevatedText = function()
     {
@@ -517,8 +518,12 @@ function d3graph(element)
     		d3.selectAll(".node").append("circle").attr("class","nodein").attr("r",nodeRadius);
     		currentShape = preferences.displayNodeShape;
     	}
- 
-
+ 		
+ 		if (String2Boolean(preferences.textShowLinkTypeName)==true)
+    		d3.selectAll(".textLink").style("display","block");
+    	else
+    		d3.selectAll(".textLink").style("display","none");
+		
 		rect.style("background-color",preferences.ColorBackgroundColor)
 			.attr("fill",preferences.ColorBackgroundColor);
 
@@ -635,22 +640,21 @@ function d3graph(element)
      
 
     }
-    function nodeName(d,hover)
+    function nodeName(d,full)
     {
-    	if (hover)
+    	if (full)
     	{
-    		return d.name;
+	    	if (d.name!="") return d.name;
+	    	else if (d.type!="") return d.type;
+	    	else
+	    	if(d.type.search("Link")==-1) return d.handle;
     	}
     	else
     	{
-	    	if (d.name!="")
-	    		return d.name.substring(0,10);
-	    	else if (d.type!="") 
-	    		if(d.type.search("Link")==-1)
-	    			return d.type;
+	    	if (d.name!="") return d.name.substring(0,10);
+	    	else if (d.type!="") return d.type.substring(0,10);
 	    	else
-	    		if(d.type.search("Link")==-1)
-	    			return d.handle;
+	    	if(d.type.search("Link")==-1) return d.handle.substring(0,10);
 	    }
     }
 
