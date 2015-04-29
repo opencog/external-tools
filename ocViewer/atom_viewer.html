@@ -171,7 +171,7 @@
                         <tr>
                           <td colspan="2" align="right"  >
                           <button class="btn btn-info" id="ConnectGetAtomTypesButton"><i class="fa fa-plug"></i> Get Atom Types</button>
-                          <button class="btn btn-success" id="ConnectConnectButton"><i class="fa fa-plug"></i> Connect</button>
+                          <button class="btn btn-success" id="ConnectConnectButton"><i class="fa fa-plug"></i> Get Atoms</button>
                           </td>   
                         </tr>
                       </table>
@@ -217,9 +217,20 @@
                         </tr>
                         <tr>
                           <td>Atom Type</td>
-                          <td><select class="form-control input-sm" id="FilterAtomType">
-                           <option value="0" id="FilterAtomTypeNoneValue">--None--</option>
-                        </select></td>
+                          <td>
+                              
+                          <div class="input-group"> 
+                            <select class="form-control input-sm" id="FilterAtomType">
+                              <option value="0" id="FilterAtomTypeNoneValue">--None--</option>
+                            </select>
+
+                            <span class="input-group-btn">
+                              <button title="Refresh AtomTypes" id="FilterRefreshAtomTypes" class="btn btn-sm btn-default" type="button"><i id="FilterRefreshAtomTypesIcon" class="fa fa-refresh"></i></button>
+                              <button title="Only load used AtomTypes" id="FilterToggleUsedAtomTypes" class="btn btn-sm btn-default" type="button"><i id="FilterToggleUsedAtomTypesIcon" class="fa"></i></button>
+                             </span>
+                          </div>
+
+                      </td>
                         </tr>
                          <tr>
                           <td>Limit</td>

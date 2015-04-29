@@ -34,7 +34,7 @@ var dragging;
 
 //Globals
 var atomData = null;
-var atomTypes = null;
+var atomTypes = [];
 var atomTypesUsed = [];
 
 var count = null //How many atoms?
@@ -61,6 +61,7 @@ var ApperanceforceAnimated;
 var cursor = null;
 var API_VER = "v1.1";
 
+var ConnectionTimeout = 10000;
 
  Colorpalette = [
         ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
@@ -365,8 +366,9 @@ $("#FileExport").click(function()
 	savePreference("viewer","export");
 });
 
-$("#ConnectConnectButton").keypress(function(e)
+$("#ConnectCogServer").keyup(function(e)
 {
+	savePreference("cogserver", $(this).val());
     if(e.which == 13) retrieveAtomTypes(); 
 });
 
@@ -560,6 +562,49 @@ $("#FilterLimit").keyup(function()
 	$("#FilterRefreshButton").prop('disabled',false);
 	//getAtoms();
 });
+
+
+$("#FilterRefreshAtomTypes").click(function()
+{
+	retrieveAtomTypes();
+});
+
+$("#FilterToggleUsedAtomTypes").click(function()
+{
+	 
+	if (String2Boolean(preferences.FilterLoadOnlyUsedAtomTypes))
+	{
+		if (atomTypesUsed!=[])
+		{
+			console.log(atomTypesUsed);
+			options = "<option value='0'>--None--</option>";
+	 		$("#FilterAtomType").html("");
+			for (var i=0; i<atomTypesUsed.length; i++)
+			{
+				options = options + "<option value='"+atomTypesUsed[i]+"'>"+atomTypesUsed[i]+"</option>";
+			}
+			$("#FilterAtomType").html(options);		
+		}
+
+		savePreference("FilterLoadOnlyUsedAtomTypes",false);
+		updateGUIPreferences();
+	}
+	else
+	{
+		
+	 	$("#FilterAtomType").html("");
+	 	options = "<option value='0'>--None--</option>";
+		for (var i=0; i<atomTypes.types.length; i++)
+		{
+			options = options + "<option value='"+atomTypes.types[i]+"'>"+atomTypes.types[i]+"</option>";
+		}
+		$("#FilterAtomType").html(options);		
+		savePreference("FilterLoadOnlyUsedAtomTypes",true);
+		updateGUIPreferences();
+	}
+});
+
+ 
 
 $("#appearanceSigmaCircularView").click(function()
 {	
@@ -909,11 +954,7 @@ $("#ColorColorMethod").change(function()
 		//$('#colorsAtomType').modal();
 		alert("A");
 		finalHTML = "<table class='table table-hover'>";
-		for (var i=0; i < atomData.length; i++)
-	    {
-	    	if ($.inArray(atomData[i].type,atomTypesUsed)==-1)
-	    		atomTypesUsed.push(atomData[i].type);
-	    }
+		
 
 		for (var i=0;i<atomTypesUsed.length;i++)
 			finalHTML = finalHTML + "<tr><td>" + atomTypesUsed[i] + "</td><td></td></tr>";
@@ -999,7 +1040,6 @@ function displayShowLinkHandlesOff()
 	savePreference("displayShowLinkHandles",false);
 }
 
-
 function textShowLinkTypeNameOn()
 {
 	savePreference("textShowLinkTypeName",true);
@@ -1084,7 +1124,7 @@ function showScreen(screen)
 
 		gefxSigmaObject = new updateGEFXView();
 	    gefxData = gefxSigmaObject.generate(atomData); 
-	    console.log(gefxData);
+	     
 	    $("#screen-gexf").html("." + gefxData);
 	}
 	else if (screen=="statistics")
@@ -1288,11 +1328,13 @@ function loadPreferences()
 	 if(!preferences.AdvancedFilterSelected)
 	 	preferences.AdvancedFilterSelected = null;
  
-
-	if(preferences.textShowLinkTypeName == undefined)
+ 	if(preferences.textShowLinkTypeName == undefined)
 	 	preferences.textShowLinkTypeName = false;
- 	
 
+	if(preferences.FilterLoadOnlyUsedAtomTypes == undefined)
+	 	preferences.FilterLoadOnlyUsedAtomTypes = false;
+ 	
+	
 
 	updateGUIPreferences();
 }
@@ -1392,6 +1434,16 @@ function updateGUIPreferences()
 	$("#FilterOutgoingSets").prop("checked",eval(preferences.FilterOutgoingSets));
 	$("#FilterLimit").val(preferences.FilterLimit);
   
+  	if (String2Boolean (preferences.FilterLoadOnlyUsedAtomTypes))
+  	{
+		$("#FilterToggleUsedAtomTypesIcon").addClass("fa-circle-thin");
+  		$("#FilterToggleUsedAtomTypesIcon").removeClass("fa-circle");
+  	}
+  	else
+  	{
+  		$("#FilterToggleUsedAtomTypesIcon").removeClass("fa-circle-thin");
+  		$("#FilterToggleUsedAtomTypesIcon").addClass("fa-circle");	
+  	}
 
 	//ADVANCED FILTERS
  	updateAdvancedFilters();
@@ -1417,13 +1469,13 @@ function updateGUIPreferences()
 	//CONNECTION
 	$("#ConnectCogServer").attr("value",preferences.cogserver);
  	//sshowScreen(preferences.viewer); //get the last user prefered viewer
- 	console.log(connectCogServers);
+ 	 
  	if (connectCogServers.length>0)
  	{
  		html = '<table class="table table-hover"><tr><th>Location </th><th>Name</th><th>Actions</th></tr>';
  		for (var i=connectCogServers.length-1; i>-1; i--)
  		{
- 			console.log(i);
+ 			 
  			html = html + '<tr><td>' + connectCogServers[i][0] 
  			+ '</td><td>' + connectCogServers[i][1]
  			+ '</td><td>' + '<button class="btn btn-info CogServerModalListLoad" id="'+ i +'">Load</button> <button class="btn btn-danger CogServerModalListDelete" id="'+ i +'">Delete</button>'
@@ -1557,7 +1609,7 @@ function getAtoms()
 		}
 	}
 
-
+	
 	
 	
 	//GUI Stuff
@@ -1628,10 +1680,10 @@ function getAtoms()
 	{
 		url: preferences.cogserver + add +  'api/v1.1/atoms' + queryString,
 		type: 'GET',
-    	dataType: "jsonp",
-    	processData: false,
-    	crossDomain: true,
-    	timeout: 2000,
+    	//dataType: "jsonp",
+    	//processData: false,
+    	//crossDomain: true,
+    	//timeout: ConnectionTimeout,
     	headers:
     	{
     		"X-Requested-With" : ""
@@ -1649,21 +1701,30 @@ function getAtoms()
 	 	atomData =  dataset.result.atoms;
     	nodes = atomData;
     	count = atomData.length;
-		
+			
+		if (atomTypes==null)
+			retrieveAtomTypes();
+
 	    if (atomData.length == 0)
 	    {
 	    	$("#ConnectionStatus").html("<span class='fail'>The Cogserver returned no atoms for the given filter/search.");
 	    	echo("The Cogserver returned no atoms for the given filter/search.</span>");
 	    	
 	    	atomData = null;
-	    	//atomTypesUsed = [];
+	    	atomTypesUsed = [];
 	    }
 	    else
 	    {
-	    	var atomTypesUsed = [];
+	    	//atomTypesUsed = [];
 	        $("#ConnectionStatus").html("<span class='success'><i class='fa fa-check-circle'></i> Successfully retrieved " + atomData.length.toString() + " atoms.</span>");
 	        echo("[[b;green;black]Successfully retrieved " + atomData.length.toString() + " atoms.]");
 	    	
+	    	for (var i=0; i < atomData.length; i++)
+		    {
+		    	if ($.inArray(atomData[i].type,atomTypesUsed)==-1)
+		    		atomTypesUsed.push(atomData[i].type);
+		    }
+
 	        //See what node types are used in the graph
 	       
         
@@ -1673,13 +1734,28 @@ function getAtoms()
 	    updateStats();
 	    showScreen(preferences.viewer);
 	})
-	.error(function()
+	.error(function(xhr, ajaxOptions, thrownError)
 	{ 
+
+		if (xhr.readyState == 4)
+		{
+			if (status==0)
+				errorMessage = thrownError + "The url specified does not point out a server";
+			else if (status==500)
+				errorMessage = "Server's Internal Error.";         	
+        }
+        else if (xhr.readyState == 0)
+            errorMessage = "Could not connect to server.";
+        else 
+            errorMessage = "Unknown Error...";
+
+ 
 		connected = false;
 		$("#ConnectConnectButton").prop('disabled', false);
-		$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> Connection Failed!</span>")
+		$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> " + status + " " + errorMessage + "</span>")
 		connectionFails++;
 		$('#loading').hide();
+		
 	})
 	.complete(function()
 	{
@@ -1697,14 +1773,21 @@ function retrieveAtomTypes()
     add = "";
 	if (preferences.cogserver.slice(-1)!="/") add="/";
 
+
+	//$("#FilterAtomTypeNoneValue").html("Loading Atomtypes...");
+
+	$("#FilterAtomType").html("<option value=0>Retrieving Atomtypes...</option>");
+	$("#FilterRefreshAtomTypesIcon").removeClass("fa-refresh");
+	$("#FilterRefreshAtomTypesIcon").addClass("  fa-spinner fa-spin");
+ 
     $.ajax(
 	{
 		url: preferences.cogserver + add + 'api/'+API_VER+'/types',
 		type: 'GET',
-    	dataType: "jsonp",
-    	processData: false,
-    	crossDomain: true,
-    	timeout:2000, 
+    	//dataType: "jsonp",
+    	//processData: false,
+    	//crossDomain: true,
+    	//timeout:ConnectionTimeout, 
     	headers :
     	{
     		"X-Requested-With" : ""
@@ -1713,6 +1796,8 @@ function retrieveAtomTypes()
 	 
 	.success(function(types) 
 	{
+ 	
+ 		//atomTypes.push(types[i]);
  
  		atomTypes = types;
  		atomTypes.types.sort();
@@ -1724,6 +1809,7 @@ function retrieveAtomTypes()
     	}
     	else
     	{
+    		$("#FilterAtomType").html("");
     		$("#FilterAtomType").removeAttr("disabled");
     		$("#FilterAtomTypeNoneValue").remove();
 		 	$("#FilterAtomType").append($("<option style='background-color:#red;'></option>")
@@ -1743,13 +1829,33 @@ function retrieveAtomTypes()
 		}
 		//getAtoms();
 	})
-	.error(function()
+	.error(function(xhr, ajaxOptions, thrownError)
 	{ 
-		echo("Could not get AtomTypes. Check connectivity with server");
+		atomTypes =  null;
+		if (xhr.readyState == 4)
+		{
+           errorMessage = "";
+        }
+        else if (xhr.readyState == 0)
+        {
+            errorMessage = "Could not connect to server.";
+		}
+       
 		connected = false;
-		$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> Could not get AtomTypes. Check connectivity with server</span>")
- 
+		//$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> " + errorMessage + "</span>")
+        $("#FilterAtomType").html("<option value=0>Could not load AtomTypes.</option>");
+			
+		$("#FilterRefreshAtomTypesIcon").removeClass("fa-spinner fa-spin");
+		$("#FilterRefreshAtomTypesIcon").addClass("fa-refresh");
+		
+	})
+	.success(function()
+	{
+		$("#FilterRefreshAtomTypesIcon").removeClass("fa-spinner fa-spin");
+		$("#FilterRefreshAtomTypesIcon").addClass("fa-refresh");
 	});
+
+
 }
 
 /*----- ATOM HANDLING ----*/
