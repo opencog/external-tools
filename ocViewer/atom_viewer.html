@@ -52,6 +52,9 @@
             <ul class="dropdown-menu">
                 <li><a href="#" id="FileImport" ><i class="fa fa-exchange"></i> Import</a></li>
                 <li><a href="#" id="FileExport" ><i class="fa fa-exchange"></i> Export</a></li>
+                <li class="divider"></li>
+                <li><a href="#" id="FileImportPreferences" ><i class="fa fa-exchange"></i> Import Preferences</a></li>
+                <li><a href="#" id="FileExportPreferences" ><i class="fa fa-exchange"></i> Export Preferences</a></li>
             </ul>
         </li>
 
@@ -328,59 +331,6 @@
                               <td>Link Distance</td>
                               <td><div id="appearanceLinkDistance"></div></td>
                             </tr>
-                            <tr>
-                            <td>Nodes Shape
-                            </td>
-                            <td>
-                            <select id="displayNodeShape">
-                              <option value="none">--None--</option>
-                              <option value="triangle">Triangle</option>
-                              <option value="rectangle">Rectangle</option>
-                              <option value="circle">Circle</option>
-                            </select>
-                            </td>
-                            </tr>
-                            <tr>
-                              <td>Radius Relative to:</td>
-                              <td>
-                                <select id="displayRadiusBasedOn">
-                                  <option value="Fixed">Fixed</option>
-                                  <option value="Incoming">Incoming</option>
-                                  <option value="Outgoing">Outgoing</option>
-                                  <option value="IncomingOutgoing">Incoming + Outgoing</option>
-                                  <option value="AtomType">AtomType</option>
-                                  <option value="Random">Random</option>
-                                  <option value="sti">sti</option>
-                                  <option value="lti">lti</option>
-                                </select>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Radius Multiplier:</td>
-                              <td>
-                                <div id="displayRadiusMultiplier"></div>
-                              </td>
-                            </tr>
-                            <!--
-                            <tr>
-                              <td>Link Handle Shape</td>
-                              <td>
-                                 
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Link Handle Radius:</td>
-                              <td>
-                                <div id="displayRadiusMultiplier"></div>
-                              </td>
-                            </tr>
-                             <tr>
-                              <td>Link Width:</td>
-                              <td>
-                                <div id="displayLinkWidth"></div>
-                              </td>
-                            </tr>
-                          -->
                           </table>
 
                         </div>
@@ -400,6 +350,93 @@
               </div>
  
 
+              <!-- SHAPES -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#shapesPanel">
+                    <i class="fa fa-star"></i></i> Shapes
+                  </a>
+                </div>
+                <div id="shapesPanel" class="accordion-body collapse">
+                  <div class="accordion-inner" style="padding:0">
+                  
+                  <!-- CONTENT -->
+                  
+                  <!-- TABS -->
+                  <ul id="shapeTabs" class="nav nav-tabs">  
+                    <li class="active"><a href="#ShapeTabNodes" data-toggle="tab"><i class="fa fa-circle-thin"></i> Nodes</a></li>
+                    <li><a href="#ShapeTabLinkHandles" data-toggle="tab"><i class="fa fa-square"></i> Link Handles</a></li>
+                    <li><a href="#ShapeTabLinkLines" data-toggle="tab"><i class="fa fa-minus"></i> Link Lines</a></li>  
+                  </ul>
+ 
+                  <!-- TABS CONTENT -->
+                  <div id="shapeTabContent" class="tab-content">
+                  
+                    <!-- SHAPE NODES -->
+                    <div class="tab-pane" id="ShapeTabNodes">
+                     <table class="table table-settings" id="colorOptionTable">
+                        <tr>
+                          <td>Nodes Shape</td>
+                          <td>
+                          <select id="displayNodeShape">
+                            <option value="none">--None--</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="rectangle">Rectangle</option>
+                            <option value="circle">Circle</option>
+                          </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Radius Relative to:</td>
+                          <td>
+                            <select id="displayRadiusBasedOn">
+                              <option value="Fixed">Fixed</option>
+                              <option value="Incoming">Incoming</option>
+                              <option value="Outgoing">Outgoing</option>
+                              <option value="IncomingOutgoing">Incoming + Outgoing</option>
+                              <option value="AtomType">AtomType</option>
+                              <option value="Random">Random</option>
+                              <option value="sti">sti</option>
+                              <option value="lti">lti</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Radius Multiplier:</td>
+                          <td>
+                            <div id="displayRadiusMultiplier"></div>
+                          </td>
+                        </tr>
+                        </table>
+                      </div>
+
+                      <!-- SHAPE LINK HANDLES -->
+                      <div class="tab-pane" id="ShapeTabLinkHandles">
+                       <table class="table table-settings">
+                        <tr>
+                          <td width="30%">Link Handle Style</td>
+                          <td></td>
+                        </tr>
+                        </table>
+                      </div>
+
+                       <!-- COLOR LINK LINES -->
+                       <div class="tab-pane" id="ShapeTabLinkLines">
+                        <table class="table table-settings">
+                        <tr>
+                          <td width="30%">Link Lines Style</td>
+                          <td></td>
+                        </tr>
+                        </table>
+                       </div>
+
+                      </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+
               <!-- COLORS -->
               <div class="accordion-group">
                 <div class="accordion-heading">
@@ -409,67 +446,87 @@
                 </div>
                 <div id="colorsPanel" class="accordion-body collapse">
                   <div class="accordion-inner" style="padding:0">
-                    <!-- CONTENT -->
-                    <table class="table table-settings" id="colorOptionTable">
-                      <tr option="simple">
-                        <td>Background Color</td>
-                        <td> 
-                            <input type="color" id="ColorBackgroundColor" value=""  class="form-control" />
-                        </td>
-                      </tr>
-                      <tr id="option">
-                        <td width="30%">Coloring Method</td>
-                        <td>
-                          <select id="ColorColorMethod">
-                            <option value="simple">Simple</option>
-                            <option value="incoming">Incoming </option>
-                            <option value="outgoing">Outgoing </option>
-                            <option value="atomtype">By AtomType </option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr option="simple">
-                        <td>Color</td>
-                        <td> 
-                            <input  type="color" id="ColorSimpleColor" value=""  class="form-control" />
-                        </td>
-                      </tr>
-                      <tr option="simple">
-                        <td>Transparency</td>
-                        <td><div id="colorSimpleTransparency"></div></td>
-                      </tr>
-                       <!--
-                      <tr option="incoming">
-                        <td>Range From:</td>
-                        <td> 
-                          <div class="input-group" id="ColorSimpleColor">
-                              <input type="text" value=""  class="form-control" />
-                              <span class="input-group-addon"><i></i></span>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr option="incoming">
-                        <td>Range To:</td>
-                        <td> 
-                          <div class="input-group" id="ColorSimpleColor">
-                              <input type="text" value=""  class="form-control" />
-                              <span class="input-group-addon"><i></i></span>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr option="atomtype">
-                        <td colspan=2><div id="colorsAtomTypeDiv">sdfsdf</div></td>
-                        
-                      </tr>
-                    -->
-                    </table>
+                  
+                  <!-- CONTENT -->
+
+                  <!-- TABS -->
+                  <ul id="colorTabs" class="nav nav-tabs">  
+                    <li class="active"><a href="#ColorTabGeneral" data-toggle="tab"><i class="fa fa-circle"></i> General</a></li>
+                    <li><a href="#ColorTabNodes" data-toggle="tab"><i class="fa fa-circle-thin"></i> Nodes</a></li>
+                    <li><a href="#ColorTabLinkHandles" data-toggle="tab"><i class="fa fa-square"></i> Link Handles</a></li>
+                    <li><a href="#ColorTabLinkLines" data-toggle="tab"><i class="fa fa-minus"></i> Link Lines</a></li>  
+                  </ul>
+
+
+                  <!-- TABS CONTENT -->
+                  <div id="colorsTabContent" class="tab-content">
+                  
+                    <!-- COLOR GENERAL -->
+                    <div class="tab-pane active" id="ColorTabGeneral">
+                     <table class="table table-settings" id="colorOptionTable">
+                          <tr>
+                            <td width="30%">Background Color</td>
+                            <td> 
+                                <input type="color" id="ColorBackgroundColor" value="" class="form-control" />
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <!-- COLOR NODES -->
+                      <div class="tab-pane" id="ColorTabNodes">
+                        <table class="table table-settings" id="colorOptionTable">
+                          <tr >
+                            <td width="30%">Coloring Method</td>
+                            <td>
+                              <select id="ColorColorMethod">
+                                <option value="simple">Simple</option>
+                                <option value="incoming">Incoming </option>
+                                <option value="outgoing">Outgoing </option>
+                                <option value="atomtype">By AtomType </option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Color</td>
+                            <td> 
+                                <input type="color" id="ColorSimpleColor" value=""  class="form-control" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Transparency</td>
+                            <td><div id="colorSimpleTransparency"></div></td>
+                          </tr>
+                          </table>
+                         </div>
+
+                         <!-- COLOR LINK HANDLES -->
+                         <div class="tab-pane" id="ColorTabLinkHandles">
+                          <table class="table table-settings">
+                            <tr>
+                              <td width="30%">Coloring Method</td>
+                              <td></td>
+                            </tr>
+                          </table>
+                         </div>
+
+                         <!-- COLOR LINK LINES -->
+                         <div class="tab-pane" id="ColorTabLinkLines">
+                          <table class="table table-settings">
+                          <tr>
+                            <td width="30%">Coloring Method</td>
+                            <td></td>
+                          </tr>
+                          </table>
+                         </div>
+
+                       </div>
                     <!-- END CONTENT -->
                   </div>
                 </div>
               </div>
 
-
-                 <!-- TEXT -->
+              <!-- TEXT -->
               <div class="accordion-group">
                 <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#textPanel">
@@ -537,7 +594,11 @@
                     </button>
                     <button class="btn btn-danger" id="appearanceClearD3">
                       Clear D3
-                    </button>           
+                    </button>
+                         <button class="btn btn-danger" id="settingsAnimate">
+                      Animate
+                    </button>
+
                     <!-- END CONTENT -->
                   </div>
                 </div>
@@ -847,7 +908,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Save Cogserver</h4>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-cog"></i> Save Cogserver</h4>
       </div>
       <div class="modal-body">
          <table class="table">
@@ -874,7 +935,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">List Cogserver</h4>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-cog"></i> List Cogserver</h4>
       </div>
       <div class="modal-body" id="CogServerModalListBody">
         No saved servers so far.   
@@ -885,20 +946,40 @@
 </div>
 
 
-<div class="modal fade" id="colorsAtomType" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+<!-- IMPORT PREFERENCES -->
+<div class="modal fade" id="modalPreferencesImport" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">ColorNodes by AtomType</h4>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-exchange"></i> Import Preferences</h4>
       </div>
-      <div class="modal-body" id="colorsAtomTypeBody">
+      <div class="modal-body" id="modalPreferencesImportBody">
          
       </div>
       
     </div>
   </div>
 </div>
+
+<!-- EXPORT PREFERENCES -->
+<div class="modal fade" id="modalPreferencesExport" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-exchange"></i> Export Preferences</h4>
+      </div>
+      <div class="modal-body" id="modalPreferencesExportBody">
+         
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success">Export</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
 
 <!-- SCRIPTS -->
 <script src="media/js/d3.min.js" charset="utf-8"></script>

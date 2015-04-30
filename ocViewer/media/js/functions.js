@@ -50,6 +50,8 @@ var selectedNode = null;
 var selectedLink = null;
 var transitionSpeed = 500;
 
+var selectedTabs = [];
+
 var advancedFilters = []; 
 var connectCogServers = [];
 
@@ -366,6 +368,32 @@ $("#FileExport").click(function()
 	savePreference("viewer","export");
 });
 
+$("#FileImportPreferences").click(function()
+{	
+	$("#modalPreferencesImport").modal();
+});
+
+$("#FileExportPreferences").click(function()
+{	
+
+	finalOut = "<div style='height:500px; overflow:scroll;'><table class='table table-settings'>";
+	
+	$.each(preferences,function(index,data){
+		finalOut = finalOut + "<tr><td>" + index + "</td><td>"+ data +"</td></tr>";
+	});
+	  
+	finalOut = finalOut + "</div></table>";
+	 
+	$("#modalPreferencesExportBody").html(finalOut);
+	$("#modalPreferencesExport").modal();
+});
+
+
+ 
+$("#settingsAnimate").click(function(e){
+	d3g.animate();
+});
+
 $("#ConnectCogServer").keyup(function(e)
 {
 	savePreference("cogserver", $(this).val());
@@ -562,8 +590,7 @@ $("#FilterLimit").keyup(function()
 	$("#FilterRefreshButton").prop('disabled',false);
 	//getAtoms();
 });
-
-
+ 
 $("#FilterRefreshAtomTypes").click(function()
 {
 	retrieveAtomTypes();
@@ -576,7 +603,6 @@ $("#FilterToggleUsedAtomTypes").click(function()
 	{
 		if (atomTypesUsed!=[])
 		{
-			console.log(atomTypesUsed);
 			options = "<option value='0'>--None--</option>";
 	 		$("#FilterAtomType").html("");
 			for (var i=0; i<atomTypesUsed.length; i++)
@@ -603,7 +629,6 @@ $("#FilterToggleUsedAtomTypes").click(function()
 		updateGUIPreferences();
 	}
 });
-
  
 
 $("#appearanceSigmaCircularView").click(function()
@@ -952,15 +977,28 @@ $("#ColorColorMethod").change(function()
 	else if ($(this).val()=="atomtype")
 	{
 		//$('#colorsAtomType').modal();
-		alert("A");
-		finalHTML = "<table class='table table-hover'>";
-		
+	 
+		if (atomTypesUsed.length>0)
+		{ 
+			finalHTML = "<table class='table table-hover'>";
 
-		for (var i=0;i<atomTypesUsed.length;i++)
-			finalHTML = finalHTML + "<tr><td>" + atomTypesUsed[i] + "</td><td></td></tr>";
-		
-		finalHTML = finalHTML + "</table>";
-		$("#colorsAtomTypeDiv").html(finalHTML);
+			for (var i=0;i<atomTypesUsed.length;i++)
+				finalHTML = finalHTML + "<tr><td>" + atomTypesUsed[i] + "</td><td></td></tr>";
+			
+			finalHTML = finalHTML + "</table>";
+		}
+		else
+		{
+			console.log(atomTypes.types);
+			//finalHTML = "<table class='table table-hover'>";
+			
+			for (var i=0;i<atomTypes.types.length;i++)
+				finalHTML = finalHTML + "<tr><td>" + atomTypes.types[i] + "</td><td></td></tr>";
+			
+			//finalHTML = finalHTML + "</table>";
+		}
+		$("#colorOptionTable").appendTo(finalHTML);
+	
 	}
 	
 });
@@ -977,7 +1015,31 @@ $("#textAbbreviatedTextsButton").click(function()
 	
 });
 
+$(".nav-tabs li a").click(function(e)
+{ 
 
+	if (selectedTabs.length==0)
+		selectedTabs.push([ $(this).parent().parent().attr("id") , $(this).attr("href") ]);
+	else
+	{
+ 		counter =-1
+		for (var i=0 ; i<selectedTabs.length;i++)
+		{
+			if (selectedTabs[i][0]==$(this).parent().parent().attr("id"))
+			{
+				counter = i;
+				break;	 
+			}
+		}
+
+		if (counter>-1)
+			selectedTabs[counter][1] = $(this).attr("href");
+		else
+			selectedTabs.push([ $(this).parent().parent().attr("id") , $(this).attr("href") ]);
+	}
+ 	savePreference("selectedTabs",JSON.stringify(selectedTabs));
+
+});
 
 
 $("body").on("click",".CogServerModalListLoad",function()
@@ -1190,11 +1252,19 @@ function showScreen(screen)
 function loadPreferences()
 { 
 	preferences = window.localStorage;
-  
+    
 	if (!preferences.Accordions)
 		preferences.Accordions = [];
 	else
 		Accordions = JSON.parse(preferences.Accordions);
+
+
+	if (!preferences.selectedTabs)
+	    preferences.selectedTabs = [];
+	else
+		selectedTabs = JSON.parse(preferences.selectedTabs);
+
+
 
 	//Defaults
 	if (!preferences.cogserver)
@@ -1333,9 +1403,7 @@ function loadPreferences()
 
 	if(preferences.FilterLoadOnlyUsedAtomTypes == undefined)
 	 	preferences.FilterLoadOnlyUsedAtomTypes = false;
- 	
-	
-
+ 
 	updateGUIPreferences();
 }
 
@@ -1348,6 +1416,18 @@ function updateGUIPreferences()
 		for (var i=0;i<Accordions.length;i++)
 			$("#"+Accordions[i]).addClass("in");
 	}
+	
+	if (selectedTabs!=[])
+	{ 
+		for (var i=0;i<selectedTabs.length;i++)
+		{
+			$("#"+selectedTabs[i][0] + ">li").removeClass("active");
+			$("#"+selectedTabs[i][0] + ">li>a[href='" + selectedTabs[i][1] + "']").parent().addClass("active");
+			$(".tab-pane").removeClass("  in");
+			$(selectedTabs[i][1]).addClass("active in");
+		}
+	}	
+ 	 
 	//VIEW MENU 
 	if (preferences.visibleLeftSideBar==true)
 	{
@@ -1745,7 +1825,7 @@ function getAtoms()
 				errorMessage = "Server's Internal Error.";         	
         }
         else if (xhr.readyState == 0)
-            errorMessage = "Could not connect to server.";
+            errorMessage = "Server not found.";
         else 
             errorMessage = "Unknown Error...";
 
@@ -1838,7 +1918,7 @@ function retrieveAtomTypes()
         }
         else if (xhr.readyState == 0)
         {
-            errorMessage = "Could not connect to server.";
+            errorMessage = "Server not found...";
 		}
        
 		connected = false;
@@ -1847,7 +1927,7 @@ function retrieveAtomTypes()
 			
 		$("#FilterRefreshAtomTypesIcon").removeClass("fa-spinner fa-spin");
 		$("#FilterRefreshAtomTypesIcon").addClass("fa-refresh");
-		
+
 	})
 	.success(function()
 	{

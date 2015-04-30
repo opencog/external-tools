@@ -5,6 +5,8 @@ var currentShape = null;
 
 function d3graph(element)
 {
+
+	this.enableForce = true;
  
  	zoom = d3.behavior.zoom().scaleExtent([0.05, 5]).on("zoom", zoomed);
 
@@ -152,6 +154,7 @@ function d3graph(element)
 
         force.on("tick", function() 
         {
+        	 
 
 	        if (preferences.appearanceShowLinks)
 	        {
@@ -173,6 +176,8 @@ function d3graph(element)
 	        }
 
           });
+           
+           
           fps++;
         });
  
@@ -507,6 +512,11 @@ function d3graph(element)
  	this.showAbbrevatedText = function()
     {
     	d3.selectAll(".text").classed("fullName",false).text(function(d){return nodeName(d,false)}) ;
+    }
+
+    this.animate = function()
+    {
+    
     }
     
    
