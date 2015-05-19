@@ -64,10 +64,8 @@
             <ul class="dropdown-menu">
                 <li class="dropdown-header">Views</li>
                 <li><a href="#" viewer="d3"><i class="fa"></i> D3</a></li>
-                <li><a href="#" viewer="sigma"><i class="fa"></i> Sigma</a></li>
-                <!--
-                <li><a href="#" viewer="3d"><i class="fa"></i> 3D</a></li>
-                -->
+                <li><a href="#" viewer="sigma"><i class="fa"></i> Sigma</a></li>     
+                <li><a href="#" viewer="3d"><i class="fa"></i> 3D</a></li> 
                 <li><a href="#" viewer="table"><i class="fa"></i> Table</a></li>
                 <li><a href="#" viewer="json"><i class="fa"></i> JSON</a></li>
                 <li><a href="#" viewer="scheme"><i class="fa"></i> Scheme</a></li>
@@ -117,17 +115,26 @@
     <ul class="nav navbar-nav collapse navbar-collapse navbar-right" >
       <div id="navbarTools-d3" style="display:none">
 
-        <button class="btn btn-default navbar-btn" title="Normal Pointer" id="toolboxPointer"><i class="fa fa-hand-o-up"></i></button>
-        <button class="btn btn-default navbar-btn" title="Add new node" id="toolboxAddNode"><i class="fa fa-plus-circle"></i></button>
-        <button class="btn btn-default navbar-btn" title="Delete existing node..." id="toolboxRemoveNode"><i class="fa fa-minus-circle"></i></button>
-         
-        <button class="btn btn-default navbar-btn" title="Add new link" id="toolboxAddLink"><i class="fa fa-link"></i></button>
-        <button class="btn btn-default navbar-btn" title="Remove link" id="toolboxRemoveLink"><i class="fa fa-unlink"></i></button>
-         
-        <button class="btn btn-default navbar-btn" title="Highlight" id="toolboxHighlight"><i class="fa fa-search-plus"></i></button>
- 
+        <button class="btn btn-default navbar-btn toolboxButton toolboxButtonSelected" title="Normal Pointer" id="toolboxPointer"><i class="fa fa-hand-o-up"></i></button>
+        <span class="btn-separator"></span>
+
+        <button class="btn btn-default navbar-btn toolboxButton" title="Collapse/Expand" id="toolboxCollapseExpand"><i class="fa fa-tree"></i></button>
+        <span class="btn-separator"></span>
+
+        
+
+        <button class="btn btn-default navbar-btn toolboxButton" title="Add new node" id="toolboxAddNode"><i class="fa fa-plus-circle"></i></button>
+        <button class="btn btn-default navbar-btn toolboxButton" title="Delete existing node..." id="toolboxRemoveNode"><i class="fa fa-minus-circle"></i></button>
+
+        <span class="btn-separator"></span>
+        <button class="btn btn-default navbar-btn toolboxButton" title="Add new link" id="toolboxAddLink"><i class="fa fa-link"></i></button>
+        <button class="btn btn-default navbar-btn toolboxButton" title="Remove link" id="toolboxRemoveLink"><i class="fa fa-unlink"></i></button>
+
+        <span class="btn-separator"></span>
+        <button class="btn btn-default navbar-btn toolboxButton" title="Highlight" id="toolboxHighlight"><i class="fa fa-star"></i></button>
+         <span class="btn-separator"></span>
         <button id="snapshotButton" class="btn btn-default navbar-btn"><i class="fa fa-camera"></i> Snapshot</button>  
-        <button id="toggleFixNodes" class="btn btn-default navbar-btn">Fix Nodes</button> 
+        <button id="toggleFixNodes" class="btn btn-default navbar-btn"><i class="fa fa-lock"></i> Fix Nodes</button> 
       </div>
     </ul>
 
@@ -289,6 +296,9 @@
                 </div>
               </div>
 
+             
+
+
               <!-- APPEARANCE -->
               <div class="accordion-group">
                 <div class="accordion-heading">
@@ -339,6 +349,56 @@
                           <button id="appearanceSigmaCircularView" class="btn btn-md btn-success">Circular View</button>
                           <button id="appearanceSigmaGridView" class="btn btn-md btn-success">Grid View</button> 
                           <button id="appearanceSigmaClusterView" class="btn btn-md btn-success">Cluster View</button> 
+                        </div>
+
+
+                        <div id="AppearanceInner-3d">
+                          <table class="table table-settings">
+                            <tr>
+                              <td width="30%">Animation?</td>
+                              <td><div id="appearanceAVTAnimation"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Force Dynamics?</td>
+                              <td><div id="appearanceAVTForceDynamics"></div></td>
+                            </tr>
+                            <tr> 
+                              <td>Planar Linkage?</td>
+                              <td><div id="appearanceAVTPlanarLinkage"></div></td>
+                            </tr>
+                             <tr>
+                              <td>Placement</td>
+                              <td>
+                                <select>
+                                  <option value="1">Random Position</option>
+                                  <option value="2">Octant Extension</option>
+                                  <option value="3">Random Extension</option>
+                                </select>
+                            </td>
+                            </tr>
+                            <tr>
+                              <td>Loops</td>
+                              <td><div id="appearanceAVTLoops"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Jump Limit</td>
+                              <td><div id="appearanceAVTJumpLimit"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Force Range</td>
+                              <td><div id="appearanceAVTForceRange"></div></td>
+                            </tr>
+                              <tr>
+                              <td>Link Length</td>
+                              <td><div id="appearanceAVTLinkLength"></div></td>
+                            </tr>
+                            <!--
+                             <tr>
+                              <td>Link Depth</td>
+                              <td></td>
+                            </tr>
+                            -->   
+                          </table>
                         </div>
 
                         <div id="AppearanceInner-none" style="padding:10px">
@@ -476,26 +536,36 @@
                       <!-- COLOR NODES -->
                       <div class="tab-pane" id="ColorTabNodes">
                         <table class="table table-settings" id="colorOptionTable">
-                          <tr >
+                          <tr>
                             <td width="30%">Coloring Method</td>
                             <td>
-                              <select id="ColorColorMethod">
-                                <option value="simple">Simple</option>
+                              <select id="colorNodeBased">
+                                <option value="simple">Simple </option>
                                 <option value="incoming">Incoming </option>
                                 <option value="outgoing">Outgoing </option>
+                                <option value="incomingoutgoing">Incoming + Outgoing </option>
+
                                 <option value="atomtype">By AtomType </option>
                               </select>
                             </td>
                           </tr>
-                          <tr>
+                          <tr option="simple" >
                             <td>Color</td>
                             <td> 
                                 <input type="color" id="ColorSimpleColor" value=""  class="form-control" />
                             </td>
                           </tr>
-                          <tr>
+                          <tr >
                             <td>Transparency</td>
                             <td><div id="colorSimpleTransparency"></div></td>
+                          </tr>
+                           <tr >
+                            <td>Range</td>
+                            <td><input id="colorNodeRange1"> - <input id="colorNodeRange2"> </td>
+                          </tr>
+                           <tr >
+                            <td>Color by Type</td>
+                            <td><button id="modalAtomTypesColorsButton" class="btn btn-default">...</button> </td>
                           </tr>
                           </table>
                          </div>
@@ -561,7 +631,26 @@
                 </div>
               </div>
 
-              
+              <!-- ADVANCED FILTER -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#rulesPanel">
+                    <i class="fa fa-globe"></i> Rules
+                  </a>
+                </div>
+                <div id="rulesPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                    <table class="table table-settings">
+                      <tr>
+                        <td>Enable visualization rules</td>
+                        <td><div id="rulesEnableVisualizationRules"></div></td>
+                      </tr>
+                    </table>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
 
               <!-- ANALYSE -->
               <div class="accordion-group" style="display:none">
@@ -810,8 +899,10 @@
                       </table>
                     </div>
                     <div id="detailsPanelLinkContent">
+                      
                     </div>
                     <div id="detailsPanelMultipleContent">
+                      
                     </div>
                     <div id="detailsPanelContentNone">
                       (Nothing is currently selected)
@@ -820,6 +911,38 @@
                   </div>
                 </div>
               </div>
+
+
+
+
+
+
+
+               <!-- DETAILS -->
+           <div class="accordion-group" >
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#highlightsPanel">
+                    <i class="fa fa-globe"></i> <span id="detailsPanelTitle"> Highlights </span>
+                  </a>
+                </div>
+                <div id="highlightsPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                     <table class="table table-settings">
+                      <tr>
+                        <td><button class="btn btn-xs btn-success" id="highlightsUnhighlightAll">Unhighlight All</button></td>
+                        <td><button class="btn btn-xs btn-success">Hide Except Highlighted</button></td>
+                      </tr>
+                     </table>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
         </div>
     </div>
 </div>
@@ -979,7 +1102,59 @@
     </div>
   </div>
 </div>
+
+
+<!-- ATOM TYPE COLORS -->
+<div class="modal fade" id="modalAtomTypesColors" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="modalAtomTypesTitle"><i class="fa fa-exchange"></i> AtomType Colors</h4>
+      </div>
+      <div class="modal-body" >
+
+        <div id="modalAtomTypesColorsOptions" style="margin-bottom:20px">
+          <label class="radio-inline"><input type="radio" name="modalAtomTypesColorsShowType" value="Used" class="modalAtomTypesColorsShowType" >Show Only Used Types</label>
+          <label class="radio-inline"><input type="radio" name="modalAtomTypesColorsShowType" value="All" class="modalAtomTypesColorsShowType"  >Show All Types</label>
+        </div>
+
+        <div id="modalAtomTypesColorsBody">
+          
+       </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="modalAtomTypesColorsReset">Reset</button>
+        <button class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    
+    </div>
+  </div>
+</div>
  
+ 
+<!-- NODE RIGHT CLICK MENU -->
+<div id="NodeContextMenu" class="dropdown clearfix contextMenu">
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+    <li><a tabindex="-1" href="#">HighLight</a></li>
+    <li><a tabindex="-1" href="#">View Details</a></li>
+    <li class="divider"></li>
+    <li><a tabindex="-1" href="#">Delete</a></li>
+    <li class="divider"></li>
+    <li><a tabindex="-1" href="#">Hide</a></li>
+  </ul>
+</div>
+
+
+<!-- Vis RIGHT CLICK MENU -->
+<div id="VisContextMenu" class="dropdown clearfix contextMenu">
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+    <li><a tabindex="-1" href="#">Show Highlighted Atoms</a></li>
+  </ul>
+</div>
+
 
 <!-- SCRIPTS -->
 <script src="media/js/d3.min.js" charset="utf-8"></script>
@@ -993,13 +1168,17 @@
 <script src="media/js/jquery.awesome-cursor.min.js"></script>
 <script src="media/js/spectrum.js"></script>
   
+<!-- ATOMSPACETHREE -->
+<script src="media/js/three.min.js" charset="utf-8"></script>
+<script src="media/js/OrbitControls.min.js" charset="utf-8"></script>
+<script src="media/js/visual-3d.js" charset="utf-8"></script>
+
 <!-- SIGMA -->
 <script src="media/js/sigma.js-master/src/sigma.core.js"></script>
 <script src="media/js/sigma.js-master/src/conrad.js"></script>
 <script src="media/js/sigma.js-master/src/utils/sigma.utils.js"></script>
 <script src="media/js/sigma.js-master/src/utils/sigma.polyfills.js"></script>
 <script src="media/js/sigma.js-master/src/sigma.settings.js"></script>
-
 <script src="media/js/sigma.js-master/src/classes/sigma.classes.dispatcher.js"></script>
 <script src="media/js/sigma.js-master/src/classes/sigma.classes.configurable.js"></script>
 <script src="media/js/sigma.js-master/src/classes/sigma.classes.graph.js"></script>
@@ -1040,7 +1219,6 @@
 <script src="media/js/sigma.js-master/src/misc/sigma.misc.bindEvents.js"></script>
 <script src="media/js/sigma.js-master/src/misc/sigma.misc.bindDOMEvents.js"></script>
 <script src="media/js/sigma.js-master/src/misc/sigma.misc.drawHovers.js"></script>
- 
 <script src="media/js/sigma.js-master/plugins/sigma.plugins.animate/sigma.plugins.animate.js"></script>
 <script src="media/js/sigma.js-master/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
  
@@ -1052,7 +1230,6 @@
 <script src="media/js/visual-scheme.js"></script>
 <script src="media/js/visual-sigma.js"></script>
 <script src="media/js/visual-gexf.js"></script>
-<script src="media/js/visual-3d.js"></script>
 <script src="media/js/visual-statistics.js"></script>
 <script src="media/js/functions.js"></script>
 <script src="media/js/terminal.js"></script>

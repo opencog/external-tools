@@ -1,7 +1,7 @@
 /*------------------------
 ------- VARIABLES --------
 ------------------------*/
-
+ 
 //Default Data structure for atom
 var Accordions = []; //Storing the accordions preferences
 var connectedNode = []; //The connected node
@@ -9,7 +9,7 @@ var connectedNode = []; //The connected node
 var d3g = null; //Storing the whole d3 graph here
 //var graph = null; //Storing the graph Viewer
 var sigmag = null; //Storing the Sigma Viewer
-//var tg = null;  //3D graph T(threeD)G(raph)
+var tg = null;  //3D graph T(threeD)G(raph)
 
 var fixedNodes = false;
 var fpsf = null;
@@ -41,6 +41,7 @@ var count = null //How many atoms?
 var filterQuery = new Object();
 
 var nodes = [],links = [];
+var stats = [];
 var terminal = null;
 
 var connectionSuccess = 0;
@@ -54,11 +55,14 @@ var selectedTabs = [];
 
 var advancedFilters = []; 
 var connectCogServers = [];
+var AtomTypesColors = [];
+var highlightedAtoms = [];
 
 var gui;
 var links = [];
 var index = 0;
-   
+
+
 var ApperanceforceAnimated;
 var cursor = null;
 var API_VER = "v1.1";
@@ -78,8 +82,7 @@ var ConnectionTimeout = 10000;
 
 $(document).ready(function()
 {
-
-	
+ 
     $("#details").draggable({
 		stop: function(e,ui) { 
 			savePreference("detailsLeft",ui.position.left);
@@ -125,11 +128,93 @@ $(document).ready(function()
 	    showPaletteOnly: true,
     	togglePaletteOnly: true,
 	    showPalette: true,
-	    change: function(tinycolor){ savePreference("ColorBackgroundColor",tinycolor.toHexString()); d3g.updateDisplay(); },
-	    move: function(tinycolor){ savePreference("ColorBackgroundColor",tinycolor.toHexString()); d3g.updateDisplay(); }
+	    change: function(tinycolor){ savePreference("ColorBackgroundColor",tinycolor.toHexString()); tg.updateDisplay();d3g.updateDisplay(); },
+	    move: function(tinycolor){ savePreference("ColorBackgroundColor",tinycolor.toHexString()); tg.updateDisplay();d3g.updateDisplay(); }
 	});
 
+  	$("#colorNodeRange1").spectrum({
+	    color: preferences.colorNodeRange1,
+	    palette: Colorpalette,
+	    showPaletteOnly: true,
+    	togglePaletteOnly: true,
+	    showPalette: true,
+	    change: function(tinycolor){ savePreference("colorNodeRange1",tinycolor.toHexString()); d3g.updateDisplay(); },
+	    move: function(tinycolor){ savePreference("colorNodeRange1",tinycolor.toHexString()); d3g.updateDisplay(); }
+	});
 
+	$("#colorNodeRange2").spectrum({
+	    color: preferences.colorNodeRange2,
+	    palette: Colorpalette,
+	    showPaletteOnly: true,
+    	togglePaletteOnly: true,
+	    showPalette: true,
+	    change: function(tinycolor){ savePreference("colorNodeRange2",tinycolor.toHexString()); d3g.updateDisplay(); },
+	    move: function(tinycolor){ savePreference("colorNodeRange2",tinycolor.toHexString()); d3g.updateDisplay(); }
+	});
+
+  	 
+    $("#appearanceAVTLoops").slider({
+      min: 20,
+      max: 400,
+      values: [preferences.appearanceAVTLoops],
+      change: function(event, ui) 
+      {
+      	savePreference("appearanceAVTLoops",$("#appearanceAVTLoops").slider("values",0));
+       }
+    });
+
+    $("#appearanceAVTJumpLimit").slider({
+      min: 1,
+      max: 5,
+      values: [preferences.appearanceAVTJumpLimit],
+      change: function(event, ui) 
+      {
+      	savePreference("appearanceAVTJumpLimit",$("#appearanceAVTJumpLimit").slider("values",0));
+       }
+    });
+
+	$("#appearanceAVTForceRange").slider({
+      min: 2,
+      max: 12,
+      values: [preferences.appearanceAVTForceRange],
+      change: function(event, ui) 
+      {
+      	savePreference("appearanceAVTForceRange",$("#appearanceAVTForceRange").slider("values",0));
+       }
+    });
+
+	$("#appearanceAVTLinkLength").slider({
+      min: 5,
+      max: 20,
+      values: [preferences.appearanceAVTLinkLength],
+      change: function(event, ui) 
+      {
+      	savePreference("appearanceAVTLinkLength",$("#appearanceAVTLinkLength").slider("values",0));
+       }
+    });
+
+    $("#appearanceAVTAnimation").switchButton({
+  		labels_placement: "right",
+  		checked: String2Boolean(preferences.appearanceAVTAnimation),
+  		on_callback: function(){preferences.appearanceAVTAnimation=true} ,
+  		off_callback: function(){preferences.appearanceAVTAnimation=false} 
+	});
+
+    $("#appearanceAVTForceDynamics").switchButton({
+  		labels_placement: "right",
+  		checked: String2Boolean(preferences.appearanceAVTForceDynamics),
+  		on_callback: function(){preferences.appearanceAVTForceDynamics=true} ,
+  		off_callback: function(){preferences.appearanceAVTForceDynamics=false} 
+	});
+
+    $("#appearanceAVTPlanarLinkage").switchButton({
+  		labels_placement: "right",
+  		checked: String2Boolean(preferences.appearanceAVTPlanarLinkage),
+  		on_callback: function(){preferences.appearanceAVTPlanarLinkage=true} ,
+  		off_callback: function(){preferences.appearanceAVTPlanarLinkage=false} 
+	});
+
+     
   	//STI Range
     $("#FilterSTIRange").slider({
       range: true,
@@ -331,7 +416,7 @@ function render()
 	$('#mainContent').height(wh - navbarTopHeight);
  	width = $('#mainContent')[0].offsetWidth;
 	height = $('#mainContent')[0].offsetHeight;
- 
+ 	 
 	$('div[id^="screen"]').height(wh - navbarTopHeight);
  
 }
@@ -339,6 +424,12 @@ function render()
 /*------------------------
 -------- EVENTS ----------
 ------------------------*/
+
+$("body").on("contextmenu",function(e)
+{
+	e.preventDefault();
+})
+
 $(".accordion-toggle").click(function()
 {
 	thisOpen = (!$($(this).attr("href")).hasClass("in"));
@@ -486,6 +577,12 @@ $("#snapshotButton").click(function(e)
 	download("ocViewerSnapshot.png","data:image/svg+xml;base64,"+$("#screen-d3").html(),"image/png");
 })
 
+$(".toolboxButton").click(function()
+{
+	$(".toolboxButton").removeClass("toolboxButtonSelected");
+	$(this).addClass("toolboxButtonSelected");
+});
+
 $("#toggleFixNodes").click(function()
 {
 	if (fixedNodes)
@@ -493,6 +590,10 @@ $("#toggleFixNodes").click(function()
 		for(var i=0;i<count;i++)
 	    	nodes[i].fixed = false;
 		fixedNodes = false;
+		force.start();
+		
+		$(this).first().removeClass("fa-lock");
+		$(this).first().addClass("fa-unlock");
 		$(this).html("Fix Nodes");
 	}
 	else
@@ -500,6 +601,10 @@ $("#toggleFixNodes").click(function()
 		for(var i=0;i<count;i++)
 	    	nodes[i].fixed = true;
 	    fixedNodes = true;
+	    force.stop();
+
+	    $(this).first().removeClass("fa-unlock");
+		$(this).first().addClass("fa-lock");
 	    $(this).html("Unfix Nodes");
 	}
 })
@@ -657,6 +762,125 @@ $("#ColorUpdateButton").click(function()
 	d3g.updateDisplay();
 });
 
+
+$("#colorNodeBased").click(function()
+{
+	savePreference("colorNodeBased",$(this).val());
+	d3g.updateDisplay();
+});
+
+$("#modalAtomTypesColorsButton").click(function()
+{
+	loadAtomTypeColors();
+	$("#modalAtomTypesColors").modal();
+});
+
+function loadAtomTypeColors()
+{
+ 	console.log(AtomTypesColors);
+	if (preferences.AtomTypesModalShowType=="Used")
+	{
+		if ((atomTypesUsed.length>0) )
+		{
+			 
+			finalHtml = "<div style='height:300px;overflow-y:scroll'><table class='table'>";
+			for (var i=0; i< atomTypesUsed.length;i++)
+			{
+				value = "";
+		 		for (var y=0; y< AtomTypesColors.length;y++)
+				{
+					if (AtomTypesColors[y][0] == atomTypesUsed[i])
+						value = AtomTypesColors[y][1];
+				}
+				
+				finalHtml = finalHtml + "<tr ><td width='50%'>"  + 
+				atomTypesUsed[i] + 
+				"</td><td><input class='AtomTypesColor' AtomType='"  + 
+				atomTypesUsed[i] + "' type='color' value='" + 
+				value + "'/> </td></tr>";
+			}
+			finalHtml = finalHtml + "</table></div>";
+			$("#modalAtomTypesColorsBody").html(finalHtml);
+		}
+		else
+		{	 
+			$("#modalAtomTypesColorsBody").html("No UsedAtoms yet...");
+		}
+	}
+	else if (preferences.AtomTypesModalShowType=="All")
+	{
+		if ((atomTypes!=[]) && (atomTypes!=null)  )
+		{
+			finalHtml = "<div style='height:500px;overflow-y:scroll'><table class='table'>";
+			for (var i=0; i< atomTypes.types.length;i++)
+			{
+				value = "";
+		 		for (var y=0; y< AtomTypesColors.length;y++)
+				{
+					if (AtomTypesColors[y][0] == atomTypes.types[i])
+						value = AtomTypesColors[y][1];
+				}
+
+				finalHtml = finalHtml + "<tr ><td width='50%'>"  + 
+				atomTypes.types[i] + 
+				"</td><td><input class='AtomTypesColor' AtomType='"  + 
+				atomTypes.types[i] + "' type='color' value='" + 
+				value + "'/> </td></tr>";
+			}
+			finalHtml = finalHtml + "</table></div>";
+			$("#modalAtomTypesColorsBody").html(finalHtml);
+		}
+		else
+		{
+			$("#modalAtomTypesColorsBody").html("No AtomTypes loaded yet...");
+		}
+	}
+ 	$("#modalAtomTypesColorsOptions").show();
+ 
+}
+
+$("body").on("change",".AtomTypesColor", function()
+{
+ 
+	if (AtomTypesColors.length>0)
+	{
+ 		counter =-1
+		for (var i=0 ; i<AtomTypesColors.length;i++)
+		{
+			if (AtomTypesColors[i][0]==$(this).attr("AtomType"))
+			{
+				counter = i;
+				break;	 
+			}
+		}
+
+		if (counter>-1)
+			AtomTypesColors[counter][1] = $(this).val();
+		else
+			AtomTypesColors.push([ $(this).attr("AtomType") , $(this).val() ]);
+	}
+	else
+	{
+		AtomTypesColors.push([$(this).attr("AtomType"),$(this).val()]);
+	}
+ 
+	savePreference("AtomTypesColors", JSON.stringify(AtomTypesColors));
+	d3g.updateDisplay();
+});
+
+$(".modalAtomTypesColorsShowType").click(function()
+{
+	savePreference("AtomTypesModalShowType",$(this).val());
+	loadAtomTypeColors();
+});
+
+$("#modalAtomTypesColorsReset").click(function()
+{
+	AtomTypesColors=[];
+	savePreference("AtomTypesColors","");
+	loadAtomTypeColors();
+});
+
 $("#AdvancedFilterExecute").click(function()
 {	
 	connected = true;
@@ -744,13 +968,22 @@ $("#AdvancedFilterForget").click(function()
 	}
 });
 
+
+$("#highlightsUnhighlightAll").click(function()
+{
+	d3g.unhighlightAll();
+});
+
+
+// NAVBAR TOOLBOX 
 $("#toolboxPointer").click(function()
 {
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
 	cursor = null;
+	cursor = $('#screen-d3').awesomeCursor('f ', {color: 'white'});
 	$('#screen-d3').css("cursor","default");
-	$('.node circle').css("cursor","pointer");
+	$('.nodein').css("cursor","pointer");
 	savePreference("selectedTool","pointer");
 });
 
@@ -758,8 +991,9 @@ $("#toolboxAddNode").click(function()
 {
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
-	cursor = $('#screen-d3').awesomeCursor('fa fa-plus-circle', {color: 'white'});
-	$('.node circle').css("cursor","pointer");
+	cursor =  null;
+	$('#screen-d3').awesomeCursor('fa fa-plus-circle', {color: 'white'});
+	$('.nodein').css("cursor","pointer");
 	savePreference("selectedTool","addNode");
 });
 
@@ -767,8 +1001,10 @@ $("#toolboxRemoveNode").click(function()
 {
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
-	$('#screen-d3').awesomeCursor('fa fa-minus-circle', {color: 'white'});
-	$('.node circle').awesomeCursor('fa fa-minus-circle', {color: 'white'});
+	cursor = null; 
+	$('#screen-d3').awesomeCursor('f ', {color: 'white'});
+	$('#screen-d3').css("cursor","default");
+	$('.nodein').awesomeCursor('fa fa-minus-circle', {color: 'white'});
 	savePreference("selectedTool","removeNode");
 });
 
@@ -777,6 +1013,9 @@ $("#toolboxAddLink").click(function()
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
 	$('.node circle').awesomeCursor('fa fa-link', {color: 'white'});
+	cursor = null;
+	$('#screen-d3').awesomeCursor('fa ', {color: 'white'});
+	$('#screen-d3').css("cursor","default");
 	savePreference("selectedTool","addLink");
 });
 
@@ -785,6 +1024,9 @@ $("#toolboxRemoveLink").click(function()
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
 	$('.link ').awesomeCursor('fa fa-unlink', {color: 'white'});
+	cursor = null;
+	$('#screen-d3').awesomeCursor('f ', {color: 'white'});
+	$('#screen-d3').css("cursor","default");
 	savePreference("selectedTool","removeLink");
 });
 
@@ -792,10 +1034,11 @@ $("#toolboxHighlight").click(function()
 {
 	$(".toolboxIcon").removeClass("toolboxIconSelected");
 	$(this).addClass("toolboxIconSelected");
-	$('.node').awesomeCursor('fa fa-search-plus', {color: 'white'});
-	$('rect').awesomeCursor('fa fa-search-plus', {color: 'white'});
-	savePreference("selectedTool","Highlight");
+	$('.nodein').awesomeCursor('fa fa-star', {color: 'white'});
+	//$('rect').awesomeCursor('fa fa-star', {color: 'white'});
+	savePreference("selectedTool","highlight");
 });
+
 
 $("#AdvancedFilterSavedFilters").change(function()
 {
@@ -1105,13 +1348,13 @@ function displayShowLinkHandlesOff()
 function textShowLinkTypeNameOn()
 {
 	savePreference("textShowLinkTypeName",true);
-	d3g.updateDisplay();
+	if (d3g!=null) d3g.updateDisplay();
 }
 
 function textShowLinkTypeNameOff()
 {
 	savePreference("textShowLinkTypeName",false);
-	d3g.updateDisplay();
+	if (d3g!=null) d3g.updateDisplay();
 }
 
 
@@ -1129,12 +1372,14 @@ function atomDetailsFixedOff()
 
 function showScreen(screen)
 {
-  	//render(); 
+ 
   	$('#loading').show();
   	clearViews();
-  	render();
+	render();
+  	
 	$('div[id^="screen"]').css("display","none");
 	$("#screen-"+screen).css("display","block");
+  	 
 
  	if (d3g!=null)	d3g.stop();
 
@@ -1147,8 +1392,10 @@ function showScreen(screen)
 	}
 	else if (screen=="3d")
 	{
-		if (tg==null)
-			tg = new threedgraph("screen-3d");	 
+		tg = new threedgraph("screen-3d");	 
+		if (atomData!=null)
+			{ tg.addNodes(atomData);  }
+		tg.updateDisplay();
 	}
 	else if (screen=="sigma")
 	{
@@ -1191,7 +1438,8 @@ function showScreen(screen)
 	}
 	else if (screen=="statistics")
 	{
-		updateStats();
+		//updateStats();
+		displayStats();
 	}
 
 	if (preferences.visibleAtomDetails)
@@ -1265,6 +1513,10 @@ function loadPreferences()
 		selectedTabs = JSON.parse(preferences.selectedTabs);
 
 
+	if (!preferences.AtomTypesColors)
+	    preferences.AtomTypesColors = [];
+	else
+		AtomTypesColors = JSON.parse(preferences.AtomTypesColors);
 
 	//Defaults
 	if (!preferences.cogserver)
@@ -1395,7 +1647,21 @@ function loadPreferences()
 	if (preferences.ColorColorMethod == undefined)
 		preferences.ColorColorMethod = "simple";
 
-	 if(!preferences.AdvancedFilterSelected)
+	if (preferences.colorNodeRange1 == undefined)
+		preferences.colorNodeRange1 = "#ffffff";
+
+	if (preferences.colorNodeRange2 == undefined)
+		preferences.colorNodeRange2 = "#000000";
+ 
+
+	if (preferences.AtomTypesModalShowType == undefined)
+		preferences.AtomTypesModalShowType = "Used";
+ 
+
+	if (preferences.colorNodeBased == undefined)
+		preferences.colorNodeBased = "simple";
+
+	if(!preferences.AdvancedFilterSelected)
 	 	preferences.AdvancedFilterSelected = null;
  
  	if(preferences.textShowLinkTypeName == undefined)
@@ -1404,6 +1670,45 @@ function loadPreferences()
 	if(preferences.FilterLoadOnlyUsedAtomTypes == undefined)
 	 	preferences.FilterLoadOnlyUsedAtomTypes = false;
  
+
+	//ATOMVIEWERTHREE VARIABLEs
+	if (preferences.appearanceAVTLoops==undefined)
+		preferences.appearanceAVTLoops = 200;
+
+	if (preferences.appearanceAVTForceDynamics==undefined)
+		preferences.appearanceAVTForceDynamics = true;
+
+	if (preferences.appearanceAVTForceRange==undefined)
+		preferences.appearanceAVTForceRange = 5.0;
+
+	if (preferences.appearanceAVTLinkLength==undefined)
+		preferences.appearanceAVTLinkLength = 10;
+
+	if (preferences.appearanceAVTPlacement==undefined)
+		preferences.appearanceAVTPlacement = 1;
+
+	if (preferences.AVTlinkDepth==undefined)
+		preferences.AVTlinkDepth = 4;
+
+	if (preferences.appearanceAVTJumpLimit==undefined)
+		preferences.appearanceAVTJumpLimit = 2.0;
+
+	if (preferences.appearanceAVTPlanarLinkage==undefined)
+		preferences.appearanceAVTPlanarLinkage = false;
+
+	if (preferences.appearanceAVTAnimation==undefined)
+		preferences.appearanceAVTAnimation = true;
+
+	if (preferences.AVTcoolFactor==undefined)
+		preferences.AVTcoolFactor = 5;
+
+	if (preferences.AVTjumpLimit==undefined)
+		preferences.AVTjumpLimit = 2.0;
+  
+ 
+  
+
+
 	updateGUIPreferences();
 }
 
@@ -1579,26 +1884,31 @@ function updateGUIPreferences()
 
  	$("#toolboxPointer").addClass("toolboxIconSelected");
 
- 	//render stuff
+ 	//Colors Modal
+ 	$(".modalAtomTypesColorsShowType").prop('checked', false);
+ 	$(".modalAtomTypesColorsShowType[value='"+preferences.AtomTypesModalShowType+"']").prop('checked', true);
+ 	
 }
 
 function clearViews()
 {
 
 	if (sigmag!=null)
-	{
 		sigmag.clear();
 
+	if (tg!=null)
+	{
+		tg.removeGraph();
+		tg = null;
 	}
 
 	$("#screen-d3").remove();
-	//$("#screen-sigma").remove();
+	$("#screen-3d").remove();
 	$("#screen-table").remove();
 	$("#screen-json").remove();
-	$("<div>", {id: "screen-d3" }).appendTo($("#mainContent"));
-	//$("#screen-d3").html("<button id='snapshotButton' class='btn btn-success'><i class='fa fa-camera'></i> 		Snapshot</button><button id='toggleFixNodes' class='btn btn-success'>Fix Nodes</button>");
 
-	//$("<div>", {id: "screen-sigma" }).appendTo($("#mainContent"));
+	$("<div>", {id: "screen-3d" }).appendTo($("#mainContent"));
+	$("<div>", {id: "screen-d3" }).appendTo($("#mainContent"));
 	$("<div>", {id: "screen-table" }).appendTo($("#mainContent"));
 	$("<div>", {id: "screen-json" }).appendTo($("#mainContent"));
 }
@@ -1688,10 +1998,8 @@ function getAtoms()
 				return;
 		}
 	}
-
-	
-	
-	
+ 
+	atomData = [];
 	//GUI Stuff
 	$('#loading').show();
 	$("#ConnectConnectButton").disabled = true;
@@ -1760,9 +2068,9 @@ function getAtoms()
 	{
 		url: preferences.cogserver + add +  'api/v1.1/atoms' + queryString,
 		type: 'GET',
-    	//dataType: "jsonp",
+    	dataType: "jsonp",
     	//processData: false,
-    	//crossDomain: true,
+    	crossDomain: true,
     	//timeout: ConnectionTimeout,
     	headers:
     	{
@@ -1805,14 +2113,16 @@ function getAtoms()
 		    		atomTypesUsed.push(atomData[i].type);
 		    }
 
+		    
 	        //See what node types are used in the graph
 	       
         
 	    }
 	    connectionSuccess++;
-	    clearViews();
 	    updateStats();
-	    showScreen(preferences.viewer);
+	    //displayStats();
+	    //clearViews();
+	    //showScreen(preferences.viewer);
 	})
 	.error(function(xhr, ajaxOptions, thrownError)
 	{ 
@@ -1834,11 +2144,15 @@ function getAtoms()
 		$("#ConnectConnectButton").prop('disabled', false);
 		$("#ConnectionStatus").html("<span class='fail'><i class='fa fa-exclamation-circle'></i> " + status + " " + errorMessage + "</span>")
 		connectionFails++;
-		$('#loading').hide();
+		//clearViews();
+		//showScreen(preferences.viewer);
+		//$('#loading').hide();
 		
 	})
 	.complete(function()
 	{
+		clearViews();
+		showScreen(preferences.viewer);
 		$('#loading').hide();
 	});
 
@@ -1936,6 +2250,50 @@ function retrieveAtomTypes()
 	});
 
 
+}
+
+function updateStats()
+{
+
+	if (atomData == null) return;
+	//MAXIMUM Incoming
+	stats["maxIncomingAll"] = 0;
+	stats["maxIncomingNodes"] = 0;
+	stats["nodes"] = 0;
+	stats["links"] = 0;
+	for (var i=0; i < atomData.length; i++)
+	{
+		if (atomData[i].incoming.length>stats["maxIncomingAll"])
+			stats["maxIncomingAll"] = atomData[i].incoming.length;
+	
+		if (atomData[i].type=="link")
+			stats["links"]++;
+		else
+			stats["nodes"]++;
+
+
+	}
+
+ 
+}
+
+function displayStats()
+{
+	if (atomData == null)
+  		$("#screen-statistics").html("<h3>Statistics</h3><hr>No Data. Please connect to server and specify your filter data.");
+	else
+	{
+		 
+		tableData = "<h3>Statistics</h3><hr><table class='table table-settings'>";
+
+		for (var key in stats)
+		    tableData = tableData + "<tr><td width='30%'>" + key + "</td><td>" + stats[key] + "</td></tr>";
+
+		tableData = tableData + "</table>";
+	
+		$("#screen-statistics").html(     tableData);
+	}
+		
 }
 
 /*----- ATOM HANDLING ----*/
@@ -2120,30 +2478,32 @@ function findNodebyHandle(handle)
 function deleteNode(node)
 {
 	//if (confirm("Are you sure that you want to delete node:" + node.name))
+	d3g.removeNode(node.id);
+	return;
+
+	$.ajax(
 	{
-		$.ajax(
+		url: preferences.cogserver + 'api/v1.1/atoms/' + node.handle,
+		type: 'DELETE',
+		dataType: "json",
+    	processData: false,
+    	crossDomain: true, 
+		data:
 		{
-			url: preferences.cogserver + 'api/v1.1/atoms/' + node.handle,
-			type: 'DELETE',
-			dataType: "json",
-	    	processData: false,
-	    	crossDomain: true, 
-			data:
-			{
-				id: node.handle 
-			} 	 
-		})
-		.success(function(data)
-		{
-			//removeNodeFromTheGraph
-			d3g.removeNode(node.index);
-			d3g.showAll();
-		})
-		.fail(function(data)
-		{
-			//Failed
-		});
-	}
+			id: node.handle 
+		} 	 
+	})
+	.success(function(data)
+	{
+		//removeNodeFromTheGraph
+		d3g.removeNode(node.index);
+		d3g.showAll();
+	})
+	.fail(function(data)
+	{
+		//Failed
+	});
+	 
 }
 
 function refresh()
