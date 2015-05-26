@@ -1,306 +1,7 @@
 /**
- *
- 	@author Douglas Chorpita   http://chorpita.com
- 	@Adjusted by skoumas for the AtomViewer http://www.skoumas.com
+ * @author Douglas Chorpita   http://chorpita.com
  */
-var numAtoms=0;
-var numLinks=0;
-var counter;
-var pCounter;
-
-function threedgraph(element)
-{
-	 
-	var lights = [];
-	var keyCodes = {};
-	var scene = new THREE.Scene();
-	var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.01, 1000 );
-	var renderer = new THREE.WebGLRenderer();
-	var mouse = new THREE.Vector2();
-	var raycaster = new THREE.Raycaster();
-	var clickReady;
-	var clickables;
-	var HIT;
-
-	
  
-	renderer.setSize(ww, wh);
-	container = document.getElementById(element);
-	container.appendChild(renderer.domElement);
-	 
-	//Load the ThreeD
-	var a3 = new AtomspaceThree();
-	var controls = new THREE.OrbitControls(camera, renderer.domElement);
-	
-	
-	
- 
-	camera.position.z = 5;
-
-	//Events	
-	window.addEventListener("rebuild", onRebuild );
-	window.addEventListener("splcamera", onSplineCamera );
-	window.addEventListener("mousemove", onMouseMove );
-	window.addEventListener("keydown", onKeyDown );
-	window.addEventListener("keyup", onKeyUp ); 
-
-
-	//Add Lights
-	for( var t = 0; t < 10; t++ )
-	{
-		var light = new THREE.PointLight( 0x201010, 6, 1000 );
-		x =  Math.random() * 50 - 25
-		y = Math.random() * 50 - 25
-		z = Math.random() * 60 - 100
-		light.position.set(x, y,z );
-		scene.add(light);
-
-		if (0)
-		{
-			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-			var material = new THREE.MeshPhongMaterial( { color: 0xdddddd } );
-			var cube = new THREE.Mesh( geometry, material );
-			cube.position.set(x, y,z );
-			scene.add(cube);
-		}
-
-		// lightCurves.push( a3.createSpline() );
-		lights.push(light);
-	}
-
-	var lamb = new THREE.AmbientLight( 0x282828 );
-	scene.add(lamb);
-
-	if (0)
-	{
-		var planarGeometry = new THREE.PlaneGeometry( 500, 500, 500 );
-		var planarMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-		var plane = new THREE.Mesh( planarGeometry,planarMaterial );
-		plane.rotation.x = 90;
-		plane.position.x = 90;
-		scene.add( plane );
-	}
-	//Variables
-	var splcam = false;
-	var spline = a3.createSpline();
-	var orbitcam = false;
-	var orbit = a3.createOrbit();
-
-	init();
-	updateDisplay();
-
-	function init()
-	{
-		camera.position.copy( new THREE.Vector3( 0, 0, 15 ) );
-		controls.target = new THREE.Vector3( 0, 0, camera.position.z - 100 );
-		controls.update();
-		pLoops = preferences.appearanceAVTLoops;
-		forceDynamics = String2Boolean( preferences.appearanceAVTForceDynamics );
-		forceRange = preferences.appearanceAVTForceRange;
-		linkLength = preferences.appearanceAVTLinkLength;
-		placement = preferences.appearanceAVTPlacement;
-		linkDepth = preferences.AVTlinkDepth;
-		jumpLimit = preferences.appearanceAVTJumpLimit;
-		planarLinkage = String2Boolean(preferences.appearanceAVTPlanarLinkage);
-		pAnimation = String2Boolean(preferences.appearanceAVTAnimation);
-
-		counter = 0;
-		pCounter = 0;
-		clickables = null;
-		clickReady = false;
-		HIT  = null;
-		orbitcam = false;
-
-	
-	}
-
- 
-
-	//EVENTS
-	function onMouseMove(event) 
-	{
-		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;	
-	}
-
-	function onKeyChange( event, pressed ) 
-	{
-		keyCodes[ event.keyCode ] = pressed;
-	}
-
-	function onKeyDown( event ) 
-	{
-		onKeyChange( event, true );	
-	}
-
-	function onKeyUp(event) 
-	{
-		onKeyChange( event, false );
-	}
-
-	function keyPressed(key) 
-	{
-		return keyCodes[ key.charCodeAt( 0 ) ];
-	}
-	
-	this.removeGraph = function()
-	{
-		init();
-		a3.removeGraph(scene);
-	}
-
-	function onRebuild(event) 
-	{
-		init();
-		a3.removeGraph(scene);
-		doStuff();
-	}
-
-	function onSplineCamera(event)
-	{
-		splcam = !splcam;
-
-		if(!splcam)
-		{
-			camera.position.copy( new THREE.Vector3( 0, 0, 15 ) );
-			controls.addEventListeners();
-			controls.update();
-		}
-		else 
-			controls.removeEventListeners();
-		
-	}
-
-	var atomFolderOpenCallback = function()
-	{
-		//gui.openAtomFolder();	
-	}
-	
-	render();
-	 
-
-	//Main Function	
-	function render ()
-	{
-		 
-		 
-		requestAnimationFrame( render );
-		
-		if( clickReady && ! HIT && keyPressed( "A" ) ) {		
-
-			raycaster.setFromCamera( mouse, camera );	
-
-			var intersects = raycaster.intersectObjects( clickables );
-			if( intersects.length > 0 ) {
-				HIT = intersects[ 0 ].object;
-				splcam = false;
-				orbitcam = true;
-				orbit.init( camera, HIT, linkLength, atomFolderOpenCallback );
-				controls.removeEventListeners();
-				HIT = null;
-			}
-		}
-		
-		if( orbitcam && keyPressed( "Q" ) ) {
-			orbitcam = false;
-			camera.position.copy( new THREE.Vector3( 0, 0, 15 ) );
-			controls.addEventListeners();
-			controls.update();
-		}
-		
-		if( pAnimation ) {
-		
-			if( counter < numAtoms )
-				a3.addAtomToScene( scene, counter );
-			
-			if( counter < numLinks )
-				a3.createLink( scene, counter, ! forceDynamics );
-
-			counter++;
-		
-			if( forceDynamics && ( counter > numAtoms ) && ( pCounter < pLoops ) ) {
-				pCounter++;
-				a3.updateAtomLocations( pCounter );
-				a3.updateLinkLocationsFast();
-			}
-		
-			if( forceDynamics && ( pCounter === pLoops ) ) {
-				pCounter++;
-				spline.initCurve();
-				a3.removeLinks( scene );  //  take out imperfect (fast rendering) links and recreate them correctly
-				a3.createLinks( scene );  // with proper render volume and potentially with directed arrows
-				clickReady = true;		// graph is done!
-			}
-		}
-		
-		if( splcam )
-			spline.moveCamera( camera );
-			
-		if( orbitcam )
-			orbit.moveCamera( camera );	
-					
-		renderer.render( scene, camera );
-
-
-	};
-
-
-	function updateDisplay()
-	{	
-		var backColor = new THREE.Color();
-		backColor.set(preferences.ColorBackgroundColor);
-		renderer.setClearColor(backColor, 1);
-	}
-
-	this.updateDisplay = function()
-	{
-		updateDisplay();
-	}
-
-	this.addNodes = function(atomData)
-	{
-		counter = 0;
-		var numChildren = 2;
-		var zPos = -85;
-		coolFactor = 1.0 - ( 5 * 0.01 );
-		
-		//a3.createGraph( numChildren, linkDepth, linkLength, planarLinkage, zPos );
-
-		a3.addNodes(atomData);
-		numAtoms = a3.getNumAtoms();
-		numLinks = a3.getNumLinks();
-	 
-		
-		if(forceDynamics)
-			a3.forceDynamics( pLoops, linkLength, linkLength * jumpLimit, linkLength * forceRange, coolFactor );
-		
-		spline.initCurve();
-		spline.setDelta( 0.005 / numAtoms );
-		
-		if( !pAnimation )
-		{
-			if(forceDynamics)
-				a3.updateAtomLocations(pLoops);	
-
-			for(var i = 0; i < numAtoms; i++)  
-				a3.addAtomToScene( scene, i );
-
-			a3.createLinks( scene );
-			clickReady = true; // graph is done!
-		}
-
-		clickables = a3.getClickables();
-		controls.addEventListeners();
-		
-	}
-	 
-	
-	
-
-}
-
-
-//THE MAIN OBJECT
 function AtomspaceThree() {
 	
 	var out = {}, geos = {}, materials = [], atoms = [], links = [], scales = [ 5.0, 3.3, 1.6 ];
@@ -468,8 +169,9 @@ function AtomspaceThree() {
 		return new THREE.Line( linkGeo, linkMaterial );	
 	}
 	
-
-	function createVector() {
+	function createChildren( level, numChildren, parent, parentId, root, linkLength, planarLinkage, prevVec ) {
+		
+	  	function createVector() {
 			var vec, z = 0;
 			switch( placement ) {
 				case '0':
@@ -498,64 +200,7 @@ function AtomspaceThree() {
 				}
 			}
 		}
-
-
-	out.addNodes = function(atomData)
-	{
-		for (var i =0 ; i < atomData.length; i++)
-		{
-			var rootis = createRandomAtomMesh();
-			rootis.position.x = Math.random() * 50; 
-			rootis.position.y = Math.random() * 50; 
-			rootis.position.z = Math.random() * 50; 
-			atoms.push( { mesh: rootis, data: atomData[i] ,  rel: [], physics: [] } );
-		}
-
-		//Relations
-		/*
-		//  
-			var relations = [];
-			relations.push( parentId );
-			atoms.push( { mesh: childMesh, rel: relations, physics: [] } );
-			//var id = atoms.length - 1;
-			//atoms[ parentId ].rel.push( id ); 
-
-			// create link
-			//var hasArrow = ( Math.random() * 6 < 1 ); 
-			//links.push( { mesh: null, directed: hasArrow, amesh: null, from: parentId, to: id } );
-		*/
-
-		for (var i =0 ; i < atomData.length; i++)
-		{
-
-			for (var j =0 ; j < atomData[i].incoming.length; j++)
-			{
-				inId = findByHandle(atomData[i].incoming[j]);
-				if (inId!=-1)
-				{
-					atoms[inId].rel.push(i);
-					atoms[i].rel.push (inId) ;
-					links.push( { mesh: null, directed: false, amesh: null, from: i, to: inId } );
-				}
-				
-			}
-			 
-		}
-
-
-		 
-	}
-
-	function findByHandle(handle)
-	{
-		for (var i=0; i<atoms.length;i++)
-		{
-			if (atoms[i].data.handle == handle)
-				return i;
-		}
-		return -1;
-	}
-
+		
 		function createChild( parentPos ) {
 			// create vector for child mesh
 			var vector = createVector();
@@ -568,26 +213,20 @@ function AtomspaceThree() {
 								
 			// relation updates
 			var relations = [];
-			//relations.push( parentId );
+			relations.push( parentId );
 			atoms.push( { mesh: childMesh, rel: relations, physics: [] } );
-			//var id = atoms.length - 1;
-			//atoms[ parentId ].rel.push( id ); 
+			var id = atoms.length - 1;
+			atoms[ parentId ].rel.push( id ); 
 
 			// create link
-			//var hasArrow = ( Math.random() * 6 < 1 ); 
-			//links.push( { mesh: null, directed: hasArrow, amesh: null, from: parentId, to: id } );
+			var hasArrow = ( Math.random() * 6 < 1 ); 
+			links.push( { mesh: null, directed: hasArrow, amesh: null, from: parentId, to: id } );
 
 			// child's children 
 			var numChildChildren = Math.floor( Math.random() * 4 ) + 1; // 1 to 4 additional links...
 			createChildren( level - 1, numChildChildren, childMesh, id, root, linkLength, planarLinkage, vector );
 	 	}
 
-
-	function createChildren( level, numChildren, parent, parentId, root, linkLength, planarLinkage, prevVec ) {
-		
-	  	
-		
-		
 		if( level === 0 )
 			return;
 			
@@ -662,15 +301,12 @@ function AtomspaceThree() {
 	}
 	
 	out.createGraph = function( numChildren, linkDepth, linkLength, planarLinkage, zPos ) {
-		var rootis = createRandomAtomMesh();
-		rootis.position.z = zPos; 
-		atoms.push( { mesh: rootis, rel: [], physics: [] } );
-		createChildren( linkDepth, numChildren, rootis, 0, rootis, linkLength, planarLinkage, null );
-		
+		var root = createRandomAtomMesh();
+		root.position.z = zPos; 
+		atoms.push( { mesh: root, rel: [], physics: [] } );
+		createChildren( linkDepth, numChildren, root, 0, root, linkLength, planarLinkage, null );
 	} 
 	
-
-
 	out.removeGraph = function( scene ) {
 		var i;
 		for( i = 0; i < atoms.length; i++ )
@@ -875,7 +511,6 @@ function AtomspaceThree() {
 	}
 	
 	out.updateLinkLocationsFast = function() {
-		  
 		for( var i = 0; i < links.length; i++ ) {
 		    var geo = links[ i ].mesh.geometry;
 			var pts = createLinkPoints( atoms[ links[ i ].from ].mesh.position, atoms[ links[ i ].to ].mesh.position ); 
@@ -921,3 +556,227 @@ function AtomspaceThree() {
 	computeMaterials();
 	return out;
 }
+
+
+
+var lights = [];
+var keyCodes = {};
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.01, 1000 );
+var renderer = new THREE.WebGLRenderer();
+var mouse = new THREE.Vector2();
+var raycaster = new THREE.Raycaster();
+var clickReady;
+var clickables;
+var HIT;
+		
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+var gui = new AtomspaceGui();
+var a3 = new AtomspaceThree();
+
+var controls = new THREE.OrbitControls( camera, renderer.domElement );
+		
+window.addEventListener( "rebuild", onRebuild );
+window.addEventListener( "splcamera", onSplineCamera );
+window.addEventListener( "mousemove", onMouseMove );
+window.addEventListener( "keydown", onKeyDown );
+window.addEventListener( "keyup", onKeyUp ); 
+
+for( var t = 0; t < 10; t++ ) {
+	var light = new THREE.PointLight( 0x101010, 6, 1000 );
+	light.position.set( Math.random() * 50 - 25, Math.random() * 50 - 25, Math.random() * 60 - 100 );
+	scene.add( light );
+	// lightCurves.push( a3.createSpline() );
+	lights.push( light );
+}
+
+var lamb = new THREE.AmbientLight( 0x282828 );
+scene.add( lamb );
+
+var pLoops;
+var counter = 0, pCounter = 0;
+var forceDynamics;
+var forceRange;
+var linkLength;
+var placement;
+var jumpLimit;
+var linkDepth;
+var planarLinkage;
+var bezDelta;
+var pAnimation;
+var coolFactor;
+var numAtoms;
+var numLinks;
+var splcam = false;
+var spline = a3.createSpline();
+var orbitcam = false;
+var orbit = a3.createOrbit();
+	
+init();
+doStuff();
+	
+function init() 
+{
+	camera.position.copy( new THREE.Vector3( 0, 0, 15 ) );
+	controls.target = new THREE.Vector3( 0, 0, camera.position.z - 100 );
+	controls.update();
+	pLoops = gui.getIterations();
+	forceDynamics = gui.getForceDynamics();
+	forceRange = gui.getForceRange();
+	linkLength = gui.getLinkLength();
+	placement = gui.getPlacement();
+	linkDepth = gui.getLinkDepth();
+	jumpLimit = gui.getJumpLimit();
+	planarLinkage = gui.getPlanarLinkage();
+	pAnimation = gui.getAnimation();
+	coolFactor = 1.0 - ( gui.getCoolingRate() * 0.01 );
+	counter = 0;
+	pCounter = 0;
+	clickables = null;
+	clickReady = false;
+	HIT  = null;
+	orbitcam = false;
+}
+
+function doStuff() 
+{
+	var numChildren = 5;
+	var zPos = -85;
+	a3.createGraph( numChildren, linkDepth, linkLength, planarLinkage, zPos );
+	numAtoms = a3.getNumAtoms();
+	numLinks = a3.getNumLinks();
+	if( forceDynamics )
+		a3.forceDynamics( pLoops, linkLength, linkLength * jumpLimit, linkLength * forceRange, coolFactor );
+	spline.initCurve();
+	spline.setDelta( 0.005 / numAtoms );
+	if( ! pAnimation ) 
+	{
+		if( forceDynamics )
+			a3.updateAtomLocations( pLoops );
+
+		for( var i = 0; i < numAtoms; i++ )  
+			a3.addAtomToScene( scene, i );
+
+		a3.createLinks( scene );
+		clickReady = true; // graph is done!
+	}
+	clickables = a3.getClickables();
+	controls.addEventListeners();
+}
+
+function onMouseMove( event ) 
+{
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;	
+}
+
+function onKeyChange( event, pressed ) 
+{
+	keyCodes[ event.keyCode ] = pressed;
+}
+
+function onKeyDown( event ) 
+{
+	onKeyChange( event, true );	
+}
+
+function onKeyUp(event) 
+{
+	onKeyChange( event, false );
+}
+
+function keyPressed(key) 
+{
+	return keyCodes[ key.charCodeAt( 0 ) ];
+}
+		
+function onRebuild(event) 
+{
+	init();
+	a3.removeGraph( scene );
+	doStuff();
+}
+
+function onSplineCamera( event )
+{
+	splcam = !splcam;
+	if( ! splcam ) {
+		camera.position.copy( new THREE.Vector3( 0, 0, 15 ) );
+		controls.addEventListeners();
+		controls.update();
+	}
+	else {
+		controls.removeEventListeners();
+	}
+}
+
+var atomFolderOpenCallback = function() {
+	gui.openAtomFolder();	
+}
+		
+var render = function () 
+{
+
+	requestAnimationFrame(render);
+	
+	if( clickReady && ! HIT && keyPressed( "A" ) ) 
+	{		
+
+		raycaster.setFromCamera( mouse, camera );	
+
+		var intersects = raycaster.intersectObjects( clickables );
+		if( intersects.length > 0 ) {
+			HIT = intersects[ 0 ].object;
+			splcam = false;
+			orbitcam = true;
+			orbit.init( camera, HIT, linkLength, atomFolderOpenCallback );
+			controls.removeEventListeners();
+			HIT = null;
+		}
+	}
+	
+	if( orbitcam && keyPressed( "Q" ) ) {
+		orbitcam = false;
+		camera.position.copy( new THREE.Vector3( 0, 0, 15 ) );
+		controls.addEventListeners();
+		controls.update();
+	}
+	
+	if(pAnimation)
+	{
+	
+		if(counter < numAtoms)
+			a3.addAtomToScene( scene, counter );
+		
+		if(counter < numLinks)
+			a3.createLink( scene, counter, ! forceDynamics );
+
+		counter++;
+	
+		if( forceDynamics && ( counter > a3.getNumAtoms() ) && ( pCounter < pLoops ) ) {
+			pCounter++;
+			a3.updateAtomLocations( pCounter );
+			a3.updateLinkLocationsFast();
+		}
+	
+		if( forceDynamics && ( pCounter === pLoops ) ) {
+			pCounter++;
+			spline.initCurve();
+			a3.removeLinks( scene );  //  take out imperfect (fast rendering) links and recreate them correctly
+			a3.createLinks( scene );  // with proper render volume and potentially with directed arrows
+			clickReady = true;		// graph is done!
+		}
+	}
+	
+	if(splcam)
+		spline.moveCamera( camera );
+		
+	if(orbitcam)
+		orbit.moveCamera(camera);	
+				
+	renderer.render( scene, camera );
+};
+		
+render();
+
