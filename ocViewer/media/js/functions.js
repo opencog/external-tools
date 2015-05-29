@@ -2115,22 +2115,15 @@ function getAtoms()
 
     add = "";
 	if (preferences.cogserver.slice(-1)!="/") add="/";
-  
-  
-  if (preferences.cogserver.indexOf('localhost') != -1)
-    ConnectionTimeOut = 500;
-  else
-    ConnectionTimeOut = 0;
-  
-	
-  $.ajax(
+
+	$.ajax(
 	{
 		url: preferences.cogserver + add +  'api/v1.1/atoms' + queryString,
-		  type: 'GET',
+		type: 'GET',
     	dataType: "jsonp",
     	//processData: false,
-    	//crossDomain: true,
-      timeout: ConnectionTimeOut,
+    	crossDomain: true,
+    	//timeout: ConnectionTimeout,
     	headers:
     	{
     		"X-Requested-With" : ""
