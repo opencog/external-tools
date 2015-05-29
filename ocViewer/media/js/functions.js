@@ -2120,9 +2120,9 @@ function getAtoms()
 	{
 		url: preferences.cogserver + add +  'api/v1.1/atoms' + queryString,
 		type: 'GET',
-    	dataType: "jsonp",
+    	//dataType: "jsonp",
     	//processData: false,
-    	crossDomain: true,
+    	//crossDomain: true,
     	//timeout: ConnectionTimeout,
     	headers:
     	{
