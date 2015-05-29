@@ -8,23 +8,25 @@ var numLinks=0;
 var counter;
 var pCounter;
 
+ 
 function threedgraph(element)
 {
 	 
 	var lights = [];
 	var keyCodes = {};
 	var scene = new THREE.Scene();
-	var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.01, 1000 );
-	var renderer = new THREE.WebGLRenderer();
+	var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 2000 );
+	var renderer = new THREE.WebGLRenderer({ antialias: true });
 	var mouse = new THREE.Vector2();
+ 
 	var raycaster = new THREE.Raycaster();
 	var clickReady;
 	var clickables;
 	var HIT;
-
 	
- 
-	renderer.setSize(ww, wh);
+  
+	renderer.setSize( ww  - $("#screen-3d").offset().left   , wh - $("#screen-3d").offset().top );
+	renderer.shadowMapEnabled = false;
 	container = document.getElementById(element);
 	container.appendChild(renderer.domElement);
 	 
@@ -32,9 +34,6 @@ function threedgraph(element)
 	var a3 = new AtomspaceThree();
 	var controls = new THREE.OrbitControls(camera, renderer.domElement);
 	
-	
-	
- 
 	camera.position.z = 5;
 
 	//Events	
@@ -43,16 +42,16 @@ function threedgraph(element)
 	window.addEventListener("mousemove", onMouseMove );
 	window.addEventListener("keydown", onKeyDown );
 	window.addEventListener("keyup", onKeyUp ); 
-
+	$("#screen-3d").on( 'mousedown', onMouseDown );
 
 	//Add Lights
 	for( var t = 0; t < 10; t++ )
 	{
-		var light = new THREE.PointLight( 0x201010, 6, 1000 );
+		var light = new THREE.PointLight( 0x101010, 6, 1000 );
 		x =  Math.random() * 50 - 25
 		y = Math.random() * 50 - 25
 		z = Math.random() * 60 - 100
-		light.position.set(x, y,z );
+		light.position.set(x, y, z ); 
 		scene.add(light);
 
 		if (0)
@@ -70,16 +69,46 @@ function threedgraph(element)
 
 	var lamb = new THREE.AmbientLight( 0x282828 );
 	scene.add(lamb);
+	
+	 function de2ra(degree)   { return degree*(Math.PI/180); }
 
+	//ADD GRID
+	// each square
 	if (0)
 	{
-		var planarGeometry = new THREE.PlaneGeometry( 500, 500, 500 );
-		var planarMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-		var plane = new THREE.Mesh( planarGeometry,planarMaterial );
-		plane.rotation.x = 90;
-		plane.position.x = 90;
-		scene.add( plane );
+
+		var planeW = 50; // pixels
+		var planeH = 50; // pixels 
+		var numW = 150; // how many wide (50*50 = 2500 pixels wide)
+		var numH = 150; // how many tall (50*50 = 2500 pixels tall)
+		
+		var plane = new THREE.Mesh(
+		    new THREE.PlaneGeometry( planeW*numW, planeH*numH, planeW, planeH ),
+		    new THREE.MeshBasicMaterial( {
+		        color: 0x333333,
+		        wireframe: true,
+		        opacity:0.5
+		    } )
+		);
+
+		var plane2 = new THREE.Mesh(
+		    new THREE.PlaneGeometry( planeW*numW, planeH*numH, planeW, planeH ),
+		    new THREE.MeshBasicMaterial( {
+		        color: 0x333333,
+		        wireframe: true,
+		        opacity:0.5
+		    } )
+		);
+
+		plane.rotation.x = de2ra( 90);
+		plane.position.z = -100;
+	 	plane.position.y = -numW * planeW ;
+		plane2.position.z = -500;
+		scene.add(plane);
+		scene.add(plane2);
 	}
+
+
 	//Variables
 	var splcam = false;
 	var spline = a3.createSpline();
@@ -91,7 +120,7 @@ function threedgraph(element)
 
 	function init()
 	{
-		camera.position.copy( new THREE.Vector3( 0, 0, 15 ) );
+		camera.position.copy( new THREE.Vector3( 0, 0,  150 ) );
 		controls.target = new THREE.Vector3( 0, 0, camera.position.z - 100 );
 		controls.update();
 		pLoops = preferences.appearanceAVTLoops;
@@ -111,16 +140,55 @@ function threedgraph(element)
 		HIT  = null;
 		orbitcam = false;
 
-	
 	}
+
+  	//EVENTS
+	function onMouseMove(event) 
+	{
+		//mouse.x =  (event.clientX - $("#screen-3d").offset().left )*2-1;
+		//mouse.y =   -(event.clientY - $("#screen-3d").offset().top )*2 +1;	
+		mouse.x = ( (event.clientX - $("#screen-3d").offset().left) / renderer.domElement.width ) * 2 - 1;
+		mouse.y = - ( (event.clientY - $("#screen-3d").offset().top) / renderer.domElement.height ) * 2 + 1;
+	}
+
+	function onMouseDown(event)
+	{  
+
+		event.preventDefault();
 
  
 
-	//EVENTS
-	function onMouseMove(event) 
-	{
-		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;	
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObjects( clickables );
+
+		if ( intersects.length > 0 )
+		{
+			//intersects[0].object.material.color.setHex( Math.random() * 0xffffff );	
+			console.log(intersects[0].object.atom.data );
+			showSelectedAtom(intersects[0].object.atom);
+		}
+
+		/*
+		// Parse all the faces
+		for ( var i in intersects ) {
+
+			intersects[ i ].face.material[ 0 ].color.setHex( Math.random() * 0xffffff | 0x80000000 );
+
+		}
+		*/
+
+
+		//raycaster.setFromCamera( mouse, camera );
+		/*  raycaster = projector.pickingRay( mouse.clone(), camera );
+
+		var intersects = raycaster.intersectObjects( clickables );
+  
+		if ( intersects.length > 0 )
+		{
+			ob = intersects[ 0 ].object;
+			alert(ob + " ok");
+		}*/
 	}
 
 	function onKeyChange( event, pressed ) 
@@ -155,7 +223,7 @@ function threedgraph(element)
 		a3.removeGraph(scene);
 		doStuff();
 	}
-
+ 
 	function onSplineCamera(event)
 	{
 		splcam = !splcam;
@@ -176,23 +244,31 @@ function threedgraph(element)
 		//gui.openAtomFolder();	
 	}
 	
+
 	render();
-	 
+	 var INTERSECTED= null;
 
 	//Main Function	
 	function render ()
 	{
 		 
-		 
+		raycaster.setFromCamera( mouse, camera );
 		requestAnimationFrame( render );
 		
+		if( clickReady )
+		{
+			 
+		}
+
 		if( clickReady && ! HIT && keyPressed( "A" ) ) {		
 
-			raycaster.setFromCamera( mouse, camera );	
+				
 
 			var intersects = raycaster.intersectObjects( clickables );
 			if( intersects.length > 0 ) {
 				HIT = intersects[ 0 ].object;
+				console.log(HIT);
+				HIT.material.emissive.setHex( 0xff0000 );
 				splcam = false;
 				orbitcam = true;
 				orbit.init( camera, HIT, linkLength, atomFolderOpenCallback );
@@ -238,7 +314,11 @@ function threedgraph(element)
 			
 		if( orbitcam )
 			orbit.moveCamera( camera );	
-					
+			
+
+
+
+
 		renderer.render( scene, camera );
 
 
@@ -250,6 +330,9 @@ function threedgraph(element)
 		var backColor = new THREE.Color();
 		backColor.set(preferences.ColorBackgroundColor);
 		renderer.setClearColor(backColor, 1);
+		 
+		//scene.fog = new THREE.FogExp2( backColor, 0.008 );
+ 		//renderer.setClearColor( scene.fog.color );
 	}
 
 	this.updateDisplay = function()
@@ -257,6 +340,7 @@ function threedgraph(element)
 		updateDisplay();
 	}
 
+ 
 	this.addNodes = function(atomData)
 	{
 		counter = 0;
@@ -266,10 +350,13 @@ function threedgraph(element)
 		
 		//a3.createGraph( numChildren, linkDepth, linkLength, planarLinkage, zPos );
 
-		a3.addNodes(atomData);
+		a3.addNodes(atomData,scene);
 		numAtoms = a3.getNumAtoms();
 		numLinks = a3.getNumLinks();
 	 
+
+		 
+
 		
 		if(forceDynamics)
 			a3.forceDynamics( pLoops, linkLength, linkLength * jumpLimit, linkLength * forceRange, coolFactor );
@@ -291,11 +378,20 @@ function threedgraph(element)
 
 		clickables = a3.getClickables();
 		controls.addEventListeners();
+		 
+		$("#appearanceAVTAnimationScraper").slider({ max: a3.getNumPhysics(), values:[a3.getNumPhysics()] });
+		$("#appearanceAVTAnimationScraper").slider("enable");
 		
 	}
 	 
 	
-	
+	this.animate = function(frame)
+	{
+		a3.updateAtomLocations(frame);
+        //a3.updateLinkLocationsFast();
+        a3.removeLinks( scene ); 
+		a3.createLinks( scene );
+	}
 
 }
 
@@ -303,7 +399,9 @@ function threedgraph(element)
 //THE MAIN OBJECT
 function AtomspaceThree() {
 	
-	var out = {}, geos = {}, materials = [], atoms = [], links = [], scales = [ 5.0, 3.3, 1.6 ];
+
+
+	var out = {}, geos = {}, materials = [], atoms = [], links = [], texts=[], scales = [ 5.0, 3.3, 1.6 ];
 	
 	out.geoNames = [ "ball", "cube", "storus", "htorus", "ctorus", "tetra", "doceda", "can", "cone", "slab", "stick", 
 		"plank", "column" ,	"cfrus", "saturn", "stuck", "bloke", "devil", "waiter","biball", "hexie", "pawn", "connie", 
@@ -469,7 +567,8 @@ function AtomspaceThree() {
 	}
 	
 
-	function createVector() {
+	function createVector()
+	{
 			var vec, z = 0;
 			switch( placement ) {
 				case '0':
@@ -500,30 +599,99 @@ function AtomspaceThree() {
 		}
 
 
-	out.addNodes = function(atomData)
+function makeTextSprite( message, parameters )
 	{
+		if ( parameters === undefined ) parameters = {};
+		
+			// function for drawing rounded rectangles
+		function roundRect(ctx, x, y, w, h, r) 
+		{
+		    ctx.beginPath();
+		    ctx.moveTo(x+r, y);
+		    ctx.lineTo(x+w-r, y);
+		    ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+		    ctx.lineTo(x+w, y+h-r);
+		    ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+		    ctx.lineTo(x+r, y+h);
+		    ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+		    ctx.lineTo(x, y+r);
+		    ctx.quadraticCurveTo(x, y, x+r, y);
+		    ctx.closePath();
+		    ctx.fill();
+			ctx.stroke();   
+		}
+
+
+		var fontface = parameters.hasOwnProperty("fontface") ? 
+			parameters["fontface"] : "Arial";
+		
+		var fontsize = parameters.hasOwnProperty("fontsize") ? 
+			parameters["fontsize"] : 18;
+		
+		var borderThickness = parameters.hasOwnProperty("borderThickness") ? 
+			parameters["borderThickness"] : 4;
+		
+		var borderColor = parameters.hasOwnProperty("borderColor") ?
+			parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
+		
+		var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
+			parameters["backgroundColor"] : { r:255, g:255, b:255, a:1.0 };
+
+		var spriteAlignment = 1;
+			
+		var canvas = document.createElement('canvas');
+		var context = canvas.getContext('2d');
+		context.font = "  " + fontsize + "px " + fontface;
+	    
+		// get size data (height depends only on font size)
+		var metrics = context.measureText( message );
+		var textWidth = metrics.width;
+
+		// background color
+		context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
+									  + backgroundColor.b + "," + backgroundColor.a + ")";
+		// border color
+		context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
+									  + borderColor.b + "," + borderColor.a + ")";
+
+		context.lineWidth = borderThickness;
+		roundRect(context, borderThickness/2, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+		// 1.4 is extra height factor for text below baseline: g,j,p,q.
+		
+		// text color
+		context.fillStyle = "rgba(0, 0, 0, 1.0)";
+
+		context.fillText( message, borderThickness, fontsize + borderThickness);
+		
+		// canvas contents will be used for a texture
+		var texture = new THREE.Texture(canvas) 
+		texture.needsUpdate = true;
+
+		var spriteMaterial = new THREE.SpriteMaterial( 
+			{ map: texture, useScreenCoordinates: false, alignment: spriteAlignment } );
+		var sprite = new THREE.Sprite( spriteMaterial );
+		sprite.scale.set(100,50,1.0);
+		return sprite;	
+	}
+
+
+
+	out.addNodes = function(atomData,scene)
+	{
+
+
+
+
 		for (var i =0 ; i < atomData.length; i++)
 		{
 			var rootis = createRandomAtomMesh();
-			rootis.position.x = Math.random() * 50; 
+			rootis.position.x =   Math.random() * 50; 
 			rootis.position.y = Math.random() * 50; 
-			rootis.position.z = Math.random() * 50; 
+			rootis.position.z =  Math.random() * 50; 
 			atoms.push( { mesh: rootis, data: atomData[i] ,  rel: [], physics: [] } );
 		}
 
-		//Relations
-		/*
-		//  
-			var relations = [];
-			relations.push( parentId );
-			atoms.push( { mesh: childMesh, rel: relations, physics: [] } );
-			//var id = atoms.length - 1;
-			//atoms[ parentId ].rel.push( id ); 
-
-			// create link
-			//var hasArrow = ( Math.random() * 6 < 1 ); 
-			//links.push( { mesh: null, directed: hasArrow, amesh: null, from: parentId, to: id } );
-		*/
+		 
 
 		for (var i =0 ; i < atomData.length; i++)
 		{
@@ -541,8 +709,17 @@ function AtomspaceThree() {
 			}
 			 
 		}
+		 
+		if (!String2Boolean(preferences.appearanceShowText)) return;
 
-
+		for (var i=0;i<atoms.length;i++)
+		{
+			var spritey = makeTextSprite( atoms[i].data.name ,{ fontsize: 10 } );
+			spritey.position.set( atoms[i].mesh.position.x  ,atoms[i].mesh.position.y  ,atoms[i].mesh.position.z  );
+			scene.add( spritey );
+			texts.push (spritey);
+		}
+		
 		 
 	}
 
@@ -556,37 +733,39 @@ function AtomspaceThree() {
 		return -1;
 	}
 
-		function createChild( parentPos ) {
-			// create vector for child mesh
-			var vector = createVector();
-				
-			// create child mesh
-			var childMesh = createRandomAtomMesh();
-				
-			// position it
-			childMesh.position.set( parentPos.x + vector.x, parentPos.y + vector.y, parentPos.z + vector.z );
-								
-			// relation updates
-			var relations = [];
-			//relations.push( parentId );
-			atoms.push( { mesh: childMesh, rel: relations, physics: [] } );
-			//var id = atoms.length - 1;
-			//atoms[ parentId ].rel.push( id ); 
+	
 
-			// create link
-			//var hasArrow = ( Math.random() * 6 < 1 ); 
-			//links.push( { mesh: null, directed: hasArrow, amesh: null, from: parentId, to: id } );
 
-			// child's children 
-			var numChildChildren = Math.floor( Math.random() * 4 ) + 1; // 1 to 4 additional links...
-			createChildren( level - 1, numChildChildren, childMesh, id, root, linkLength, planarLinkage, vector );
-	 	}
+
+	function createChild( parentPos )
+	{
+		// create vector for child mesh
+		var vector = createVector();
+			
+		// create child mesh
+		var childMesh = createRandomAtomMesh();
+			
+		// position it
+		childMesh.position.set( parentPos.x + vector.x, parentPos.y + vector.y, parentPos.z + vector.z );
+							
+		// relation updates
+		var relations = [];
+		//relations.push( parentId );
+		atoms.push( { mesh: childMesh, rel: relations, physics: [] } );
+		//var id = atoms.length - 1;
+		//atoms[ parentId ].rel.push( id ); 
+
+		// create link
+		//var hasArrow = ( Math.random() * 6 < 1 ); 
+		//links.push( { mesh: null, directed: hasArrow, amesh: null, from: parentId, to: id } );
+
+		// child's children 
+		var numChildChildren = Math.floor( Math.random() * 4 ) + 1; // 1 to 4 additional links...
+		createChildren( level - 1, numChildChildren, childMesh, id, root, linkLength, planarLinkage, vector );
+ 	}
 
 
 	function createChildren( level, numChildren, parent, parentId, root, linkLength, planarLinkage, prevVec ) {
-		
-	  	
-		
 		
 		if( level === 0 )
 			return;
@@ -595,7 +774,7 @@ function AtomspaceThree() {
 			createChild( parent.position );
 	}; 
 	
-	
+	/* OLDER 
 	function forceTrial( trialNum, kFac, cLimit, rLimit ) {
 		
 		for( var i = 0; i < atoms.length; i++ ) {
@@ -649,7 +828,60 @@ function AtomspaceThree() {
 			atoms[ i ].physics.push( newPos );
 		}
 	}
-	
+	*/
+
+	function forceTrial( trialNum, kFac, cLimit, rLimit ) {
+		
+		for( var i = 0; i < atoms.length; i++ ) {
+			var fx = 0.0, fy = 0.0, fz = 0.0, ai = atoms[ i ].physics[ trialNum ], ix = ai.x, iy = ai.y, iz = ai.z;
+			for( var j = 0; j < atoms.length; j++ ) 
+				if( i != j ) {
+					var aj = atoms[ j ].physics[ trialNum ], x = ix - aj.x, y = iy - aj.y, z = iz - aj.z;
+					var d2 = x * x + y * y + z * z;
+					
+					if( d2 < 0.01 )
+						d2 = 0.01;
+					
+					if( ( rLimit == 0.0 ) || ( rLimit * rLimit > d2 ) ) {
+						var fr = kFac * kFac / d2; 
+						fx += x * fr;
+						fy += y * fr;
+						fz += z * fr;
+					}
+						
+					var connected = false;
+					for ( var t = 0; t < atoms[ i ].rel.length; t++ )
+						if( j == atoms[ i ].rel[ t ] )
+							connected = true;
+								
+					if( connected ) {
+						var fa =  Math.sqrt( d2 ) / kFac;
+						fx -= x * fa;
+						fy -= y * fa;
+						fz -= z * fa;
+					}
+				}
+					
+			if( fx > 0 )
+				fx = Math.min( fx, cLimit )
+			else
+				fx = Math.max( fx, - cLimit );
+					
+			if( fy > 0 )
+				fy = Math.min( fy, cLimit )
+			else
+				fy = Math.max( fy, - cLimit );
+					
+			if( fz > 0 )
+				fz = Math.min( fz, cLimit )
+			else
+				fz = Math.max( fz, - cLimit );
+				
+			atoms[ i ].physics.push( new THREE.Vector3( ix + fx, iy + fy, iz + fz ) );
+		}
+	}
+
+
 	out.forceDynamics = function( numTrials, kFac, cLimit, rLimit, coolFactor ) {
 		var i;
 		for( i = 0; i < atoms.length; i++ )
@@ -851,6 +1083,9 @@ function AtomspaceThree() {
 		return { initCurve: _initCurve, setDelta: _setDelta, moveCamera: _moveCamera };
 	}
 	
+
+
+
 	out.getNumAtoms = function() {
 		return atoms.length;
 	}
@@ -859,8 +1094,14 @@ function AtomspaceThree() {
 		return links.length;
 	}
 
+	out.getNumPhysics = function()
+	{
+		return atoms[0].physics.length;
+	}
 	out.addAtomToScene = function( scene, i ) {
+				 
 		scene.add( atoms[ i ].mesh );
+
 	}
 	
 	out.addLinkToScene = function( scene, i ) {
@@ -869,12 +1110,28 @@ function AtomspaceThree() {
 			scene.add( links[ i ].amesh );
 	}
 	
+	out.animate = function(frame)
+	{
+		updateAtomLocations(frame);
+		updateLinkLocationsFast();
+	}
+
 	out.updateAtomLocations = function( trial ) {
 		for( var i = 0; i < atoms.length; i++ )
 			atoms[ i ].mesh.position.copy( atoms[ i ].physics[ trial ] );
+		
+		if (!String2Boolean(preferences.appearanceShowText)) return;
+		for (var i=0;i<atoms.length;i++)
+		{
+			texts[i].position.x =  atoms[i].mesh.position.x;
+			texts[i].position.y =  atoms[i].mesh.position.y;
+			texts[i].position.z =  atoms[i].mesh.position.z;
+		}
+		
 	}
 	
-	out.updateLinkLocationsFast = function() {
+	out.updateLinkLocationsFast = function()
+	{
 		  
 		for( var i = 0; i < links.length; i++ ) {
 		    var geo = links[ i ].mesh.geometry;

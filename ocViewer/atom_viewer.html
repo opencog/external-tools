@@ -311,10 +311,7 @@
                     <!-- CONTENT -->
                         <div id="AppearanceInner-d3" style="padding:0px">
                           <table class="table table-settings">
-                            <tr>
-                              <td width="30%">Show Text?</td>
-                              <td><div id="AppearanceShowText"></div></td>
-                            </tr>
+                            
                             <tr>
                               <td>Show Links?</td>
                               <td><div id="AppearanceShowLinks"></div></td>
@@ -366,16 +363,18 @@
                               <td>Planar Linkage?</td>
                               <td><div id="appearanceAVTPlanarLinkage"></div></td>
                             </tr>
-                             <tr>
-                              <td>Placement</td>
-                              <td>
-                                <select>
-                                  <option value="1">Random Position</option>
-                                  <option value="2">Octant Extension</option>
-                                  <option value="3">Random Extension</option>
-                                </select>
-                            </td>
-                            </tr>
+                            <!--
+                               <tr>
+                                <td>Placement</td>
+                                <td>
+                                  <select>
+                                    <option value="1">Random Position</option>
+                                    <option value="2">Octant Extension</option>
+                                    <option value="3">Random Extension</option>
+                                  </select>
+                              </td>
+                              </tr>
+                            -->
                             <tr>
                               <td>Loops</td>
                               <td><div id="appearanceAVTLoops"></div></td>
@@ -392,12 +391,17 @@
                               <td>Link Length</td>
                               <td><div id="appearanceAVTLinkLength"></div></td>
                             </tr>
-                            <!--
                              <tr>
-                              <td>Link Depth</td>
-                              <td></td>
+                              <td>Animation Scraper</td>
+                              <td><div id="appearanceAVTAnimationScraper"></div></td>
                             </tr>
-                            -->   
+                            <tr>
+                              <td colspan="2">
+                                 <button id="appearanceAVTSplineCamera" class="btn btn-success btn-xs" >Spline Camera</button>
+                              </td>
+                              
+                            </tr>
+                              
                           </table>
                         </div>
 
@@ -607,6 +611,10 @@
                   <div class="accordion-inner" style="padding:0">
                     <!-- CONTENT -->
                     <table class="table table-settings">
+                      <tr>
+                        <td width="30%">Show Text?</td>
+                        <td><div id="AppearanceShowText"></div></td>
+                      </tr>
                       <tr>
                         <td>Show Link Type Name</td>
                         <td><div id="textShowLinkTypeName"></div></td>
@@ -892,15 +900,24 @@
                         </tr>
                          <tr>
                           <td colspan="2">
+                            <button id="atomDetailsConnections" class="btn btn-md btn-success">Show Connections</button> 
+                          </td>
+                        </tr>
+                         <tr>
+                          <td colspan="2">
                             <button disabled="disabled" id="atomDetailsUpdate" class="btn btn-md btn-success">Update</button> 
                             <button disabled="disabled" id="atomDetailsDelete" class="btn btn-md btn-danger">Delete</button>
                           </td>
                         </tr>
                       </table>
                     </div>
+
+
                     <div id="detailsPanelLinkContent">
                       
                     </div>
+
+
                     <div id="detailsPanelMultipleContent">
                       
                     </div>
@@ -911,14 +928,8 @@
                   </div>
                 </div>
               </div>
-
-
-
-
-
-
-
-               <!-- DETAILS -->
+ 
+           <!-- DETAILS -->
            <div class="accordion-group" >
                 <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#highlightsPanel">
@@ -939,10 +950,7 @@
                 </div>
               </div>
 
-
-
-
-
+ 
         </div>
     </div>
 </div>
@@ -1103,6 +1111,37 @@
   </div>
 </div>
 
+<!-- NODE CONNECTIONS INCOMING AND OUTGOING -->
+<div class="modal fade" id="modalConnections" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"  ><i class="fa fa-exchange"></i> <span id="modalConnectionsIncomingTitle">Atom Connections</i></h4>
+      </div>
+      <div class="modal-body" id="modalConnectionsBody">
+         <div class="row">
+
+          <div class="col-lg-12 panel">
+            <h5> Incoming </h6>
+            <table id="modalConnectionsIncoming" class="table table-settings">
+             </table>
+              
+          </div>
+           
+          <div class="col-lg-12 panel">
+            <h5> Outgoing </h5>
+            <table id="modalConnectionsOutgoing" class="table table-settings">
+            </table>
+          </div>
+          
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ATOM TYPE COLORS -->
 <div class="modal fade" id="modalAtomTypesColors" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
@@ -1120,8 +1159,7 @@
         </div>
 
         <div id="modalAtomTypesColorsBody">
-          
-       </div>
+        </div>
 
       </div>
 
@@ -1138,12 +1176,16 @@
 <!-- NODE RIGHT CLICK MENU -->
 <div id="NodeContextMenu" class="dropdown clearfix contextMenu">
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
-    <li><a tabindex="-1" href="#">HighLight</a></li>
-    <li><a tabindex="-1" href="#">View Details</a></li>
+    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse</a></li>
     <li class="divider"></li>
-    <li><a tabindex="-1" href="#">Delete</a></li>
+    <li id="NodeCMHighlight"><a tabindex="-1" href="#">HighLight</a></li>
+    <li id="NodeCMViewDetails"><a tabindex="-1" href="#">View Details</a></li>
     <li class="divider"></li>
-    <li><a tabindex="-1" href="#">Hide</a></li>
+    <li id="NodeCMCDelete"><a tabindex="-1" href="#">Delete</a></li>
+    <li class="divider"></li>
+    <li id="NodeCMHide"><a tabindex="-1" href="#">Hide</a></li>
+    <li class="divider"></li>
+    <li id="NodeCMShowConnections"><a tabindex="-1" href="#">Show Connections</a></li>
   </ul>
 </div>
 
@@ -1151,6 +1193,7 @@
 <!-- Vis RIGHT CLICK MENU -->
 <div id="VisContextMenu" class="dropdown clearfix contextMenu">
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+
     <li><a tabindex="-1" href="#">Show Highlighted Atoms</a></li>
   </ul>
 </div>
