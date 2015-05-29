@@ -319,9 +319,10 @@ hr
   stroke-width:1px;
   fill:red;
 } 
-.tempSelected
-{
-  stroke:#fff;
+.tempSelected 
+{  
+  stroke-width:1px;
+  stroke:yellow;
 }
 
 .link-active

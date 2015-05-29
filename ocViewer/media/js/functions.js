@@ -32,7 +32,6 @@ var zoom;
 var container;
 var dragging;
 
-//Globals
 var atomData = null;
 var atomTypes = [];
 var atomTypesUsed = [];
@@ -49,6 +48,7 @@ var connectionFails = 0;
 
 var selectedNode = null;
 var selectedLink = null;
+var rightClickNode = null;
 var transitionSpeed = 500;
 
 var selectedTabs = [];
@@ -61,7 +61,6 @@ var highlightedAtoms = [];
 var gui;
 var links = [];
 var index = 0;
-
 
 var ApperanceforceAnimated;
 var cursor = null;
@@ -83,20 +82,21 @@ var ConnectionTimeout = 10000;
 $(document).ready(function()
 {
  
-    $("#details").draggable({
+  $("#details").draggable({
 		stop: function(e,ui) { 
 			savePreference("detailsLeft",ui.position.left);
 			savePreference("detailsTop",ui.position.top);
 		}
 	})
-    $("#toolbox").draggable({
+
+  $("#toolbox").draggable({
 		stop: function(e,ui) { 
 			savePreference("toolBoxLeft",ui.position.left);
 			savePreference("toolBoxTop",ui.position.top);
 		}
 	})
 
-    $("#terminal").draggable({
+  $("#terminal").draggable({
 		stop: function(e,ui) { 
 			savePreference("terminalLeft",ui.position.left);
 			savePreference("terminalTop",ui.position.top);
@@ -104,15 +104,15 @@ $(document).ready(function()
 	}).resizable();
 
 	//navbarTopHeight = $('#navbarTop')[0].offsetHeight;
-    wh = $(window).height();
+  wh = $(window).height();
 	ww = $(window).width();
     
 	loadPreferences(); //Load user's options
 	showScreen(preferences.viewer);;
-  	$("body").css("display","block"); //show the Body when everything has been calculater
+  $("body").css("display","block"); //show the Body when everything has been calculater
  
   	 
-  	$("#ColorSimpleColor").spectrum({
+  $("#ColorSimpleColor").spectrum({
 	    color: preferences.ColorSimpleColor,
 	    palette: Colorpalette,
 	    showPaletteOnly: true,
@@ -122,7 +122,7 @@ $(document).ready(function()
 	    move: function(tinycolor){ savePreference("ColorSimpleColor",tinycolor.toHexString()); d3g.updateDisplay(); }
 	});
 
-  	$("#ColorBackgroundColor").spectrum({
+  $("#ColorBackgroundColor").spectrum({
 	    color: preferences.ColorBackgroundColor,
 	    palette: Colorpalette,
 	    showPaletteOnly: true,
@@ -132,7 +132,7 @@ $(document).ready(function()
 	    move: function(tinycolor){ savePreference("ColorBackgroundColor",tinycolor.toHexString()); tg.updateDisplay();d3g.updateDisplay(); }
 	});
 
-  	$("#colorNodeRange1").spectrum({
+  $("#colorNodeRange1").spectrum({
 	    color: preferences.colorNodeRange1,
 	    palette: Colorpalette,
 	    showPaletteOnly: true,
@@ -152,18 +152,15 @@ $(document).ready(function()
 	    move: function(tinycolor){ savePreference("colorNodeRange2",tinycolor.toHexString()); d3g.updateDisplay(); }
 	});
 
-  	 
-    $("#appearanceAVTLoops").slider({
+  $("#appearanceAVTLoops").slider({
       min: 20,
       max: 400,
       values: [preferences.appearanceAVTLoops],
       change: function(event, ui) 
-      {
-      	savePreference("appearanceAVTLoops",$("#appearanceAVTLoops").slider("values",0));
-       }
+      { savePreference("appearanceAVTLoops",$("#appearanceAVTLoops").slider("values",0)); }
     });
 
-    $("#appearanceAVTJumpLimit").slider({
+  $("#appearanceAVTJumpLimit").slider({
       min: 1,
       max: 5,
       values: [preferences.appearanceAVTJumpLimit],
@@ -180,7 +177,7 @@ $(document).ready(function()
       change: function(event, ui) 
       {
       	savePreference("appearanceAVTForceRange",$("#appearanceAVTForceRange").slider("values",0));
-       }
+      }
     });
 
 	$("#appearanceAVTLinkLength").slider({
@@ -190,31 +187,41 @@ $(document).ready(function()
       change: function(event, ui) 
       {
       	savePreference("appearanceAVTLinkLength",$("#appearanceAVTLinkLength").slider("values",0));
-       }
+      }
     });
+
+  $("#appearanceAVTAnimationScraper").slider({
+      min: 1,
+      max: 200,
+      values: [1],
+      slide: function(event, ui) 
+      {tg.animate($("#appearanceAVTAnimationScraper").slider("values",0)-1);}
+    });
+
+    $("#appearanceAVTAnimationScraper").slider("disable");
+
 
     $("#appearanceAVTAnimation").switchButton({
   		labels_placement: "right",
   		checked: String2Boolean(preferences.appearanceAVTAnimation),
   		on_callback: function(){preferences.appearanceAVTAnimation=true} ,
   		off_callback: function(){preferences.appearanceAVTAnimation=false} 
-	});
+	   });
 
     $("#appearanceAVTForceDynamics").switchButton({
   		labels_placement: "right",
   		checked: String2Boolean(preferences.appearanceAVTForceDynamics),
   		on_callback: function(){preferences.appearanceAVTForceDynamics=true} ,
   		off_callback: function(){preferences.appearanceAVTForceDynamics=false} 
-	});
+	   });
 
     $("#appearanceAVTPlanarLinkage").switchButton({
   		labels_placement: "right",
   		checked: String2Boolean(preferences.appearanceAVTPlanarLinkage),
   		on_callback: function(){preferences.appearanceAVTPlanarLinkage=true} ,
   		off_callback: function(){preferences.appearanceAVTPlanarLinkage=false} 
-	});
+	   });
 
-     
   	//STI Range
     $("#FilterSTIRange").slider({
       range: true,
@@ -225,8 +232,8 @@ $(document).ready(function()
       {
         $("#FilterSTIRangeAmount").html("Min:" + ui.values[0]/100 + " - Max:" + ui.values[1]/100);
       	savePreference("FilterSTIMin",$("#FilterSTIRange").slider("values",0));
-		savePreference("FilterSTIMax",$("#FilterSTIRange").slider("values",1));
-		$("#FilterRefreshButton").prop('disabled',false);
+		    savePreference("FilterSTIMax",$("#FilterSTIRange").slider("values",1));
+		    $("#FilterRefreshButton").prop('disabled',false);
       }
     });
  
@@ -314,8 +321,6 @@ $(document).ready(function()
        }
     });
 
-    
-
     $("#FilterSTIRangeAmount").html(
     	"Min:" + $("#FilterSTIRange").slider("values",0) +
       " - Max:" + $("#FilterSTIRange").slider("values",1)
@@ -384,9 +389,9 @@ $(document).ready(function()
 	currentShape=preferences.displayNodeShape;
 
 	//render(); //Render some gui elements having to do with height
-    render(); 
+  render(); 
 
-    //showScreen(preferences.viewer);    
+  //showScreen(preferences.viewer);    
  
 });
 
@@ -414,6 +419,7 @@ function render()
 	});
  
 	$('#mainContent').height(wh - navbarTopHeight);
+
  	width = $('#mainContent')[0].offsetWidth;
 	height = $('#mainContent')[0].offsetHeight;
  	 
@@ -573,7 +579,7 @@ $("[viewer]").click(function(){
 $("#snapshotButton").click(function(e)
 {
 	$("#snapshotFlash").fadeIn('fast', function(){ $("#snapshotFlash").fadeOut('fast'); });
-	console.log($("#screen-d3").html())
+ 
 	download("ocViewerSnapshot.png","data:image/svg+xml;base64,"+$("#screen-d3").html(),"image/png");
 })
 
@@ -775,9 +781,41 @@ $("#modalAtomTypesColorsButton").click(function()
 	$("#modalAtomTypesColors").modal();
 });
 
+
+//RightClickMenu
+$("#NodeCMCollapseExpand").click(function()
+{
+  alert("collapse");
+  if (rightClickSelected.collapsed==true)
+  {
+
+  }
+  else
+  {
+
+  };
+});
+
+$("#appearanceAVTSplineCamera").click(function()
+{ 
+  if ($(this).text() == "Spline Camera")
+  {
+    window.dispatchEvent(new CustomEvent('splcamera'));
+    $(this).text("Stop Camera");
+    $(this).addClass("btn-danger");
+  }
+  else
+  {
+    window.dispatchEvent(new CustomEvent('splcamera'));
+    $(this).text("Spline Camera");
+    $(this).removeClass("btn-danger");
+  }
+});
+
+
 function loadAtomTypeColors()
 {
- 	console.log(AtomTypesColors);
+  
 	if (preferences.AtomTypesModalShowType=="Used")
 	{
 		if ((atomTypesUsed.length>0) )
@@ -1150,7 +1188,12 @@ $(".atomDetailsForm").keydown(function()
 	atomDetailsChanged = true;
 	$("#atomDetailsUpdate").prop("disabled",false);
 });
- 
+
+$("#atomDetailsConnections").click(function()
+{
+  showAtomConnections(selectedNode);
+});
+
 $("#terminalClose").click(function()
 {
 	savePreference("visibleTerminal",false);
@@ -1232,7 +1275,7 @@ $("#ColorColorMethod").change(function()
 		}
 		else
 		{
-			console.log(atomTypes.types);
+			 
 			//finalHTML = "<table class='table table-hover'>";
 			
 			for (var i=0;i<atomTypes.types.length;i++)
@@ -1299,7 +1342,17 @@ $("body").on("click",".CogServerModalListDelete",function()
 	savePreference("connectCogServers",JSON.stringify(connectCogServers));
 	updateGUIPreferences(); 
 })
+
+
+$("#NodeCMShowConnections").click(function()
+{
  
+   showAtomConnections(rightClickNode);
+});
+
+
+
+
 
 function AppearanceShowTextOn()
 {
@@ -1373,8 +1426,8 @@ function atomDetailsFixedOff()
 function showScreen(screen)
 {
  
-  	$('#loading').show();
-  	clearViews();
+  $('#loading').show();
+  clearViews();
 	render();
   	
 	$('div[id^="screen"]').css("display","none");
@@ -1430,8 +1483,7 @@ function showScreen(screen)
 	}
  	else if (screen=="gexf")
 	{
-
-		gefxSigmaObject = new updateGEFXView();
+		  gefxSigmaObject = new updateGEFXView();
 	    gefxData = gefxSigmaObject.generate(atomData); 
 	     
 	    $("#screen-gexf").html("." + gefxData);
@@ -1446,7 +1498,7 @@ function showScreen(screen)
 	{
 		$("#details").show();
 		$("#toolbox").show();
-  		$("#terminal").show();
+  	$("#terminal").show();
  	}
  
  
@@ -2063,15 +2115,22 @@ function getAtoms()
 
     add = "";
 	if (preferences.cogserver.slice(-1)!="/") add="/";
-
-	$.ajax(
+  
+  
+  if (preferences.cogserver.indexOf('localhost') != -1)
+    ConnectionTimeOut = 500;
+  else
+    ConnectionTimeOut = 0;
+  
+	
+  $.ajax(
 	{
 		url: preferences.cogserver + add +  'api/v1.1/atoms' + queryString,
-		type: 'GET',
+		  type: 'GET',
     	dataType: "jsonp",
     	//processData: false,
-    	crossDomain: true,
-    	//timeout: ConnectionTimeout,
+    	//crossDomain: true,
+      timeout: ConnectionTimeOut,
     	headers:
     	{
     		"X-Requested-With" : ""
@@ -2345,10 +2404,45 @@ function defaultAtom()
 	return tempAtom;
 }
 
+function showAtomConnections(atom)
+{
+   
+  incoming = "";
+ 
+  
+  for (var i=0; i <atom.incoming.length; i++)
+  {
+    svg = d3.select("[svghandle='"+atom.incoming[i]+"']")[0][0].outerHTML;
+    incoming = incoming + "<tr><td><svg width=50>" +   + "</svg></td>" +
+      "<td>" + atom.incoming[i] + "</td>" +
+      "<td>" +  findNodebyHandle(atom.incoming[i]).name + "</td>" + 
+      "<td>" +  findNodebyHandle(atom.incoming[i]).type + "</td>" + 
+      "<td colspan='2'>" +  "<button class='btn btn-xs btn-default' selectNode='" + atom.outgoing[i] + "'>Select</button>" + " " +
+      " " +  "<button class='btn btn-xs btn-default' selectNode='" + atom.outgoing[i] + "'>Show Connections</button>" + "</td>";
+  }
+  incoming = "<tr><td></td><th>Handle</th><th>Name</th><th>Type</th><th>Actions</th></tr>" + incoming;
+  $("#modalConnectionsIncoming").html(incoming);
+  outgoing = ""
+  for (var i=0; i <atom.outgoing.length; i++)
+  {
+     svg = d3.select("[svghandle='"+atom.outgoing[i]+"']")[0][0].outerHTML;
+     outgoing = outgoing + "<tr><td><svg width=50>" +   + "</svg></td>" +
+      "<td>" + atom.incoming[i] + "</td>" +
+      "<td>" +  findNodebyHandle(atom.outgoing[i]).name + "</td>" + 
+      "<td>" +  findNodebyHandle(atom.outgoing[i]).type + "</td>" + 
+      "<td colspan='2'>" +  "<button class='btn btn-xs btn-default' selectNode='" + atom.outgoing[i] + "'>Select</button>" + " "
+       +      " " +  "<button class='btn btn-xs btn-default' selectNode='" + atom.outgoing[i] + "'>Show Connections</button>" + "</td>";
+  }
+  outgoing = "<tr><td></td><th>Handle</th><th>Name</th><th>Type</th><th>Actions</th></tr>" + outgoing;
+  $("#modalConnectionsOutgoing").html(outgoing);
+  $("#modalConnections").modal();
+ 
+}
+
 function showSelectedLink(link)
 {
   
-    $("#detailsPanelTitle").html("Link: " + link.name);
+  $("#detailsPanelTitle").html("Link: " + link.name);
  	$("#detailsBarTitle").html("Link: " + link.name);
 
 	$("#detailsContent").css("display","none");

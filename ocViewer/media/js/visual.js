@@ -66,11 +66,11 @@ function d3graph(element)
 
     var update = function () 
     {
-    	//var nodes = flatten(root);
-  	for (var i = 0; i <nodes.length;i++)
-  	{
-  		console.log(nodes[i].id);
-  	}
+	    //var nodes = flatten(root);
+	  	//for (var i = 0; i <nodes.length;i++)
+	  	//{
+	  		//console.log(nodes[i].id);
+	  	//}
   		 
   		textVisibillity =  preferences.appearanceShowText=="true" ? "visible": "hidden";
 		linksVisibillity = preferences.appearanceShowLinks=="true" ? "visible" : "hidden";
@@ -102,10 +102,13 @@ function d3graph(element)
         var nodeEnter = node.enter().append("g")
 	        .attr("class",function(d){return "node " + d.type})
 	        .attr("id",function(d){return d.index;})
+	        .attr("handle",function(d){return d.handle;})
 	        .call(drag);
 
     	nodeEnter.filter(function(d) { return d.type.search("Link")!=-1 })
 	        .append("path")
+
+	        .attr("svghandle",function(d){return d.handle;})
       		.attr("d", d3.svg.symbol().type("triangle-up"))
 	        .attr("class", "linkNode")
 	        .attr("height", nodeRadius)
@@ -119,6 +122,7 @@ function d3graph(element)
 	    	nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
 		        //.attr("fixed",function(d){return d.incoming.length > 5})
 	    		.append("circle")
+	    		.attr("svghandle",function(d){return d.handle;})
 	    		.attr("class", "nodein")
 		        .attr("fill",nodeColor)
 		        .attr("x",function(d){return d.x})
@@ -129,6 +133,7 @@ function d3graph(element)
  		{
  			nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
 	    		.append("rect")
+	    		.attr("svghandle",function(d){return d.handle;})
  				.attr("class", "nodein")
 		        .attr("fill", nodeColor )
 		        //.attr("fixed",function(d){return d.incoming.length > 5})
@@ -142,6 +147,7 @@ function d3graph(element)
  			nodeEnter.filter(function(d) { return d.type.search("Link")==-1 })
 		        //.attr("fixed",function(d){return d.incoming.length > 5})
 	    		.append("path")
+	    		.attr("svghandle",function(d){return d.handle;})
  				.attr("class", "nodein")
 	      		.attr("d", d3.svg.symbol().type("triangle-up"))
 		        .attr("fill",nodeColor)
@@ -153,7 +159,6 @@ function d3graph(element)
  		{
 
  		}
-		
 
         text = nodeEnter.append("text")
 	        .attr("class", "text")
@@ -211,19 +216,6 @@ function d3graph(element)
 			}
 		});
 
-		vis.on("contextmenu", function(d)
-		{
-			d3.event.preventDefault();
-			$(".contextMenu").css({ display: "none" });
-			$("#VisContextMenu").css({
-		      display: "block",
-		      left: d3.event.pageX,
-		      top: d3.event.pageY  
-		    });
- 
-			return false;
-		});
-
 		d3.select("body").on("keydown", function() 
 		{
 			if ( d3.event.shiftKey)
@@ -237,6 +229,8 @@ function d3graph(element)
 		 
 		vis.on("mouseup", function(d) 
 		{
+			node.classed("tempSelected",false);
+		 
 			//if (dragging) return;
 			$(".contextMenu").css({ display: "none" });
 			selectedNode = null;
@@ -313,19 +307,44 @@ function d3graph(element)
 		 
 		node.on("contextmenu", function(d)
 		{
+			  
 			$(".contextMenu").css({ display: "none" });
 			node.classed("tempSelected",false);
 			d3.select(this).classed("tempSelected",true);
-			 
-			
+
+	 		rightClickNode = d;
+
 			$("#NodeContextMenu").css({
 		      display: "block",
 		      left: d3.event.pageX,
 		      top: d3.event.pageY  
 		    });
+
+
+		    if ((d.incoming.length==0) && (d.outgoing.length))
+		    	$("#NodeCMShowConnections").prop('disabled',true);
+		    else
+		    	$("#NodeCMShowConnections").prop('disabled',false);
+
 		   	d3.event.preventDefault();
+
 			return false;
 		});
+
+		/*
+		vis.on("contextmenu", function(d)
+		{
+			d3.event.preventDefault();
+			$(".contextMenu").css({ display: "none" });
+			$("#VisContextMenu").css({
+		      display: "block",
+		      left: d3.event.pageX,
+		      top: d3.event.pageY  
+		    });
+ 
+			return false;
+		});
+		*/
 
 		node.on("click",function(d)
 		{
@@ -649,7 +668,7 @@ function d3graph(element)
 
     this.collapseExpand = function(d)
 	{
-		 console.log(d.incoming.length);
+		//console.log(d.incoming.length);
 		//d3.select(this).transition().duration(transitionSpeed).attr("r",300);
 	 
 	 	for (var i=0; i<d.incoming.length;i++)
@@ -802,7 +821,7 @@ function d3graph(element)
     }
     function nodeName(d,full)
     {
-    	return  d.id;
+    	 
     	if (full)
     	{
 	    	if (d.name!="") return d.name;
@@ -823,6 +842,10 @@ function d3graph(element)
     function nodeColor(d)
     {
     	
+    	if (d.rightSelected)
+    	{
+    		return "red";
+    	}
 
     	if (preferences.colorNodeBased=="simple")
     	{
