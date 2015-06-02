@@ -15,7 +15,7 @@ function threedgraph(element)
 	var lights = [];
 	var keyCodes = {};
 	var scene = new THREE.Scene();
-	var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 2000 );
+	var camera = new THREE.PerspectiveCamera( 80, window.innerWidth/window.innerHeight, 1, 2000 );
 	var renderer = new THREE.WebGLRenderer({ antialias: true });
 	var mouse = new THREE.Vector2();
  
@@ -709,8 +709,8 @@ function makeTextSprite( message, parameters )
 			}
 			 
 		}
-		 
-		if (!String2Boolean(preferences.appearanceShowText)) return;
+		  return;
+		if (String2Boolean(preferences.appearanceShowText)) return;
 
 		for (var i=0;i<atoms.length;i++)
 		{
@@ -1119,7 +1119,7 @@ function makeTextSprite( message, parameters )
 	out.updateAtomLocations = function( trial ) {
 		for( var i = 0; i < atoms.length; i++ )
 			atoms[ i ].mesh.position.copy( atoms[ i ].physics[ trial ] );
-		
+		return;
 		if (!String2Boolean(preferences.appearanceShowText)) return;
 		for (var i=0;i<atoms.length;i++)
 		{

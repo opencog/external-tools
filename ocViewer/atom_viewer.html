@@ -27,7 +27,22 @@
 </head>
  
 <body>
-
+<!-- NODE RIGHT CLICK MENU -->
+<div id="NodeContextMenu" class="dropdown clearfix contextMenu">
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse</a></li>
+    <li class="divider"></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMFix">Fix Position</a></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMHighlight">HighLight</a></li>
+    <li class="divider"></li>
+ 
+    <li ><a tabindex="-1" href="#" id="NodeCMViewDetails">Show Details</a></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMShowConnections">Show Connections</a></li>
+    <li class="divider"></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMHide">Hide</a></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMCDelete">Delete</a></li>
+  </ul>
+</div>
 <!-- LOADING SCREEN -->
 <div id="loading">
 <div id="loadingInner"><i class="fa fa-spin fa-spinner"></i> Please wait</div>
@@ -1124,15 +1139,18 @@
 
           <div class="col-lg-12 panel">
             <h5> Incoming </h6>
-            <table id="modalConnectionsIncoming" class="table table-settings">
-             </table>
-              
+            <div style="height:200px; overflow-y:scroll">
+              <table id="modalConnectionsIncoming" class="table table-settings">
+              </table>
+            </div>
           </div>
            
           <div class="col-lg-12 panel">
             <h5> Outgoing </h5>
-            <table id="modalConnectionsOutgoing" class="table table-settings">
-            </table>
+            <div style="height:200px; overflow-y:scroll">
+              <table id="modalConnectionsOutgoing" class="table table-settings">
+              </table>
+            </div>
           </div>
           
       </div>
@@ -1173,21 +1191,7 @@
 </div>
  
  
-<!-- NODE RIGHT CLICK MENU -->
-<div id="NodeContextMenu" class="dropdown clearfix contextMenu">
-  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
-    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse</a></li>
-    <li class="divider"></li>
-    <li id="NodeCMHighlight"><a tabindex="-1" href="#">HighLight</a></li>
-    <li id="NodeCMViewDetails"><a tabindex="-1" href="#">View Details</a></li>
-    <li class="divider"></li>
-    <li id="NodeCMCDelete"><a tabindex="-1" href="#">Delete</a></li>
-    <li class="divider"></li>
-    <li id="NodeCMHide"><a tabindex="-1" href="#">Hide</a></li>
-    <li class="divider"></li>
-    <li id="NodeCMShowConnections"><a tabindex="-1" href="#">Show Connections</a></li>
-  </ul>
-</div>
+
 
 
 <!-- Vis RIGHT CLICK MENU -->
