@@ -50,6 +50,7 @@ var selectedNode = null;
 var selectedLink = null;
 var rightClickNode = null;
 var transitionSpeed = 500;
+var d3rightClickNode = null;
 
 var selectedTabs = [];
 
@@ -1343,13 +1344,77 @@ $("body").on("click",".CogServerModalListDelete",function()
 	updateGUIPreferences(); 
 })
 
+$("#NodeCMHighlight").click(function()
+{
+
+  node.classed("tempSelected",false);
+  $(".contextMenu").css({"display":"none"});
+  console.log(rightClickNode.highlight);
+  if (rightClickNode.highlight==true)
+  {
+    d3rightClickNode.classed("highlight",false);
+    rightClickNode.highlight = false;
+    $("#NodeCMHighlight").html("Highlight");
+    
+  }
+  else
+  {
+    d3rightClickNode.classed("highlight",true);
+    rightClickNode.highlight = true;
+    $("#NodeCMHighlight").html("Unhighlight");
+  }
+  d3g.updateDisplay();
+
+});
+
+
+
+$("#NodeCMFix").click(function()
+{
+  node.classed("tempSelected",false);
+  $(".contextMenu").css({"display":"none"});
+  if (rightClickNode.fixed==true)
+  {
+    rightClickNode.fixed = false;
+
+    $("#atomDetailsFixed").switchButton({  checked: false  });
+    //$(this).html("Fix Position");
+  }
+  else
+  {
+    //$(this).html("Unfix Position");
+    rightClickNode.fixed = true;
+    $("#atomDetailsFixed").switchButton({  checked: true  });
+  }
+  d3g.updateDisplay();
+});
+
 
 $("#NodeCMShowConnections").click(function()
 {
- 
-   showAtomConnections(rightClickNode);
+    node.classed("tempSelected",false);
+    $(".contextMenu").css({"display":"none"});
+    showAtomConnections(rightClickNode);
 });
 
+$("#NodeCMViewDetails").click(function()
+{
+    node.classed("tempSelected",false);
+    $(".contextMenu").css({"display":"none"});
+    showSelectedAtom(rightClickNode);   
+});
+
+
+$("#highlightsUnhighlightAll").click(function()
+{
+   
+  for (var i =0; i < nodes.length;i++)
+  {
+    nodes[i].highlight = false;
+  }
+  d3g.updateDisplay();
+});
+ 
 
 
 
@@ -2120,7 +2185,7 @@ function getAtoms()
 	{
 		url: preferences.cogserver + add +  'api/v1.1/atoms' + queryString,
 		type: 'GET',
-    	//dataType: "jsonp",
+    	dataType: "jsonp",
     	//processData: false,
     	//crossDomain: true,
     	//timeout: ConnectionTimeout,
@@ -2406,7 +2471,7 @@ function showAtomConnections(atom)
   for (var i=0; i <atom.incoming.length; i++)
   {
     svg = d3.select("[svghandle='"+atom.incoming[i]+"']")[0][0].outerHTML;
-    incoming = incoming + "<tr><td><svg width=50>" +   + "</svg></td>" +
+    incoming = incoming + "<tr><td> </td>" +
       "<td>" + atom.incoming[i] + "</td>" +
       "<td>" +  findNodebyHandle(atom.incoming[i]).name + "</td>" + 
       "<td>" +  findNodebyHandle(atom.incoming[i]).type + "</td>" + 
@@ -2419,7 +2484,7 @@ function showAtomConnections(atom)
   for (var i=0; i <atom.outgoing.length; i++)
   {
      svg = d3.select("[svghandle='"+atom.outgoing[i]+"']")[0][0].outerHTML;
-     outgoing = outgoing + "<tr><td><svg width=50>" +   + "</svg></td>" +
+     outgoing = outgoing + "<tr><td> </td>" +
       "<td>" + atom.incoming[i] + "</td>" +
       "<td>" +  findNodebyHandle(atom.outgoing[i]).name + "</td>" + 
       "<td>" +  findNodebyHandle(atom.outgoing[i]).type + "</td>" + 

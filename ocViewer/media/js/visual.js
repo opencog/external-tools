@@ -309,16 +309,28 @@ function d3graph(element)
 		{
 			  
 			$(".contextMenu").css({ display: "none" });
+
+			$("#NodeContextMenu").css({
+		      display: "block",
+		      left: d3.event.pageX + "px",
+		      top: d3.event.pageY + "px"  
+		    });
+			 
 			node.classed("tempSelected",false);
 			d3.select(this).classed("tempSelected",true);
 
 	 		rightClickNode = d;
+	 		d3rightClickNode= d3.select(this);
 
-			$("#NodeContextMenu").css({
-		      display: "block",
-		      left: d3.event.pageX,
-		      top: d3.event.pageY  
-		    });
+			if ( (d.fixed)==3 )
+		    	$("#NodeCMFix").html("Unfix Position");  
+		    else
+		    	$("#NodeCMFix").html("Fix Position");  
+
+		    if ( (d.highlight)==true )
+		    	$("#NodeCMHighlight").html("Unhighlight");  
+		    else
+		    	$("#NodeCMHighlight").html("Highlight"); 
 
 
 		    if ((d.incoming.length==0) && (d.outgoing.length))
@@ -841,11 +853,21 @@ function d3graph(element)
 
     function nodeColor(d)
     {
-    	
+    	 if (d.fixed==3)
+    	{
+    		return "#ccc";
+    	}
+
+    	if (d.highlight==true)
+    	{
+    		return "#ccc";
+    	}
     	if (d.rightSelected)
     	{
-    		return "red";
+    		return "#ccc";
     	}
+    	 
+    	
 
     	if (preferences.colorNodeBased=="simple")
     	{
