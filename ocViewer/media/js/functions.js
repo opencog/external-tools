@@ -400,7 +400,7 @@ $(document).ready(function()
   showScreen(preferences.viewer);
   
 
-  
+  /*
   vaggelis = { name:"Vaggelis",handle:3,type:"ConceptNode",incoming:[5,4],outgoing:[]};
   d3g.addNodes(
   [
@@ -422,7 +422,7 @@ $(document).ready(function()
     { name:"Mandeep",handle:14,type:"ConceptNode",incoming:[],outgoing:[]},
     { name:"stella",handle:15,type:"ConceptNode",incoming:[],outgoing:[]},
   ]);
-  
+  */
   //d3g.collapseExpand(vaggelis);  
   
 });
