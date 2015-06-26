@@ -15,7 +15,7 @@ function threedgraph(element)
 	var lights = [];
 	var keyCodes = {};
 	var scene = new THREE.Scene();
-	var camera = new THREE.PerspectiveCamera( 80, window.innerWidth/window.innerHeight, 1, 2000 );
+	var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 1, 2000 );
 	var renderer = new THREE.WebGLRenderer({ antialias: true });
 	var mouse = new THREE.Vector2();
  

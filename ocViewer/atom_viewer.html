@@ -8,13 +8,14 @@
     <!-- META -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
     <meta name="description" content="Data Visualizer for OpenCog's AtomSpace">
     <meta name="author" content="openCog skoumas">
 
     <!-- CSS -->
     <link href="media/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="media/font-awesome-4.3.0/css/font-awesome.min.css">
+ 
     <link rel="stylesheet" href="media/css/bootstrap.min.css">
     <link href="media/css/jquery-ui.css" rel="stylesheet">
     <link href="media/css/jquery-ui.structure.css" rel="stylesheet">
@@ -627,6 +628,12 @@
                     <!-- CONTENT -->
                     <table class="table table-settings">
                       <tr>
+                      <td colspan=2>
+                        <button id="textFullTextsButton" class="btn btn-success">Show Full Texts</button>
+                        <button id="textAbbreviatedTextsButton" class="btn btn-success">Show AbbrevatedText Texts</button>
+                      </td>
+                      </tr>
+                      <tr>
                         <td width="30%">Show Text?</td>
                         <td><div id="AppearanceShowText"></div></td>
                       </tr>
@@ -634,20 +641,17 @@
                         <td>Show Link Type Name</td>
                         <td><div id="textShowLinkTypeName"></div></td>
                       </tr>
-                      <tr>
-                        <td colspan=2>
-                          <button id="textFullTextsButton" class="btn btn-success">Show Full Texts</button>
-                          <button id="textAbbreviatedTextsButton" class="btn btn-success">Show AbbrevatedText Texts</button>
-                        </td>
-                      </tr>
+                    
+                      <!--
                       <tr>
                         <td width="30%">Abbreviation Style</td>
                         <td>
                           <select>
-                            <option> Coming Soon.... </option>
+                            <option>  </option>
                            
                           </select>
                       </tr>
+                    -->
                     </table>
                     <!-- END CONTENT -->
                   </div>

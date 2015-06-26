@@ -6,6 +6,7 @@
 var Accordions = []; //Storing the accordions preferences
 var connectedNode = []; //The connected node
 
+ 
 var d3g = null; //Storing the whole d3 graph here
 //var graph = null; //Storing the graph Viewer
 var sigmag = null; //Storing the Sigma Viewer
@@ -32,7 +33,8 @@ var zoom;
 var container;
 var dragging;
 
-var atomData = null;
+var atomData = [];
+var atomDataFlatten=null;
 var atomTypes = [];
 var atomTypesUsed = [];
 
@@ -129,8 +131,8 @@ $(document).ready(function()
 	    showPaletteOnly: true,
     	togglePaletteOnly: true,
 	    showPalette: true,
-	    change: function(tinycolor){ savePreference("ColorBackgroundColor",tinycolor.toHexString()); tg.updateDisplay();d3g.updateDisplay(); },
-	    move: function(tinycolor){ savePreference("ColorBackgroundColor",tinycolor.toHexString()); tg.updateDisplay();d3g.updateDisplay(); }
+	    change: function(tinycolor){ savePreference("ColorBackgroundColor",tinycolor.toHexString()); if (tg!=null) tg.updateDisplay(); d3g.updateDisplay(); },
+	    move: function(tinycolor){ savePreference("ColorBackgroundColor",tinycolor.toHexString()); if (tg!=null) tg.updateDisplay(); d3g.updateDisplay(); }
 	});
 
   $("#colorNodeRange1").spectrum({
@@ -384,8 +386,9 @@ $(document).ready(function()
  	//maybe store locally in the future if server fails to connect...
 	retrieveAtomTypes();
 
-	if(String2Boolean(preferences.ConnectAutoConnect))
-		getAtoms();
+	//if(String2Boolean(preferences.ConnectAutoConnect))
+    //getAtoms();
+
 
 	currentShape=preferences.displayNodeShape;
 
@@ -393,7 +396,35 @@ $(document).ready(function()
   render(); 
 
   //showScreen(preferences.viewer);    
- 
+  clearViews();
+  showScreen(preferences.viewer);
+  
+
+  
+  vaggelis = { name:"Vaggelis",handle:3,type:"ConceptNode",incoming:[5,4],outgoing:[]};
+  d3g.addNodes(
+  [
+    { name:"Giorgos",handle:1,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"kostas",handle:2,type:"ConceptNode",incoming:[],outgoing:[]},
+    vaggelis,
+    { name:"Mitsos",handle:4,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"Giorgaina",handle:5,type:"ConceptNode",incoming:[11],outgoing:[]},
+    { name:"Miltos",handle:6,type:"ConceptNode",incoming:[],outgoing:[]},
+  ]);
+   
+
+  d3g.addNodes(
+  [
+    { name:"Vasilo",handle:10,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"Aristotelis",handle:11,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"vaggelis",handle:12,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"Mitsos2",handle:13,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"Mandeep",handle:14,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"stella",handle:15,type:"ConceptNode",incoming:[],outgoing:[]},
+  ]);
+  
+  //d3g.collapseExpand(vaggelis);  
+  
 });
 
 $(window).resize(function() 
@@ -502,6 +533,8 @@ $("#ConnectConnectButton").click(function()
 { 
 	getAtoms();
 });
+
+ 
 
 $("#FilterRefreshButton").click(function()
 {
@@ -773,6 +806,7 @@ $("#ColorUpdateButton").click(function()
 $("#colorNodeBased").click(function()
 {
 	savePreference("colorNodeBased",$(this).val());
+  alert(preferences.colorNodeBased);
 	d3g.updateDisplay();
 });
 
@@ -783,18 +817,32 @@ $("#modalAtomTypesColorsButton").click(function()
 });
 
 
+ 
+
+function findNodeFlatten(node)
+{
+  index = -1;
+  for (var i=0; i<atomDataFlatten.length; i++)
+  {
+    if (atomDataFlatten[i].index==node.index)
+      {
+        index = i;
+        break;
+      }    
+  }
+  return index;
+}
+
+
+
 //RightClickMenu
 $("#NodeCMCollapseExpand").click(function()
 {
-  alert("collapse");
-  if (rightClickSelected.collapsed==true)
-  {
 
-  }
-  else
-  {
+  
+  d3g.collapseExpand(rightClickNode);
+  $(".contextMenu").css("display","none");
 
-  };
 });
 
 $("#appearanceAVTSplineCamera").click(function()
@@ -1504,14 +1552,15 @@ function showScreen(screen)
 	if (screen=="d3")
 	{
 		d3g = new d3graph("#screen-d3");
-		if (atomData!=null)
-			d3g.addNodes(atomData);
+		if (atomData!=[])
+			 d3g.addNodes(atomData);
+     
 		d3g.updateDisplay();
 	}
 	else if (screen=="3d")
 	{
 		tg = new threedgraph("screen-3d");	 
-		if (atomData!=null)
+		if (atomData!=[])
 			{ tg.addNodes(atomData);  }
 		tg.updateDisplay();
 	}
@@ -1960,6 +2009,10 @@ function updateGUIPreferences()
  	$("#displayRadiusBasedOn").val(preferences.radiusBased);
  	$("#displayNodeShape").val(preferences.displayNodeShape);
 
+  //Colors
+  
+  $("#colorNodeBased").val(preferences.colorNodeBased);
+ 
 
  	//Viewer
 	$("[viewer]").children().addClass("fa-square-o");
@@ -2181,18 +2234,24 @@ function getAtoms()
     add = "";
 	if (preferences.cogserver.slice(-1)!="/") add="/";
 
+   
+    finalURL = preferences.cogserver + add +  'api/v1.1/atoms' + queryString
+
+   
+    dataType = "jsonp";
+
 	$.ajax(
 	{
-		url: preferences.cogserver + add +  'api/v1.1/atoms' + queryString,
+		url: finalURL,
 		type: 'GET',
-    	dataType: "jsonp",
-    	//processData: false,
-    	//crossDomain: true,
-    	//timeout: ConnectionTimeout,
-    	headers:
-    	{
-    		"X-Requested-With" : ""
-    	}
+    dataType: dataType,
+    //processData: false,
+    //crossDomain: true,
+    //timeout: ConnectionTimeout,
+    headers:
+    {
+    	"X-Requested-With" : ""
+    }
 	})
 	.success(function(dataset) 
 	{
@@ -2204,8 +2263,8 @@ function getAtoms()
 
 		connected = true; 	
 	 	atomData =  dataset.result.atoms;
-    	nodes = atomData;
-    	count = atomData.length;
+    //nodes = atomData;
+    count = atomData.length;
 			
 		if (atomTypes==null)
 			retrieveAtomTypes();
@@ -2217,6 +2276,7 @@ function getAtoms()
 	    	
 	    	atomData = null;
 	    	atomTypesUsed = [];
+       
 	    }
 	    else
 	    {
@@ -2230,10 +2290,9 @@ function getAtoms()
 		    		atomTypesUsed.push(atomData[i].type);
 		    }
 
-		    
-	        //See what node types are used in the graph
-	       
-        
+        atomDataFlatten = atomData;
+        //See what node types are used in the graph
+  
 	    }
 	    connectionSuccess++;
 	    updateStats();
@@ -2281,7 +2340,7 @@ function getAtoms()
 
 function retrieveAtomTypes()
 {
-    add = "";
+   add = "";
 	if (preferences.cogserver.slice(-1)!="/") add="/";
 
 
@@ -2291,11 +2350,14 @@ function retrieveAtomTypes()
 	$("#FilterRefreshAtomTypesIcon").removeClass("fa-refresh");
 	$("#FilterRefreshAtomTypesIcon").addClass("  fa-spinner fa-spin");
  
-    $.ajax(
+  
+  finalURL = preferences.cogserver + add + 'api/'+API_VER+'/types'
+
+  $.ajax(
 	{
-		url: preferences.cogserver + add + 'api/'+API_VER+'/types',
+		url: finalURL,
 		type: 'GET',
-    	//dataType: "jsonp",
+    	dataType: "jsonp",
     	//processData: false,
     	//crossDomain: true,
     	//timeout:ConnectionTimeout, 
@@ -2323,7 +2385,7 @@ function retrieveAtomTypes()
     		$("#FilterAtomType").html("");
     		$("#FilterAtomType").removeAttr("disabled");
     		$("#FilterAtomTypeNoneValue").remove();
-		 	$("#FilterAtomType").append($("<option style='background-color:#red;'></option>")
+		 	  $("#FilterAtomType").append($("<option style='background-color:#red;'></option>")
 				    .attr("value", 0).text("--None--"));
 
 			$.each(atomTypes.types, function(value,key)
@@ -2612,6 +2674,21 @@ function findNode(node)
 	}
 	return index;
 }
+
+function findNodebyId(node)
+{
+  finalNode = null;
+  for (var i=0; i<nodes.length; i++)
+  {
+    if (nodes[i].id==node.id)
+      {
+        finalNode = nodes[i];
+        break;
+      }    
+  }
+  return finalNode;
+}
+
 
 function findNodebyHandle(handle)
 {

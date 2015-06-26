@@ -4,15 +4,13 @@ var fps = 0;
 var currentShape = null;
 var keyDragging = false;
 var force = null;
-
+var groupby = "no";
 var id = 0;
-
-var root=null;
-
-
+ 
 function d3graph(element)
 {
-	
+	 
+	var parent = this;
 	this.enableForce = true;
 
  	zoom = d3.behavior.zoom().scaleExtent([0.05, 5]).on("zoom", zoomed);
@@ -41,6 +39,8 @@ function d3graph(element)
 		.friction(preferences.appearanceFriction/100)
         .size([width, height]);
 
+     
+ 
 	var color = d3.scale.linear()
 	    .domain([ 0, 10])
 	    .range(["green", "red"]);
@@ -50,8 +50,10 @@ function d3graph(element)
 		.on("drag", dragged)
 		.on("dragend", dragended);
 
+	var node;
  	var nodes = force.nodes();
-	var links = force.links();
+    var links = force.links();
+
 
     fpsf = null;
     fpsf = setInterval(function () { ffps = fps;   fps=0; }, 1000);
@@ -66,12 +68,7 @@ function d3graph(element)
 
     var update = function () 
     {
-	    //var nodes = flatten(root);
-	  	//for (var i = 0; i <nodes.length;i++)
-	  	//{
-	  		//console.log(nodes[i].id);
-	  	//}
-  		 
+	    
   		textVisibillity =  preferences.appearanceShowText=="true" ? "visible": "hidden";
 		linksVisibillity = preferences.appearanceShowLinks=="true" ? "visible" : "hidden";
 	 
@@ -89,10 +86,14 @@ function d3graph(element)
 	   		.attr('height', height)
 
 	   	//d3.select('#visualizerInner').append("div").attr("id","fpsScreen")
-        node = container.selectAll(".node").data(nodes);
- 
-        link = container.selectAll(".link").data(links);
-
+       node = container.selectAll(".node").data(nodes, function(d) {
+        return d.id; 
+        });
+    	link = container.selectAll(".link").data(links, function(d) {
+        return d.source.id + "-" + d.target.id; 
+        });
+		 
+    	 
         var linkEnter = link.enter().append("line")
             .attr("class", "link")
             .style("visibility",linksVisibillity);
@@ -101,13 +102,12 @@ function d3graph(element)
 
         var nodeEnter = node.enter().append("g")
 	        .attr("class",function(d){return "node " + d.type})
-	        .attr("id",function(d){return d.index;})
+	        .attr("id",function(d){return d.id;})
 	        .attr("handle",function(d){return d.handle;})
 	        .call(drag);
 
     	nodeEnter.filter(function(d) { return d.type.search("Link")!=-1 })
 	        .append("path")
-
 	        .attr("svghandle",function(d){return d.handle;})
       		.attr("d", d3.svg.symbol().type("triangle-up"))
 	        .attr("class", "linkNode")
@@ -128,6 +128,7 @@ function d3graph(element)
 		        .attr("x",function(d){return d.x})
 		        .attr("y",function(d){return d.y})
 		        .attr("r", nodeRadius);
+
  		}
  		else if (preferences.displayNodeShape=="rectangle")
  		{
@@ -159,14 +160,22 @@ function d3graph(element)
  		{
 
  		}
-
+  
         text = nodeEnter.append("text")
 	        .attr("class", "text")
+	        .attr("txthandle",function(d){return d.handle;})
 	        .attr("class",function(d) { if (d.type.search("Link")!=-1) return "textLink text"; else return "text"; })
 	        .style("visibility",textVisibillity)
-	        .text(function(d){return nodeName(d,false);});
+	        .text(function(d){ return nodeName(d,false);}); 
 
-	    node.exit().remove();
+	        /*
+	    textId = nodeEnter.append("text")
+	        .attr("class", "text")
+			.text(function(d){return "id: " + d.id + " name:" + d.name ;});
+
+	    */
+		node.exit().remove();
+	   	  	  
     
 		//nodeEnter.exit().remove();
         //linkEnter.exit().remove();
@@ -176,15 +185,32 @@ function d3graph(element)
        
 	        if (preferences.appearanceShowLinks)
 	        {
-	          link
-	          .attr("x1", function(d) { return d.source.x; })
-	          .attr("y1", function(d) { return d.source.y; })
-	          .attr("x2", function(d) { return d.target.x; })
-	          .attr("y2", function(d) { return d.target.y; });
+	        	if(groupby=="id")
+	        	{
+	        		 link
+			          .attr("x1", function(d) { return d.source.x + ( d.source.id *160); })
+			          .attr("y1", function(d) { return d.source.y + ( d.source.id % 2)*100; })
+			          .attr("x2", function(d) { return d.target.x + ( d.target.id *160); })
+			          .attr("y2", function(d) { return d.target.y+ ( d.target.id % 2)*100;    });
+	        	}
+	        	else
+	        	{
+        		 link
+		          .attr("x1", function(d) { return d.source.x; })
+		          .attr("y1", function(d) { return d.source.y; })
+		          .attr("x2", function(d) { return d.target.x; })
+		          .attr("y2", function(d) { return d.target.y;   });	
+	        	}
+	         
 			}  
 
-          	node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+			if(groupby=="id")
+				node.attr("transform", function(d) { return "translate(" +   ( d.id *160) + "," + ( d.id % 2)*100 + ")"; });
+			else
+				node.attr("transform", function(d) { return "translate(" +   d.x + "," +  d.y + ")"; });
 
+
+          
           	fps++;
         });
  
@@ -259,7 +285,7 @@ function d3graph(element)
 				{
 					atomis["x"] = d3.mouse(this)[0];
 					atomis["y"] = d3.mouse(this)[1];
-					d3g.addNode(atomis);
+					parent.addNode(atomis);
 				})
 				.fail(function(data)
 				{
@@ -276,7 +302,7 @@ function d3graph(element)
 			$(".contextMenu").css({ display: "none" });
 			if (preferences.selectedTool == "removeLink")
 			{
-				d3g.removeLink(d.index);
+				parent.removeLink(d.index);
 				return;
 			}
 
@@ -366,7 +392,8 @@ function d3graph(element)
 			{
 				if (d3.event.ctrlKey)
 				{ 
-					d3g.collapseExpand(d);
+					 
+					parent.collapseExpand(d);
 					return;
 				 
 				}
@@ -444,7 +471,7 @@ function d3graph(element)
 			}
 			else if (preferences.selectedTool == "collapseexpand")
 			{
-				d3g.collapseExpand(d);
+				parent.collapseExpand(d);
 			}
 
 			d3.event.stopPropagation();
@@ -542,18 +569,22 @@ function d3graph(element)
 
     this.addNodes = function(newnodes) 
 	{
-		
+		 
         if (newnodes==null)return;
+        id = (nodes.length)
+     
 
         for(var i=0;i<newnodes.length;i++)
     	{
     		newnodes[i].id = id;
     		id++;
+    		//collapsed = (newnodes[i].collapsed==undefined) ? false :  newnodes[i].collapsed;
+			//newnodes[i].collapsed  = collapsed;
     		nodes.push(newnodes[i]);
     	}	
  
-        this.refreshLinks();
-         
+        parent.refreshLinks();
+        console.log(nodes);
         update();
 
     }
@@ -563,22 +594,30 @@ function d3graph(element)
 
     	for(var i=0;i<nodes.length;i++)
         {
+        	
 	    	for (var li=0;li<nodes[i].incoming.length;li++)
 	    	{
 	    		if(findNodeByHandle(nodes[i].incoming[li]))
 	    			links.push({"source": nodes[i], "target": findNodeByHandle(nodes[i].incoming[li]), "index": links.length});
 	    	}
+    	
+    	
 	    	for (var lo=0;lo<nodes[i].outgoing.length;lo++)
 	    	{
 	    		if(findNodeByHandle(nodes[i].outgoing[lo]))
 	    			links.push({"source": findNodeByHandle(nodes[i].outgoing[lo]), "target": nodes[i], "index": links.length});
 	    	}
+	    	
     	}
     }
 
 	this.addNode = function (newnode) 
 	{
+		newnode.id = nodes.length + 1;
         nodes.push(newnode);
+        //collapsed = (newnode.collapsed==undefined) ? false :  newnode.collapsed;
+        //newnode.collapsed = collapsed;
+        parent.refreshLinks();
         update();
     }
 
@@ -587,6 +626,7 @@ function d3graph(element)
     	 
         var i = 0;
         var n = findNode(id);
+
         while (i < links.length) 
         {
             if ((links[i]['source'] === n)||(links[i]['target'] == n)) 
@@ -594,14 +634,18 @@ function d3graph(element)
             else i++;
         }
         i = 0;
-        var index = findNodeIndex(id);
-        while (i < nodes.length) 
-        {
-            if ((nodes[i].id === id)) 
-            	nodes.splice(i, 1);
-            else i++;
-        }
 
+        var index = findNodeIndex(id);
+ 
+         
+        for (var i;i<nodes.length;i++)
+        {
+        	if ((nodes[i].index === index))
+            	nodes.splice(i, 1);	 
+        }
+      
+            
+        //node.exit().remove();
         update();
     }
 
@@ -630,6 +674,7 @@ function d3graph(element)
     	links = [];
     	nodes = [];
     }
+
     this.stop = function()
     {
     	force.stop();
@@ -647,6 +692,7 @@ function d3graph(element)
 
 	this.updateDisplay = function()
     {
+
     	if (currentShape!=preferences.displayNodeShape)
     	{
     		d3.selectAll(".nodein").remove();
@@ -678,45 +724,95 @@ function d3graph(element)
 
     }
 
+    this.switchConnections = function(node)
+    {
+
+	  if (node.incoming==[])
+	  {
+	    node.incoming = node._incoming;
+	    node.outgoing = node._outgoing;
+	    node._outgoing = [];
+	    node._incoming = [];
+	  }
+	  else
+	  {
+	    node._incoming = node.incoming;
+	    node._outgoing = node.outgoing;
+	    node.incoming = [];
+	    node.outgoing = []; 
+	  };
+	  return node;
+   
+    }
+
+    function isInt(n) {
+   	return n % 1 === 0;
+	}
+
     this.collapseExpand = function(d)
 	{
-		//console.log(d.incoming.length);
-		//d3.select(this).transition().duration(transitionSpeed).attr("r",300);
-	 
-	 	for (var i=0; i<d.incoming.length;i++)
-	 	{
-	 		this.removeNode(d.incoming[i]);
-	 	}
-	 	//this.refreshLinks();
+		
+		max =50;
+		count = 0;
+		var nodesDeleted = 0;
+		firstNode = d;
 
-	 	return;
+		function recurse(node)
+		{
+			finalnode = node;
+			if (count>max) return;
 
-		if (d.incoming)
-		{
-			d._incoming = d.incoming;
-			d.incoming = null;
-		}
-		else
-		{
-			d.incoming = d._incoming;
-			d._incoming = null;
-		}
+			count++;
 
-		if (d.outgoing)
-		{
-			d._outgoing = d.outgoing;
-			d.outgoing = null;
-		}
-		else
-		{
-			d.outgoing = d._outgoing;
-			d._outgoing = null;
-		}
+			if (isInt(node))
+			{
+				for (var i=0;i<nodes.length;i++)
+				{
+					if (nodes[i].handle == node)
+					{
+						finalnode = nodes[i];
+						finali = i;
+						break;
+					}
+				}
+			}
 
-		//nodes = []; links = [];
-		nodes = flatten(root);
-		this.refreshLinks();
-		d3g.update();
+
+			if (firstNode!==finalnode)
+			{
+				deleteNode(finalnode);
+				nodesDeleted++;
+			}
+			if ( (finalnode.incoming!=undefined))
+			{
+				if (finalnode.incoming.length>0) 
+					finalnode.incoming.forEach(recurse);
+			}
+
+			if ( (finalnode.outgoing!=undefined))
+			{
+				if (finalnode.outgoing.length>0) 
+					finalnode.outgoing.forEach(recurse);
+			}
+			 
+			 
+			//$("text[txthandle="+finalnode.handle+"]").html("S");
+			//finalnode.addClass("collapsed");
+			
+	    	 
+			finalnode = parent.switchConnections(finalnode);
+			finalnode.collapsed = true;
+		 
+		}
+		recurse(d);
+
+		firstNode.collapsed = nodesDeleted;
+		console.log(nodesDeleted);
+		 
+		
+		parent.update();
+		parent.updateDisplay();
+		return;
 	}
 
     this.unhighlightAll = function()
@@ -779,14 +875,17 @@ function d3graph(element)
     function nodeRadius(d)
     {
     	
+ 	 
+		finalCollapsed = ((d.collapsed!=undefined) && (d.collapsed!=false)) ? finalCollapsed = (d.collapsed ) : 1 ; 
+ 
     	if (preferences.radiusBased=="Incoming")
     	{
 	    	if (d.incoming!=undefined)
 	    	{
 		    	if (d.name!="")
-		    		return d.incoming.length * (preferences.displayRadiusMultiplier/10) + 2;
+		    		return d.incoming.length * (preferences.displayRadiusMultiplier/10) + 2 + finalCollapsed;
 		    	else
-		    		return 1;
+		    		return 1  + finalCollapsed;
 	    	}
 	    	return 10;
 	    }
@@ -795,38 +894,38 @@ function d3graph(element)
     		if (d.outgoing!=undefined)
 	    	{
 		    	if (d.name!="")
-		    		return d.outgoing.length * (preferences.displayRadiusMultiplier/10) + 2;
+		    		return d.outgoing.length * (preferences.displayRadiusMultiplier/10) + 2 + finalCollapsed;
 		    	else
-		    		return 1;
+		    		return 1 + finalCollapsed;
 	    	}
 	    	return 10;
     	}
     	else if (preferences.radiusBased=="IncomingOutgoing")
     	{
     		if (d.name!="")
-		    		return (d.outgoing.length + d.incoming.length) * (preferences.displayRadiusMultiplier/10) + 2;
+		    		return (d.outgoing.length + d.incoming.length) * (preferences.displayRadiusMultiplier/10) + 2 + finalCollapsed;
 		    	else
-		    		return 1;
+		    		return 1 + finalCollapsed;
     	}
     	else if (preferences.radiusBased=="AtomType")
     	{
-    		return preferences.displayRadiusMultiplier;
+    		return preferences.displayRadiusMultiplier + finalCollapsed;
     	}
     	else if (preferences.radiusBased=="Fixed")
     	{
-    		return preferences.displayRadiusMultiplier;
+    		return preferences.displayRadiusMultiplier + finalCollapsed;
     	}
     	else if (preferences.radiusBased=="Random")
     	{
-    		return Math.random() * preferences.displayRadiusMultiplier;
+    		return Math.random() * preferences.displayRadiusMultiplier + finalCollapsed;
     	}
     	else if (preferences.radiusBased=="sti")
     	{
-    		return  d.attentionvalue.sti * preferences.displayRadiusMultiplier;
+    		return  d.attentionvalue.sti * preferences.displayRadiusMultiplier + finalCollapsed;
     	}
     	else if (preferences.radiusBased=="lti")
     	{
-    		return  d.attentionvalue.lti * preferences.displayRadiusMultiplier;
+    		return  d.attentionvalue.lti * preferences.displayRadiusMultiplier + finalCollapsed;
     	}
      
 
@@ -834,41 +933,36 @@ function d3graph(element)
     function nodeName(d,full)
     {
     	 
+    	collapsed  = (d.collapsed!=undefined || d.collapsed) ? "+ " : "";
     	if (full)
     	{
 	    	if (d.name!="") return d.name;
 	    	else if (d.type!="") return d.type;
 	    	else
-	    	if(d.type.search("Link")==-1) return d.handle;
+	    	if(d.type.search("Link")==-1) return collapsed + d.handle  ;
     	}
     	else
     	{
 	    	if (d.name!="") return d.name.substring(0,10);
 	    	else if (d.type!="") return d.type.substring(0,10);
 	    	else
-	    	if(d.type.search("Link")==-1) return d.handle.substring(0,10);
+	    	if(d.type.search("Link")==-1) return collapsed + d.handle.substring(0,10) ;
 	    }
     }
 
 
     function nodeColor(d)
     {
-    	 if (d.fixed==3)
-    	{
-    		return "#ccc";
-    	}
 
+    	if (d.fixed==3)
+    		return "#ccc";
+ 
     	if (d.highlight==true)
-    	{
     		return "#ccc";
-    	}
-    	if (d.rightSelected)
-    	{
-    		return "#ccc";
-    	}
-    	 
     	
-
+    	if (d.rightSelected)
+    		return "#ccc";
+    	
     	if (preferences.colorNodeBased=="simple")
     	{
     		return preferences.ColorSimpleColor;
@@ -991,25 +1085,10 @@ function d3graph(element)
 			return false;
 		else
 			return true;
+
 	}
 
 	 
-	function flatten(root)
-	{
-		var nodes = [];
-		var i = 0;
-
-		function recurse(node)
-		{
-			if (node.incoming) 
-				node.incoming.forEach(recurse);
-
-			if (!node.handle) node.handle = ++i;
-				nodes.push(node);
-		}
-
-		recurse(root);
-		return nodes;
-	}
+	
 
 }
