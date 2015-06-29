@@ -5,6 +5,7 @@
 //Default Data structure for atom
 var Accordions = []; //Storing the accordions preferences
 var connectedNode = []; //The connected node
+ 
 
  
 var d3g = null; //Storing the whole d3 graph here
@@ -42,6 +43,7 @@ var count = null //How many atoms?
 var filterQuery = new Object();
 
 var nodes = [],links = [];
+var collapsedNodes = [];
 var stats = [];
 var terminal = null;
 
@@ -111,6 +113,7 @@ $(document).ready(function()
 	ww = $(window).width();
     
 	loadPreferences(); //Load user's options
+ 
 	showScreen(preferences.viewer);;
   $("body").css("display","block"); //show the Body when everything has been calculater
  
@@ -400,6 +403,17 @@ $(document).ready(function()
   showScreen(preferences.viewer);
   
 
+  vaggelis = { name:"Vaggelis",handle:3,type:"ConceptNode",incoming:[5,4],outgoing:[]};
+  d3g.addNodes(
+  [
+   
+    vaggelis,
+    { name:"Mitsos",handle:4,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"Giorgaina",handle:5,type:"ConceptNode",incoming:[6,7,8],outgoing:[]},
+    { name:"Miltos",handle:6,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"Nontas",handle:7,type:"ConceptNode",incoming:[],outgoing:[]},
+    { name:"Nontas2",handle:8,type:"ConceptNode",incoming:[],outgoing:[]},
+  ]);
   /*
   vaggelis = { name:"Vaggelis",handle:3,type:"ConceptNode",incoming:[5,4],outgoing:[]};
   d3g.addNodes(
@@ -411,8 +425,8 @@ $(document).ready(function()
     { name:"Giorgaina",handle:5,type:"ConceptNode",incoming:[11],outgoing:[]},
     { name:"Miltos",handle:6,type:"ConceptNode",incoming:[],outgoing:[]},
   ]);
-   
-
+   */
+/*
   d3g.addNodes(
   [
     { name:"Vasilo",handle:10,type:"ConceptNode",incoming:[],outgoing:[]},
@@ -423,8 +437,9 @@ $(document).ready(function()
     { name:"stella",handle:15,type:"ConceptNode",incoming:[],outgoing:[]},
   ]);
   */
-  //d3g.collapseExpand(vaggelis);  
-  
+    //d3g.collapseExpand(vaggelis); 
+     
+    
 });
 
 $(window).resize(function() 
@@ -839,7 +854,7 @@ function findNodeFlatten(node)
 $("#NodeCMCollapseExpand").click(function()
 {
 
-  
+
   d3g.collapseExpand(rightClickNode);
   $(".contextMenu").css("display","none");
 

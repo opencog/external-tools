@@ -86,12 +86,9 @@ function d3graph(element)
 	   		.attr('height', height)
 
 	   	//d3.select('#visualizerInner').append("div").attr("id","fpsScreen")
-       node = container.selectAll(".node").data(nodes, function(d) {
-        return d.id; 
-        });
-    	link = container.selectAll(".link").data(links, function(d) {
-        return d.source.id + "-" + d.target.id; 
-        });
+
+        node = container.selectAll(".node").data(nodes, function(d) { return   d.handle; });
+    	link = container.selectAll(".link").data(links, function(d) { return d.source.id + "-" + d.target.id; });
 		 
     	 
         var linkEnter = link.enter().append("line")
@@ -253,6 +250,8 @@ function d3graph(element)
 			keyDragging = false;	 
     	});
 		 
+
+
 		vis.on("mouseup", function(d) 
 		{
 			node.classed("tempSelected",false);
@@ -348,6 +347,11 @@ function d3graph(element)
 	 		rightClickNode = d;
 	 		d3rightClickNode= d3.select(this);
 
+	 		if (d.collapsed)
+	 			$("#NodeCMCollapseExpand").html("<i class='fa fa-plus-square'></i> Expand All</a>"); 
+	 		else
+	 			$("#NodeCMCollapseExpand").html("<i class='fa fa-minus-square'></i> Collapse All</a>"); 
+	 		
 			if ( (d.fixed)==3 )
 		    	$("#NodeCMFix").html("Unfix Position");  
 		    else
@@ -576,15 +580,19 @@ function d3graph(element)
 
         for(var i=0;i<newnodes.length;i++)
     	{
-    		newnodes[i].id = id;
-    		id++;
+    		 
+    		if (newnodes[i].id==undefined)
+    		{
+    			newnodes[i].id = id;
+    			id++;
+    		}
     		//collapsed = (newnodes[i].collapsed==undefined) ? false :  newnodes[i].collapsed;
 			//newnodes[i].collapsed  = collapsed;
     		nodes.push(newnodes[i]);
     	}	
  
         parent.refreshLinks();
-        console.log(nodes);
+        
         update();
 
     }
@@ -644,7 +652,7 @@ function d3graph(element)
             	nodes.splice(i, 1);	 
         }
       
-            
+   
         //node.exit().remove();
         update();
     }
@@ -727,15 +735,16 @@ function d3graph(element)
     this.switchConnections = function(node)
     {
 
-	  if (node.incoming==[])
+	  if  ( !(node.collapsed!=undefined) &&  (node.collapsed>0) )
 	  {
+	  	 
 	    node.incoming = node._incoming;
 	    node.outgoing = node._outgoing;
 	    node._outgoing = [];
 	    node._incoming = [];
 	  }
 	  else
-	  {
+	  { 
 	    node._incoming = node.incoming;
 	    node._outgoing = node.outgoing;
 	    node.incoming = [];
@@ -743,6 +752,20 @@ function d3graph(element)
 	  };
 	  return node;
    
+    }
+    this.normalizeNode= function(node)
+    {
+    	if ( (node._incoming!=undefined) && (node.incoming!=[]))
+		{	
+			node.incoming = node._incoming;
+			node._incoming = [];
+		}
+		if ((node._outgoing!=undefined) && (node.outgoing!=[]))
+		{	
+			node.outgoing = node.outgoing;
+			node._outgoing = [];
+		}
+		return node;
     }
 
     function isInt(n) {
@@ -752,10 +775,14 @@ function d3graph(element)
     this.collapseExpand = function(d)
 	{
 		
-		max =50;
-		count = 0;
+		var max =50;
+		var count = 0;
 		var nodesDeleted = 0;
-		firstNode = d;
+		var firstNode = d;
+		var finalnode ;
+		var collapsedArray = [];
+
+	 
 
 		function recurse(node)
 		{
@@ -777,41 +804,61 @@ function d3graph(element)
 				}
 			}
 
+			if (finalnode.id==undefined) return;
 
 			if (firstNode!==finalnode)
 			{
 				deleteNode(finalnode);
+				collapsedArray.push(parent.normalizeNode(finalnode));
 				nodesDeleted++;
 			}
+			
 			if ( (finalnode.incoming!=undefined))
 			{
 				if (finalnode.incoming.length>0) 
 					finalnode.incoming.forEach(recurse);
 			}
-
+	
 			if ( (finalnode.outgoing!=undefined))
 			{
 				if (finalnode.outgoing.length>0) 
 					finalnode.outgoing.forEach(recurse);
 			}
-			 
-			 
-			//$("text[txthandle="+finalnode.handle+"]").html("S");
-			//finalnode.addClass("collapsed");
-			
-	    	 
+	 	 
 			finalnode = parent.switchConnections(finalnode);
-			finalnode.collapsed = true;
-		 
+	  
 		}
-		recurse(d);
 
-		firstNode.collapsed = nodesDeleted;
-		console.log(nodesDeleted);
-		 
+		if (firstNode.collapsed>0)
+		{
+		 	 console.log(collapsedNodes[firstNode.id])
+		 	 parent.addNodes((collapsedNodes[firstNode.id]));
+		 	 collapsedNodes.splice(  collapsedNodes.indexOf(collapsedNodes[firstNode.id]),1  );
+			/*or (var i=0;i<collapsedNodes[firstNode.id].length;i++)
+			{
+				nodeTemp = parent.switchConnections(collapsedNodes[firstNode.id][i]); 
+				
+				//parent.addNode(nodeTemp) ;
+				nodes.push(nodeTemp);
+				force.start();
+			}*/
+			
+			//update();
+			 
 		
-		parent.update();
-		parent.updateDisplay();
+			
+			firstNode.collapsed = 0;
+		}
+		else
+		{
+			
+			recurse(d);
+			firstNode.collapsed = nodesDeleted;
+			collapsedNodes[firstNode.id] = collapsedArray; 
+			
+		}
+
+ 		console.log(nodes);
 		return;
 	}
 
@@ -856,6 +903,7 @@ function d3graph(element)
 	/*------------------------------------*/
 	/*------------------------------------*/
 
+
  
 	function nodeAppend(d)
 	{
@@ -876,7 +924,7 @@ function d3graph(element)
     {
     	
  	 
-		finalCollapsed = ((d.collapsed!=undefined) && (d.collapsed!=false)) ? finalCollapsed = (d.collapsed ) : 1 ; 
+		finalCollapsed = ((d.collapsed!=undefined) && (d.collapsed!=false)) ? finalCollapsed = (d.collapsed / 10 ) : 1 ; 
  
     	if (preferences.radiusBased=="Incoming")
     	{
@@ -930,23 +978,25 @@ function d3graph(element)
      
 
     }
+    
     function nodeName(d,full)
     {
     	 
-    	collapsed  = (d.collapsed!=undefined || d.collapsed) ? "+ " : "";
+    	finalCollapsed  = ((d.collapsed!=undefined)  ) ? "+ " : " " ;
+    	
     	if (full)
     	{
-	    	if (d.name!="") return d.name;
-	    	else if (d.type!="") return d.type;
+	    	if (d.name!="") return finalCollapsed + d.name;
+	    	else if (d.type!="") return  finalCollapsed + d.type;
 	    	else
-	    	if(d.type.search("Link")==-1) return collapsed + d.handle  ;
+	    	if(d.type.search("Link")==-1) return finalCollapsed + d.handle  ;
     	}
     	else
     	{
-	    	if (d.name!="") return d.name.substring(0,10);
-	    	else if (d.type!="") return d.type.substring(0,10);
+	    	if (d.name!="") return finalCollapsed + d.name.substring(0,10);
+	    	else if (d.type!="") return finalCollapsed + d.type.substring(0,10);
 	    	else
-	    	if(d.type.search("Link")==-1) return collapsed + d.handle.substring(0,10) ;
+	    	if(d.type.search("Link")==-1) return finalCollapsed + d.handle.substring(0,10) ;
 	    }
     }
 

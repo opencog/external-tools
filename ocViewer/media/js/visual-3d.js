@@ -10,7 +10,7 @@ var pCounter;
 
  
 function threedgraph(element)
-{
+{ 
 	 
 	var lights = [];
 	var keyCodes = {};
@@ -1096,7 +1096,8 @@ function makeTextSprite( message, parameters )
 
 	out.getNumPhysics = function()
 	{
-		return atoms[0].physics.length;
+		//if (atoms!=[])
+		//return atoms[0].physics.length;
 	}
 	out.addAtomToScene = function( scene, i ) {
 				 

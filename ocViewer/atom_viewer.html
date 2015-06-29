@@ -31,7 +31,11 @@
 <!-- NODE RIGHT CLICK MENU -->
 <div id="NodeContextMenu" class="dropdown clearfix contextMenu">
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
-    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse</a></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMCollapseExpand"><i class="fa fa-minus-square"></i> Collapse All</a></li>
+
+    <li class="divider"></li>
+    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse Incoming</a></li>
+    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse Outgoing</a></li>
     <li class="divider"></li>
     <li ><a tabindex="-1" href="#" id="NodeCMFix">Fix Position</a></li>
     <li ><a tabindex="-1" href="#" id="NodeCMHighlight">HighLight</a></li>
