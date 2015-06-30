@@ -1,3 +1,4 @@
+//Some basic variables
 var nodeDragging = false;
 var nodeClicked = false;
 var fps = 0;
@@ -7,20 +8,24 @@ var force = null;
 var groupby = "no";
 var id = 0;
  
+
+//The main d3 object that contains all the variables and functions
 function d3graph(element)
 {
-	 
-	var parent = this;
-	this.enableForce = true;
+	
+	var parent = this; //This is stored at the parent variable to help access it later
+	this.enableForce = true; //
 
  	zoom = d3.behavior.zoom().scaleExtent([0.05, 5]).on("zoom", zoomed);
  
+ 	// The main container of everything
     var vis = this.vis = d3.select(element).append("svg")
         .attr("width", width)
         .attr("height", height)
         .append("g")
         .attr("id","visualizerInner")
 		.call(zoom).on("dblclick.zoom", null);
+
 
 	var rect = vis.append("rect")
 		.attr("width", width)
@@ -31,6 +36,7 @@ function d3graph(element)
  
 	container = vis.append("g");
 
+	//The d3 Force layout Force
     force = d3.layout.force()
     	.charge(preferences.appearanceCharge)
 		.gravity(0.1)
@@ -40,7 +46,6 @@ function d3graph(element)
         .size([width, height]);
 
      
- 
 	var color = d3.scale.linear()
 	    .domain([ 0, 10])
 	    .range(["green", "red"]);
@@ -51,10 +56,10 @@ function d3graph(element)
 		.on("dragend", dragended);
 
 	var node;
- 	var nodes = force.nodes();
-    var links = force.links();
+ 	var nodes = force.nodes(); //The nodes
+    var links = force.links(); //and links...
 
-
+    //Frames per second to keep track how fast things go
     fpsf = null;
     fpsf = setInterval(function () { ffps = fps;   fps=0; }, 1000);
 
@@ -65,7 +70,7 @@ function d3graph(element)
 	/*--------------------------*/
 	/*--------------------------*/
 
-
+	//The main function that makes things happen
     var update = function () 
     {
 	    
@@ -177,6 +182,9 @@ function d3graph(element)
 		//nodeEnter.exit().remove();
         //linkEnter.exit().remove();
 
+        //This function is called every time a new position of 
+        //all the nodes of the graphs have been specified.
+
         force.on("tick", function() 
         {
        
@@ -207,7 +215,7 @@ function d3graph(element)
 				node.attr("transform", function(d) { return "translate(" +   d.x + "," +  d.y + ")"; });
 
 
-          
+          	
           	fps++;
         });
  
@@ -571,6 +579,7 @@ function d3graph(element)
 	    force.start();
 	}
 
+	//Add nodes to the visualizer
     this.addNodes = function(newnodes) 
 	{
 		 
@@ -596,6 +605,7 @@ function d3graph(element)
         update();
 
     }
+    // Calculate the links based on incoming and outgoing arrays
 
     this.refreshLinks = function ()
     {
@@ -732,6 +742,8 @@ function d3graph(element)
 
     }
 
+    // This functions puts the incoming into _incoming for temp storing them.
+    // It is used for the expand collapse function
     this.switchConnections = function(node)
     {
 
@@ -753,7 +765,8 @@ function d3graph(element)
 	  return node;
    
     }
-    this.normalizeNode= function(node)
+
+    this.normalizeNode = function(node)
     {
     	if ( (node._incoming!=undefined) && (node.incoming!=[]))
 		{	
@@ -767,11 +780,13 @@ function d3graph(element)
 		}
 		return node;
     }
-
+    //Check if n is integer
     function isInt(n) {
    	return n % 1 === 0;
 	}
 
+
+	//Collapse and expand function
     this.collapseExpand = function(d)
 	{
 		
@@ -779,10 +794,8 @@ function d3graph(element)
 		var count = 0;
 		var nodesDeleted = 0;
 		var firstNode = d;
-		var finalnode ;
+		var finalnode;
 		var collapsedArray = [];
-
-	 
 
 		function recurse(node)
 		{
@@ -904,7 +917,8 @@ function d3graph(element)
 	/*------------------------------------*/
 
 
- 
+ 	//This function selectes the symbol to be assigned 
+ 	//to each svg element created by d3
 	function nodeAppend(d)
 	{
 		if ( d.type.search("Link")!=-1)	
@@ -920,6 +934,7 @@ function d3graph(element)
 		}
 	}
 
+	//This function determines the size of the node
     function nodeRadius(d)
     {
     	
@@ -979,6 +994,7 @@ function d3graph(element)
 
     }
     
+    //This function determines the node name
     function nodeName(d,full)
     {
     	 
@@ -1000,7 +1016,7 @@ function d3graph(element)
 	    }
     }
 
-
+    //This function determines the node color
     function nodeColor(d)
     {
 
@@ -1053,7 +1069,7 @@ function d3graph(element)
     	
     }
 
- 
+ 	//On zoom
     function zoomed()
 	{
 		dragging = true;
@@ -1096,7 +1112,7 @@ function d3graph(element)
 			if (handle == atomData[jnode].handle)
 				return atomData[jnode];
 	}
-
+	// Check if two nodes are connected
 	function isConnected(a, b) 
 	{
 

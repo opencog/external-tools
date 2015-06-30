@@ -6,7 +6,6 @@
 var Accordions = []; //Storing the accordions preferences
 var connectedNode = []; //The connected node
  
-
  
 var d3g = null; //Storing the whole d3 graph here
 //var graph = null; //Storing the graph Viewer
@@ -34,42 +33,40 @@ var zoom;
 var container;
 var dragging;
 
-var atomData = [];
-var atomDataFlatten=null;
-var atomTypes = [];
-var atomTypesUsed = [];
+var atomData = []; //Where all the JSON atoms are stored
+var atomTypes = []; //All the atomTypes used
+var atomTypesUsed = []; //Only the atomTypes which are activelly used by the nodes loaded
 
 var count = null //How many atoms?
-var filterQuery = new Object();
+var filterQuery = new Object(); //An object used to filter out the data requests to the server
 
-var nodes = [],links = [];
-var collapsedNodes = [];
-var stats = [];
-var terminal = null;
+var nodes = [],links = []; //The main nodes and links variables used in the force layout
+var collapsedNodes = []; //All the collapsed nodes after the collapse function
+var stats = []; //Some stats here
+var terminal = null; //The terminal object for the terminal window
 
-var connectionSuccess = 0;
-var connectionFails = 0;
+var connectionSuccess = 0; //Number of successful connections
+var connectionFails = 0; //Number of failed connections
 
-var selectedNode = null;
-var selectedLink = null;
-var rightClickNode = null;
-var transitionSpeed = 500;
-var d3rightClickNode = null;
+var selectedNode = null; //The selected noed
+var selectedLink = null; // The selected link
+var rightClickNode = null; //When right clicking a node its being stored here
+var transitionSpeed = 500; //Transition speed for all transitions
+var d3rightClickNode = null; 
 
-var selectedTabs = [];
+var selectedTabs = []; //The selected tabs
 
-var advancedFilters = []; 
-var connectCogServers = [];
-var AtomTypesColors = [];
+var advancedFilters = [];  //Not currently used
+var connectCogServers = []; //The cog servers saved
+var AtomTypesColors = []; 
 var highlightedAtoms = [];
 
-var gui;
-var links = [];
+var gui; 
 var index = 0;
 
 var ApperanceforceAnimated;
 var cursor = null;
-var API_VER = "v1.1";
+var API_VER = "v1.1"; //Used at getAtoms function
 
 var ConnectionTimeout = 10000;
 
@@ -84,9 +81,10 @@ var ConnectionTimeout = 10000;
         ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
     ];
 
-$(document).ready(function()
+$(document).ready(function() //Called when DOM is loaded
 {
  
+ //Make elements draggable using JQuery GUI
   $("#details").draggable({
 		stop: function(e,ui) { 
 			savePreference("detailsLeft",ui.position.left);
@@ -389,8 +387,8 @@ $(document).ready(function()
  	//maybe store locally in the future if server fails to connect...
 	retrieveAtomTypes();
 
-	//if(String2Boolean(preferences.ConnectAutoConnect))
-    //getAtoms();
+	if(String2Boolean(preferences.ConnectAutoConnect)) //Auto connect
+    getAtoms();
 
 
 	currentShape=preferences.displayNodeShape;
@@ -402,7 +400,7 @@ $(document).ready(function()
   clearViews();
   showScreen(preferences.viewer);
   
-
+ /* TESTING DATA
   vaggelis = { name:"Vaggelis",handle:3,type:"ConceptNode",incoming:[5,4],outgoing:[]};
   d3g.addNodes(
   [
@@ -414,7 +412,8 @@ $(document).ready(function()
     { name:"Nontas",handle:7,type:"ConceptNode",incoming:[],outgoing:[]},
     { name:"Nontas2",handle:8,type:"ConceptNode",incoming:[],outgoing:[]},
   ]);
-  /*
+
+ 
   vaggelis = { name:"Vaggelis",handle:3,type:"ConceptNode",incoming:[5,4],outgoing:[]};
   d3g.addNodes(
   [
@@ -455,6 +454,7 @@ function render()
 	wh = $(window).height();
 	ww = $(window).width();
 
+  //Adjust the new values for specific DIVS
  	$('#leftMenu').height(wh - navbarTopHeight);
  	$('#rightMenu').height(wh - navbarTopHeight);
  	$('#leftMenuInner').height(wh - navbarTopHeight);
@@ -483,8 +483,10 @@ $("body").on("contextmenu",function(e)
 	e.preventDefault();
 })
 
+//An accordion is being clicked - store the value inside preferences.
 $(".accordion-toggle").click(function()
 {
+  //Check if accordion is open
 	thisOpen = (!$($(this).attr("href")).hasClass("in"));
 
 	if (thisOpen)
@@ -494,11 +496,12 @@ $(".accordion-toggle").click(function()
 	}
 	else
 	{
-    	index = Accordions.indexOf($(this).attr("href").replace("#",""));
+    index = Accordions.indexOf($(this).attr("href").replace("#",""));
 		Accordions.splice(index, 1);
 	}
 	savePreference("Accordions",JSON.stringify(Accordions));
 })
+
 
 $("#FileImport").click(function()
 {
@@ -541,15 +544,15 @@ $("#settingsAnimate").click(function(e){
 $("#ConnectCogServer").keyup(function(e)
 {
 	savePreference("cogserver", $(this).val());
-    if(e.which == 13) retrieveAtomTypes(); 
+  if(e.which == 13) retrieveAtomTypes(); 
 });
 
 $("#ConnectConnectButton").click(function()
 { 
+  //The main connection button that gets the atoms
 	getAtoms();
 });
 
- 
 
 $("#FilterRefreshButton").click(function()
 {
@@ -638,12 +641,13 @@ $(".toolboxButton").click(function()
 	$(this).addClass("toolboxButtonSelected");
 });
 
+//Fix all the nodes so they wont move...
 $("#toggleFixNodes").click(function()
 {
 	if (fixedNodes)
 	{
 		for(var i=0;i<count;i++)
-	    	nodes[i].fixed = false;
+	    nodes[i].fixed = false;
 		fixedNodes = false;
 		force.start();
 		
@@ -652,7 +656,7 @@ $("#toggleFixNodes").click(function()
 		$(this).html("Fix Nodes");
 	}
 	else
-	{
+	{  //Unfix the nodes....
 		for(var i=0;i<count;i++)
 	    	nodes[i].fixed = true;
 	    fixedNodes = true;
@@ -756,6 +760,7 @@ $("#FilterRefreshAtomTypes").click(function()
 	retrieveAtomTypes();
 });
 
+//Show only the used Atom Types
 $("#FilterToggleUsedAtomTypes").click(function()
 {
 	 
@@ -833,7 +838,7 @@ $("#modalAtomTypesColorsButton").click(function()
 
 
  
-
+/* Not used anymore
 function findNodeFlatten(node)
 {
   index = -1;
@@ -847,7 +852,7 @@ function findNodeFlatten(node)
   }
   return index;
 }
-
+*/
 
 
 //RightClickMenu
@@ -1481,12 +1486,13 @@ $("#highlightsUnhighlightAll").click(function()
 
 
 
-
+//The function called when the show text button is pressed
 function AppearanceShowTextOn()
 {
 	d3.selectAll(".text").style("visibility", "visible");
 	savePreference("appearanceShowText",true);
 }
+
 
 function AppearanceShowTextOff()
 {
@@ -1551,6 +1557,10 @@ function atomDetailsFixedOff()
 		selectedNode.fixed = false;
 }
 
+//A very basic functions that renders out the 
+//elements according to the viewer and also
+//initiates the objects to be viewed such as
+//d3 or 3d.
 function showScreen(screen)
 {
  
@@ -1678,6 +1688,7 @@ function showScreen(screen)
 /*---- PREFERENCES -----*/
 /*---------------------*/
 /*---------------------*/
+//Load the preferences and assign default values....
 function loadPreferences()
 { 
 	preferences = window.localStorage;
@@ -1887,12 +1898,11 @@ function loadPreferences()
 		preferences.AVTjumpLimit = 2.0;
   
  
-  
-
-
 	updateGUIPreferences();
 }
 
+
+//Update the GUI preferences after loading the preferences...
 function updateGUIPreferences()
 {
 	full = 12;
@@ -2075,6 +2085,9 @@ function updateGUIPreferences()
  	
 }
 
+
+//Clear all the views
+//for rendering
 function clearViews()
 {
 
@@ -2098,6 +2111,7 @@ function clearViews()
 	$("<div>", {id: "screen-json" }).appendTo($("#mainContent"));
 }
 
+//This is a function that places a tick at the view menu
 function checkBoxLi(name,value)
 {
 	if (value)
@@ -2128,6 +2142,7 @@ function forgetPreferences()
 		}
 }
 
+//To be developed
 function updateAdvancedFilters()
 {
 	
@@ -2169,10 +2184,12 @@ function SearchAtom(atomHandle)
 
 /*---- CONNECTION -----*/
 /*---------------------*/
+// The basic function that gets the atoms
 /*---------------------*/
 function getAtoms()
 {
 
+  //Save the server at the connection text area
 	savePreference("cogserver",$("#ConnectCogServer").val());
 
 	if (atomData!= null)
@@ -2235,7 +2252,7 @@ function getAtoms()
     
     if (($("#FilterLimit").val() != null) && ($("#FilterLimit").val() != "")) 
     	filterQuery.limit= $("#FilterLimit").val();
-	else
+	   else
 		filterQuery.limit= null;
 
     var ret = [];
@@ -2247,12 +2264,10 @@ function getAtoms()
     queryString =  "?" + ret.join("&");
 
     add = "";
-	if (preferences.cogserver.slice(-1)!="/") add="/";
 
-   
+	 if (preferences.cogserver.slice(-1)!="/") add="/";
     finalURL = preferences.cogserver + add +  'api/v1.1/atoms' + queryString
 
-   
     dataType = "jsonp";
 
 	$.ajax(
@@ -2262,7 +2277,7 @@ function getAtoms()
     dataType: dataType,
     //processData: false,
     //crossDomain: true,
-    //timeout: ConnectionTimeout,
+     timeout: ConnectionTimeout,
     headers:
     {
     	"X-Requested-With" : ""
@@ -2355,9 +2370,9 @@ function getAtoms()
 
 function retrieveAtomTypes()
 {
-   add = "";
-	if (preferences.cogserver.slice(-1)!="/") add="/";
 
+  add = "";
+	if (preferences.cogserver.slice(-1)!="/") add="/";
 
 	//$("#FilterAtomTypeNoneValue").html("Loading Atomtypes...");
 
@@ -2372,14 +2387,14 @@ function retrieveAtomTypes()
 	{
 		url: finalURL,
 		type: 'GET',
-    	dataType: "jsonp",
-    	//processData: false,
-    	//crossDomain: true,
-    	//timeout:ConnectionTimeout, 
-    	headers :
-    	{
-    		"X-Requested-With" : ""
-    	}
+  	dataType: "jsonp",
+  	//processData: false,
+  	//crossDomain: true,
+  	timeout:ConnectionTimeout, 
+  	headers :
+  	{
+  		"X-Requested-With" : ""
+  	}
 	})
 	 
 	.success(function(types) 
@@ -2446,6 +2461,7 @@ function retrieveAtomTypes()
 
 }
 
+
 function updateStats()
 {
 
@@ -2464,12 +2480,10 @@ function updateStats()
 			stats["links"]++;
 		else
 			stats["nodes"]++;
-
-
 	}
 
- 
 }
+
 
 function displayStats()
 {
@@ -2539,6 +2553,8 @@ function defaultAtom()
 	return tempAtom;
 }
 
+
+//The popup window to display the connections
 function showAtomConnections(atom)
 {
    
@@ -2573,6 +2589,7 @@ function showAtomConnections(atom)
   $("#modalConnections").modal();
  
 }
+
 
 function showSelectedLink(link)
 {
