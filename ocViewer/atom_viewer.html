@@ -1,3 +1,14 @@
+<!--
+    ATOMSPACE VIEWER
+    This version is developed by
+    George Papanikolaou for OpenCog
+    www.skoumas.com
+    skoumas.net@gmail.com
+
+    Basic Javascript files are Functions.js and Visual.js.
+    For different views there are different views such as
+    Visual-3d.js
+ -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,13 +19,14 @@
     <!-- META -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+   
     <meta name="description" content="Data Visualizer for OpenCog's AtomSpace">
     <meta name="author" content="openCog skoumas">
 
     <!-- CSS -->
     <link href="media/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="media/font-awesome-4.3.0/css/font-awesome.min.css">
+ 
     <link rel="stylesheet" href="media/css/bootstrap.min.css">
     <link href="media/css/jquery-ui.css" rel="stylesheet">
     <link href="media/css/jquery-ui.structure.css" rel="stylesheet">
@@ -27,10 +39,15 @@
 </head>
  
 <body>
+
 <!-- NODE RIGHT CLICK MENU -->
 <div id="NodeContextMenu" class="dropdown clearfix contextMenu">
   <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
-    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse</a></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMCollapseExpand"><i class="fa fa-minus-square"></i> Collapse All</a></li>
+
+    <li class="divider"></li>
+    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse Incoming</a></li>
+    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse Outgoing</a></li>
     <li class="divider"></li>
     <li ><a tabindex="-1" href="#" id="NodeCMFix">Fix Position</a></li>
     <li ><a tabindex="-1" href="#" id="NodeCMHighlight">HighLight</a></li>
@@ -627,6 +644,12 @@
                     <!-- CONTENT -->
                     <table class="table table-settings">
                       <tr>
+                      <td colspan=2>
+                        <button id="textFullTextsButton" class="btn btn-success">Show Full Texts</button>
+                        <button id="textAbbreviatedTextsButton" class="btn btn-success">Show AbbrevatedText Texts</button>
+                      </td>
+                      </tr>
+                      <tr>
                         <td width="30%">Show Text?</td>
                         <td><div id="AppearanceShowText"></div></td>
                       </tr>
@@ -634,20 +657,17 @@
                         <td>Show Link Type Name</td>
                         <td><div id="textShowLinkTypeName"></div></td>
                       </tr>
-                      <tr>
-                        <td colspan=2>
-                          <button id="textFullTextsButton" class="btn btn-success">Show Full Texts</button>
-                          <button id="textAbbreviatedTextsButton" class="btn btn-success">Show AbbrevatedText Texts</button>
-                        </td>
-                      </tr>
+                    
+                      <!--
                       <tr>
                         <td width="30%">Abbreviation Style</td>
                         <td>
                           <select>
-                            <option> Coming Soon.... </option>
+                            <option>  </option>
                            
                           </select>
                       </tr>
+                    -->
                     </table>
                     <!-- END CONTENT -->
                   </div>
