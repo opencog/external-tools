@@ -17,6 +17,3 @@ TEMPLATE = app
 QMAKE_CXXFLAGS+=-std=c++11
 SOURCES += \
     cnet_import.cpp
-
-DISTFILES += \
-    main2.txt
