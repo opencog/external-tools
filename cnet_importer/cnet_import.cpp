@@ -154,12 +154,14 @@ inline QString to_scm_str(QStringList assertions,int templt,QString linktype,con
     }
 
     QString cn_argument1 = assertions[1].mid(6);
+    cn_argument1 = cn_argument1.left(cn_argument1.indexOf('/'));
     int i =wlist.indexOf(cn_argument1);
     float mean = (i !=-1) ? meanlist[i] : 0.0;
     float confidence = 0.95;
     QString cn1 = "(ConceptNode \""+cn_argument1+"\" (stv "+QString::number(mean)+" "+QString::number(confidence)+"))";
 
     QString cn_argument2 = assertions[2].mid(6);
+    cn_argument2 = cn_argument2.left(cn_argument2.indexOf('/'));
     i =wlist.indexOf(cn_argument2);
     mean = (i !=-1) ? meanlist[i] : 0.0;
     confidence = 0.95;
@@ -171,6 +173,7 @@ inline QString to_scm_str(QStringList assertions,int templt,QString linktype,con
     }
     else if(templt == 2){
         QString cn_relation = assertions[0].mid(3);
+        cn_relation = cn_relation.left(cn_relation.indexOf('/'));
         QString pn = "(PredicateNode \""+cn_relation+"\" (stv "+QString::number(confidence_value)+" "+QString::number(0.9)+"))";
         QString listlink = "(ListLink\n  "+cn1+"\n  "+cn2+")";
         QString evallink = "(EvaluationLink (stv "+QString::number(confidence_value)+"  "+QString::number(0.9)+")\n  "+pn+"\n  "+listlink+")\n";
