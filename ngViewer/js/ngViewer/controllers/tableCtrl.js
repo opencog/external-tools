@@ -1,0 +1,3 @@
+var tableCtrl = function ($scope) {
+
+};

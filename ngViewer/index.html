@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html ng-app="ngViewer">
+<head>
+
+    <meta charset="utf-8">
+
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/vis.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+
+    <!--LIBRARIES-->
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-resource.min.js"></script>
+    <script src="js/angular-route.min.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="js/vis.min.js"></script>
+
+    <!--CONTROLLERS-->
+    <script src="js/ngViewer/main.js"></script>
+    <script src="js/ngViewer/controllers/simpleCtrl.js"></script>
+    <script src="js/ngViewer/controllers/planarCtrl.js"></script>
+    <script src="js/ngViewer/controllers/jsonCtrl.js"></script>
+    <script src="js/ngViewer/controllers/tableCtrl.js"></script>
+    <script src="js/ngViewer/controllers/addNodeCtrl.js"></script>
+
+    <script src="js/ngViewer/factories.js"></script>
+    <title>Atomspace Viewer</title>
+</head>
+<body ng-controller="mainCtrl">
+
+<!--NAVBAR-->
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">Atomspace Viewer</a>
+    </div>
+
+    <!--NAV - RIGHT-->
+    <form class="navbar-form navbar-right">
+        <div class="btn-group" uib-dropdown is-open="status.isopen">
+            <button id="viewModeDropDown" type="button" class="btn btn-default" uib-dropdown-toggle
+                    ng-disabled="disabled">
+                {{getViewMode()}} <span class="caret"></span>
+            </button>
+            <ul class="uib-dropdown-menu" role="menu" aria-labelledby="single-button">
+                <li><a href="#/view/json">JSON</a></li>
+                <li><a href="#/view/planar">Planar</a></li>
+                <li><a href="#/view/simple">Simple</a></li>
+                <li><a href="#/view/table">Table</a></li>
+            </ul>
+        </div>
+
+
+        <button type="submit" class="btn btn-default"><i class="fa fa-refresh"></i></button>
+        <button type="submit" class="btn btn-default"><i class="fa fa-wrench"></i></button>
+        <button type="submit" class="btn btn-default"><i class="fa fa-question-circle"></i></button>
+    </form>
+
+
+    <form class="navbar-form">
+        <button type="submit" class="btn btn-default" ng-click="addNode_handler()"><i class="fa fa-plus-circle"></i>
+        </button>
+        <button type="submit" class="btn btn-default"><i class="fa fa-minus-circle"></i></button>
+        <button type="submit" class="btn btn-default"><i class="fa fa-edit"></i></button>
+        <button type="submit" class="btn btn-default"><i class="fa fa-link"></i></button>
+        <button type="submit" class="btn btn-default"><i class="fa fa-unlink"></i></button>
+        <button type="submit" class="btn btn-default"><i class="fa fa-expand"></i></button>
+    </form>
+</div>
+
+<div id="view" style="height: 85%" ng-view></div>
+
+<!--TERMINAL-->
+<div class="navbar navbar-default navbar-fixed-bottom" style="height: 15%;">
+    <div id="terminal">
+        guile>
+    </div>
+</div>
+</body>
+</html>
