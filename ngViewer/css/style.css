@@ -1,0 +1,24 @@
+body {
+    padding-top: 60px;
+    background-color: #EAEAEA;
+}
+
+#terminal {
+    height: 100%;
+    background-color: #121212;
+    color: #3e8f3e;
+    font-family: 'Courier New', sans-serif;
+    padding: 10px 5px;
+}
+
+#simple_view {
+    height: 100%;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}

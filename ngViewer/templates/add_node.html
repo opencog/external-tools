@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <h3 class="modal-title">Create a node...</h3>
+</div>
+<div class="modal-body">
+    <form novalidate class="form-horizontal">
+        <div class="form-group">
+            <label for="name" class="col-lg-3 control-label">Name</label>
+
+            <div class="col-lg-9">
+                <input ng-model="node.name" type="text" class="form-control" id="name" placeholder="Node name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="type" class="col-lg-3 control-label">Type</label>
+
+            <div class="col-lg-9">
+                <select ng-model="node.type" class="form-control" id="type">
+                    <option ng-repeat="type in types()">{{type}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">Truth Value</label>
+
+            <div class="col-lg-9">
+                <input ng-model="node.truthvalue.type" type="text" class="form-control" id="tv_type"
+                       placeholder="Truth value type">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">Details</label>
+
+            <div class="col-lg-3">
+                <input ng-model="node.truthvalue.details.count" type="text" class="form-control" id="count"
+                       placeholder="Count">
+            </div>
+            <div class="col-lg-3">
+                <input ng-model="node.truthvalue.details.confidence" type="text" class="form-control"
+                       id="confidence" placeholder="Confidence">
+            </div>
+            <div class="col-lg-3">
+                <input ng-model="node.truthvalue.details.strength" type="text" class="form-control" id="strength"
+                       placeholder="Strength">
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success" type="button" ng-click="ok()">Create</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
