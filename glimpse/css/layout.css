@@ -9,6 +9,8 @@ body {
 #dock_manager {
     clear: both;
     font-size: smaller;
+    background-color: #d3d3d3;
+
 }
 
 #toolbox_window {
@@ -21,6 +23,12 @@ body {
     background-color: #d3d3d3;
     width: 300px;
     padding: 12px;
+}
+
+#json_window {
+    background-color: #d3d3d3;
+    overflow: scroll;
+    padding: 10px;
 }
 
 #terminal_window {

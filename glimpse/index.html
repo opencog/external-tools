@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="glimpse">
 <head>
     <meta charset="utf-8">
 
@@ -16,12 +16,15 @@
     <script type="application/javascript" src="libs/jquery/dist/jquery.min.js"></script>
     <script type="application/javascript" src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <script type="application/javascript" src="libs/dock-spawn/js/out/js/dockspawn.js"></script>
+    <script type="application/javascript" src="libs/angular/angular.min.js"></script>
+    <script type="application/javascript" src="libs/angular-resource/angular-resource.min.js"></script>
 
     <title>Glimpse - Atomspace Viewer</title>
 </head>
 
-<body>
+<body ng-controller="mainCtrl">
 
+<!--Nav Bar-->
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid small">
         <div class="navbar-header">
@@ -59,26 +62,36 @@
 
 <div id="dock_manager"></div>
 
+<!--ToolBox-->
 <div id="toolbox_window" caption="Toolbox" icon="">
-
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-hand-pointer-o"></i></button>
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-plus-circle"></i></button>
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-minus-circle"></i></button>
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-link"></i></button>
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-unlink"></i></button>
-
 </div>
+
 <div id="atom_details_window" caption="Atom Details" icon=""></div>
 <div id="terminal_window" caption="Terminal" icon=""></div>
 
 <div id="three_d_window" caption="3D" icon=""></div>
-<div id="json_window" caption="JSON" icon=""></div>
+<div id="json_window" ng-controller="jsonCtrl" caption="JSON" icon="">
+    <div class="">
+        <pre>{{jsonAtoms}}</pre>
+    </div>
+</div>
 <div id="planar_window" caption="Planar" icon=""></div>
 <div id="scheme_window" caption="Scheme" icon=""></div>
 <div id="tabular_window" caption="Tabular" icon=""></div>
 
 <div id="settings_window" caption="Settings" icon=""></div>
 
+<!--More JS-->
 <script type="application/javascript" src="js/layout.js"></script>
+<script type="application/javascript" src="js/main.js"></script>
+<script type="application/javascript" src="js/factories.js"></script>
+
+<script type="application/javascript" src="js/controllers/jsonCtrl.js"></script>
+
 </body>
 </html>
