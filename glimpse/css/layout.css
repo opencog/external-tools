@@ -1,0 +1,28 @@
+body {
+    background-color: #888888;
+    padding-top: 53px;
+    margin: 0px;
+    overflow: hidden;
+    position: fixed;
+}
+
+#dock_manager {
+    clear: both;
+    font-size: smaller;
+}
+
+#toolbox_window {
+    background-color: #d3d3d3;
+    width: 100px;
+    padding: 15px;
+}
+
+#atom_details_window {
+    background-color: #d3d3d3;
+    width: 300px;
+    padding: 12px;
+}
+
+#terminal_window {
+    background-color: #1a1a1a;
+}
