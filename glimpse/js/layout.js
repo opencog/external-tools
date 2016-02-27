@@ -25,9 +25,9 @@ window.onload = function () {
 
     dockManager.dockFill(documentManagerNode, json_window);
     dockManager.dockFill(documentManagerNode, planar_window);
-    dockManager.dockFill(documentManagerNode, three_d_window);
-    dockManager.dockFill(documentManagerNode, scheme_window);
-    dockManager.dockFill(documentManagerNode, tabular_window);
+    //dockManager.dockFill(documentManagerNode, three_d_window);
+    //dockManager.dockFill(documentManagerNode, scheme_window);
+    //dockManager.dockFill(documentManagerNode, tabular_window);
     dockManager.dockDown(documentManagerNode, terminal_window, 0.2);
     dockManager.dockLeft(documentManagerNode, toolbox_window);
     dockManager.dockRight(documentManagerNode, atom_details_window);

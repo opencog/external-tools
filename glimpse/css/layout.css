@@ -27,7 +27,13 @@ body {
 
 #json_window {
     background-color: #d3d3d3;
-    overflow: scroll;
+    overflow: auto;
+    padding: 10px;
+}
+
+#planar_window {
+    background-color: #d3d3d3;
+    overflow: auto;
     padding: 10px;
 }
 

@@ -1,0 +1,29 @@
+svg {
+    background-color: #f2f2f2;
+    border: solid #b4b4b4 1px;
+    margin: auto;
+    display: block;
+    border-radius: 4px;
+
+}
+
+#planar_view {
+    height: 100%;
+    width: 100%;
+}
+
+.node circle {
+    stroke: #424242 ;
+    stroke-opacity: .6;
+    fill: #29a;
+    stroke-width: 1px;
+}
+
+.node text {
+    font: 10px sans-serif;
+}
+
+.connector {
+    stroke: #424242;
+    stroke-opacity: .8;
+}

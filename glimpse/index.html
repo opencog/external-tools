@@ -10,14 +10,17 @@
     <link rel="stylesheet" type="text/css" href="libs/dock-spawn/js/out/css/font-awesome.css">
     <link rel="stylesheet" type="text/css" href="libs/font-awesome/css/font-awesome.min.css">
 
+    <!--Custom CSS-->
     <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <link rel="stylesheet" type="text/css" href="css/planar.css">
 
-    <!--JS-->
+    <!--JS Libs-->
     <script type="application/javascript" src="libs/jquery/dist/jquery.min.js"></script>
     <script type="application/javascript" src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <script type="application/javascript" src="libs/dock-spawn/js/out/js/dockspawn.js"></script>
     <script type="application/javascript" src="libs/angular/angular.min.js"></script>
     <script type="application/javascript" src="libs/angular-resource/angular-resource.min.js"></script>
+    <script type="application/javascript" src="libs/d3/d3.min.js"></script>
 
     <title>Glimpse - Atomspace Viewer</title>
 </head>
@@ -30,7 +33,6 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Glimpse</a>
         </div>
-
         <ul class="nav navbar-nav">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">File<span class="caret"></span></a>
@@ -60,6 +62,7 @@
     </div>
 </div>
 
+
 <div id="dock_manager"></div>
 
 <!--ToolBox-->
@@ -70,28 +73,39 @@
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-link"></i></button>
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-unlink"></i></button>
 </div>
-
+<!--Atom Details-->
 <div id="atom_details_window" caption="Atom Details" icon=""></div>
+<!--Terminal-->
 <div id="terminal_window" caption="Terminal" icon=""></div>
 
+<!--3D-->
 <div id="three_d_window" caption="3D" icon=""></div>
+<!--JSON-->
 <div id="json_window" ng-controller="jsonCtrl" caption="JSON" icon="">
-    <div class="">
-        <pre>{{jsonAtoms}}</pre>
-    </div>
+    <pre>{{jsonAtoms}}</pre>
 </div>
-<div id="planar_window" caption="Planar" icon=""></div>
+<!--Planar-->
+<div id="planar_window" ng-controller="planarCtrl" caption="Planar" icon="">
+    <div id="planar_view"></div>
+</div>
+<!--Scheme-->
 <div id="scheme_window" caption="Scheme" icon=""></div>
+<!--Tabular-->
 <div id="tabular_window" caption="Tabular" icon=""></div>
 
+<!--Settings-->
 <div id="settings_window" caption="Settings" icon=""></div>
+
 
 <!--More JS-->
 <script type="application/javascript" src="js/layout.js"></script>
 <script type="application/javascript" src="js/main.js"></script>
 <script type="application/javascript" src="js/factories.js"></script>
+<script type="application/javascript" src="js/utils.js"></script>
 
+<!--Controllers-->
 <script type="application/javascript" src="js/controllers/jsonCtrl.js"></script>
+<script type="application/javascript" src="js/controllers/planarCtrl.js"></script>
 
 </body>
 </html>
