@@ -1,4 +1,7 @@
-angular.module('glimpse').controller("planarCtrl", function ($scope) {
+angular.module('glimpse').controller("planarCtrl", function ($scope, userSettings) {
+
+    var force;
+
 
 
     var updateView = function () {
@@ -39,33 +42,23 @@ angular.module('glimpse').controller("planarCtrl", function ($scope) {
 
 
         // Draw graph
-
         var bounding_rect = document.getElementById("planar_view").getBoundingClientRect();
-
         var width = bounding_rect.width, height = bounding_rect.height;
         document.getElementById("planar_view").innerHTML = "";
         var svg = d3.select("#planar_view")
             .append("svg:svg")
-            .attr("width", width - 20)
+            .attr("width", width)
             .attr("height", height)
-            .call(d3.behavior.zoom().on("zoom", svg_transform))
+            .call(d3.behavior.zoom().on("zoom", function () {
+                svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+            }))
             .append("svg:g");
 
-        console.log("HEIGHT = " + document.getElementById("planar_view").getBoundingClientRect().height);
-        console.log("WIDTH = " + document.getElementById("planar_view").getBoundingClientRect().width);
-
-        function svg_transform() {
-            svg.attr("transform",
-                "translate(" + d3.event.translate + ")"
-                + " scale(" + d3.event.scale + ")");
-        }
-
-        var force = d3.layout.force()
-            .charge(-300)
-            .linkDistance(20)
-            .gravity(0.15)
+        force = d3.layout.force()
+            .charge(userSettings.planarView.charge)
+            .linkDistance(userSettings.planarView.linkDistance)
+            .gravity(userSettings.planarView.gravity)
             .size([width, height]);
-
 
         var drag = force.drag()
             .on("dragstart", function (d) {
@@ -104,10 +97,6 @@ angular.module('glimpse').controller("planarCtrl", function ($scope) {
                 }
                 return d.label
             });
-        //node.on("mouseover", function (d) {
-        //    console.log(d);
-        //})
-
 
         force.on("tick", function () {
             connector.attr("x1", function (d) {
@@ -138,6 +127,13 @@ angular.module('glimpse').controller("planarCtrl", function ($scope) {
                 });
         });
 
+        function resize() {
+            width = window.innerWidth, height = window.innerHeight;
+            svg.attr("width", width).attr("height", height);
+            force.size([width, height]).resume();
+        }
+
+        d3.select(window).on("resize", resize);
 
     };
 
@@ -145,7 +141,12 @@ angular.module('glimpse').controller("planarCtrl", function ($scope) {
         updateView();
     });
 
-    updateView();
+    $scope.$on("settingsChanged", function () {
+        force.charge(userSettings.planarView.charge);
+        force.gravity(userSettings.planarView.gravity);
+        force.linkDistance(userSettings.planarView.linkDistance);
+    });
 
+    updateView();
 
 })
