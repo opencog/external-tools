@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html ng-app="glimpse">
+<head>
+    <meta charset="utf-8">
+
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="libs/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/dock-spawn/js/out/css/dock-manager.css">
+    <link rel="stylesheet" type="text/css" href="libs/dock-spawn/js/out/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="libs/font-awesome/css/font-awesome.min.css">
+
+    <!--Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <link rel="stylesheet" type="text/css" href="css/planar.css">
+
+    <!--JS Libs-->
+    <script type="application/javascript" src="libs/jquery/dist/jquery.min.js"></script>
+    <script type="application/javascript" src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="application/javascript" src="libs/dock-spawn/js/out/js/dockspawn.js"></script>
+    <script type="application/javascript" src="libs/angular/angular.min.js"></script>
+    <script type="application/javascript" src="libs/angular-resource/angular-resource.min.js"></script>
+    <script type="application/javascript" src="libs/d3/d3.min.js"></script>
+
+    <title>Glimpse - Atomspace Viewer</title>
+</head>
+
+<body ng-controller="mainCtrl">
+
+<!--Nav Bar-->
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid small">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Glimpse</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">File<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Import Preferences</a></li>
+                    <li><a href="#">Export Preferences</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">View<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Toolbox</a></li>
+                    <li><a href="#">Atom Details</a></li>
+                    <li><a href="#">Terminal</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">3D</a></li>
+                    <li><a href="#">JSON</a></li>
+                    <li><a href="#">Planar</a></li>
+                    <li><a href="#">Scheme</a></li>
+                    <li><a href="#">Tabular</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Help</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<div id="dock_manager"></div>
+
+<!--ToolBox-->
+<div id="toolbox_window" caption="Toolbox" icon="">
+    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-hand-pointer-o"></i></button>
+    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-plus-circle"></i></button>
+    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-minus-circle"></i></button>
+    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-link"></i></button>
+    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-unlink"></i></button>
+</div>
+<!--Atom Details-->
+<div id="atom_details_window" caption="Atom Details" icon=""></div>
+<!--Terminal-->
+<div id="terminal_window" caption="Terminal" icon=""></div>
+
+<!--3D-->
+<div id="three_d_window" caption="3D" icon=""></div>
+<!--JSON-->
+<div id="json_window" ng-controller="jsonCtrl" caption="JSON" icon="">
+    <pre>{{jsonAtoms}}</pre>
+</div>
+<!--Planar-->
+<div id="planar_window" ng-controller="planarCtrl" caption="Planar" icon="">
+    <div id="planar_view"></div>
+</div>
+<!--Scheme-->
+<div id="scheme_window" caption="Scheme" icon=""></div>
+<!--Tabular-->
+<div id="tabular_window" caption="Tabular" icon=""></div>
+
+<!--Settings-->
+<div id="settings_window" caption="Settings" icon=""></div>
+
+
+<!--More JS-->
+<script type="application/javascript" src="js/layout.js"></script>
+<script type="application/javascript" src="js/main.js"></script>
+<script type="application/javascript" src="js/factories.js"></script>
+<script type="application/javascript" src="js/utils.js"></script>
+
+<!--Controllers-->
+<script type="application/javascript" src="js/controllers/jsonCtrl.js"></script>
+<script type="application/javascript" src="js/controllers/planarCtrl.js"></script>
+
+</body>
+</html>
