@@ -70,7 +70,8 @@
 
 <!--ToolBox-->
 <div id="toolbox_panel" caption="Toolbox" icon="">
-    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-hand-pointer-o"></i></button>
+    <button type="submit" class="btn btn-default btn-sm btn-block" ng-click="pow()"><i class="fa fa-hand-pointer-o"></i>
+    </button>
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-plus-circle"></i></button>
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-minus-circle"></i></button>
     <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-link"></i></button>
@@ -84,12 +85,12 @@
 <!--3D-->
 <div id="three_d_panel" caption="3D" icon=""></div>
 <!--JSON-->
-<div id="json_panel" ng-controller="jsonCtrl" caption="JSON" icon="">
-    <pre>{{jsonAtoms}}</pre>
+<div id="json_panel" caption="JSON" icon="">
+    <json-view atoms="atoms"></json-view>
 </div>
 <!--Planar-->
-<div id="planar_panel" ng-controller="planarCtrl" caption="Planar" icon="">
-    <div id="planar_view"></div>
+<div id="planar_panel" caption="Planar" icon="">
+    <planar-view class="planar-view" atoms="atoms" settings="pv_settings"></planar-view>
 </div>
 <!--Scheme-->
 <div id="scheme_panel" caption="Scheme" icon=""></div>
@@ -140,14 +141,17 @@
 
 
 <!--More JS-->
-<script type="application/javascript" src="js/layout.js"></script>
 <script type="application/javascript" src="js/main.js"></script>
 <script type="application/javascript" src="js/factories.js"></script>
 <script type="application/javascript" src="js/utils.js"></script>
 
+<!--Directives-->
+<script type="application/javascript" src="js/directives/json-view.js"></script>
+<script type="application/javascript" src="js/directives/planar-view.js"></script>
+
 <!--Controllers-->
-<script type="application/javascript" src="js/controllers/jsonCtrl.js"></script>
-<script type="application/javascript" src="js/controllers/planarCtrl.js"></script>
+<!--<script type="application/javascript" src="js/controllers/jsonCtrl.js"></script>-->
+<!--<script type="application/javascript" src="js/controllers/planarCtrl.js"></script>-->
 
 </body>
 </html>

@@ -6,13 +6,13 @@ svg {
     border-radius: 4px;
 }
 
-#planar_view {
+planar-view {
     height: 100%;
     width: 100%;
 }
 
 .node circle {
-    stroke: #424242 ;
+    stroke: #424242;
     stroke-opacity: .6;
     fill: #29a;
     stroke-width: 1px;
@@ -22,7 +22,7 @@ svg {
     font: 10px sans-serif;
 }
 
-.connector {
+.link {
     stroke: #424242;
     stroke-opacity: .8;
 }
