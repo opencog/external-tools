@@ -1,6 +1,7 @@
 angular.module('glimpse')
     .directive('planarView', function () {
 
+
         function linkDirective(scope, element, attributes) {
             var force = d3.layout.force();
 

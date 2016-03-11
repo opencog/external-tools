@@ -32,7 +32,7 @@ body {
 
 #planar_panel {
     background-color: #d3d3d3;
-    overflow: auto;
+    overflow: visible;
     padding: 10px;
 }
 

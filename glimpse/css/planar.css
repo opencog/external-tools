@@ -1,14 +1,15 @@
-svg {
+planar-view {
+    height: 100%;
+    width: 100%;
+    float: left;
+}
+
+planar-view svg {
     background-color: #f2f2f2;
     border: solid #b4b4b4 1px;
     margin: auto;
     display: block;
-    border-radius: 4px;
-}
-
-planar-view {
-    height: 100%;
-    width: 100%;
+    border-radius: 8px;
 }
 
 .node circle {
@@ -25,4 +26,10 @@ planar-view {
 .link {
     stroke: #424242;
     stroke-opacity: .8;
+}
+
+#memo {
+    background-color: #116644;
+    width: 100%;
+    height: 100%;
 }
