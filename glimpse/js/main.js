@@ -85,8 +85,9 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     });
 
     $scope.showSettingsPanel = function () {
-        settingsDialog = new dockspawn.Dialog(settingsPanel, dockManager);
-        settingsDialog.setPosition(window.innerWidth - settingsPanel._cachedWidth, window.innerHeight - settingsPanel._cachedHeight);
+        console.log("ASDASD");
+        //settingsDialog = new dockspawn.Dialog(settingsPanel, dockManager);
+        //settingsDialog.setPosition(window.innerWidth - settingsPanel._cachedWidth, window.innerHeight - settingsPanel._cachedHeight);
     };
 
     $scope.pow = function () {

@@ -20,16 +20,20 @@ planar-view svg {
 }
 
 .node text {
-    font: 10px sans-serif;
+    font: Arial;
 }
 
 .link {
     stroke: #424242;
-    stroke-opacity: .8;
+    font-family: 'Courier New', sans-serif;
 }
 
-#memo {
-    background-color: #116644;
-    width: 100%;
-    height: 100%;
+.node_highlight circle {
+    stroke-opacity: .9;
+    fill: #3aaa60;
+    stroke-width: 2px;
+}
+
+.node_highlight text {
+    font-weight: bold;
 }

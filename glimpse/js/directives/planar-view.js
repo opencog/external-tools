@@ -55,6 +55,14 @@ angular.module('glimpse')
                     return d.label
                 });
 
+
+                node.on("mouseenter", function () {
+                    console.log(d3.select(this));
+                    d3.select(this).attr("class", "node node_highlight");
+                }).on("mouseout", function () {
+                    d3.select(this).attr("class", "node");
+                });
+
                 force.on("tick", function () {
                     link.attr("x1", function (d) {
                         return d.source.x;
