@@ -1,9 +1,9 @@
 angular.module('glimpse')
-    .directive('jsonView', function () {
+    .directive('atomDetails', function () {
         function link(scope, element, attributes) {
             scope.jsonAtoms = [];
 
-            scope.$watch('atoms', function (value) {
+            scope.$watch('selectedAtoms', function (value) {
                 scope.jsonAtoms = JSON.stringify(value, null, '\t');
             }, true);
         };
@@ -11,7 +11,7 @@ angular.module('glimpse')
         return {
             link: link,
             restrict: 'E',
-            scope: {atoms: '='},
+            scope: {atoms: '=', selectedAtoms: '='},
             template: '<pre>{{jsonAtoms}}</pre>',
             replace: true
         }

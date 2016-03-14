@@ -20,20 +20,40 @@ planar-view svg {
 }
 
 .node text {
-    font: Arial;
+    font: 'Courier New', sans-serif;
+}
+
+.node:hover circle {
+    stroke-opacity: .9;
+    fill: #28b6ca;
+    stroke-width: 1.5px;
+}
+
+.node:hover text {
+    font-weight: bold;
+}
+
+.node_selected circle {
+    stroke-opacity: .9;
+    fill: #fcbe28;
+    stroke-width: 1px;
+}
+
+.node_selected text {
+    font-weight: bold;
+}
+
+.node_selected:hover circle {
+    stroke-opacity: 1;
+    fill: #fcdb1f;
+    stroke-width: 2px;
+}
+
+.node_selected:hover text {
+    font-weight: bold;
 }
 
 .link {
     stroke: #424242;
     font-family: 'Courier New', sans-serif;
-}
-
-.node_highlight circle {
-    stroke-opacity: .9;
-    fill: #3aaa60;
-    stroke-width: 2px;
-}
-
-.node_highlight text {
-    font-weight: bold;
 }

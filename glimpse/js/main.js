@@ -85,7 +85,6 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     });
 
     $scope.showSettingsPanel = function () {
-        console.log("ASDASD");
         //settingsDialog = new dockspawn.Dialog(settingsPanel, dockManager);
         //settingsDialog.setPosition(window.innerWidth - settingsPanel._cachedWidth, window.innerHeight - settingsPanel._cachedHeight);
     };
@@ -99,6 +98,8 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         size: {width: 0, height: 0},
         force: {charge: -300}
     };
+    $scope.selected_atoms = [];
+
 
     $scope.getAtoms();
 })

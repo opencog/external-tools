@@ -1,7 +1,6 @@
 angular.module('glimpse')
     .directive('planarView', function () {
 
-
         function linkDirective(scope, element, attributes) {
             var force = d3.layout.force();
 
@@ -47,20 +46,27 @@ angular.module('glimpse')
                 var link = svg.selectAll(".link").data(graph.links).enter().append("line").attr("class", "link");
                 var node = svg.selectAll(".node").data(graph.nodes).enter().append("g").attr("class", "node").call(drag);
                 node.append("circle").attr("r", function (d) {
-                    if (isLink(d)) return 4;
-                    return 12
+                    return isLink(d) ? 4 : 12;
                 });
                 node.append("text").attr("dx", 10).attr("dy", ".35em").text(function (d) {
-                    if (isLink(d)) return d.type;
-                    return d.label
+                    return isLink(d) ? d.type : d.label;
                 });
 
-
                 node.on("mouseenter", function () {
-                    console.log(d3.select(this));
-                    d3.select(this).attr("class", "node node_highlight");
+                    //d3.select(this).attr("class", "node node_highlight");
                 }).on("mouseout", function () {
-                    d3.select(this).attr("class", "node");
+                    //d3.select(this).attr("class", "node");
+                }).on("click", function (sender) {
+                    if (scope.selectedAtoms.indexOf(sender.id) == -1)
+                        scope.selectedAtoms.push(sender.id);
+                    else
+                        scope.selectedAtoms.splice(scope.selectedAtoms.indexOf(sender.id), 1);
+
+
+                    node.attr("class", function (d) {
+                        return scope.selectedAtoms.indexOf(d.id) == -1 ? "node" : "node node_selected";
+                    });
+                    scope.$apply();
                 });
 
                 force.on("tick", function () {
@@ -93,6 +99,6 @@ angular.module('glimpse')
         return {
             link: linkDirective,
             restrict: 'E',
-            scope: {atoms: '=', settings: '='}
+            scope: {atoms: '=', settings: '=', selectedAtoms: '='}
         }
-    })
+    });
