@@ -1,18 +1,23 @@
 angular.module('glimpse')
     .directive('atomDetails', function () {
         function link(scope, element, attributes) {
-            scope.jsonAtoms = [];
 
-            scope.$watch('selectedAtoms', function (value) {
-                scope.jsonAtoms = JSON.stringify(value, null, '\t');
+
+            scope.$watch('selectedIndices', function (value) {
+                if (value) {
+                    scope.selectedAtoms = [];
+                    value.forEach(function (i) {
+                        scope.selectedAtoms.push(scope.atoms[i]);
+                    });
+                }
             }, true);
         };
 
         return {
             link: link,
             restrict: 'E',
-            scope: {atoms: '=', selectedAtoms: '='},
-            template: '<pre>{{jsonAtoms}}</pre>',
+            scope: {atoms: '=', selectedIndices: '='},
+            templateUrl: "js/templates/atom-details.html",
             replace: true
         }
     });

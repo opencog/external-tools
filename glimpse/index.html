@@ -79,7 +79,7 @@
 </div>
 <!--Atom Details-->
 <div id="atom_details_panel" caption="Atom Details" icon="">
-    <atom-details atoms="atoms" selected-atoms="selected_atoms"></atom-details>
+    <atom-details atoms="atoms" selected-indices="selected_indices"></atom-details>
 </div>
 <!--Terminal-->
 <div id="terminal_panel" caption="Terminal" icon=""></div>
@@ -92,7 +92,7 @@
 </div>
 <!--Planar-->
 <div id="planar_panel" caption="Planar" icon="">
-    <planar-view id="planar-view-1" class="planar-view" atoms="atoms" selected-atoms="selected_atoms"
+    <planar-view id="planar-view-1" class="planar-view" atoms="atoms" selected-indices="selected_indices"
                  settings="pv_settings"></planar-view>
 </div>
 <!--Scheme-->
@@ -151,11 +151,8 @@
 <!--Directives-->
 <script type="application/javascript" src="js/directives/json-view.js"></script>
 <script type="application/javascript" src="js/directives/planar-view.js"></script>
+<script type="application/javascript" src="js/directives/atom-detail.js"></script>
 <script type="application/javascript" src="js/directives/atom-details.js"></script>
-
-<!--Controllers-->
-<!--<script type="application/javascript" src="js/controllers/jsonCtrl.js"></script>-->
-<!--<script type="application/javascript" src="js/controllers/planarCtrl.js"></script>-->
 
 </body>
 </html>

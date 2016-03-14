@@ -57,14 +57,17 @@ angular.module('glimpse')
                 }).on("mouseout", function () {
                     //d3.select(this).attr("class", "node");
                 }).on("click", function (sender) {
-                    if (scope.selectedAtoms.indexOf(sender.id) == -1)
-                        scope.selectedAtoms.push(sender.id);
-                    else
-                        scope.selectedAtoms.splice(scope.selectedAtoms.indexOf(sender.id), 1);
-
+                    if (d3.event.shiftKey || d3.event.ctrlKey) {
+                        if (scope.selectedIndices.indexOf(sender.index == -1))
+                            scope.selectedIndices.push(sender.index);
+                        else
+                            scope.selectedIndices.splice(scope.selectedIndices.indexOf(sender.index), 1);
+                    } else {
+                        scope.selectedIndices = [sender.index];
+                    }
 
                     node.attr("class", function (d) {
-                        return scope.selectedAtoms.indexOf(d.id) == -1 ? "node" : "node node_selected";
+                        return scope.selectedIndices.indexOf(d.index) == -1 ? "node" : "node node_selected";
                     });
                     scope.$apply();
                 });
@@ -99,6 +102,6 @@ angular.module('glimpse')
         return {
             link: linkDirective,
             restrict: 'E',
-            scope: {atoms: '=', settings: '=', selectedAtoms: '='}
+            scope: {atoms: '=', settings: '=', selectedIndices: '='}
         }
     });

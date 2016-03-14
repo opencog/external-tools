@@ -98,7 +98,8 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         size: {width: 0, height: 0},
         force: {charge: -300}
     };
-    $scope.selected_atoms = [];
+    $scope.selectedIndices = [];
+
 
 
     $scope.getAtoms();
