@@ -16,6 +16,7 @@ body {
     background-color: #d3d3d3;
     width: 100px;
     padding: 15px;
+    overflow: auto;
 }
 
 #atom_details_panel {

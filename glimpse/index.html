@@ -70,12 +70,39 @@
 
 <!--ToolBox-->
 <div id="toolbox_panel" caption="Toolbox" icon="">
-    <button type="submit" class="btn btn-default btn-sm btn-block" ng-click="pow()"><i class="fa fa-hand-pointer-o"></i>
-    </button>
-    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-plus-circle"></i></button>
-    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-minus-circle"></i></button>
-    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-link"></i></button>
-    <button type="submit" class="btn btn-default btn-sm btn-block"><i class="fa fa-unlink"></i></button>
+    <a class="btn btn-sm btn-block" ng-class="[tool=='pan_zoom'?'btn-primary':'btn-default']" ng-click="tool='pan_zoom'">
+        <i class="fa fa-arrows"></i>
+    </a>
+    <a class="btn btn-sm btn-block" ng-class="[tool=='select'?'btn-primary':'btn-default']" ng-click="tool='select'">
+        <i class="fa fa-hand-pointer-o"></i>
+    </a>
+
+    <a class="btn btn-sm btn-block" ng-class="[tool=='add'?'btn-primary':'btn-default']" ng-click="tool='add'">
+        <i class="fa fa-plus-circle"></i>
+    </a>
+    <a class="btn btn-sm btn-block" ng-class="[tool=='delete'?'btn-primary':'btn-default']" ng-click="tool='delete'">
+        <i class="fa fa fa-trash-o"></i>
+    </a>
+    <a class="btn btn-sm btn-block" ng-class="[tool=='edit'?'btn-primary':'btn-default']" ng-click="tool='edit'">
+        <i class="fa fa-pencil-square-o"></i>
+    </a>
+
+    <a class="btn btn-sm btn-block" ng-class="[tool=='link'?'btn-primary':'btn-default']" ng-click="tool='link'">
+        <i class="fa fa-link"></i>
+    </a>
+    <a class="btn btn-sm btn-block" ng-class="[tool=='unlink'?'btn-primary':'btn-default']" ng-click="tool='unlink'">
+        <i class="fa fa-unlink"></i>
+    </a>
+    <a class="btn btn-sm btn-block" ng-class="[tool=='expand'?'btn-primary':'btn-default']" ng-click="tool='expand'">
+        <i class="fa fa-expand"></i>
+    </a>
+    <a class="btn btn-sm btn-block" ng-class="[tool=='collapse'?'btn-primary':'btn-default']" ng-click="tool='collapse'">
+        <i class="fa fa-compress"></i>
+    </a>
+    <a class="btn btn-sm btn-block" ng-class="[tool=='anchor'?'btn-primary':'btn-default']" ng-click="tool='anchor'">
+        <i class="fa fa-anchor"></i>
+    </a>
+
 </div>
 <!--Atom Details-->
 <div id="atom_details_panel" caption="Atom Details" icon="">
@@ -93,7 +120,7 @@
 <!--Planar-->
 <div id="planar_panel" caption="Planar" icon="">
     <planar-view id="planar-view-1" class="planar-view" atoms="atoms" selected-indices="selected_indices"
-                 settings="pv_settings"></planar-view>
+                 settings="pv_settings" tool="tool"></planar-view>
 </div>
 <!--Scheme-->
 <div id="scheme_panel" caption="Scheme" icon=""></div>

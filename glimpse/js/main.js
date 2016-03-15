@@ -90,16 +90,17 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     };
 
     $scope.pow = function () {
+
     };
 
     // Init
     $scope.atoms = [];
+    $scope.tool = "pan_zoom";
     $scope.pv_settings = {
         size: {width: 0, height: 0},
         force: {charge: -300}
     };
     $scope.selectedIndices = [];
-
 
 
     $scope.getAtoms();

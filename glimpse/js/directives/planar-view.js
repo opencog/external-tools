@@ -26,7 +26,7 @@ angular.module('glimpse')
                     .append("svg:svg")
                     .attr("width", scope.settings.size.width).attr("height", scope.settings.size.height)
                     .call(d3.behavior.zoom().on("zoom", function () {
-                        svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+                        if (scope.tool == 'pan_zoom') svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
                     }))
                     .append("svg:g");
 
@@ -35,16 +35,15 @@ angular.module('glimpse')
                     .gravity(0.15)
                     .size([scope.settings.size.width, scope.settings.size.height]);
 
-                var drag = force.drag().on("dragstart", function (d) {
-                    d3.event.sourceEvent.stopPropagation();
-                });
-
 
                 force.nodes(graph.nodes).links(graph.links).start();
                 update(scope.settings);
 
                 var link = svg.selectAll(".link").data(graph.links).enter().append("line").attr("class", "link");
-                var node = svg.selectAll(".node").data(graph.nodes).enter().append("g").attr("class", "node").call(drag);
+                var node = svg.selectAll(".node").data(graph.nodes).enter().append("g").attr("class", "node")
+                    .call(force.drag().on("dragstart", function (d) {
+                        if (scope.tool == 'pan_zoom') d3.event.sourceEvent.stopPropagation();
+                    }));
                 node.append("circle").attr("r", function (d) {
                     return isLink(d) ? 4 : 12;
                 });
@@ -52,23 +51,22 @@ angular.module('glimpse')
                     return isLink(d) ? d.type : d.label;
                 });
 
-                node.on("mouseenter", function () {
-                    //d3.select(this).attr("class", "node node_highlight");
-                }).on("mouseout", function () {
-                    //d3.select(this).attr("class", "node");
-                }).on("click", function (sender) {
-                    if (d3.event.shiftKey || d3.event.ctrlKey) {
-                        if (scope.selectedIndices.indexOf(sender.index == -1))
-                            scope.selectedIndices.push(sender.index);
-                        else
-                            scope.selectedIndices.splice(scope.selectedIndices.indexOf(sender.index), 1);
-                    } else {
-                        scope.selectedIndices = [sender.index];
+                node.on("click", function (sender) {
+
+                    if (scope.tool == 'select') {
+                        if (d3.event.shiftKey || d3.event.ctrlKey) {
+                            if (scope.selectedIndices.indexOf(sender.index == -1))
+                                scope.selectedIndices.push(sender.index);
+                            else
+                                scope.selectedIndices.splice(scope.selectedIndices.indexOf(sender.index), 1);
+                        } else {
+                            scope.selectedIndices = [sender.index];
+                        }
+                        node.attr("class", function (d) {
+                            return scope.selectedIndices.indexOf(d.index) == -1 ? "node" : "node node_selected";
+                        });
                     }
 
-                    node.attr("class", function (d) {
-                        return scope.selectedIndices.indexOf(d.index) == -1 ? "node" : "node node_selected";
-                    });
                     scope.$apply();
                 });
 
@@ -102,6 +100,6 @@ angular.module('glimpse')
         return {
             link: linkDirective,
             restrict: 'E',
-            scope: {atoms: '=', settings: '=', selectedIndices: '='}
+            scope: {atoms: '=', settings: '=', selectedIndices: '=', tool: '='}
         }
     });
