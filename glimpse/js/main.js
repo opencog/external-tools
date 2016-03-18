@@ -3,8 +3,8 @@ var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion"
 glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, AtomsFactory) {
     // Global vars
     var divDockManager, dockManager;
-    var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel, settingsPanel;
-    var documentManagerNode, toolboxNode, jsonNode, threeDNode, terminalNode, planarNode, atomDetailsNode, settingsDialog;
+    var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel, filtersPanel, settingsPanel;
+    var documentManagerNode, toolboxNode, jsonNode, threeDNode, terminalNode, planarNode, atomDetailsNode, settingsDialog, filtersDialog;
 
     var planarView1;
 
@@ -16,7 +16,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     };
 
     var panelResized = function () {
-        $scope.pv_settings.size = {
+        $scope.settings.planar.size = {
             width: planarView1.getBoundingClientRect().width,
             height: planarView1.getBoundingClientRect().height
         };
@@ -45,6 +45,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         planarPanel = new dockspawn.PanelContainer(document.getElementById("planar_panel"), dockManager);
         schemePanel = new dockspawn.PanelContainer(document.getElementById("scheme_panel"), dockManager);
         tabularPanel = new dockspawn.PanelContainer(document.getElementById("tabular_panel"), dockManager);
+        filtersPanel = new dockspawn.PanelContainer(document.getElementById("filters_panel"), dockManager);
         settingsPanel = new dockspawn.PanelContainer(document.getElementById("settings_panel"), dockManager);
 
         // Dock windows
@@ -65,9 +66,10 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         // Translate jquery events into angular
         $(document)
             .on("dockspawn.panelResized", function (event) {
-                $rootScope.$apply(function () {
-                    $rootScope.$broadcast("panelResized");
-                });
+                if (event.sender == planarPanel)
+                    $rootScope.$apply(function () {
+                        $rootScope.$broadcast("panelResized");
+                    });
             })
             .on("dockspawn.panelUndock", function (event) {
                 $rootScope.$apply(function () {
@@ -84,23 +86,28 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         $timeout(panelResized);
     });
 
-    $scope.showSettingsPanel = function () {
-        //settingsDialog = new dockspawn.Dialog(settingsPanel, dockManager);
-        //settingsDialog.setPosition(window.innerWidth - settingsPanel._cachedWidth, window.innerHeight - settingsPanel._cachedHeight);
+    $scope.showPanel = function (panel) {
+        if (panel == 'filters') {
+            filtersDialog = new dockspawn.Dialog(filtersPanel, dockManager);
+            filtersDialog.setPosition(window.innerWidth - filtersPanel._cachedWidth, window.innerHeight - filtersPanel._cachedHeight);
+        } else if (panel == 'planar_settings') {
+            settingsDialog = new dockspawn.Dialog(settingsPanel, dockManager);
+            settingsDialog.setPosition(window.innerWidth - settingsPanel._cachedWidth, window.innerHeight - settingsPanel._cachedHeight);
+        }
     };
 
-    $scope.pow = function () {
-
-    };
 
     // Init
     $scope.atoms = [];
     $scope.tool = "pan_zoom";
-    $scope.pv_settings = {
-        size: {width: 0, height: 0},
-        force: {charge: -300}
+    $scope.settings = {
+        planar: {
+            size: {width: 0, height: 0},
+            force: {charge: -300}
+        }
     };
     $scope.selectedIndices = [];
+    $scope.filter = [];
 
 
     $scope.getAtoms();

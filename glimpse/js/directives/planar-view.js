@@ -42,7 +42,7 @@ angular.module('glimpse')
                 var link = svg.selectAll(".link").data(graph.links).enter().append("line").attr("class", "link");
                 var node = svg.selectAll(".node").data(graph.nodes).enter().append("g").attr("class", "node")
                     .call(force.drag().on("dragstart", function (d) {
-                        if (scope.tool == 'pan_zoom') d3.event.sourceEvent.stopPropagation();
+                        d3.event.sourceEvent.stopPropagation();
                     }));
                 node.append("circle").attr("r", function (d) {
                     return isLink(d) ? 4 : 12;

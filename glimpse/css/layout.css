@@ -45,6 +45,19 @@ body {
     padding: 10px;
 }
 
+#filters_panel {
+    background-color: #d3d3d3;
+    overflow: auto;
+    width: 350px;
+    height: 420px;
+    padding: 10px;
+}
+
 #terminal_panel {
     background-color: #1a1a1a;
 }
+
+
+
+
+
