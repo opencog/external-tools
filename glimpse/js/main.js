@@ -78,6 +78,9 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
             });
 
         $timeout(panelResized);
+
+
+        //$scope.showPanel('planar_settings');
     };
 
 
@@ -103,7 +106,13 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     $scope.settings = {
         planar: {
             size: {width: 0, height: 0},
-            force: {charge: -300}
+            force: {
+                charge: -300,
+                friction: 10,
+                linkStrength: 0,
+                linkDistance: 20,
+                gravity: 0.15
+            }
         }
     };
     $scope.selectedIndices = [];

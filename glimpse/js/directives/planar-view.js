@@ -7,10 +7,14 @@ angular.module('glimpse')
             var update = function (settings) {
                 // Size
                 d3.select(element[0]).select("svg").attr("width", settings.size.width).attr("height", settings.size.height);
-                force.size([settings.size.width, settings.size.height]).resume();
+                force.size([settings.size.width, settings.size.height]);
 
                 // Force Params
                 force.charge(settings.force.charge);
+                force.linkDistance(settings.force.linkDistance);
+                force.gravity(settings.force.gravity);
+                //force.resume();
+                force.start();
             };
 
             scope.$watch('settings', function (settings) {
@@ -31,8 +35,8 @@ angular.module('glimpse')
                     .append("svg:g");
 
                 force.charge(scope.settings.force.charge)
-                    .linkDistance(20)
-                    .gravity(0.15)
+                    .linkDistance(scope.settings.force.linkDistance)
+                    .gravity(scope.settings.force.gravity)
                     .size([scope.settings.size.width, scope.settings.size.height]);
 
 
