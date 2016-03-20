@@ -71,6 +71,10 @@ angular.module('glimpse')
                         });
                     }
 
+                    else if (scope.tool == 'anchor') {
+                        sender.fixed = !d3.event.altKey;
+                    }
+
                     scope.$apply();
                 });
 
