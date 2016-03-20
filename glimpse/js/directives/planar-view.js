@@ -30,7 +30,7 @@ angular.module('glimpse')
                     .append("svg:svg")
                     .attr("width", scope.settings.size.width).attr("height", scope.settings.size.height)
                     .call(d3.behavior.zoom().on("zoom", function () {
-                        if (scope.tool == 'pan_zoom') svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+                        svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
                     }))
                     .append("svg:g");
 

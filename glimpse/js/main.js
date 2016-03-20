@@ -102,7 +102,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
 
     // Init
     $scope.atoms = [];
-    $scope.tool = "pan_zoom";
+    $scope.tool = "select";
     $scope.settings = {
         planar: {
             size: {width: 0, height: 0},
