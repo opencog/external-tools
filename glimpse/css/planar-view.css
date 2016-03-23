@@ -1,0 +1,59 @@
+planar-view {
+    height: 100%;
+    width: 100%;
+    float: left;
+}
+
+planar-view svg {
+    background-color: #f2f2f2;
+    border: solid #b4b4b4 1px;
+    margin: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.node circle {
+    stroke: #424242;
+    stroke-opacity: .6;
+    fill: #29a;
+    stroke-width: 1px;
+}
+
+.node text {
+    font: 'Courier New', sans-serif;
+}
+
+.node:hover circle {
+    stroke-opacity: .9;
+    fill: #28b6ca;
+    stroke-width: 1.5px;
+}
+
+.node:hover text {
+    font-weight: bold;
+}
+
+.node_selected circle {
+    stroke-opacity: .9;
+    fill: #fcbe28;
+    stroke-width: 1px;
+}
+
+.node_selected text {
+    font-weight: bold;
+}
+
+.node_selected:hover circle {
+    stroke-opacity: 1;
+    fill: #fcdb1f;
+    stroke-width: 2px;
+}
+
+.node_selected:hover text {
+    font-weight: bold;
+}
+
+.link {
+    stroke: #424242;
+    font-family: 'Courier New', sans-serif;
+}

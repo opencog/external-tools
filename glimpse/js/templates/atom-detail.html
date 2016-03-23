@@ -1,0 +1,41 @@
+<div class="panel panel-default" style="margin-bottom: 10px;">
+    <div class="panel-heading" style="padding: 5px">
+        <h4 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            {{atom.name}}
+        </h4>
+        <span class="label label-info">{{atom.type}}</span>
+    </div>
+
+    <div class="panel-body">
+        <table style="width:100%">
+            <col width="10">
+            <col width="100">
+            <tr>
+                <td>Handle</td>
+                <td>{{atom.handle}}</td>
+            </tr>
+
+            <tr>
+                <td>LTI</td>
+                <td>{{atom.attentionvalue.lti}}</td>
+            </tr>
+            <tr>
+                <td>STI</td>
+                <td>{{atom.attentionvalue.sti}}</td>
+            </tr>
+            <tr>
+                <td>VLTI</td>
+                <td>{{atom.attentionvalue.vlti}}</td>
+            </tr>
+
+            <tr>
+                <td>Confidence</td>
+                <td>{{atom.truthvalue.details.confidence}}</td>
+            </tr>
+            <tr>
+                <td>Strength</td>
+                <td>{{atom.truthvalue.details.strength}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

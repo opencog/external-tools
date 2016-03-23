@@ -10,33 +10,54 @@ body {
     clear: both;
     font-size: smaller;
     background-color: #d3d3d3;
-
 }
 
-#toolbox_window {
+#toolbox_panel {
     background-color: #d3d3d3;
     width: 100px;
     padding: 15px;
+    overflow: auto;
 }
 
-#atom_details_window {
+#atom_details_panel {
     background-color: #d3d3d3;
     width: 300px;
     padding: 12px;
 }
 
-#json_window {
+#json_panel {
     background-color: #d3d3d3;
     overflow: auto;
     padding: 10px;
 }
 
-#planar_window {
+#planar_panel {
     background-color: #d3d3d3;
-    overflow: auto;
+    overflow: visible;
     padding: 10px;
 }
 
-#terminal_window {
+#settings_panel {
+    background-color: #eaeaea;
+    overflow: auto;
+    width: 350px;
+    height: 420px;
+    padding: 10px;
+}
+
+#filters_panel {
+    background-color: #d3d3d3;
+    overflow: auto;
+    width: 350px;
+    height: 420px;
+    padding: 10px;
+}
+
+#terminal_panel {
     background-color: #1a1a1a;
 }
+
+
+
+
+
