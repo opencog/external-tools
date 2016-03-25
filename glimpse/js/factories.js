@@ -5,10 +5,11 @@ angular.module('glimpse')
 
         atomsFactory.atoms = [];
         atomsFactory.pullAtoms = function (callback) {
-            $resource("http://localhost:8000/test_jsons/atoms.json").get(function (data) {
+            $resource("test_jsons/atoms.json", {}, {'get': {method: 'GET', cache: false}}).get(function (data) {
                 atomsFactory.atoms = data.result.atoms;
                 if (typeof callback === "function") callback();
             });
+
         };
         return atomsFactory;
     })

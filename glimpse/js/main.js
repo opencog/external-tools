@@ -99,7 +99,6 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         }
     };
 
-
     // Init
     $scope.atoms = [];
     $scope.tool = "select";
@@ -117,7 +116,6 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     };
     $scope.selectedIndices = [];
     $scope.filter = [];
-
 
     $scope.getAtoms();
 })
