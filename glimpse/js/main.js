@@ -79,8 +79,6 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
 
         $timeout(panelResized);
 
-
-        //$scope.showPanel('planar_settings');
     };
 
 

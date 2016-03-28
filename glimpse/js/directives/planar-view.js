@@ -108,15 +108,15 @@ angular.module('glimpse')
                 node.on("click", function (sender) {
                     if (scope.tool == 'select') {
                         if (d3.event.shiftKey || d3.event.ctrlKey) {
-                            if (scope.selectedIndices.indexOf(sender.index == -1))
-                                scope.selectedIndices.push(sender.index);
+                            if (scope.selectedHandles.indexOf(sender.handle) == -1)
+                                scope.selectedHandles.push(sender.handle);
                             else
-                                scope.selectedIndices.splice(scope.selectedIndices.indexOf(sender.index), 1);
+                                scope.selectedHandles.splice(scope.selectedHandles.indexOf(sender.handle), 1);
                         } else {
-                            scope.selectedIndices = [sender.index];
+                            scope.selectedHandles = [sender.handle];
                         }
                         node.attr("class", function (d) {
-                            return scope.selectedIndices.indexOf(d.index) == -1 ? "node" : "node node_selected";
+                            return scope.selectedHandles.indexOf(d.handle) == -1 ? "node" : "node node_selected";
                         });
                     }
                     else if (scope.tool == 'anchor') {
@@ -144,7 +144,7 @@ angular.module('glimpse')
         return {
             link: linkDirective,
             restrict: 'E',
-            scope: {atoms: '=', settings: '=', selectedIndices: '=', tool: '='}
+            scope: {atoms: '=', settings: '=', selectedHandles: '=', tool: '='}
         };
     })
 ;
