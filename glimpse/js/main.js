@@ -111,6 +111,10 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
                 linkStrength: 0,
                 linkDistance: 20,
                 gravity: 0.15
+            },
+            simplifications: {
+                logical: true,
+                evaluation: true
             }
         }
     };

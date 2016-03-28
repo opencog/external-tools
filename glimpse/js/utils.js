@@ -2,50 +2,12 @@
  Contains various helper functions
  */
 
-
 var isNode = function (atom) {
     return atom["type"].indexOf("Node") > -1;
 };
 
 var isLink = function (atom) {
     return atom["type"].indexOf("Link") > -1;
-};
-
-
-var processAtoms = function (atoms) {
-    var graph = {nodes: [], links: []};
-    var raw_links = [];
-    for (var atom_index = 0; atom_index < atoms.length; atom_index++) {
-        var atom = atoms[atom_index];
-        graph.nodes.push({
-            handle: atom["handle"],
-            label: atom["name"],
-            type: atom["type"]
-        });
-
-        if (isLink(atom)) {
-            for (var outgoing_index = 0; outgoing_index < atom["outgoing"].length; outgoing_index++) {
-                raw_links.push({
-                    source: atom["handle"],
-                    target: atom["outgoing"][outgoing_index],
-                    type: atom["type"],
-                    label: atom["type"]
-                });
-            }
-        }
-    }
-
-    raw_links.forEach(function (e) {
-        var sourceNode = graph.nodes.filter(function (n) {
-                return n.handle === e.source;
-            })[0],
-            targetNode = graph.nodes.filter(function (n) {
-                return n.handle === e.target;
-            })[0];
-        graph.links.push({source: sourceNode, target: targetNode, label: e.label, type: e.type});
-    });
-
-    return graph;
 };
 
 
@@ -62,3 +24,40 @@ var indexOfLink = function (haystack, needle) {
     }
     return -1;
 }
+
+
+var atoms2Graph = function (atoms, settings) {
+    var graph = {nodes: [], edges: []};
+    var rawEdges = [];
+    for (var atom_index = 0; atom_index < atoms.length; atom_index++) {
+        var atom = atoms[atom_index];
+        graph.nodes.push({
+            handle: atom["handle"],
+            label: atom["name"] || atom["type"],
+            type: atom["type"]
+        });
+
+        if (isLink(atom)) {
+            for (var outgoing_index = 0; outgoing_index < atom["outgoing"].length; outgoing_index++) {
+                rawEdges.push({
+                    source: atom["handle"],
+                    target: atom["outgoing"][outgoing_index],
+                    label: atom["type"]
+                });
+            }
+        }
+    }
+
+    rawEdges.forEach(function (e) {
+        var sourceNode = graph.nodes.filter(function (n) {
+                return n.handle === e.source;
+            })[0],
+            targetNode = graph.nodes.filter(function (n) {
+                return n.handle === e.target;
+            })[0];
+        graph.edges.push({source: sourceNode, target: targetNode, label: e.label});
+    });
+
+    return graph;
+};
+

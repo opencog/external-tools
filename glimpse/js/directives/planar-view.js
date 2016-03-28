@@ -4,16 +4,15 @@ angular.module('glimpse')
         function linkDirective(scope, element, attributes) {
 
             // Create force layout and svg
-            var graph = {nodes: [], links: []};
             var force = d3.layout.force()
-                .nodes(graph.nodes)
-                .links(graph.links)
+                .nodes([])
+                .links([])
                 .charge(scope.settings.force.charge)
                 .linkDistance(scope.settings.force.linkDistance)
                 .gravity(scope.settings.force.gravity)
                 .size([scope.settings.size.width, scope.settings.size.height])
                 .on("tick", function () {
-                    link.attr("x1", function (d) {
+                    edge.attr("x1", function (d) {
                         return d.source.x;
                     }).attr("y1", function (d) {
                         return d.source.y;
@@ -38,70 +37,75 @@ angular.module('glimpse')
                 .append("svg:svg")
                 .attr("width", scope.settings.size.width).attr("height", scope.settings.size.height)
                 .call(d3.behavior.zoom().on("zoom", function () {
-                    svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
-                }))
-                .append("svg:g");
+                    svg_g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+                }));
 
-            var node = svg.selectAll(".node"),
-                link = svg.selectAll(".link");
+            var svg_g = svg.append("svg:g");
+
+            var node = svg_g.selectAll(".node"),
+                edge = svg_g.selectAll(".edge");
 
             // Update display whenever atoms change
             scope.$watch('atoms', function (atoms) {
-                var newGraph = processAtoms(atoms);
+                var graph = atoms2Graph(atoms, scope.settings.simplifications);
 
-                // Add and update nodes
-                for (var i = 0; i < newGraph.nodes.length; i++) {
-                    var nodeIndex = indexOfNode(graph.nodes, newGraph.nodes[i]);
-                    if (nodeIndex == -1) {
-                        graph.nodes.push(newGraph.nodes[i]);
+                // Add new nodes and update existing ones
+                for (var i = 0; i < graph.nodes.length; i++) {
+                    var nodeIndex = indexOfNode(force.nodes(), graph.nodes[i]);
+                    if (nodeIndex == -1) { //New Node
+                        force.nodes().push(graph.nodes[i]);
                     }
-                    else {
-                        graph.nodes[nodeIndex].label = newGraph.nodes[i].label;
-                        graph.nodes[nodeIndex].type = newGraph.nodes[i].type;
+                    else { // Update existing
+                        force.nodes()[nodeIndex].label = graph.nodes[i].label;
+                        force.nodes()[nodeIndex].type = graph.nodes[i].type;
                     }
                 }
+                // Remove nodes not in the updated atoms
+                force.nodes(force.nodes().filter(function (n) {
+                    return indexOfNode(graph.nodes, n) > -1;
+                }));
 
-                // Add and update links
-                for (var i = 0; i < newGraph.links.length; i++) {
-                    console.log(newGraph.links[i]);
-                    var linkIndex = indexOfLink(graph.links, newGraph.links[i]);
+
+                // Add new links and update existing ones
+                for (i = 0; i < graph.edges.length; i++) {
+                    var linkIndex = indexOfLink(force.links(), graph.edges[i]);
                     if (linkIndex == -1) {
-                        graph.links.push(newGraph.links[i]);
+                        force.links().push(graph.edges[i]);
                     }
                     else {
-                        graph.links[linkIndex].source = newGraph.links[i].source;
-                        graph.links[linkIndex].target = newGraph.links[i].target;
-                        graph.links[linkIndex].label = newGraph.links[i].label;
-                        graph.links[linkIndex].type = newGraph.links[i].typr;
+                        force.links()[linkIndex].label = graph.edges[i].label;
                     }
                 }
+                // Remove links...
+                force.links(force.links().filter(function (n) {
+                    return indexOfLink(graph.edges, n) > -1;
+                }));
 
 
-                link = link.data(graph.links);
-                link.enter().append("line").attr("class", "link");
-                link.exit().remove();
+                // Clear canvas
+                svg_g.selectAll(".node").remove();
+                svg_g.selectAll(".edge").remove();
 
-                node = node.data(graph.nodes);
+                // Draw Edges
+                edge = svg_g.selectAll(".edge");
+                edge = edge.data(force.links());
+                edge.enter().append("line").attr("class", "edge");
+                edge.exit().remove();
+
+                //Draw Nodes
+                node = svg_g.selectAll(".node");
+                node = node.data(force.nodes());
                 node.enter().append("g").attr("class", "node");
-
-                // Remove text and circle from previous drawing
-                for (var i = 0; i < node["0"].length; i++) {
-                    node["0"][i].innerHTML = "";
-                }
-
                 node.call(force.drag().on("dragstart", function (d) {
                     d3.event.sourceEvent.stopPropagation();
                 }));
-
                 node.append("circle").attr("r", function (d) {
                     return isLink(d) ? 4 : 12;
                 });
                 node.append("text").attr("dx", 10).attr("dy", ".35em").text(function (d) {
                     return isLink(d) ? d.type : d.label;
                 });
-
                 node.on("click", function (sender) {
-
                     if (scope.tool == 'select') {
                         if (d3.event.shiftKey || d3.event.ctrlKey) {
                             if (scope.selectedIndices.indexOf(sender.index == -1))
@@ -115,22 +119,18 @@ angular.module('glimpse')
                             return scope.selectedIndices.indexOf(d.index) == -1 ? "node" : "node node_selected";
                         });
                     }
-
                     else if (scope.tool == 'anchor') {
                         sender.fixed = !d3.event.altKey;
                     }
-
                     scope.$apply();
                 });
 
-
-                node.exit().remove();
                 force.start();
             }, true);
 
 
             scope.$watch('settings', function (settings) {
-                d3.select(element[0]).select("svg").attr("width", settings.size.width).attr("height", settings.size.height);
+                svg.attr("width", settings.size.width).attr("height", settings.size.height);
                 force.size([settings.size.width, settings.size.height]);
 
                 // Force Params
