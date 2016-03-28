@@ -45,6 +45,26 @@ angular.module('glimpse')
             var node = svg_g.selectAll(".node"),
                 edge = svg_g.selectAll(".edge");
 
+            // Add Arrow definition
+            svg.append("defs").selectAll("marker")
+                .data(["end"])
+                .enter().append("marker")
+                .attr("id", function (d) {
+                    return d;
+                })
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 30)
+                .attr("refY", 0)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,-5L10,0L0,5")
+                .style("fill", "#424242")
+                .style("stroke", "#424242")
+                .style("stroke-opacity", "0.8");
+
+
             // Update display whenever atoms change
             scope.$watch('atoms', function (atoms) {
                 var graph = atoms2Graph(atoms, scope.settings.simplifications);
@@ -81,7 +101,6 @@ angular.module('glimpse')
                     return indexOfLink(graph.edges, n) > -1;
                 }));
 
-
                 // Clear canvas
                 svg_g.selectAll(".node").remove();
                 svg_g.selectAll(".edge").remove();
@@ -89,7 +108,8 @@ angular.module('glimpse')
                 // Draw Edges
                 edge = svg_g.selectAll(".edge");
                 edge = edge.data(force.links());
-                edge.enter().append("line").attr("class", "edge");
+                edge.enter().append("line").attr("class", "edge")
+                    .style("marker-end", "url(#end)");
                 edge.exit().remove();
 
                 //Draw Nodes
