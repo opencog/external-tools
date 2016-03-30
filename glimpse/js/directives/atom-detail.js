@@ -1,9 +1,8 @@
 angular.module('glimpse')
     .directive('atomDetail', function () {
-        function link(scope, element, attributes) {
+        var link = function (scope, element, attributes) {
 
         };
-
         return {
             link: link,
             restrict: 'E',

@@ -81,7 +81,6 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
 
     };
 
-
     $scope.$on('panelResized', panelResized);
     $scope.$on('panelUndock', function () {
         $timeout(panelResized);
@@ -105,15 +104,16 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
             size: {width: 0, height: 0},
             force: {
                 charge: -300,
-                friction: 10,
-                linkStrength: 0,
-                linkDistance: 20,
-                gravity: 0.15
+                friction: 0.8,
+                gravity: 0.15,
+                linkDistance: 40,
+                linkStrength: 3
             },
-            simplifications: {
-                logical: true,
-                evaluation: true
-            }
+            text: {
+                node: "full",
+                link: "none"
+            },
+            simplifications: {}
         }
     };
     $scope.selectedIndices = [];

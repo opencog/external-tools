@@ -7,9 +7,6 @@ angular.module('glimpse')
             var force = d3.layout.force()
                 .nodes([])
                 .links([])
-                .charge(scope.settings.force.charge)
-                .linkDistance(scope.settings.force.linkDistance)
-                .gravity(scope.settings.force.gravity)
                 .size([scope.settings.size.width, scope.settings.size.height])
                 .on("tick", function () {
                     edge.attr("x1", function (d) {
@@ -63,6 +60,54 @@ angular.module('glimpse')
                 .style("fill", "#424242")
                 .style("stroke", "#424242")
                 .style("stroke-opacity", "0.8");
+
+
+            var settingsChanged = {};
+
+            // Monitor bounding box dimensions
+            settingsChanged.size = function (size) {
+                svg.attr("width", size.width).attr("height", size.height);
+                force.size([size.width, size.height]);
+                force.start();
+            };
+
+            // Monitor force params
+            settingsChanged.force = function (forceParams) {
+                force.charge(forceParams.charge)
+                    .friction(scope.settings.force.friction)
+                    .gravity(forceParams.gravity)
+                    .linkDistance(forceParams.linkDistance)
+                    .linkStrength(forceParams.linkStrength);
+                force.start();
+            };
+
+            // Monitor text settings
+            settingsChanged.text = function (textSettings) {
+                node = svg_g.selectAll(".node");
+                node = node.data(force.nodes());
+
+                // For nodes
+                node.select("text").filter(function (d) {
+                    return !isLink(d);
+                }).text(function (d) {
+                    if (textSettings.node == "full")
+                        return d.label;
+                    else if (textSettings.node == "abbreviated")
+                        return (d.label.length > 10) ? d.label.substr(0, 8) + "..." : d.label;
+                    return "";
+                });
+
+                // For Links
+                node.select("text").filter(function (d) {
+                    return isLink(d);
+                }).text(function (d) {
+                    if (textSettings.link == "full")
+                        return d.label;
+                    else if (textSettings.link == "abbreviated")
+                        return (d.label.length > 10) ? d.label.substr(0, 8) + "..." : d.label;
+                    return "";
+                });
+            };
 
 
             // Update display whenever atoms change
@@ -122,9 +167,7 @@ angular.module('glimpse')
                 node.append("circle").attr("r", function (d) {
                     return isLink(d) ? 4 : 12;
                 });
-                node.append("text").attr("dx", 10).attr("dy", ".35em").text(function (d) {
-                    return isLink(d) ? d.type : d.label;
-                });
+                node.append("text").attr("dx", 10).attr("dy", ".35em");
                 node.on("click", function (sender) {
                     if (scope.tool == 'select') {
                         if (d3.event.shiftKey || d3.event.ctrlKey) {
@@ -145,20 +188,16 @@ angular.module('glimpse')
                     scope.$apply();
                 });
 
+                settingsChanged.text(scope.settings.text);
+
                 force.start();
             }, true);
 
 
-            scope.$watch('settings', function (settings) {
-                svg.attr("width", settings.size.width).attr("height", settings.size.height);
-                force.size([settings.size.width, settings.size.height]);
+            scope.$watch('settings.size', settingsChanged.size, true);
+            scope.$watch('settings.force', settingsChanged.force, true);
+            scope.$watch('settings.text', settingsChanged.text, true);
 
-                // Force Params
-                force.charge(settings.force.charge);
-                force.linkDistance(settings.force.linkDistance);
-                force.gravity(settings.force.gravity);
-                force.start();
-            }, true);
         }
 
         return {
