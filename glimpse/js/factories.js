@@ -1,23 +1,58 @@
 angular.module('glimpse')
-    .factory('AtomsFactory', function ($resource) {
+    .factory('AtomsFactory', function ($http, $resource) {
 
         var atomsFactory = {};
 
-
+        // Data members
         atomsFactory.atoms = [];
         atomsFactory.server = "";
-        atomsFactory.pullAtoms = function (callback) {
-            $resource(atomsFactory.server + "api/v1.1/atoms", {}, {'get': {method: 'GET', cache: false}}).get(function (data) {
-                atomsFactory.atoms = data.result.atoms;
-                if (typeof callback === "function") callback();
-            });
+        atomsFactory.nodeTypes = [];
 
+        // Member functions
+        atomsFactory.updateAtoms = function (successCB) {
+            $http({
+                method: 'GET',
+                url: atomsFactory.server + "api/v1.1/atoms",
+                cache: false
+            }).then(
+                function (response) {
+                    atomsFactory.atoms = response.data.result.atoms;
+                    if (typeof successCB === "function") successCB();
+                },
+                function (error) {
+                    window.alert("Error connecting to server!");
+                }
+            );
         };
-
         atomsFactory.setServer = function (s) {
             atomsFactory.server = s;
+            atomsFactory.updateAtomTypes();
+            atomsFactory.updateAtoms();
+        };
+
+        atomsFactory.createAtom = function (atom, callback) {
+            $http({
+                method: 'POST',
+                url: atomsFactory.server + 'api/v1.1/atoms',
+                data: atom
+            }).then(function (response) {
+                if (typeof callback === "function") callback();
+            });
+        };
+
+        atomsFactory.updateAtomTypes = function () {
+            $http({
+                method: 'GET',
+                url: atomsFactory.server + 'api/v1.1/types'
+            }).then(function (response) {
+                atomsFactory.nodeTypes = response.data.types.filter(function (atom) {
+                    return atom.indexOf("Node") > -1;
+                });
+            });
         };
 
         return atomsFactory;
     })
+
+
 ;

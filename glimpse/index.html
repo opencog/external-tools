@@ -11,11 +11,11 @@
     <link rel="stylesheet" type="text/css" href="libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/v-accordion/dist/v-accordion.min.css">
 
+
     <!--Custom CSS-->
     <link rel="stylesheet" type="text/css" href="css/layout.css">
     <link rel="stylesheet" type="text/css" href="css/planar-view.css">
     <link rel="stylesheet" type="text/css" href="css/dropdown.css">
-
 
     <!--JS Libs-->
     <script type="application/javascript" src="libs/jquery/dist/jquery.min.js"></script>
@@ -97,10 +97,10 @@
         <i class="fa fa-hand-pointer-o"></i>
     </a>
 
-    <a title="Add" class="btn btn-sm btn-block" ng-class="[tool=='add'?'btn-primary':'btn-default']" ng-click="tool='add'">
+    <a title="Create a node" class="btn btn-sm btn-block btn-default" ng-click="showPanel('add_node')">
         <i class="fa fa-plus-circle"></i>
     </a>
-    <a title="Delete" class="btn btn-sm btn-block" ng-class="[tool=='delete'?'btn-primary':'btn-default']" ng-click="tool='delete'">
+    <a title="Delete selected nodes" class="btn btn-sm btn-block btn-default" ng-click="tool='delete'">
         <i class="fa fa fa-trash-o"></i>
     </a>
     <a title="Edit" class="btn btn-sm btn-block" ng-class="[tool=='edit'?'btn-primary':'btn-default']" ng-click="tool='edit'">
@@ -154,6 +154,11 @@
     <planar-settings settings="settings.planar"></planar-settings>
 </div>
 
+<!--Add -->
+<div id="add_node_panel" caption="Create a new node" icon="">
+    <add-node atoms="atoms"></add-node>
+</div>
+
 
 <!--More JS-->
 <script type="application/javascript" src="js/main.js"></script>
@@ -167,6 +172,7 @@
 <script type="application/javascript" src="js/directives/atom-details.js"></script>
 <script type="application/javascript" src="js/directives/filters.js"></script>
 <script type="application/javascript" src="js/directives/planar-settings.js"></script>
+<script type="application/javascript" src="js/directives/add-node.js"></script>
 
 </body>
 </html>

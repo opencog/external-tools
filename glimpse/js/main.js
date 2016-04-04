@@ -3,16 +3,18 @@ var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion"
 glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, AtomsFactory) {
     // Global vars
     var divDockManager, dockManager;
-    var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel, filtersPanel, settingsPanel;
-    var documentManagerNode, toolboxNode, jsonNode, threeDNode, terminalNode, planarNode, atomDetailsNode, settingsDialog, filtersDialog;
+    var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel,
+        filtersPanel, settingsPanel, addNodePanel;
+    var documentManagerNode, toolboxNode, jsonNode, threeDNode, terminalNode, planarNode, atomDetailsNode,
+        settingsDialog, filtersDialog, addNodeDialog;
 
     var planarView1;
 
     // Functions
     $scope.getAtoms = function () {
-        AtomsFactory.pullAtoms(function () {
+        AtomsFactory.updateAtoms(function () {
             $scope.atoms = AtomsFactory.atoms;
-            setTimeout($scope.getAtoms, 5000);
+            setTimeout($scope.getAtoms, 3000);
         });
     };
 
@@ -48,6 +50,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         tabularPanel = new dockspawn.PanelContainer(document.getElementById("tabular_panel"), dockManager);
         filtersPanel = new dockspawn.PanelContainer(document.getElementById("filters_panel"), dockManager);
         settingsPanel = new dockspawn.PanelContainer(document.getElementById("settings_panel"), dockManager);
+        addNodePanel = new dockspawn.PanelContainer(document.getElementById("add_node_panel"), dockManager);
 
         // Dock windows
         documentManagerNode = dockManager.context.model.documentManagerNode;
@@ -95,6 +98,11 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
             settingsDialog = new dockspawn.Dialog(settingsPanel, dockManager);
             settingsDialog.setPosition(window.innerWidth - settingsPanel._cachedWidth, window.innerHeight - settingsPanel._cachedHeight);
         }
+
+        else if (panel == 'add_node') {
+            addNodeDialog = new dockspawn.Dialog(addNodePanel, dockManager);
+            addNodeDialog.setPosition((window.innerWidth - addNodePanel._cachedWidth) / 2, 150);
+        }
     };
 
     // Init
@@ -129,6 +137,5 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     $scope.filter = [];
 
     $scope.getAtoms();
-
 
 });
