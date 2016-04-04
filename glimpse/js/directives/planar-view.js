@@ -125,32 +125,40 @@ angular.module('glimpse')
                         force.nodes()[nodeIndex].type = graph.nodes[i].type;
                     }
                 }
+
                 // Remove nodes not in the updated atoms
                 force.nodes(force.nodes().filter(function (n) {
                     return indexOfNode(graph.nodes, n) > -1;
                 }));
 
-
                 // Add new links and update existing ones
                 for (i = 0; i < graph.edges.length; i++) {
                     var linkIndex = indexOfLink(force.links(), graph.edges[i]);
                     if (linkIndex == -1) {
-                        force.links().push(graph.edges[i]);
+                        force.links().push({
+                            source: getAtomByHandle(force.nodes(), graph.edges[i]["source"]),
+                            target: getAtomByHandle(force.nodes(), graph.edges[i]["target"]),
+                            label: getAtomByHandle(force.nodes(), graph.edges[i]["label"])
+                        });
                     }
                     else {
                         force.links()[linkIndex].label = graph.edges[i].label;
                     }
                 }
+
                 // Remove links...
                 force.links(force.links().filter(function (n) {
-                    return indexOfLink(graph.edges, n) > -1;
+                    for (var i = 0; i < graph.edges.length; i++) {
+                        if (graph.edges[i].source == n.source.handle && graph.edges[i].target == n.target.handle) return true;
+                    }
+                    return false;
                 }));
 
                 // Clear canvas
                 svg_g.selectAll(".node").remove();
                 svg_g.selectAll(".edge").remove();
 
-                // Draw Edges
+                //Draw Edges
                 edge = svg_g.selectAll(".edge");
                 edge = edge.data(force.links());
                 edge.enter().append("line").attr("class", "edge")

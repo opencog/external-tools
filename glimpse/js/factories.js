@@ -3,26 +3,21 @@ angular.module('glimpse')
 
         var atomsFactory = {};
 
+
         atomsFactory.atoms = [];
+        atomsFactory.server = "";
         atomsFactory.pullAtoms = function (callback) {
-            $resource("test_jsons/atoms.json", {}, {'get': {method: 'GET', cache: false}}).get(function (data) {
+            $resource(atomsFactory.server + "api/v1.1/atoms", {}, {'get': {method: 'GET', cache: false}}).get(function (data) {
                 atomsFactory.atoms = data.result.atoms;
                 if (typeof callback === "function") callback();
             });
 
         };
-        return atomsFactory;
-    })
 
-    .factory('SettingsFactory', function ($resource) {
-
-        var settingsFactory = {};
-
-        settingsFactory.display.planarView = {
-            gravity: 0.2,
-            charge: -300,
-            linkDistance: 20
+        atomsFactory.setServer = function (s) {
+            atomsFactory.server = s;
         };
-        return settingsFactory;
+
+        return atomsFactory;
     })
 ;
