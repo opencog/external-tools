@@ -3,9 +3,13 @@ angular.module('glimpse')
         function link(scope, element, attributes) {
 
             scope.$watch('selectedHandles', function (handles) {
-                scope.selectedAtoms = scope.atoms.filter(function (n) {
-                    return handles.indexOf(n.handle) > -1;
-                });
+                if (handles) {
+                    scope.selectedAtoms = scope.atoms.filter(function (n) {
+                        return handles.indexOf(n.handle) > -1;
+                    });
+                } else {
+                    scope.selectedAtoms = [];
+                }
             }, true);
         };
 

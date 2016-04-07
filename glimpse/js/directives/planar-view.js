@@ -1,5 +1,5 @@
 angular.module('glimpse')
-    .directive('planarView', function () {
+    .directive('planarView', function (utils) {
 
         function linkDirective(scope, element, attributes) {
 
@@ -88,7 +88,7 @@ angular.module('glimpse')
 
                 // For nodes
                 node.select("text").filter(function (d) {
-                    return !isLink(d);
+                    return !utils.isLink(d);
                 }).text(function (d) {
                     if (textSettings.node == "full")
                         return d.label;
@@ -99,7 +99,7 @@ angular.module('glimpse')
 
                 // For Links
                 node.select("text").filter(function (d) {
-                    return isLink(d);
+                    return utils.isLink(d);
                 }).text(function (d) {
                     if (textSettings.link == "full")
                         return d.label;
@@ -112,11 +112,11 @@ angular.module('glimpse')
 
             // Update display whenever atoms change
             scope.$watch('atoms', function (atoms) {
-                var graph = atoms2Graph(atoms, scope.settings.simplifications);
+                var graph = utils.atoms2Graph(atoms, scope.settings.simplifications);
 
                 // Add new nodes and update existing ones
                 for (var i = 0; i < graph.nodes.length; i++) {
-                    var nodeIndex = indexOfNode(force.nodes(), graph.nodes[i]);
+                    var nodeIndex = utils.indexOfNode(force.nodes(), graph.nodes[i]);
                     if (nodeIndex == -1) { //New Node
                         force.nodes().push(graph.nodes[i]);
                     }
@@ -128,17 +128,17 @@ angular.module('glimpse')
 
                 // Remove nodes not in the updated atoms
                 force.nodes(force.nodes().filter(function (n) {
-                    return indexOfNode(graph.nodes, n) > -1;
+                    return utils.indexOfNode(graph.nodes, n) > -1;
                 }));
 
                 // Add new links and update existing ones
                 for (i = 0; i < graph.edges.length; i++) {
-                    var linkIndex = indexOfLink(force.links(), graph.edges[i]);
+                    var linkIndex = utils.indexOfLink(force.links(), graph.edges[i]);
                     if (linkIndex == -1) {
                         force.links().push({
-                            source: getAtomByHandle(force.nodes(), graph.edges[i]["source"]),
-                            target: getAtomByHandle(force.nodes(), graph.edges[i]["target"]),
-                            label: getAtomByHandle(force.nodes(), graph.edges[i]["label"])
+                            source: utils.getAtomByHandle(force.nodes(), graph.edges[i]["source"]),
+                            target: utils.getAtomByHandle(force.nodes(), graph.edges[i]["target"]),
+                            label: utils.getAtomByHandle(force.nodes(), graph.edges[i]["label"])
                         });
                     }
                     else {
@@ -173,7 +173,7 @@ angular.module('glimpse')
                     d3.event.sourceEvent.stopPropagation();
                 }));
                 node.append("circle").attr("r", function (d) {
-                    return isLink(d) ? 4 : 12;
+                    return utils.isLink(d) ? 4 : 12;
                 });
                 node.append("text").attr("dx", 10).attr("dy", ".35em");
                 node.on("click", function (sender) {

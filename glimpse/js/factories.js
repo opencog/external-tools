@@ -40,6 +40,15 @@ angular.module('glimpse')
             });
         };
 
+        atomsFactory.deleteAtom = function (handle, callback) {
+            $http({
+                method: 'DELETE',
+                url: atomsFactory.server + 'api/v1.1/atoms/12'
+            }).then(function (response) {
+                //if (typeof callback === "function") callback();
+            });
+        };
+
         atomsFactory.updateAtomTypes = function () {
             $http({
                 method: 'GET',
