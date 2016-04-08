@@ -85,6 +85,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
 
     };
 
+    // Event Handlers
     $scope.$on('panelResized', panelResized);
     $scope.$on('panelUndock', function () {
         $timeout(panelResized);
@@ -98,11 +99,14 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
             settingsDialog = new dockspawn.Dialog(settingsPanel, dockManager);
             settingsDialog.setPosition(window.innerWidth - settingsPanel._cachedWidth, window.innerHeight - settingsPanel._cachedHeight);
         }
-
         else if (panel == 'add_node') {
             addNodeDialog = new dockspawn.Dialog(addNodePanel, dockManager);
             addNodeDialog.setPosition((window.innerWidth - addNodePanel._cachedWidth) / 2, 150);
         }
+    };
+
+    $scope.deleteSelectedAtoms = function () {
+        AtomsFactory.deleteAtom(12);
     };
 
     // Init
@@ -120,8 +124,8 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
             charge: -300,
             friction: 0.8,
             gravity: 0.15,
-            linkDistance: 40,
-            linkStrength: 3
+            linkDistance: 70,
+            linkStrength: 2
         },
         text: {
             node: "full",
@@ -131,7 +135,6 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
             compressedLinks: false
         }
     };
-
 
     $scope.selectedIndices = [];
     $scope.filter = [];

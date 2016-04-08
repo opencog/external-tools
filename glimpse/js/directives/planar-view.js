@@ -1,5 +1,5 @@
 angular.module('glimpse')
-    .directive('planarView', function (utils) {
+    .directive('planarView', function (utils, simplifications) {
 
         function linkDirective(scope, element, attributes) {
 
@@ -9,24 +9,14 @@ angular.module('glimpse')
                 .links([])
                 .size([scope.settings.size.width, scope.settings.size.height])
                 .on("tick", function () {
-                    edge.attr("x1", function (d) {
-                        return d.source.x;
-                    }).attr("y1", function (d) {
-                        return d.source.y;
-                    }).attr("x2", function (d) {
-                        return d.target.x;
-                    }).attr("y2", function (d) {
-                        return d.target.y;
+
+                    edge.selectAll("path").attr("d", function (d) {
+                        var dr = 400;
+                        return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
                     });
-                    d3.selectAll("circle").attr("cx", function (d) {
-                        return d.x;
-                    }).attr("cy", function (d) {
-                        return d.y;
-                    });
-                    d3.selectAll("text").attr("x", function (d) {
-                        return d.x;
-                    }).attr("y", function (d) {
-                        return d.y;
+
+                    node.attr("transform", function (d) {
+                        return "translate(" + d.x + "," + d.y + ")";
                     });
                 });
 
@@ -112,7 +102,8 @@ angular.module('glimpse')
 
             // Update display whenever atoms change
             scope.$watch('atoms', function (atoms) {
-                var graph = utils.atoms2Graph(atoms, scope.settings.simplifications);
+                var graph = simplifications.simplify(utils.atoms2Graph(atoms), scope.settings.simplifications);
+
 
                 // Add new nodes and update existing ones
                 for (var i = 0; i < graph.nodes.length; i++) {
@@ -161,9 +152,28 @@ angular.module('glimpse')
                 //Draw Edges
                 edge = svg_g.selectAll(".edge");
                 edge = edge.data(force.links());
-                edge.enter().append("line").attr("class", "edge")
-                    .style("marker-end", "url(#end)");
-                edge.exit().remove();
+                //edge.enter().append("line").attr("class", "edge")
+                //    .style("marker-end", "url(#end)");
+                //edge.exit().remove();
+
+                edge.enter()
+                    .append("g")
+                    .attr("class", "edge");
+                //.append("line");
+
+
+                edge.append("path")
+                    .attr("id", function (d, i) {
+                        return "edge_" + i;
+                    }).style("marker-end", "url(#end)");
+
+                edge.append("text").attr("dy", "-4")
+                    .append("textPath").attr('xlink:href', function (d, i) {
+                        return "#edge_" + i;
+                    })
+                    .attr("startOffset", "50%")
+                    .text("inherits from");
+
 
                 //Draw Nodes
                 node = svg_g.selectAll(".node");

@@ -53,7 +53,12 @@ planar-view svg {
     font-weight: bold;
 }
 
-.edge {
+.edge path {
     stroke: #424242;
+    fill: none;
+}
+
+.edge text {
+    text-anchor: middle;
     font-family: 'Courier New', sans-serif;
 }

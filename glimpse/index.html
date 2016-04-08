@@ -100,7 +100,7 @@
     <a title="Create a node" class="btn btn-sm btn-block btn-default" ng-click="showPanel('add_node')">
         <i class="fa fa-plus-circle"></i>
     </a>
-    <a title="Delete selected nodes" class="btn btn-sm btn-block btn-default" ng-click="tool='delete'">
+    <a title="Delete selected nodes" class="btn btn-sm btn-block btn-default" ng-click="deleteSelectedAtoms()">
         <i class="fa fa fa-trash-o"></i>
     </a>
     <a title="Edit" class="btn btn-sm btn-block" ng-class="[tool=='edit'?'btn-primary':'btn-default']" ng-click="tool='edit'">
@@ -164,6 +164,7 @@
 <script type="application/javascript" src="js/main.js"></script>
 <script type="application/javascript" src="js/factories.js"></script>
 <script type="application/javascript" src="js/utils.js"></script>
+<script type="application/javascript" src="js/simplifications.js"></script>
 
 <!--Directives-->
 <script type="application/javascript" src="js/directives/json-view.js"></script>

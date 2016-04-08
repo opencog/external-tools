@@ -12,7 +12,6 @@ angular.module('glimpse').factory('utils', function () {
         return atom["type"].indexOf("Link") > -1;
     };
 
-
     var indexOfNode = function (haystack, needle) {
         for (var i = 0; i < haystack.length; i++) {
             if (haystack[i].handle == needle.handle) return i;
@@ -35,19 +34,19 @@ angular.module('glimpse').factory('utils', function () {
     };
 
 
-    var atoms2Graph = function (atoms, settings) {
+    var atoms2Graph = function (atoms) {
         var graph = {nodes: [], edges: []};
         var links = [];
         for (var atom_index = 0; atom_index < atoms.length; atom_index++) {
             var atom = atoms[atom_index];
-            if (isNode(atom) || !settings["compressedLinks"]) {
-                graph.nodes.push({
-                    handle: atom["handle"],
-                    label: atom["name"] || atom["type"],
-                    type: atom["type"],
-                    incoming: atom["incoming"]
-                });
-            }
+
+            graph.nodes.push({
+                handle: atom["handle"],
+                label: atom["name"] || atom["type"],
+                type: atom["type"],
+                incoming: atom["incoming"]
+            });
+
             if (isLink(atom)) {
                 links.push({
                     handle: atom["handle"],
@@ -61,12 +60,8 @@ angular.module('glimpse').factory('utils', function () {
 
 
         links.forEach(function (link) {
-
-            if (settings["compressedLinks"]) {
-            } else {
-                for (var i = 0; i < link["outgoing"].length; i++) {
-                    graph.edges.push({source: link["handle"], target: link["outgoing"][i], label: ""});
-                }
+            for (var i = 0; i < link["outgoing"].length; i++) {
+                graph.edges.push({source: link["handle"], target: link["outgoing"][i], label: ""});
             }
         });
 
