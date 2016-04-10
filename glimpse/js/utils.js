@@ -42,6 +42,7 @@ angular.module('glimpse').factory('utils', function () {
                 handle: atom["handle"],
                 label: atom["name"] || atom["type"],
                 type: atom["type"],
+                incoming: atom["incoming"],
                 outgoing: atom["outgoing"],
                 outgoing_labels: [],
                 outgoing_arrows: [],

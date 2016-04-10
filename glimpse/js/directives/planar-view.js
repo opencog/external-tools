@@ -73,7 +73,11 @@ angular.module('glimpse')
                 force.charge(forceParams.charge)
                     .friction(scope.settings.force.friction)
                     .gravity(forceParams.gravity)
-                    .linkDistance(forceParams.linkDistance)
+                    .linkDistance(function (link) {
+                        if (link.label)
+                            return forceParams.linkDistance * 2.4;
+                        return forceParams.linkDistance;
+                    })
                     .linkStrength(forceParams.linkStrength);
                 force.start();
             };

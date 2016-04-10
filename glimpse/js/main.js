@@ -14,7 +14,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     $scope.getAtoms = function () {
         AtomsFactory.updateAtoms(function () {
             $scope.atoms = AtomsFactory.atoms;
-            setTimeout($scope.getAtoms, 3000);
+            setTimeout($scope.getAtoms, 10000);
         });
     };
 
@@ -122,8 +122,8 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
             charge: -500,
             friction: 0.9,
             gravity: 0.10,
-            linkDistance: 150,
-            linkStrength: 2.5
+            linkDistance: 70,
+            linkStrength: 0.5
         },
         text: {
             node: "full",
