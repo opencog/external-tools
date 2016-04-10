@@ -5,11 +5,12 @@ angular.module('glimpse')
 
         // Data members
         atomsFactory.atoms = [];
+        atomsFactory.atomsCount = 0;
         atomsFactory.server = "";
         atomsFactory.nodeTypes = [];
 
         // Member functions
-        atomsFactory.updateAtoms = function (successCB) {
+        atomsFactory.updateAtoms = function (successCB, failureCB) {
             $http({
                 method: 'GET',
                 url: atomsFactory.server + "api/v1.1/atoms",
@@ -17,17 +18,16 @@ angular.module('glimpse')
             }).then(
                 function (response) {
                     atomsFactory.atoms = response.data.result.atoms;
+                    atomsFactory.atomsCount = response.data.result.total;
                     if (typeof successCB === "function") successCB();
                 },
                 function (error) {
-                    window.alert("Error connecting to server!");
+                    if (typeof failureCB === "function") failureCB();
                 }
             );
         };
         atomsFactory.setServer = function (s) {
             atomsFactory.server = s;
-            atomsFactory.updateAtomTypes();
-            atomsFactory.updateAtoms();
         };
 
         atomsFactory.createAtom = function (atom, callback) {

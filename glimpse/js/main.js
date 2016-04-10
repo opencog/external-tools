@@ -1,23 +1,21 @@
 var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion"]);
 
 glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, AtomsFactory) {
+
+    $scope.$on('$viewContentLoaded', function () {
+        console.log("POW");
+    });
+
     // Global vars
     var divDockManager, dockManager;
     var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel,
-        filtersPanel, settingsPanel, addNodePanel;
+        filtersPanel, settingsPanel, addNodePanel, connectPanel;
     var documentManagerNode, toolboxNode, jsonNode, threeDNode, terminalNode, planarNode, atomDetailsNode,
-        settingsDialog, filtersDialog, addNodeDialog;
+        settingsDialog, filtersDialog, addNodeDialog, connectDialog;
 
     var planarView1;
 
     // Functions
-    $scope.getAtoms = function () {
-        AtomsFactory.updateAtoms(function () {
-            $scope.atoms = AtomsFactory.atoms;
-            setTimeout($scope.getAtoms, 10000);
-        });
-    };
-
     var panelResized = function () {
         $scope.settings.planar.size = {
             width: planarView1.getBoundingClientRect().width,
@@ -25,10 +23,34 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         };
     };
 
+    $scope.showPanel = function (panel) {
+        if (panel == 'filters') {
+            filtersDialog = new dockspawn.Dialog(filtersPanel, dockManager);
+            filtersDialog.setPosition(window.innerWidth - filtersPanel._cachedWidth, window.innerHeight - filtersPanel._cachedHeight);
+        } else if (panel == 'planar_settings') {
+            settingsDialog = new dockspawn.Dialog(settingsPanel, dockManager);
+            settingsDialog.setPosition(window.innerWidth - settingsPanel._cachedWidth, window.innerHeight - settingsPanel._cachedHeight);
+        }
+        else if (panel == 'add_node') {
+            addNodeDialog = new dockspawn.Dialog(addNodePanel, dockManager);
+            addNodeDialog.setPosition((window.innerWidth - addNodePanel._cachedWidth) / 2, (window.innerHeight - connectPanel._cachedHeight) / 2);
+        } else if (panel == 'connect') {
+            connectDialog = new dockspawn.Dialog(connectPanel, dockManager);
+            connectDialog.setPosition((window.innerWidth - connectPanel._cachedWidth) / 2, (window.innerHeight - connectPanel._cachedHeight) / 2);
+        }
+    };
+
+
     // Event Handlers
     $window.onresize = function (e) {
         dockManager.resize(window.innerWidth - (divDockManager.clientLeft + divDockManager.offsetLeft), window.innerHeight - (divDockManager.clientTop + divDockManager.offsetTop));
     };
+
+    $scope.$on('panelResized', panelResized);
+
+    $scope.$on('panelUndock', function () {
+        $timeout(panelResized);
+    });
 
     // Onload event handler
     $window.onload = function () {
@@ -51,6 +73,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         filtersPanel = new dockspawn.PanelContainer(document.getElementById("filters_panel"), dockManager);
         settingsPanel = new dockspawn.PanelContainer(document.getElementById("settings_panel"), dockManager);
         addNodePanel = new dockspawn.PanelContainer(document.getElementById("add_node_panel"), dockManager);
+        connectPanel = new dockspawn.PanelContainer(document.getElementById("connect_panel"), dockManager);
 
         // Dock windows
         documentManagerNode = dockManager.context.model.documentManagerNode;
@@ -63,7 +86,8 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         terminalNode = dockManager.dockDown(documentManagerNode, terminalPanel, 0.2);
         toolboxNode = dockManager.dockLeft(documentManagerNode, toolboxPanel);
         atomDetailsNode = dockManager.dockRight(documentManagerNode, atomDetailsPanel);
-
+        $scope.showPanel("connect");
+        $scope.connectDialog = connectDialog;
         // Init frequently used DOM elements
         planarView1 = document.getElementById("planar-view-1");
 
@@ -80,41 +104,16 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
                     $rootScope.$broadcast("panelUndock");
                 });
             });
-
         $timeout(panelResized);
-
-    };
-
-    // Event Handlers
-    $scope.$on('panelResized', panelResized);
-    $scope.$on('panelUndock', function () {
-        $timeout(panelResized);
-    });
-
-    $scope.showPanel = function (panel) {
-        if (panel == 'filters') {
-            filtersDialog = new dockspawn.Dialog(filtersPanel, dockManager);
-            filtersDialog.setPosition(window.innerWidth - filtersPanel._cachedWidth, window.innerHeight - filtersPanel._cachedHeight);
-        } else if (panel == 'planar_settings') {
-            settingsDialog = new dockspawn.Dialog(settingsPanel, dockManager);
-            settingsDialog.setPosition(window.innerWidth - settingsPanel._cachedWidth, window.innerHeight - settingsPanel._cachedHeight);
-        }
-        else if (panel == 'add_node') {
-            addNodeDialog = new dockspawn.Dialog(addNodePanel, dockManager);
-            addNodeDialog.setPosition((window.innerWidth - addNodePanel._cachedWidth) / 2, 150);
-        }
-    };
-
-    $scope.deleteSelectedAtoms = function () {
-        AtomsFactory.deleteAtom(12);
     };
 
 
+    // Init
     $scope.atoms = [];
     $scope.tool = "select";
     $scope.settings = {};
     $scope.settings.general = {
-        server: "http://localhost:5000/"
+        server: ""
     };
     $scope.settings.planar = {
         size: {width: 0, height: 0},
@@ -137,11 +136,4 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
 
     $scope.selectedIndices = [];
     $scope.filter = [];
-
-    // Init
-    AtomsFactory.setServer($scope.settings.general.server);
-
-
-    $scope.getAtoms();
-
 });

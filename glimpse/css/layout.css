@@ -63,6 +63,11 @@ body {
     height: 340px;
 }
 
+#connect_panel {
+    background-color: #f5f5f5;
+    width: 620px;
+    height: 145px;
+}
 
 
 
