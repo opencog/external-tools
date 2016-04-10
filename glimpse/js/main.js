@@ -109,8 +109,6 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         AtomsFactory.deleteAtom(12);
     };
 
-    // Init
-    AtomsFactory.setServer("http://localhost:5000/");
 
     $scope.atoms = [];
     $scope.tool = "select";
@@ -121,23 +119,28 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     $scope.settings.planar = {
         size: {width: 0, height: 0},
         force: {
-            charge: -300,
-            friction: 0.8,
-            gravity: 0.15,
-            linkDistance: 70,
-            linkStrength: 2
+            charge: -500,
+            friction: 0.9,
+            gravity: 0.10,
+            linkDistance: 150,
+            linkStrength: 2.5
         },
         text: {
             node: "full",
             link: "abbreviated"
         },
         simplifications: {
-            compressedLinks: false
+            logical: true,
+            evaluation: true
         }
     };
 
     $scope.selectedIndices = [];
     $scope.filter = [];
+
+    // Init
+    AtomsFactory.setServer($scope.settings.general.server);
+
 
     $scope.getAtoms();
 

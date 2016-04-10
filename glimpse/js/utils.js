@@ -34,37 +34,39 @@ angular.module('glimpse').factory('utils', function () {
     };
 
 
-    var atoms2Graph = function (atoms) {
-        var graph = {nodes: [], edges: []};
-        var links = [];
+    var indexAtoms = function (atoms) {
+        var indexedAtoms = {};
         for (var atom_index = 0; atom_index < atoms.length; atom_index++) {
             var atom = atoms[atom_index];
-
-            graph.nodes.push({
+            indexedAtoms[atom["handle"]] = {
                 handle: atom["handle"],
                 label: atom["name"] || atom["type"],
                 type: atom["type"],
-                incoming: atom["incoming"]
-            });
+                outgoing: atom["outgoing"],
+                outgoing_labels: [],
+                outgoing_arrows: [],
+                isNode: isNode(atom),
+                truth_value: atom["truthvalue"]
+            };
+        }
+        return indexedAtoms;
+    };
 
-            if (isLink(atom)) {
-                links.push({
-                    handle: atom["handle"],
-                    label: atom["type"],
-                    type: atom["type"],
-                    incoming: atom["incoming"],
-                    outgoing: atom["outgoing"]
+    var atoms2Graph = function (atoms) {
+        var graph = {nodes: [], edges: []};
+
+        for (var atom_index in atoms) {
+            if (!atoms.hasOwnProperty(atom_index)) continue;
+            graph.nodes.push(atoms[atom_index]);
+            for (var j = 0; j < atoms[atom_index]["outgoing"].length; j++) {
+                graph.edges.push({
+                    source: parseInt(atom_index),
+                    target: atoms[atom_index]["outgoing"][j],
+                    label: atoms[atom_index]["outgoing_labels"][j],
+                    arrow: atoms[atom_index]["outgoing_arrows"][j]
                 });
             }
         }
-
-
-        links.forEach(function (link) {
-            for (var i = 0; i < link["outgoing"].length; i++) {
-                graph.edges.push({source: link["handle"], target: link["outgoing"][i], label: ""});
-            }
-        });
-
         return graph;
     };
 
@@ -74,9 +76,8 @@ angular.module('glimpse').factory('utils', function () {
         indexOfNode: indexOfNode,
         indexOfLink: indexOfLink,
         getAtomByHandle: getAtomByHandle,
+        indexAtoms: indexAtoms,
         atoms2Graph: atoms2Graph
     }
-
-
 });
 

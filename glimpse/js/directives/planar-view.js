@@ -3,16 +3,25 @@ angular.module('glimpse')
 
         function linkDirective(scope, element, attributes) {
 
+            var settingsChanged = {},
+                force, svg, svg_g, node, edge;
+
             // Create force layout and svg
-            var force = d3.layout.force()
+            force = d3.layout.force()
                 .nodes([])
                 .links([])
                 .size([scope.settings.size.width, scope.settings.size.height])
                 .on("tick", function () {
 
-                    edge.selectAll("path").attr("d", function (d) {
-                        var dr = 400;
-                        return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+                    edge.selectAll("path.line").attr("d", function (d) {
+                        return "M" + d.source.x + " " + d.source.y + "L " + d.target.x + " " + d.target.y;
+                    });
+
+                    edge.selectAll("path.text_path").attr("d", function (d) {
+                        var reverse = d.source.x < d.target.x;
+                        var start = reverse ? d.source : d.target,
+                            end = reverse ? d.target : d.source;
+                        return "M" + start.x + " " + start.y + "L " + end.x + " " + end.y;
                     });
 
                     node.attr("transform", function (d) {
@@ -20,39 +29,37 @@ angular.module('glimpse')
                     });
                 });
 
-            var svg = d3.select(element[0])
+            svg = d3.select(element[0])
                 .append("svg:svg")
                 .attr("width", scope.settings.size.width).attr("height", scope.settings.size.height)
                 .call(d3.behavior.zoom().on("zoom", function () {
                     svg_g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
                 }));
 
-            var svg_g = svg.append("svg:g");
+            svg_g = svg.append("svg:g");
 
-            var node = svg_g.selectAll(".node"),
-                edge = svg_g.selectAll(".edge");
+            node = svg_g.selectAll(".node");
+            edge = svg_g.selectAll(".edge");
 
             // Add Arrow definition
             svg.append("defs").selectAll("marker")
-                .data(["end"])
+                .data(["node_start", "node_end", "link_start", "link_end"])
                 .enter().append("marker")
                 .attr("id", function (d) {
                     return d;
                 })
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 30)
+                .attr("refX", function (d) {
+                    return ({"node_start": -15, "node_end": 25, "link_start": -6, "link_end": 16})[d];
+                })
                 .attr("refY", 0)
-                .attr("markerWidth", 6)
-                .attr("markerHeight", 6)
+                .attr("markerWidth", 9)
+                .attr("markerHeight", 9)
                 .attr("orient", "auto")
                 .append("path")
-                .attr("d", "M0,-5L10,0L0,5")
-                .style("fill", "#424242")
-                .style("stroke", "#424242")
-                .style("stroke-opacity", "0.8");
-
-
-            var settingsChanged = {};
+                .attr("d", function (d) {
+                    return (d == "node_start" || d == "link_start") ? "M0,0L10,-5L10,5Z" : "M0,-5L10,0L0,5";
+                });
 
             // Monitor bounding box dimensions
             settingsChanged.size = function (size) {
@@ -102,8 +109,10 @@ angular.module('glimpse')
 
             // Update display whenever atoms change
             scope.$watch('atoms', function (atoms) {
-                var graph = simplifications.simplify(utils.atoms2Graph(atoms), scope.settings.simplifications);
+                atoms = utils.indexAtoms(atoms);
 
+                atoms = simplifications.simplify(atoms, scope.settings.simplifications);
+                var graph = utils.atoms2Graph(atoms);
 
                 // Add new nodes and update existing ones
                 for (var i = 0; i < graph.nodes.length; i++) {
@@ -129,11 +138,13 @@ angular.module('glimpse')
                         force.links().push({
                             source: utils.getAtomByHandle(force.nodes(), graph.edges[i]["source"]),
                             target: utils.getAtomByHandle(force.nodes(), graph.edges[i]["target"]),
-                            label: utils.getAtomByHandle(force.nodes(), graph.edges[i]["label"])
+                            label: graph.edges[i]["label"],
+                            arrow: graph.edges[i]["arrow"]
                         });
                     }
                     else {
                         force.links()[linkIndex].label = graph.edges[i].label;
+                        force.links()[linkIndex].arrow = graph.edges[i].arrow;
                     }
                 }
 
@@ -152,27 +163,30 @@ angular.module('glimpse')
                 //Draw Edges
                 edge = svg_g.selectAll(".edge");
                 edge = edge.data(force.links());
-                //edge.enter().append("line").attr("class", "edge")
-                //    .style("marker-end", "url(#end)");
-                //edge.exit().remove();
-
                 edge.enter()
                     .append("g")
                     .attr("class", "edge");
-                //.append("line");
-
-
                 edge.append("path")
+                    .attr("class", "line")
+                    .style("marker-start", function (d) {
+                        return (d.arrow == "<" || d.arrow == "<>") ? (utils.isNode(d.source) ? "url(#node_start)" : "url(#link_start)") : "";
+                    })
+                    .style("marker-end", function (d) {
+                        return (d.arrow == ">" || d.arrow == "<>") ? (utils.isNode(d.target) ? "url(#node_end)" : "url(#link_end)") : "";
+                    });
+                edge.append("path")
+                    .attr("class", "text_path")
                     .attr("id", function (d, i) {
                         return "edge_" + i;
-                    }).style("marker-end", "url(#end)");
-
+                    });
                 edge.append("text").attr("dy", "-4")
                     .append("textPath").attr('xlink:href', function (d, i) {
                         return "#edge_" + i;
                     })
                     .attr("startOffset", "50%")
-                    .text("inherits from");
+                    .text(function (d) {
+                        return d.label;
+                    });
 
 
                 //Draw Nodes
@@ -183,9 +197,10 @@ angular.module('glimpse')
                     d3.event.sourceEvent.stopPropagation();
                 }));
                 node.append("circle").attr("r", function (d) {
-                    return utils.isLink(d) ? 4 : 12;
+                    return utils.isLink(d) ? 6 : 14;
                 });
-                node.append("text").attr("dx", 10).attr("dy", ".35em");
+
+                node.append("text").attr("dx", 16).attr("dy", ".35em");
                 node.on("click", function (sender) {
                     if (scope.tool == 'select') {
                         if (d3.event.shiftKey || d3.event.ctrlKey) {
