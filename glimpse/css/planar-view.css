@@ -12,7 +12,7 @@ planar-view svg {
     border-radius: 8px;
 }
 
-.node circle {
+.node circle, polygon {
     stroke: #424242;
     stroke-opacity: .6;
     fill: #29a;
@@ -20,13 +20,13 @@ planar-view svg {
 }
 
 .node text {
-    font: 'Courier New', sans-serif;
+    font-family: Arial, serif;
 }
 
 .node:hover circle {
     stroke-opacity: .9;
     fill: #28b6ca;
-    stroke-width: 1.5px;
+    stroke-width: 2px;
 }
 
 .node:hover text {
@@ -53,7 +53,16 @@ planar-view svg {
     font-weight: bold;
 }
 
-.link {
+.edge .line {
     stroke: #424242;
-    font-family: 'Courier New', sans-serif;
+    fill: none;
+}
+
+.edge .text_path {
+    visibility: hidden;
+}
+
+.edge text {
+    text-anchor: middle;
+    font-family: Arial, serif;
 }

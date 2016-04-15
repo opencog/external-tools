@@ -1,7 +1,6 @@
 angular.module('glimpse')
     .directive('planarSettings', function () {
-        function link(scope, element, attributes) {
-
+        var link = function (scope, element, attributes) {
 
         };
 

@@ -1,0 +1,63 @@
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+</style>
+<div class="well">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" placeholder="Name of node" ng-model="atom.name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="type" class="col-sm-2 control-label">Type</label>
+
+            <div class="col-sm-10">
+                <select id="type" class="form-control" ng-options="option for option in nodeTypes()" ng-model="atom.type">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="tv_type" class="col-sm-2 control-label">TV Type</label>
+
+            <div class="col-sm-10">
+                <select id="tv_type" class="form-control" ng-options="option.id as option.name for option in tvTypes"
+                        ng-init='atom.truthvalue.type=""' ng-model="atom.truthvalue.type">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Simple TV</label>
+
+            <div class="col-sm-5">
+                <input type="number" step="0.001" class="form-control" placeholder="Count" ng-model="atom.truthvalue.details.count"
+                       ng-disabled="atom.truthvalue.type!='simple'">
+            </div>
+            <div class="col-sm-5">
+                <input type="number" step="0.001" class="form-control" placeholder="Strength" ng-model="atom.truthvalue.details.strength"
+                       ng-disabled="atom.truthvalue.type!='simple'">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Attention</label>
+
+            <div class="col-sm-3">
+                <select class="form-control" ng-options="option as option for option in [false,true]"
+                        ng-model="atom.attentionvalue.vlti">
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <input type="number" step="0.001" class="form-control" placeholder="STI" ng-model="atom.attentionvalue.sti">
+            </div>
+            <div class="col-sm-3">
+                <input type="number" step="0.001" class="form-control" placeholder="LTI" ng-model="atom.attentionvalue.lti">
+            </div>
+        </div>
+
+        <button ng-click="createAtom()" class="btn btn-primary pull-right">Create Atom</button>
+        <button ng-click="reset()" class="btn btn-default">Reset</button>
+    </form>
+</div>

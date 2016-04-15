@@ -11,11 +11,11 @@
     <link rel="stylesheet" type="text/css" href="libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/v-accordion/dist/v-accordion.min.css">
 
+
     <!--Custom CSS-->
     <link rel="stylesheet" type="text/css" href="css/layout.css">
     <link rel="stylesheet" type="text/css" href="css/planar-view.css">
     <link rel="stylesheet" type="text/css" href="css/dropdown.css">
-
 
     <!--JS Libs-->
     <script type="application/javascript" src="libs/jquery/dist/jquery.min.js"></script>
@@ -74,8 +74,9 @@
                     <li class="dropdown-submenu">
                         <a href="">Settings</a>
                         <ul class="dropdown-menu">
-                            <li><a href="">JSON Settings</a></li>
-                            <li><a href="" ng-click="showPanel('planar_settings')">Planar Settings</a></li>
+                            <li><a href="">General</a></li>
+                            <li><a href="">JSON</a></li>
+                            <li><a href="" ng-click="showPanel('planar_settings')">Planar</a></li>
                         </ul>
                     </li>
 
@@ -96,10 +97,10 @@
         <i class="fa fa-hand-pointer-o"></i>
     </a>
 
-    <a title="Add" class="btn btn-sm btn-block" ng-class="[tool=='add'?'btn-primary':'btn-default']" ng-click="tool='add'">
+    <a title="Create a node" class="btn btn-sm btn-block btn-default" ng-click="showPanel('add_node')">
         <i class="fa fa-plus-circle"></i>
     </a>
-    <a title="Delete" class="btn btn-sm btn-block" ng-class="[tool=='delete'?'btn-primary':'btn-default']" ng-click="tool='delete'">
+    <a title="Delete selected nodes" class="btn btn-sm btn-block btn-default" ng-click="deleteSelectedAtoms()">
         <i class="fa fa fa-trash-o"></i>
     </a>
     <a title="Edit" class="btn btn-sm btn-block" ng-class="[tool=='edit'?'btn-primary':'btn-default']" ng-click="tool='edit'">
@@ -121,11 +122,10 @@
     <a title="Anchor" class="btn btn-sm btn-block" ng-class="[tool=='anchor'?'btn-primary':'btn-default']" ng-click="tool='anchor'">
         <i class="fa fa-anchor"></i>
     </a>
-
 </div>
 <!--Atom Details-->
 <div id="atom_details_panel" caption="Atom Details" icon="">
-    <atom-details atoms="atoms" selected-indices="selected_indices"></atom-details>
+    <atom-details atoms="atoms" selected-handles="selected_handles"></atom-details>
 </div>
 <!--Terminal-->
 <div id="terminal_panel" caption="Terminal" icon=""></div>
@@ -138,7 +138,7 @@
 </div>
 <!--Planar-->
 <div id="planar_panel" caption="Planar" icon="">
-    <planar-view id="planar-view-1" class="planar-view" atoms="atoms" selected-indices="selected_indices"
+    <planar-view id="planar-view-1" class="planar-view" atoms="atoms" selected-handles="selected_handles"
                  settings="settings.planar" tool="tool"></planar-view>
 </div>
 <!--Scheme-->
@@ -154,11 +154,22 @@
     <planar-settings settings="settings.planar"></planar-settings>
 </div>
 
+<!--Add -->
+<div id="add_node_panel" caption="Create a new node" icon="">
+    <add-node atoms="atoms"></add-node>
+</div>
+
+<!--Add -->
+<div id="connect_panel" caption="Connect" icon="">
+    <connect atoms="atoms" settings="settings.general" dialog="connectDialog"></connect>
+</div>
+
 
 <!--More JS-->
 <script type="application/javascript" src="js/main.js"></script>
 <script type="application/javascript" src="js/factories.js"></script>
 <script type="application/javascript" src="js/utils.js"></script>
+<script type="application/javascript" src="js/simplifications.js"></script>
 
 <!--Directives-->
 <script type="application/javascript" src="js/directives/json-view.js"></script>
@@ -167,6 +178,8 @@
 <script type="application/javascript" src="js/directives/atom-details.js"></script>
 <script type="application/javascript" src="js/directives/filters.js"></script>
 <script type="application/javascript" src="js/directives/planar-settings.js"></script>
+<script type="application/javascript" src="js/directives/add-node.js"></script>
+<script type="application/javascript" src="js/directives/connect.js"></script>
 
 </body>
 </html>

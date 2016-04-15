@@ -1,0 +1,115 @@
+<style>
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    #overlay {
+        position: fixed;
+        width: 620px;
+        height: 122px;
+        background: rgba(180, 180, 180, 0.7);
+        z-index: 10;
+    }
+
+    .spinner {
+        margin: 35px auto;
+        width: 40px;
+        height: 40px;
+        position: relative;
+        text-align: center;
+        -webkit-animation: sk-rotate 2.0s infinite linear;
+        animation: sk-rotate 2.0s infinite linear;
+    }
+
+    .dot1, .dot2 {
+        width: 60%;
+        height: 60%;
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        background-color: #1c7584;
+        border-radius: 100%;
+
+        -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+        animation: sk-bounce 2.0s infinite ease-in-out;
+    }
+
+    .dot2 {
+        top: auto;
+        bottom: 0;
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+    }
+
+    @-webkit-keyframes sk-rotate {
+        100% {
+            -webkit-transform: rotate(360deg)
+        }
+    }
+
+    @keyframes sk-rotate {
+        100% {
+            transform: rotate(360deg);
+            -webkit-transform: rotate(360deg)
+        }
+    }
+
+    @-webkit-keyframes sk-bounce {
+        0%, 100% {
+            -webkit-transform: scale(0.0)
+        }
+        50% {
+            -webkit-transform: scale(1.0)
+        }
+    }
+
+    @keyframes sk-bounce {
+        0%, 100% {
+            transform: scale(0.0);
+            -webkit-transform: scale(0.0);
+        }
+        50% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+        }
+    }
+
+    #message {
+        text-align: center;
+        vertical-align: middle;
+        line-height: 122px;
+        font-family: Arial, serif;
+        font-weight: bold;
+    }
+
+    .error {
+        color: rgba(164, 19, 17, 1);
+    }
+
+    .success {
+        color: rgba(16, 104, 12, 1);
+    }
+</style>
+<div ng-show="state != 'idle'" id="overlay">
+    <div class="spinner" ng-class="{'hidden':state != 'loading'}">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+    </div>
+    <div id="message" ng-class="[{'hidden':state != 'message'}, message_class]">
+        {{message}}
+    </div>
+</div>
+<div class="well">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="server" class="col-sm-2 control-label">Server</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="server" placeholder="http://localhost:5000/" ng-model="settings.server">
+            </div>
+        </div>
+
+        <button ng-click="connect()" class="btn btn-primary pull-right">Connect</button>
+        <button ng-click="reset()" class="btn btn-default">Reset</button>
+    </form>
+</div>
