@@ -3,57 +3,81 @@ angular.module('glimpse').factory('simplifications', function () {
 
     var simplify = function (atoms, settings) {
 
-        for (var i in atoms) {
-            if (!atoms.hasOwnProperty(i)) continue;
-            var atom = atoms[i];
-            if (settings.logical && atom.incoming.length == 0) {
-                if (atom.type == "InheritanceLink") {
-                    atoms[atom.outgoing[0]].outgoing.push(atom.outgoing[1]);
-                    atoms[atom.outgoing[0]].outgoing = $.unique(atoms[atom.outgoing[0]].outgoing);
-                    atoms[atom.outgoing[0]].outgoing_labels.push("inherits from");
-                    atoms[atom.outgoing[0]].outgoing_arrows.push(">");
-                    delete atoms[i];
-                } else if (atom.type == "ImplicationLink") {
-                    atoms[atom.outgoing[0]].outgoing.push(atom.outgoing[1]);
-                    atoms[atom.outgoing[0]].outgoing = $.unique(atoms[atom.outgoing[0]].outgoing);
-                    atoms[atom.outgoing[0]].outgoing_labels = ["implies<" +
-                    parseFloat(atom["truth_value"]["details"]["strength"]).toFixed(2) + ", " +
-                    parseFloat(atom["truth_value"]["details"]["confidence"]).toFixed(2) + ">"];
-                    atoms[atom.outgoing[0]].outgoing_arrows = [">"];
-                    delete atoms[i];
-                } else if (atom.type == "SimilarityLink") {
-                    atoms[atom.outgoing[0]].outgoing.push(atom.outgoing[1]);
-                    atoms[atom.outgoing[0]].outgoing = $.unique(atoms[atom.outgoing[0]].outgoing);
-                    atoms[atom.outgoing[0]].outgoing_labels = ["is similar to"];
-                    atoms[atom.outgoing[0]].outgoing_arrows = ["<>"];
-                    delete atoms[i];
-                } else if (atom.type == "EquivalenceLink") {
-                    atoms[atom.outgoing[0]].outgoing.push(atom.outgoing[1]);
-                    atoms[atom.outgoing[0]].outgoing = $.unique(atoms[atom.outgoing[0]].outgoing);
-                    atoms[atom.outgoing[0]].outgoing_labels = ["is equivalent to"];
-                    atoms[atom.outgoing[0]].outgoing_arrows = ["<>"];
-                    delete atoms[i];
+        //Vars
+        var atomsToDelete = [];
+
+        //Msc Functions
+        var addOutgoing = function (stack, item) {
+            var existsFlag = false;
+            for (var i = 0; i < stack.length; i++) {
+                if (stack[i]["handle"] == item["handle"]) {
+                    existsFlag = true;
+                    break;
                 }
             }
-            if (settings.evaluation && atom.incoming.length == 0) {
+            if (!existsFlag) stack.push(item);
+        };
+
+        //Compress Links
+        for (var atom_index in atoms) {
+            if (!atoms.hasOwnProperty(atom_index)) continue;
+            var atom = atoms[atom_index];
+            if (settings.logical && atom["incoming"].length == 0) {
+                if (atom.type == "InheritanceLink") {
+                    addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
+                        handle: atom["outgoing"][1]["handle"],
+                        label: "inherits from",
+                        arrow: ">"
+                    });
+                    atomsToDelete.push(atom_index);
+                } else if (atom.type == "ImplicationLink") {
+
+                    addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
+                        handle: atom["outgoing"][1]["handle"],
+                        label: "implies<" + parseFloat(atom["truth_value"]["details"]["strength"]).toFixed(2) + ", " +
+                        parseFloat(atom["truth_value"]["details"]["confidence"]).toFixed(2) + ">",
+                        arrow: ">"
+                    });
+                    atomsToDelete.push(atom_index);
+                } else if (atom.type == "SimilarityLink") {
+                    addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
+                        handle: atom["outgoing"][1]["handle"],
+                        label: "is similar to",
+                        arrow: ">"
+                    });
+                    atomsToDelete.push(atom_index);
+                } else if (atom.type == "EquivalenceLink") {
+                    addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
+                        handle: atom["outgoing"][1]["handle"],
+                        label: "is equivalent to",
+                        arrow: ">"
+                    });
+                    atomsToDelete.push(atom_index);
+                }
+            }
+            if (settings.evaluation && atom["incoming"].length == 0) {
                 if (atom.type == "EvaluationLink" || atom.type == "ExecutionOutputLink") {
-                    atoms[atom.outgoing[0]].outgoing.push.apply(atoms[atom.outgoing[0]].outgoing, atoms[atom.outgoing[1]].outgoing);
-                    atoms[atom.outgoing[0]].outgoing = $.unique(atoms[atom.outgoing[0]].outgoing);
-                    atoms[atom.outgoing[0]].outgoing_arrows = Array(10).fill(">");
+                    var predicateNode = atoms[atom.outgoing[0]["handle"]];
+                    var listLink = atoms[atom.outgoing[1]["handle"]];
+
+                    for (var j = 0; j < listLink["outgoing"].length; j++) {
+                        addOutgoing(predicateNode["outgoing"], {
+                            handle: listLink["outgoing"][j]["handle"],
+                            label: "",
+                            arrow: ">"
+                        });
+                    }
+                    atomsToDelete.push(atom_index);
+                    atomsToDelete.push(listLink["handle"]);
                 }
             }
         }
 
-        for (i in atoms) {
-            if (!atoms.hasOwnProperty(i)) continue;
-            atom = atoms[i];
-            if (settings.evaluation && atom.incoming.length == 0) {
-                if (atom.type == "EvaluationLink" || atom.type == "ExecutionOutputLink") {
-                    delete atoms[atom.outgoing[1]];
-                    delete atoms[i];
-                }
-            }
+        // Delete atoms removed during simplification
+        for (var i = 0; i < atomsToDelete.length; i++) {
+            delete atoms[atomsToDelete[i]];
         }
+
 
         return atoms;
     };

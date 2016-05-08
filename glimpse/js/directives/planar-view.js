@@ -113,9 +113,20 @@ angular.module('glimpse')
             // Update display whenever atoms change
             scope.$watch('atoms', function (atoms) {
 
+
+
                 // Index and simplify atoms from the server
-                var _atoms = simplifications.simplify(utils.indexAtoms(atoms), scope.settings.simplifications);
+                var _atoms = utils.indexAtoms(atoms);
+
+                _atoms = simplifications.simplify(_atoms, scope.settings.simplifications);
+
+                //console.log(_atoms);
+
                 var graph = utils.atoms2Graph(_atoms);
+
+
+                //console.log(graph);
+                //return;
 
                 // Add new nodes and update existing ones
                 for (var i = 0; i < graph.nodes.length; i++) {

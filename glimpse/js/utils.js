@@ -43,10 +43,8 @@ angular.module('glimpse').factory('utils', function () {
                 handle: atom["handle"],
                 label: atom["name"] || atom["type"],
                 type: atom["type"],
+                outgoing: generateOutgoingArray(atom["outgoing"]),
                 incoming: atom["incoming"].slice(),
-                outgoing: atom["outgoing"].slice(),
-                outgoing_labels: [],
-                outgoing_arrows: [],
                 isNode: isNode(atom),
                 truth_value: atom["truthvalue"]
             };
@@ -59,17 +57,43 @@ angular.module('glimpse').factory('utils', function () {
 
         for (var atom_index in atoms) {
             if (!atoms.hasOwnProperty(atom_index)) continue;
+            //Add Nodes
             graph.nodes.push(atoms[atom_index]);
+
+            // Add Edges
             for (var j = 0; j < atoms[atom_index]["outgoing"].length; j++) {
                 graph.edges.push({
                     source: parseInt(atom_index),
-                    target: atoms[atom_index]["outgoing"][j],
-                    label: atoms[atom_index]["outgoing_labels"][j],
-                    arrow: atoms[atom_index]["outgoing_arrows"][j]
+                    target: atoms[atom_index]["outgoing"][j]["handle"],
+                    label: atoms[atom_index]["outgoing"][j]["label"],
+                    arrow: atoms[atom_index]["outgoing"][j]["arrow"]
                 });
             }
+
+            for (var outgoing_index in atoms[atom_index]["outgoing"]) {
+                if (!atoms[atom_index]["outgoing"].hasOwnProperty(outgoing_index)) continue;
+                graph.edges.push({
+                    source: parseInt(atom_index),
+                    target: atoms[atom_index]["outgoing"][outgoing_index]["handle"],
+                    label: atoms[atom_index]["outgoing"][outgoing_index]["label"],
+                    arrow: atoms[atom_index]["outgoing"][outgoing_index]["arrow"]
+                })
+            }
+
         }
         return graph;
+    };
+
+    var generateOutgoingArray = function (outgoing) {
+        var output = [];
+        for (var i = 0; i < outgoing.length; i++) {
+            output.push({
+                handle: outgoing[i],
+                label: "",
+                arrow: ""
+            });
+        }
+        return output;
     };
 
     var getUrlParameter = function getUrlParameter(sParam) {
