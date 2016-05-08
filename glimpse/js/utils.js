@@ -5,11 +5,11 @@
 angular.module('glimpse').factory('utils', function () {
 
     var isNode = function (atom) {
-        return atom["type"].indexOf("Node") > -1;
+        return atom["type"].match("Node$");
     };
 
     var isLink = function (atom) {
-        return atom["type"].indexOf("Link") > -1;
+        return atom["type"].match("Link$");
     };
 
     var indexOfNode = function (haystack, needle) {
