@@ -18,6 +18,11 @@ angular.module('glimpse').factory('simplifications', function () {
             if (!existsFlag) stack.push(item);
         };
 
+        var addIncoming = function (stack, item) {
+            if (stack.indexOf(stack, item) == -1) stack.push(item);
+        };
+
+
         //Compress Links
         for (var atom_index in atoms) {
             if (!atoms.hasOwnProperty(atom_index)) continue;
@@ -29,6 +34,7 @@ angular.module('glimpse').factory('simplifications', function () {
                         label: "inherits from",
                         arrow: ">"
                     });
+                    addIncoming(atoms[atom["outgoing"][1]["handle"]]["incoming"], atom["outgoing"][0]["handle"]);
                     atomsToDelete.push(atom_index);
                 } else if (atom.type == "ImplicationLink") {
 
@@ -38,6 +44,7 @@ angular.module('glimpse').factory('simplifications', function () {
                         parseFloat(atom["truth_value"]["details"]["confidence"]).toFixed(2) + ">",
                         arrow: ">"
                     });
+                    addIncoming(atoms[atom["outgoing"][1]["handle"]]["incoming"], atom["outgoing"][0]["handle"]);
                     atomsToDelete.push(atom_index);
                 } else if (atom.type == "SimilarityLink") {
                     addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
@@ -45,6 +52,7 @@ angular.module('glimpse').factory('simplifications', function () {
                         label: "is similar to",
                         arrow: ">"
                     });
+                    addIncoming(atoms[atom["outgoing"][1]["handle"]]["incoming"], atom["outgoing"][0]["handle"]);
                     atomsToDelete.push(atom_index);
                 } else if (atom.type == "EquivalenceLink") {
                     addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
@@ -52,6 +60,7 @@ angular.module('glimpse').factory('simplifications', function () {
                         label: "is equivalent to",
                         arrow: ">"
                     });
+                    addIncoming(atoms[atom["outgoing"][1]["handle"]]["incoming"], atom["outgoing"][0]["handle"]);
                     atomsToDelete.push(atom_index);
                 }
             }
@@ -66,6 +75,7 @@ angular.module('glimpse').factory('simplifications', function () {
                             label: "",
                             arrow: ">"
                         });
+                        addIncoming(atoms[listLink["outgoing"][j]["handle"]]["incoming"], predicateNode["handle"]);
                     }
                     atomsToDelete.push(atom_index);
                     atomsToDelete.push(listLink["handle"]);

@@ -96,6 +96,17 @@ angular.module('glimpse').factory('utils', function () {
         return output;
     };
 
+    var getAllNeighborHandles = function (atom) {
+        var neighbors = [];
+        for (var i = 0; i < atom["outgoing"].length; i++) {
+            neighbors.push(atom["outgoing"][i]["handle"]);
+        }
+        for (i = 0; i < atom["incoming"].length; i++) {
+            neighbors.push(atom["incoming"][i]);
+        }
+        return neighbors;
+    };
+
     var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
             sURLVariables = sPageURL.split('&'),
@@ -119,6 +130,7 @@ angular.module('glimpse').factory('utils', function () {
         getAtomByHandle: getAtomByHandle,
         indexAtoms: indexAtoms,
         atoms2Graph: atoms2Graph,
+        getAllNeighborHandles: getAllNeighborHandles,
         getUrlParameter: getUrlParameter
     }
 });
