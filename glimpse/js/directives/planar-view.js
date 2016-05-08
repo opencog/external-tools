@@ -3,8 +3,7 @@ angular.module('glimpse')
 
         function linkDirective(scope, element, attributes) {
 
-            var settingsChanged = {},
-                force, svg, svg_g, node, edge;
+            var settingsChanged = {}, force, svg, svg_g, node, edge;
 
             // Create force layout and svg
             force = d3.layout.force()
@@ -113,10 +112,10 @@ angular.module('glimpse')
 
             // Update display whenever atoms change
             scope.$watch('atoms', function (atoms) {
-                atoms = utils.indexAtoms(atoms);
 
-                atoms = simplifications.simplify(atoms, scope.settings.simplifications);
-                var graph = utils.atoms2Graph(atoms);
+                // Index and simplify atoms from the server
+                var _atoms = simplifications.simplify(utils.indexAtoms(atoms), scope.settings.simplifications);
+                var graph = utils.atoms2Graph(_atoms);
 
                 // Add new nodes and update existing ones
                 for (var i = 0; i < graph.nodes.length; i++) {
@@ -155,7 +154,8 @@ angular.module('glimpse')
                 // Remove links...
                 force.links(force.links().filter(function (n) {
                     for (var i = 0; i < graph.edges.length; i++) {
-                        if (graph.edges[i].source == n.source.handle && graph.edges[i].target == n.target.handle) return true;
+                        if (n.source && n.target)
+                            if (graph.edges[i].source == n.source.handle && graph.edges[i].target == n.target.handle) return true;
                     }
                     return false;
                 }));
