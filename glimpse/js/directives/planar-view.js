@@ -3,8 +3,7 @@ angular.module('glimpse')
 
         function linkDirective(scope, element, attributes) {
 
-            var settingsChanged = {},
-                force, svg, svg_g, node, edge;
+            var settingsChanged = {}, force, svg, svg_g, node, edge;
 
             // Create force layout and svg
             force = d3.layout.force()
@@ -110,13 +109,20 @@ angular.module('glimpse')
                 });
             };
 
+            var toolChanged = function (newTool) {
+                if (newTool != 'focus') {
+                    node.style("opacity", "1");
+                    edge.style("opacity", "1");
+                }
+            };
 
             // Update display whenever atoms change
             scope.$watch('atoms', function (atoms) {
-                atoms = utils.indexAtoms(atoms);
 
-                atoms = simplifications.simplify(atoms, scope.settings.simplifications);
-                var graph = utils.atoms2Graph(atoms);
+                // Index and simplify atoms from the server
+                var _atoms = utils.indexAtoms(atoms);
+                _atoms = simplifications.simplify(_atoms, scope.settings.simplifications);
+                var graph = utils.atoms2Graph(_atoms);
 
                 // Add new nodes and update existing ones
                 for (var i = 0; i < graph.nodes.length; i++) {
@@ -155,7 +161,8 @@ angular.module('glimpse')
                 // Remove links...
                 force.links(force.links().filter(function (n) {
                     for (var i = 0; i < graph.edges.length; i++) {
-                        if (graph.edges[i].source == n.source.handle && graph.edges[i].target == n.target.handle) return true;
+                        if (n.source && n.target)
+                            if (graph.edges[i].source == n.source.handle && graph.edges[i].target == n.target.handle) return true;
                     }
                     return false;
                 }));
@@ -206,7 +213,7 @@ angular.module('glimpse')
 
                 node.append("text").attr("dx", 16).attr("dy", ".35em");
                 node.on("click", function (sender) {
-                    if (scope.tool == 'select') {
+                    if (scope.tool == 'select' || scope.tool == 'focus') {
                         if (d3.event.shiftKey || d3.event.ctrlKey) {
                             if (scope.selectedHandles.indexOf(sender.handle) == -1)
                                 scope.selectedHandles.push(sender.handle);
@@ -219,11 +226,35 @@ angular.module('glimpse')
                             return scope.selectedHandles.indexOf(d.handle) == -1 ? "node" : "node node_selected";
                         });
                     }
-                    else if (scope.tool == 'anchor') {
+                    if (scope.tool == 'anchor') {
                         sender.fixed = !d3.event.altKey;
+                    }
+                    if (scope.tool == 'focus') {
+                        var nodeHandlesToShow = [sender["handle"]];
+
+                        for (var depth = 0; depth < 2; depth++) {
+                            var newHandlesToShow = [];
+                            for (var i = 0; i < nodeHandlesToShow.length; i++) {
+                                if (_atoms.hasOwnProperty(nodeHandlesToShow[i]))
+                                    newHandlesToShow = newHandlesToShow.concat(utils.getAllNeighborHandles(_atoms[nodeHandlesToShow[i]]));
+                            }
+                            nodeHandlesToShow = nodeHandlesToShow.concat(newHandlesToShow);
+                            nodeHandlesToShow = $.unique(nodeHandlesToShow);
+                        }
+
+
+                        node.style("opacity", function (d) {
+                            return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0.3;
+                            //return (sender.handle == d.handle || utils.areNeighbors(sender, d)) ? 1 : 0.3;
+                        });
+                        edge.style("opacity", function (d) {
+                            return (nodeHandlesToShow.indexOf(d["source"]["handle"]) > -1 && nodeHandlesToShow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0.05;
+
+                        });
                     }
                     scope.$apply();
                 });
+
 
                 settingsChanged.text(scope.settings.text);
 
@@ -235,6 +266,7 @@ angular.module('glimpse')
             scope.$watch('settings.force', settingsChanged.force, true);
             scope.$watch('settings.text', settingsChanged.text, true);
 
+            scope.$watch('tool', toolChanged, true);
         }
 
         return {
