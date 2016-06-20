@@ -4,12 +4,11 @@ usage() {
 printf "Usage: ./%s [OPTIONS]
   OPTIONS:
     -c=? Path to a conceptnet csv file or directory containing multiple
-         csv files. If this is not given then the csv file will be downloaded
-         from http://conceptnet5.media.mit.edu/downloads/current/
+         csv files
     -h   Show this help
     -i   Install Ubuntu dependencies
-    -r   Get all dependencies and run the importer \n" "$(basename $0)"
-
+    -r   Install all dependencies, get conceptnet csv data, and run the
+         importer \n" "$(basename $0)"
 }
 
 # Download conceptnet csv tar ball
@@ -79,7 +78,7 @@ if [ -f $CNET_FILE_PATH ]; then
         if [ ! -d $PWD/cnet_csv_files ]; then
             mkdir $PWD/cnet_csv_files
         fi
-        tar -xvf $CNET_FILE_PATH -C $PWD/cnet_csv_files
+        tar -jxvf $CNET_FILE_PATH -C $PWD/cnet_csv_files
         CNET_DIR_PATH=$PWD/cnet_csv_files/data/assertions/
     else
         import $CNET_FILE_PATH
