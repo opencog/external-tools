@@ -13,15 +13,15 @@ QT4 or higher
    will be found in the outputs directory.
 
 #Notes
-1. Run `./import.sh -r` for the above three steps under `Usage` to be
+1. Run `./import.sh -r` for the above three steps, under `Usage`, to be
    undertaken for you.
 2. It takes more than 20 minutes to run each file on an intel core i7
    3.07GHz with an SSD. So you may want want to download the ready made
    compressed version from [here](http://buildbot.opencog.org/downloads/).
 3. For compressing the imports of conceptnet-5.4, run
    `tar -jcvf conceptnet5.4-scm-$(date +'%b-%d-%Y').tar.bz2 outputs/`.
-4. If you are compressing for the file to be hosted at download site, add a
-   `README.md` file simillar to the following.
+4. If you are compressing for the scheme files to be hosted at the download
+   site, add a `README.md` file simillar to the following.
 
    ```
    # Details required to reproduce these scheme files.
