@@ -12,7 +12,7 @@ QT4 or higher
 3. Run `./import.sh -c /path/to/the/downloaded/conceptnet/tar/file`. The imports
    will be found in the outputs directory.
 
-**Note**
+#Notes
 1. Run `./import.sh -r` for the above three steps under `Usage` to be
    undertaken for you.
 2. It takes more than 20 minutes to run each file on an intel core i7
