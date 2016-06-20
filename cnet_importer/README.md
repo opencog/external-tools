@@ -17,7 +17,7 @@ QT4 or higher
    undertaken for you.
 2. It takes more than 20 minutes to run each file on an intel core i7
    3.07GHz with an SSD. So you may want want to download the ready made
-   compressed version from [here](http://buildbot.opencog.org/downloads/).
+   compressed version from [here](https://drive.google.com/file/d/0BwSBtmJFZjVXbHlEQnZ4YXdFU3M/view?usp=sharing).
 3. For compressing the imports of conceptnet-5.4, run
    `tar -jcvf conceptnet5.4-scm-$(date +'%b-%d-%Y').tar.bz2 outputs/`.
 4. If you are compressing for the scheme files to be hosted at the download
