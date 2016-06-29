@@ -5,6 +5,11 @@ angular.module('glimpse')
 
             var settingsChanged = {}, force, svg, svg_g, node, edge;
 
+	var D2R = Math.PI / 180, radius=100, focusnode = 0, startAngle= 0;	
+			//Width and height
+			var w = 960 ;
+			var h = 500 ;
+
             // Create force layout and svg
             force = d3.layout.force()
                 .nodes([])
@@ -31,8 +36,8 @@ angular.module('glimpse')
             svg = d3.select(element[0])
                 .append("svg:svg")
                 .attr("width", scope.settings.size.width).attr("height", scope.settings.size.height)
-                .call(d3.behavior.zoom().on("zoom", function () {
-                    svg_g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+              .call(d3.behavior.zoom().on("zoom", function () {
+                svg_g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
                 }));
 
             svg_g = svg.append("svg:g");
@@ -74,7 +79,7 @@ angular.module('glimpse')
                     .gravity(forceParams.gravity)
                     .linkDistance(function (link) {
                         if (link.label)
-                            return forceParams.linkDistance * 2.4;
+                            return forceParams.linkDistance * 6;
                         return forceParams.linkDistance;
                     })
                     .linkStrength(forceParams.linkStrength);
@@ -212,8 +217,18 @@ angular.module('glimpse')
                 });
 
                 node.append("text").attr("dx", 16).attr("dy", ".35em");
+
+                node.on("dblclick", function(sender){
+                    sender.px = 0;
+                    sender.py = 0;
+                    console.log();
+                    console.log(sender);
+				                    
+                });
+
                 node.on("click", function (sender) {
-                    if (scope.tool == 'select' || scope.tool == 'focus') {
+			
+                    if (scope.tool == 'select' || scope.tool == 'focus' || scope.tool == 'center' ) {
                         if (d3.event.shiftKey || d3.event.ctrlKey) {
                             if (scope.selectedHandles.indexOf(sender.handle) == -1)
                                 scope.selectedHandles.push(sender.handle);
@@ -226,9 +241,12 @@ angular.module('glimpse')
                             return scope.selectedHandles.indexOf(d.handle) == -1 ? "node" : "node node_selected";
                         });
                     }
-                    if (scope.tool == 'anchor') {
+  
+                  if (scope.tool == 'anchor') {
                         sender.fixed = !d3.event.altKey;
                     }
+
+
                     if (scope.tool == 'focus') {
                         var nodeHandlesToShow = [sender["handle"]];
 
@@ -252,6 +270,131 @@ angular.module('glimpse')
 
                         });
                     }
+
+                    if(scope.tool == 'center'){
+			var i =1;
+			focusnode = sender.index;
+			console.log(sender);
+			function brfs(grph){
+				traversedNodes=[];
+				traversedNodes.push(grph.nodes[focusnode]);
+				marked={};
+				while (traversedNodes.length != 0) {
+				var v = traversedNodes.shift();
+				console.log(v);
+			if(v == grph.nodes[focusnode])
+				{ 
+				    v.x= w/2; v.y= h/2; v.fixed = true; v.px= w/2; v.py= h/2;
+				    marked[v.label]=true;
+				    var neghbours= [];
+				    console.log(grph);
+				    adjList=findchilds(v);
+				    console.log(adjList);
+				    for (var a=0;a< adjList.length;a++){
+				       u=adjList[a];
+				       if(marked[u.label]!=true){
+				          marked[u.label]=true;
+				           neghbours.push(u);
+				      var currentAngle = startAngle + ((360/adjList.length) * (a));
+				      var currentAngleRadians = currentAngle * D2R;
+				      var radialPoint = {
+     					 x: (w / 2) + radius * Math.cos(currentAngleRadians), 
+     					 y: (h / 2) + radius * Math.sin(currentAngleRadians)
+   		 					};
+	   			u.x = radialPoint.x;
+	   			u.px = radialPoint.x;
+	   			u.y = radialPoint.y;
+	   			u.py = radialPoint.y;
+	   			u.fixed = true;
+								}
+									}
+				traversedNodes.push(neghbours);
+				console.log("Traversed nodes" + traversedNodes);
+				}
+			else if(v.length > 0)
+			{
+				rad= radius * i;
+				console.log(v);
+				console.log(radius);
+				var neghbours= [];
+			
+				for(var j=0; j< v.length; j++)
+				{
+				if (marked[v[j].label]=== false) {marked[v[j].label]=true;}
+					adjList=findchilds(v[j]);
+					for (var a=0; a< adjList.length; a++){
+						u=adjList[a];
+						if(marked[u.label]!=true){
+						marked[u.label]=true;
+						neghbours.push(u);
+									}
+					}
+			
+				}
+				for (var loc= 0; loc < neghbours.length; loc++)
+				{	
+				var currentAngle = startAngle + ((360/neghbours.length) * (loc));
+				var currentAngleRadians = currentAngle * D2R;
+				var radialPoint = {
+     				 x: (w / 2) + rad * Math.cos(currentAngleRadians), 
+     				 y: (h / 2) + rad * Math.sin(currentAngleRadians)
+   				};
+				neghbours[loc].x = radialPoint.x;
+				neghbours[loc].y = radialPoint.y;
+				neghbours[loc].px = radialPoint.x;
+				neghbours[loc].py = radialPoint.y;
+				neghbours[loc].fixed = true;
+				}
+			if(neghbours.length !=0) {traversedNodes.push(neghbours);}
+			}
+			i++;
+			console.log(i);
+	}
+
+			function findchilds(node){
+			var outnode=[];
+			for(x=0; x< node.outgoing.length; x++)
+				{
+				outnode.push(node.outgoing[x].handle);
+				}
+				var nodehandles= (node.incoming).concat(outnode);
+				var n= [];
+				for(a=0; a< grph.nodes.length; a++) {
+				   for(x=0; x< nodehandles.length; x++)
+					{
+					if(grph.nodes[a].handle == nodehandles[x])
+						{n.push(grph.nodes[a]);}
+					}
+				}
+			return n;
+				}
+}
+    
+brfs(graph);
+
+for (g=0; g < graph.nodes.length; g++)
+{
+if(sender.index != graph.nodes[g].index ){
+if (sender.x == graph.nodes[g].x && sender.y == graph.nodes[g].y && sender.px == graph.nodes[g].px && sender.px == graph.nodes[g].px)
+	{ graph.nodes[g].fixed = false;
+	  console.log("sender " + graph.nodes[g]);
+	}
+}
+}
+
+for (var c=1; c < i-1; c++)
+{
+var outerCircle = svg_g.append("circle").attr({
+    cx: w/2,
+    cy: h/2,
+    r: radius * c,
+    fill: "none",
+    stroke: "black"
+});
+
+} 
+           }
+                    
                     scope.$apply();
                 });
 
