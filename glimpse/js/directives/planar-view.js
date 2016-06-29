@@ -389,7 +389,7 @@ var outerCircle = svg_g.append("circle").attr({
     cy: h/2,
     r: radius * c,
     fill: "none",
-    stroke: "black"
+    stroke: "grey"
 });
 
 } 
