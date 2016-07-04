@@ -204,6 +204,22 @@ angular.module('glimpse')
                         return d.label;
                     });
 
+function mouseover() {
+  d3.select(this).select("circle").transition()
+      .duration(750)
+      .attr("r", 26);
+
+d3.select(this).select("text").attr("font-size", "20px");
+}
+
+function mouseout() {
+  d3.select(this).select("circle").transition()
+      .duration(750)
+      .attr("r", function (d) {
+                    return utils.isLink(d) ? 6 : 14;
+                });
+d3.select(this).select("text").attr("font-size", "10px");
+}
 
                 //Draw Nodes
                 node = svg_g.selectAll(".node");
@@ -216,17 +232,12 @@ angular.module('glimpse')
                     return utils.isLink(d) ? 6 : 14;
                 });
 
-                node.append("text").attr("dx", 16).attr("dy", ".35em");
+                node.append("text").attr("x", function(d) { return d.cx; }).attr("y", function(d) { return d.cy; });
 
-                node.on("dblclick", function(sender){
-                    sender.px = 0;
-                    sender.py = 0;
-                    console.log();
-                    console.log(sender);
-				                    
-                });
+		node.on("mouseover", mouseover);
+		node.on("mouseout", mouseout);
 
-                node.on("click", function (sender) {
+               node.on("click", function (sender) {
 			
                     if (scope.tool == 'select' || scope.tool == 'focus' || scope.tool == 'center' ) {
                         if (d3.event.shiftKey || d3.event.ctrlKey) {
@@ -245,7 +256,6 @@ angular.module('glimpse')
                   if (scope.tool == 'anchor') {
                         sender.fixed = !d3.event.altKey;
                     }
-
 
                     if (scope.tool == 'focus') {
                         var nodeHandlesToShow = [sender["handle"]];
@@ -278,22 +288,23 @@ angular.module('glimpse')
 			function brfs(grph){
 				traversedNodes=[];
 				traversedNodes.push(grph.nodes[focusnode]);
-				marked={};
+				var marked={};
 				while (traversedNodes.length != 0) {
 				var v = traversedNodes.shift();
 				console.log(v);
 			if(v == grph.nodes[focusnode])
 				{ 
 				    v.x= w/2; v.y= h/2; v.fixed = true; v.px= w/2; v.py= h/2;
-				    marked[v.label]=true;
+				    marked[v.index]=true;
 				    var neghbours= [];
 				    console.log(grph);
+				    var adjList = [];
 				    adjList=findchilds(v);
-				    console.log(adjList);
+				    console.log("childs" + adjList);
 				    for (var a=0;a< adjList.length;a++){
 				       u=adjList[a];
-				       if(marked[u.label]!=true){
-				          marked[u.label]=true;
+				       if(marked[u.index]!=true){
+				          marked[u.index]=true;
 				           neghbours.push(u);
 				      var currentAngle = startAngle + ((360/adjList.length) * (a));
 				      var currentAngleRadians = currentAngle * D2R;
@@ -324,8 +335,8 @@ angular.module('glimpse')
 					adjList=findchilds(v[j]);
 					for (var a=0; a< adjList.length; a++){
 						u=adjList[a];
-						if(marked[u.label]!=true){
-						marked[u.label]=true;
+						if(marked[u.index]!=true){
+						marked[u.index]=true;
 						neghbours.push(u);
 									}
 					}
@@ -369,17 +380,17 @@ angular.module('glimpse')
 			return n;
 				}
 }
-    
+
 brfs(graph);
 
 for (g=0; g < graph.nodes.length; g++)
-{
-if(sender.index != graph.nodes[g].index ){
-if (sender.x == graph.nodes[g].x && sender.y == graph.nodes[g].y && sender.px == graph.nodes[g].px && sender.px == graph.nodes[g].px)
+	{
+	if(sender.index != graph.nodes[g].index ){
+	if (sender.x == graph.nodes[g].x && sender.y == graph.nodes[g].y && sender.px == graph.nodes[g].px && sender.px == graph.nodes[g].px)
 	{ graph.nodes[g].fixed = false;
 	  console.log("sender " + graph.nodes[g]);
 	}
-}
+	}
 }
 
 for (var c=1; c < i-1; c++)
@@ -389,11 +400,22 @@ var outerCircle = svg_g.append("circle").attr({
     cy: h/2,
     r: radius * c,
     fill: "none",
-    stroke: "grey"
+    stroke: "white"
 });
 
 } 
-           }
+        
+node.style("opacity", function (d) {
+                            return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0.3;
+                            //return (sender.handle == d.handle || utils.areNeighbors(sender, d)) ? 1 : 0.3;
+                        });
+                        edge.style("opacity", function (d) {
+                            return (nodeHandlesToShow.indexOf(d["source"]["handle"]) > -1 && nodeHandlesToShow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0.05;
+
+                        });
+
+
+   }
                     
                     scope.$apply();
                 });
@@ -402,6 +424,7 @@ var outerCircle = svg_g.append("circle").attr({
                 settingsChanged.text(scope.settings.text);
 
                 force.start();
+force.nodes
             }, true);
 
 
@@ -410,6 +433,11 @@ var outerCircle = svg_g.append("circle").attr({
             scope.$watch('settings.text', settingsChanged.text, true);
 
             scope.$watch('tool', toolChanged, true);
+
+for (g=0; g < graph.nodes.length; g++)
+{
+
+}
         }
 
         return {
