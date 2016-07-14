@@ -1,3 +1,22 @@
-<div>
 
+
+<div class="well">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div> <label>Filter By :</label> <br></div>
+
+            <label for="type" class="col-sm-2 control-label">Type</label>
+
+            <div class="col-sm-10">
+                <select id="type" class="form-control" ng-options="option for option in nodeTypes()" ng-model="atom.type">
+                </select>
+            </div>
+
+	</div>
+	            
+        <button ng-click="filter()" class="btn btn-primary pull-right">Show</button>
+	<button ng-click="close()" class="btn btn-primary pull-right">Reset</button>
+         </form>
 </div>
+
+

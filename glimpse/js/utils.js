@@ -4,6 +4,13 @@
 
 angular.module('glimpse').factory('utils', function () {
 
+    var filterBy = "none";
+
+    var filter = function(nodetype, atoms){
+	filterBy = nodetype;
+	atoms2Graph(atoms);
+	}
+
     var isNode = function (atom) {
         return atom["type"].match("Node$");
     };
@@ -58,6 +65,34 @@ angular.module('glimpse').factory('utils', function () {
         for (var atom_index in atoms) {
             if (!atoms.hasOwnProperty(atom_index)) continue;
             //Add Nodes
+	if(filterBy != "none"){
+		  if(atoms[atom_index].type == filterBy)
+		   {
+		      graph.nodes.push(atoms[atom_index]);
+
+           		 // Add Edges
+           		for (var j = 0; j < atoms[atom_index]["outgoing"].length; j++) {
+                	graph.edges.push({
+                    	source: parseInt(atom_index),
+                   	 target: atoms[atom_index]["outgoing"][j]["handle"],
+                   	 label: atoms[atom_index]["outgoing"][j]["label"],
+                    	arrow: atoms[atom_index]["outgoing"][j]["arrow"]
+               		 });
+           	   	}
+
+           		 for (var outgoing_index in atoms[atom_index]["outgoing"]) {
+               		 if (!atoms[atom_index]["outgoing"].hasOwnProperty(outgoing_index)) continue;
+               		 graph.edges.push({
+                 	 source: parseInt(atom_index),
+                    	 target: atoms[atom_index]["outgoing"][outgoing_index]["handle"],
+                    	 label: atoms[atom_index]["outgoing"][outgoing_index]["label"],
+                  	 arrow: atoms[atom_index]["outgoing"][outgoing_index]["arrow"]
+                	})
+            		}
+
+        	}
+	}
+	else{
             graph.nodes.push(atoms[atom_index]);
 
             // Add Edges
@@ -81,6 +116,7 @@ angular.module('glimpse').factory('utils', function () {
             }
 
         }
+}
         return graph;
     };
 

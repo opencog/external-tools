@@ -129,12 +129,20 @@
  <a title="Radial" class="btn btn-sm btn-block" ng-class="[tool=='center'?'btn-primary':'btn-default']" ng-click="tool='center'">
  <i class="fa fa-dot-circle-o"></i>
  </a>
-
 </div>
 <!--Atom Details-->
 <div id="atom_details_panel" caption="Atom Details" icon="">
     <atom-details atoms="atoms" selected-handles="selected_handles"></atom-details>
 </div>
+<div class="dropdown">
+  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a href="#">Link 1</a>
+    <a href="#">Link 2</a>
+    <a href="#">Link 3</a>
+  </div>
+</div>
+
 <!--Terminal-->
 <div id="terminal_panel" caption="Terminal" icon=""></div>
 

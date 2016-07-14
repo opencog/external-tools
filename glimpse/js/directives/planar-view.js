@@ -128,8 +128,8 @@ angular.module('glimpse')
                 var _atoms = utils.indexAtoms(atoms);
                 _atoms = simplifications.simplify(_atoms, scope.settings.simplifications);
                 var graph = utils.atoms2Graph(_atoms);
-
-                // Add new nodes and update existing ones
+				
+		// Add new nodes and update existing ones
                 for (var i = 0; i < graph.nodes.length; i++) {
                     var nodeIndex = utils.indexOfNode(force.nodes(), graph.nodes[i]);
                     if (nodeIndex == -1) { //New Node
@@ -253,10 +253,32 @@ angular.module('glimpse')
                         });
                     }
   
-                  if (scope.tool == 'anchor') {
+                    if (scope.tool == 'anchor') {
                         sender.fixed = !d3.event.altKey;
                     }
+		    if (scope.tool == 'nodefilter') {
+			var nodeHandlesToShow = [sender["handle"]];
 
+                        for (var g = 0; g < graph.nodes.length; g++) {
+                            var newHandlesToShow = [];
+			    for (var i = 0; i < nodeHandlesToShow.length; i++) {
+                                if (_atoms.hasOwnProperty(nodeHandlesToShow[i])){
+                                if (graph.nodes[g].type == sender.type)
+                                    newHandlesToShow = newHandlesToShow.concat(graph.nodes[g].handle);
+                            } 
+                            nodeHandlesToShow = nodeHandlesToShow.concat(newHandlesToShow);
+                            nodeHandlesToShow = $.unique(nodeHandlesToShow);
+			}
+                        }
+			node.style("opacity", function (d) {
+                            return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0.3;
+                            
+                        });
+                        edge.style("opacity", function (d) {
+                            return (nodeHandlesToShow.indexOf(d["source"]["handle"]) > -1 && nodeHandlesToShow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0.05;
+
+                        });
+			}
                     if (scope.tool == 'focus') {
                         var nodeHandlesToShow = [sender["handle"]];
 
@@ -269,9 +291,7 @@ angular.module('glimpse')
                             nodeHandlesToShow = nodeHandlesToShow.concat(newHandlesToShow);
                             nodeHandlesToShow = $.unique(nodeHandlesToShow);
                         }
-
-
-                        node.style("opacity", function (d) {
+			node.style("opacity", function (d) {
                             return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0.3;
                             //return (sender.handle == d.handle || utils.areNeighbors(sender, d)) ? 1 : 0.3;
                         });
@@ -279,7 +299,7 @@ angular.module('glimpse')
                             return (nodeHandlesToShow.indexOf(d["source"]["handle"]) > -1 && nodeHandlesToShow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0.05;
 
                         });
-                    }
+                        }
 
                     if(scope.tool == 'center'){
 			var i =1;
@@ -360,7 +380,7 @@ angular.module('glimpse')
 			}
 			i++;
 			console.log(i);
-	}
+			}
 
 			function findchilds(node){
 			var outnode=[];
@@ -405,29 +425,17 @@ var outerCircle = svg_g.append("circle").attr({
 
 } 
         
-node.style("opacity", function (d) {
-                            return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0.3;
-                            //return (sender.handle == d.handle || utils.areNeighbors(sender, d)) ? 1 : 0.3;
-                        });
-                        edge.style("opacity", function (d) {
-                            return (nodeHandlesToShow.indexOf(d["source"]["handle"]) > -1 && nodeHandlesToShow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0.05;
-
-                        });
    }
-                   
-                    scope.$apply();
+                   scope.$apply();
                 });
 
                 settingsChanged.text(scope.settings.text);
 
                 force.start();
             }, true);
-
-
-            scope.$watch('settings.size', settingsChanged.size, true);
+           scope.$watch('settings.size', settingsChanged.size, true);
             scope.$watch('settings.force', settingsChanged.force, true);
             scope.$watch('settings.text', settingsChanged.text, true);
-
             scope.$watch('tool', toolChanged, true);
      }
 
