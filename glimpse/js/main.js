@@ -108,6 +108,8 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     // Init
     $scope.atoms = [];
     $scope.tool = "select";
+    $scope.filt = "none";
+    $scope.hide = "none";
     $scope.settings = {};
     $scope.settings.general = {
         server: ""
@@ -132,5 +134,5 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     };
 
     $scope.selectedIndices = [];
-    $scope.filter = [];
+   
 });

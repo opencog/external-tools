@@ -1,22 +1,11 @@
-
-
 <div class="well">
-    <form class="form-horizontal">
-        <div class="form-group">
-            <div> <label>Filter By :</label> <br></div>
-
-            <label for="type" class="col-sm-2 control-label">Type</label>
-
-            <div class="col-sm-10">
-                <select id="type" class="form-control" ng-options="option for option in nodeTypes()" ng-model="atom.type">
-                </select>
-            </div>
-
-	</div>
-	            
-        <button ng-click="filter()" class="btn btn-primary pull-right">Show</button>
-	<button ng-click="close()" class="btn btn-primary pull-right">Reset</button>
-         </form>
+   <label for="filt">Filter By :</label><br><br>
+   <select id="filt" ng-options="option for option in nodeTypes()" ng-model="type">
+   </select><br>
+  <div> <button ng-click="filter(type)" class="btn btn-primary pull-right">Show</button> </div>
+   <div> <button ng-click="hide(type)" class="btn btn-primary pull-right">Hide</button> </div>
+   <div><button ng-click="all(type)" class="btn btn-primary pull-right">Cancel</button> </div>
+        
 </div>
 
 

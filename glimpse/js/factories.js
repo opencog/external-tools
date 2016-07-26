@@ -9,9 +9,7 @@ angular.module('glimpse')
         atomsFactory.server = "";
         atomsFactory.nodeTypes = [];
 	atomsFactory.types = [];
-	var filterstatus = 0;
-	var filterBy = "none";	
-
+	
        // Member functions
         atomsFactory.updateAtoms = function (successCB, failureCB) {
            $http({
@@ -20,16 +18,10 @@ angular.module('glimpse')
                 cache: false
             }).then(
                 function (response) {
-		    if(filterstatus == 0){
-                    atomsFactory.atoms = response.data.result.atoms;
+		    atomsFactory.atoms = response.data.result.atoms;
                     atomsFactory.atomsCount = response.data.result.total;
                     if (typeof successCB === "function") successCB();
-		    }
-		    else{
-			atomsFactory.filter(filterBy);
-			}
-		
-                },
+		     },
                 function (error) {
                     if (typeof failureCB === "function") failureCB();
                 }
@@ -63,33 +55,15 @@ angular.module('glimpse')
                 method: 'GET',
                 url: atomsFactory.server + 'api/v1.1/types'
             }).then(function (response) {
-		
+		atomsFactory.types = response.data.types;
+		atomsFactory.types.push("GeneNode");
+		atomsFactory.types.push("ProteinNode");
                 atomsFactory.nodeTypes = response.data.types.filter(function (atom) {
                     return atom.indexOf("Node") > -1;
                 });
-		atomsFactory.nodeTypes.push("GeneNode");
-		atomsFactory.nodeTypes.push("ProteinNode");
+		
             });
         };
-
-	atomsFactory.filter = function (atomType) {
-	    filterBy = atomType;
-	    filterstatus = 1;
-            $http({
-                method: 'GET',
-                url: atomsFactory.server + "api/v1.1/atoms",
-		cache: false
-               }).then(
-			function (response) {
-                	x = response.data.result.total;
-			atomsFactory.atoms.length =0;
-			for(a=0; a < x; a++){
-		  	   if(response.data.result.atoms[a].type == atomType)
-		     	      atomsFactory.atoms.push(response.data.result.atoms[a]);
-			    }
-			}
-               );
-          }; 
 
 	       
         return atomsFactory;

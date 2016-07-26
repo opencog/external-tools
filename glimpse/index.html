@@ -129,6 +129,11 @@
  <a title="Radial" class="btn btn-sm btn-block" ng-class="[tool=='center'?'btn-primary':'btn-default']" ng-click="tool='center'">
  <i class="fa fa-dot-circle-o"></i>
  </a>
+ 
+<a title="Get-Root" class="btn btn-sm btn-block" ng-class="[tool=='getroot'?'btn-primary':'btn-default']" ng-click="tool='getroot'">
+ <i class="fa fa-filter"></i>
+ </a>
+
 </div>
 <!--Atom Details-->
 <div id="atom_details_panel" caption="Atom Details" icon="">
@@ -155,7 +160,7 @@
 <!--Planar-->
 <div id="planar_panel" caption="Planar" icon="">
     <planar-view id="planar-view-1" class="planar-view" atoms="atoms" selected-handles="selected_handles"
-                 settings="settings.planar" tool="tool"></planar-view>
+                 settings="settings.planar" tool="tool" filt="filt"></planar-view>
 </div>
 <!--Scheme-->
 <div id="scheme_panel" caption="Scheme" icon=""></div>
@@ -163,7 +168,7 @@
 <div id="tabular_panel" caption="Tabular" icon=""></div>
 
 <div id="filters_panel" caption="Filters" icon="">
-    <filters filter="filter"></filters>
+   <filters filt="filt" ></filters>
 </div>
 <!--Settings-->
 <div id="settings_panel" caption="Planar Settings" icon="">
@@ -179,7 +184,6 @@
 <div id="connect_panel" caption="Connect" icon="">
     <connect atoms="atoms" settings="settings.general" dialog="connectDialog"></connect>
 </div>
-
 
 <!--More JS-->
 <script type="application/javascript" src="js/main.js"></script>
