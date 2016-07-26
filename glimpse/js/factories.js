@@ -56,9 +56,7 @@ angular.module('glimpse')
                 url: atomsFactory.server + 'api/v1.1/types'
             }).then(function (response) {
 		atomsFactory.types = response.data.types;
-		atomsFactory.types.push("GeneNode");
-		atomsFactory.types.push("ProteinNode");
-                atomsFactory.nodeTypes = response.data.types.filter(function (atom) {
+		atomsFactory.nodeTypes = response.data.types.filter(function (atom) {
                     return atom.indexOf("Node") > -1;
                 });
 		
