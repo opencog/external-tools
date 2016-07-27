@@ -1,3 +1,11 @@
-<div>
-
+<div class="well">
+   <label for="filt">Filter By :</label><br><br>
+   <select id="filt" ng-options="option for option in nodeTypes()" ng-model="type">
+   </select><br>
+  <div> <button ng-click="filter(type)" class="btn btn-primary pull-right">Show</button> </div>
+   <div> <button ng-click="hide(type)" class="btn btn-primary pull-right">Hide</button> </div>
+   <div><button ng-click="all(type)" class="btn btn-primary pull-right">Cancel</button> </div>
+        
 </div>
+
+

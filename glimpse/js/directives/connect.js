@@ -20,6 +20,7 @@ angular.module('glimpse')
                         scope.dialog.destroy();
                     }, 1500);
                     setTimeout(updateAtoms, 10000);
+			                    
                 };
 
                 var onFailure = function () {

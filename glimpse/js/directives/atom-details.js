@@ -12,7 +12,7 @@ angular.module('glimpse')
                 }
             }, true);
         };
-
+	
         return {
             link: link,
             restrict: 'E',

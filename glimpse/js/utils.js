@@ -54,8 +54,8 @@ angular.module('glimpse').factory('utils', function () {
 
     var atoms2Graph = function (atoms) {
         var graph = {nodes: [], edges: []};
-
-        for (var atom_index in atoms) {
+	
+	    for (var atom_index in atoms) {
             if (!atoms.hasOwnProperty(atom_index)) continue;
             //Add Nodes
             graph.nodes.push(atoms[atom_index]);
@@ -80,7 +80,7 @@ angular.module('glimpse').factory('utils', function () {
                 })
             }
 
-        }
+        } 
         return graph;
     };
 

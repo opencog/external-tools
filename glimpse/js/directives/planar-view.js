@@ -5,6 +5,11 @@ angular.module('glimpse')
 
             var settingsChanged = {}, force, svg, svg_g, node, edge;
 
+	        var D2R = Math.PI / 180, radius=100, focusnode = 0, startAngle= 0, ring =0;;	
+		    //Width and height
+			var w = 960 ;
+			var h = 500 ;
+
             // Create force layout and svg
             force = d3.layout.force()
                 .nodes([])
@@ -31,8 +36,8 @@ angular.module('glimpse')
             svg = d3.select(element[0])
                 .append("svg:svg")
                 .attr("width", scope.settings.size.width).attr("height", scope.settings.size.height)
-                .call(d3.behavior.zoom().on("zoom", function () {
-                    svg_g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+              .call(d3.behavior.zoom().on("zoom", function () {
+                svg_g.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
                 }));
 
             svg_g = svg.append("svg:g");
@@ -74,7 +79,7 @@ angular.module('glimpse')
                     .gravity(forceParams.gravity)
                     .linkDistance(function (link) {
                         if (link.label)
-                            return forceParams.linkDistance * 2.4;
+                            return forceParams.linkDistance * 6;
                         return forceParams.linkDistance;
                     })
                     .linkStrength(forceParams.linkStrength);
@@ -109,22 +114,71 @@ angular.module('glimpse')
                 });
             };
 
-            var toolChanged = function (newTool) {
+	     // Monitor Filter changed
+	    var atomfilter = function (filter) {
+		if(filter == 'all')
+		{
+		 d3.selectAll(".node, .edge").transition()
+                 .style("opacity", 1);
+		}
+		else if(scope.filt[0]+scope.filt[1]+scope.filt[2]+scope.filt[3]== 'hide')
+		{
+			filter = filter.substr(4);
+			console.log(filter)	;
+		  var selected = node.filter(function (d, i) {
+          		  return d.type == filter;
+       		   });
+		
+		selected.style("opacity", "0");
+		var selectededg = scope.atoms.filter(function (d, i) {
+			 if (d.type != filter) {return d["handle"]};
+       		});
+		var edgestoshow = [];
+		for(var x=0; x < selectededg.length; x++) { edgestoshow.push(selectededg[x].handle); }
+		console.log(edgestoshow);
+		edge.style("opacity", function (d) {
+                    return (edgestoshow.indexOf(d["source"]["handle"]) > -1 && edgestoshow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0;
+                        });
+		}
+
+		else{
+                console.log(edge);
+		var selected = node.filter(function (d, i) {
+          		  return d.type != filter;
+       		});
+		selected.style("opacity", "0");
+		var selectededg = scope.atoms.filter(function (d, i) {
+			 if (d.type == filter) {return d["handle"]};
+       		});
+		var edgestoshow = [];
+		for(var x=0; x < selectededg.length; x++) { edgestoshow.push(selectededg[x].handle); }
+		console.log(edgestoshow);
+		edge.style("opacity", function (d) {
+                    return (edgestoshow.indexOf(d["source"]["handle"]) > -1 && edgestoshow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0;
+                        });
+		   }
+		 };
+
+        // Monitor tool changed
+        var toolChanged = function (newTool) {
                 if (newTool != 'focus') {
                     node.style("opacity", "1");
                     edge.style("opacity", "1");
                 }
+		if (newTool != 'center') {
+                    node.fixed = false;
+                }
             };
 
             // Update display whenever atoms change
-            scope.$watch('atoms', function (atoms) {
+        scope.$watch('atoms', function (atoms) {
 
                 // Index and simplify atoms from the server
                 var _atoms = utils.indexAtoms(atoms);
                 _atoms = simplifications.simplify(_atoms, scope.settings.simplifications);
                 var graph = utils.atoms2Graph(_atoms);
-
-                // Add new nodes and update existing ones
+				
+		        // Add new nodes and update existing ones
                 for (var i = 0; i < graph.nodes.length; i++) {
                     var nodeIndex = utils.indexOfNode(force.nodes(), graph.nodes[i]);
                     if (nodeIndex == -1) { //New Node
@@ -190,6 +244,7 @@ angular.module('glimpse')
                     .attr("id", function (d, i) {
                         return "edge_" + i;
                     });
+                
                 edge.append("text").attr("dy", "-4")
                     .append("textPath").attr('xlink:href', function (d, i) {
                         return "#edge_" + i;
@@ -199,21 +254,163 @@ angular.module('glimpse')
                         return d.label;
                     });
 
+		function mouseover() { // nodes on mouse over
+  			d3.select(this).select("circle").transition()
+     			  .duration(750)
+      			  .attr("r", 26);
+
+			d3.select(this).select("text").attr("font-size", "20px");
+			}
+
+		function mouseout() { // nodes on mouse out
+  			d3.select(this).select("circle").transition()
+      			  .duration(750)
+      			  .attr("r", function (d) {
+               		  return utils.isLink(d) ? 6 : 14;
+               		 });
+			d3.select(this).select("text").attr("font-size", "10px");
+			}
+		
+		// Locate nodes in a radial layout
+		function brfs(grph){
+				traversedNodes=[];
+				traversedNodes.push(grph.nodes[focusnode]);
+				var marked={};
+				while (traversedNodes.length != 0) {
+				var v = traversedNodes.shift();
+				console.log(v);
+			if(v == grph.nodes[focusnode])
+				{ 
+				    v.x= w/2; v.y= h/2; v.fixed = true; v.px= w/2; v.py= h/2;
+				    marked[v.index]=true;
+				    var neghbours= [];
+				    console.log(grph);
+				    var adjList = [];
+				    adjList=findchilds(v, grph);
+				    console.log("childs" + adjList);
+				    for (var a=0;a< adjList.length;a++){
+				       u=adjList[a];
+				       if(marked[u.index]!=true){
+				          marked[u.index]=true;
+				           neghbours.push(u);
+				      var currentAngle = startAngle + ((360/adjList.length) * (a));
+				      var currentAngleRadians = currentAngle * D2R;
+				      var radialPoint = {
+     					 x: (w / 2) + radius * Math.cos(currentAngleRadians), 
+     					 y: (h / 2) + radius * Math.sin(currentAngleRadians)
+   		 					};
+	   			u.x = radialPoint.x;
+	   			u.px = radialPoint.x;
+	   			u.y = radialPoint.y;
+	   			u.py = radialPoint.y;
+	   			u.fixed = true;
+								}
+									}
+				traversedNodes.push(neghbours);
+				console.log("Traversed nodes" + traversedNodes);
+				}
+			else if(v.length > 0)
+			{
+				rad= radius * ring;
+				console.log(v);
+				console.log(radius);
+				var neghbours= [];
+			
+				for(var j=0; j< v.length; j++)
+				{
+				if (marked[v[j].label]=== false) {marked[v[j].label]=true;}
+					adjList=findchilds(v[j], grph );
+					for (var a=0; a< adjList.length; a++){
+						u=adjList[a];
+						if(marked[u.index]!=true){
+						marked[u.index]=true;
+						neghbours.push(u);
+									}
+					}
+			
+				}
+				for (var loc= 0; loc < neghbours.length; loc++)
+				{	
+				var currentAngle = startAngle + ((360/neghbours.length) * (loc));
+				var currentAngleRadians = currentAngle * D2R;
+				var radialPoint = {
+     				 x: (w / 2) + rad * Math.cos(currentAngleRadians), 
+     				 y: (h / 2) + rad * Math.sin(currentAngleRadians)
+   				};
+				neghbours[loc].x = radialPoint.x;
+				neghbours[loc].y = radialPoint.y;
+				neghbours[loc].px = radialPoint.x;
+				neghbours[loc].py = radialPoint.y;
+				neghbours[loc].fixed = true;
+				}
+			if(neghbours.length !=0) {traversedNodes.push(neghbours);}
+			}
+			ring++;
+			console.log(ring);
+			}
+		}
+			function findchilds(node, grph){
+			var outnode=[];
+			for(x=0; x< node.outgoing.length; x++)
+				{
+				outnode.push(node.outgoing[x].handle);
+				}
+				var nodehandles= (node.incoming).concat(outnode);
+				var n= [];
+				for(a=0; a< grph.nodes.length; a++) {
+				   for(x=0; x< nodehandles.length; x++)
+					{
+					if(grph.nodes[a].handle == nodehandles[x])
+						{n.push(grph.nodes[a]);}
+					}
+				}
+			return n;
+				}
+			
 
                 //Draw Nodes
-                node = svg_g.selectAll(".node");
-                node = node.data(force.nodes());
-                node.enter().append("g").attr("class", "node");
-                node.call(force.drag().on("dragstart", function (d) {
+        node = svg_g.selectAll(".node");
+        node = node.data(force.nodes());
+        node.enter().append("g").attr("class", "node");
+        node.call(force.drag().on("dragstart", function (d) {
                     d3.event.sourceEvent.stopPropagation();
                 }));
                 node.append("circle").attr("r", function (d) {
                     return utils.isLink(d) ? 6 : 14;
                 });
 
-                node.append("text").attr("dx", 16).attr("dy", ".35em");
-                node.on("click", function (sender) {
-                    if (scope.tool == 'select' || scope.tool == 'focus') {
+        node.append("text").attr("x", function(d) { return d.cx; }).attr("y", function(d) { return d.cy; });
+
+		node.on("mouseover", mouseover);
+		node.on("mouseout", mouseout);
+		node.on("click", function (sender) {
+		
+		// monitor radial layout
+        		function radmonitor(){
+        			for (g=0; g < graph.nodes.length; g++)
+        				{
+        			if(sender.index != graph.nodes[g].index ){
+        			if (sender.x == graph.nodes[g].x && sender.y == graph.nodes[g].y && sender.px == graph.nodes[g].px && sender.px == graph.nodes[g].px)
+        			{ 
+        			graph.nodes[g].fixed = false;
+        	  		console.log("sender " + graph.nodes[g]);
+        			}
+        				}
+        			}
+
+        			for (var c=1; c < ring-1; c++)
+        			    {
+        			var outerCircle = svg_g.append("circle").attr({
+            			    cx: w/2,
+           			    cy: h/2,
+            			    r: radius * c,
+            			    fill: "none",
+            			    stroke: "white"
+        			                    });
+        			    } 
+        		    }
+			
+                    if (scope.tool == 'select' || scope.tool == 'focus' || scope.tool == 'center' || scope.tool == 'getroot' ) {
                         if (d3.event.shiftKey || d3.event.ctrlKey) {
                             if (scope.selectedHandles.indexOf(sender.handle) == -1)
                                 scope.selectedHandles.push(sender.handle);
@@ -226,54 +423,104 @@ angular.module('glimpse')
                             return scope.selectedHandles.indexOf(d.handle) == -1 ? "node" : "node node_selected";
                         });
                     }
+  
                     if (scope.tool == 'anchor') {
                         sender.fixed = !d3.event.altKey;
                     }
+                    
                     if (scope.tool == 'focus') {
-                        var nodeHandlesToShow = [sender["handle"]];
-
-                        for (var depth = 0; depth < 2; depth++) {
-                            var newHandlesToShow = [];
-                            for (var i = 0; i < nodeHandlesToShow.length; i++) {
-                                if (_atoms.hasOwnProperty(nodeHandlesToShow[i]))
-                                    newHandlesToShow = newHandlesToShow.concat(utils.getAllNeighborHandles(_atoms[nodeHandlesToShow[i]]));
-                            }
-                            nodeHandlesToShow = nodeHandlesToShow.concat(newHandlesToShow);
-                            nodeHandlesToShow = $.unique(nodeHandlesToShow);
-                        }
-
-
-                        node.style("opacity", function (d) {
+            			ring =1;
+            			focusnode = sender.index;
+            			brfs(graph);
+            			radmonitor();
+            			var linksTohide = [];
+            			var nodeHandlesToShow = [sender["handle"]];
+            			
+                                    for (var depth = 0; depth < 2; depth++) {
+                                        var newHandlesToShow = [];
+                                        for (var i = 0; i < nodeHandlesToShow.length; i++) {
+                                            if (_atoms.hasOwnProperty(nodeHandlesToShow[i]))
+            				newHandlesToShow = newHandlesToShow.concat(utils.getAllNeighborHandles(_atoms[nodeHandlesToShow[i]]));
+            				}
+            				for(a=0; a < newHandlesToShow.length; a++){
+            				for(b=0; b < graph.nodes.length; b++)
+            				  {
+            					if(newHandlesToShow[a] == graph.nodes[b].handle)
+            					    { if(graph.nodes[b].type == 'ListLink' || graph.nodes[b].type == 'SetLink') 
+                                     {
+                                        linksTohide = linksTohide.concat(graph.nodes[b].handle);
+                                    newHandlesToShow = newHandlesToShow.concat(utils.getAllNeighborHandles(_atoms[newHandlesToShow[a]]));
+                                         }
+            						}	
+            				  }
+            				    }
+            			nodeHandlesToShow = nodeHandlesToShow.concat(newHandlesToShow);
+                                   	nodeHandlesToShow = $.unique(nodeHandlesToShow);
+            			console.log(nodeHandlesToShow + "hide this" +linksTohide)	;
+            			node.style("opacity", function (d) {
                             return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0.3;
-                            //return (sender.handle == d.handle || utils.areNeighbors(sender, d)) ? 1 : 0.3;
-                        });
+                                      });
+                        var selected = node.filter(function (d, i) {
+                            return d.type == 'ListLink';
+                            });
+                        selected.style("opacity", "0.3");
+                        var selected = node.filter(function (d, i) {
+                            return d.type == 'ListLink';
+                            });
+                        selected.style("opacity", "0.3");
                         edge.style("opacity", function (d) {
                             return (nodeHandlesToShow.indexOf(d["source"]["handle"]) > -1 && nodeHandlesToShow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0.05;
+            			 });
 
+                                    }}
+
+                    if(scope.tool == 'center'){
+            			ring =1;
+            			focusnode = sender.index;
+            			console.log(sender);
+            			brfs(graph);
+            			radmonitor();
+            						
+                    	 }
+		            if (scope.tool == 'getroot') {
+                        ring =1;
+                        focusnode = sender.index;
+                        brfs(graph);
+                        radmonitor();
+            		    var nodeHandlesToShow = [sender["handle"]];
+            		    var nodes = findchilds(sender, graph);
+                        for(x=0; x < nodes.length; x++){
+                            nodeHandlesToShow.push(nodes[x].handle);
+                            }
+                        nodeHandlesToShow = $.unique(nodeHandlesToShow);
+                        console.log(nodeHandlesToShow);
+          			    node.style("opacity", function (d) {
+                        return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0;
                         });
-                    }
-                    scope.$apply();
+                        edge.style("opacity", function (d) {
+                        return (nodeHandlesToShow.indexOf(d["source"]["handle"]) > -1 && nodeHandlesToShow.indexOf(d["target"]["handle"]) > -1) ? 1: 0;
+            			});
+            			
+                                }
+		    
+                scope.$apply();
                 });
 
-
                 settingsChanged.text(scope.settings.text);
-
+		
                 force.start();
             }, true);
-
-
             scope.$watch('settings.size', settingsChanged.size, true);
             scope.$watch('settings.force', settingsChanged.force, true);
             scope.$watch('settings.text', settingsChanged.text, true);
-
+	        scope.$watch('filt', atomfilter, true);
             scope.$watch('tool', toolChanged, true);
-        }
+     }
 
         return {
             link: linkDirective,
             restrict: 'E',
-            scope: {atoms: '=', settings: '=', selectedHandles: '=', tool: '='}
+            scope: {atoms: '=', settings: '=', selectedHandles: '=', tool: '=', filt: '='}
         };
     })
 ;
-
