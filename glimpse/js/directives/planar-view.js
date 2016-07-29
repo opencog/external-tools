@@ -158,21 +158,25 @@ angular.module('glimpse')
                         });
 		   }
 		 };
-
+	var roothandles = [];
         // Monitor tool changed
         var toolChanged = function (newTool) {
                 if (newTool != 'focus') {
                     node.style("opacity", "1");
                     edge.style("opacity", "1");
                 }
-		if (newTool != 'center') {
-                    node.fixed = false;
-                }
+		if (newTool == 'tree') {
+                    node.style("opacity", function (d) {
+                        return (roothandles.indexOf(d["handle"]) > -1) ? 1 : 0;
+                        });
+                    edge.style("opacity", function (d) {
+                     return (roothandles.indexOf(d["source"]["handle"]) > -1 && roothandles.indexOf(d["target"]["handle"]) > -1) ? 1: 0;            				});
+                   }
             };
 
             // Update display whenever atoms change
         scope.$watch('atoms', function (atoms) {
-
+		
                 // Index and simplify atoms from the server
                 var _atoms = utils.indexAtoms(atoms);
                 _atoms = simplifications.simplify(_atoms, scope.settings.simplifications);
@@ -385,19 +389,30 @@ angular.module('glimpse')
 		node.on("mouseout", mouseout);
 		node.on("click", function (sender) {
 		
+		// depth-first search for nodes 
+		function dfs(node, graph){
+				ans=[];
+				traversedNodes=[];
+				traversedNodes.push(node);
+				allNodes=graph.nodes;
+				marked={};
+				while(traversedNodes.length!=0){
+				var v = traversedNodes.pop();
+				marked[v.index]=true;
+				adjList= findchilds(v, graph);
+				ans.push(v);
+				for (var i=0;i<adjList.length;i++){
+					u=adjList[i];
+					if(marked[u.index]!=true){
+						traversedNodes.push(u);
+						marked[u.index]=true;
+						}
+					}			
+				}
+					return ans;
+				}
 		// monitor radial layout
         		function radmonitor(){
-        			for (g=0; g < graph.nodes.length; g++)
-        				{
-        			if(sender.index != graph.nodes[g].index ){
-        			if (sender.x == graph.nodes[g].x && sender.y == graph.nodes[g].y && sender.px == graph.nodes[g].px && sender.px == graph.nodes[g].px)
-        			{ 
-        			graph.nodes[g].fixed = false;
-        	  		console.log("sender " + graph.nodes[g]);
-        			}
-        				}
-        			}
-
         			for (var c=1; c < ring-1; c++)
         			    {
         			var outerCircle = svg_g.append("circle").attr({
@@ -408,6 +423,21 @@ angular.module('glimpse')
             			    stroke: "white"
         			                    });
         			    } 
+        			for (g=0; g < graph.nodes.length; g++)
+        			{
+        			if(sender.index != graph.nodes[g].index ){
+        			if (sender.x == graph.nodes[g].x && sender.y == graph.nodes[g].y && sender.px == graph.nodes[g].px && sender.px == graph.nodes[g].px)
+        			{ 
+        			//graph.nodes[g].fixed = false;
+                    		var c = dfs(graph.nodes[g], graph);
+                    			for(a=0; a < c.length; a++)
+                        			{
+                           			c[a].fixed = false;                                    
+                        			}                                 
+        	  		}
+        			}
+        			}
+						
         		    }
 			
                     if (scope.tool == 'select' || scope.tool == 'focus' || scope.tool == 'center' || scope.tool == 'getroot' ) {
@@ -482,7 +512,8 @@ angular.module('glimpse')
             			radmonitor();
             						
                     	 }
-		            if (scope.tool == 'getroot') {
+  	           
+		    if (scope.tool == 'getroot') {
                         ring =1;
                         focusnode = sender.index;
                         brfs(graph);
@@ -494,7 +525,7 @@ angular.module('glimpse')
                             }
                         nodeHandlesToShow = $.unique(nodeHandlesToShow);
                         console.log(nodeHandlesToShow);
-          			    node.style("opacity", function (d) {
+          		node.style("opacity", function (d) {
                         return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0;
                         });
                         edge.style("opacity", function (d) {
