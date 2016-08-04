@@ -119,7 +119,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         force: {
             charge: -500,
             friction: 0.9,
-            gravity: 0.10,
+            gravity: 0.05,
             linkDistance: 70,
             linkStrength: 0.5
         },
