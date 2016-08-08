@@ -134,4 +134,3 @@ angular.module('glimpse').factory('utils', function () {
         getUrlParameter: getUrlParameter
     }
 });
-
