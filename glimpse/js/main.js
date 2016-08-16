@@ -5,8 +5,6 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
   
   // If slide mode is enabled, refresh every 5 secs
   var slideModeReset = false;
-  glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
-      $interval, utils, AtomsFactory) {
     $rootScope.$watch('slideMode', function( ) {
       if( !slideModeReset){ slideModeReset = true;}
       else{
