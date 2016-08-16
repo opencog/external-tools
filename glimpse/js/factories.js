@@ -62,10 +62,47 @@ angular.module('glimpse')
 		
             });
         };
+        
+        atomsFactory.sampleAtomsInAF = function (successCB, failureCB) {
+          var sampleSize = 100;
+          var randIndex = function(sampleSize, sampleSpaceSize){ 
+            var arr = []
+            while(arr.length < sampleSize){
+              var randomnumber=Math.ceil(Math.random()* sampleSpaceSize)
+              var found=false;
+              for(var i=0;i<arr.length;i++){
+                if(arr[i]==randomnumber){found=true;break;}
+              }
+              if(!found)arr[arr.length]=randomnumber;
+            }
+          }
+          $http({
+            method: 'GET',
+            url: atomsFactory.server + 'api/v1.1/atoms?filterby=attentionalfocus'
+          }).then(
+            function (response){
+              var responseAtoms = response.data.result.atoms;
 
-	       
+              if (responseAtoms.length > sampleSize){
+                var randomAtoms = []
+                for(i in randIndex(sampleSize,responseAtoms.length)){
+                  randAtoms.push(responseAtoms[randIndex[i]]);
+                }
+                atomsFactory.atoms = randomAtoms;
+              }
+              else{
+                atomsFactory.atoms = responseAtoms;
+              }
+
+              atomsFactory.atomsCount = atomsFactory.atoms.length;
+              if (typeof successCB === "function") successCB();
+            },
+            function (error) {
+              if (typeof failureCB === "function") failureCB();
+            }
+          );
+        };
+
         return atomsFactory;
     })
-
-
-;
+  ;

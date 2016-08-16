@@ -2,6 +2,20 @@ var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion"
 
 glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, utils, AtomsFactory) {
 
+  
+  // If slide mode is enabled, refresh every 5 secs
+  var slideModeReset = false;
+  glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
+      $interval, utils, AtomsFactory) {
+    $rootScope.$watch('slideMode', function( ) {
+      if( !slideModeReset){ slideModeReset = true;}
+      else{
+        $window.alert("SlideMode activated");
+        $interval(AtomsFactory.sampleAtomsInAF, 5000);
+        slideModeReset = true;
+      }
+    });
+
     // Global vars
     var divDockManager, dockManager;
     var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel,

@@ -31,7 +31,7 @@
     <title>Glimpse - Atomspace Viewer</title>
 </head>
 
-<body ng-controller="mainCtrl">
+<body ng-controller="mainCtrl" ng-init="slideMode=false">
 
 <!--Nav Bar-->
 <div class="navbar navbar-inverse navbar-fixed-top">
@@ -105,6 +105,11 @@
     </a>
     <a title="Edit" class="btn btn-sm btn-block" ng-class="[tool=='edit'?'btn-primary':'btn-default']" ng-click="tool='edit'">
         <i class="fa fa-pencil-square-o"></i>
+    </a>
+
+    <!--SLIDE MODE-->
+    <a title="SlideMode" class="btn btn-sm btn-block" ng-class="['btn-primary']" ng-click="$root.slideMode = $root.slideMode ? false : true">
+        <i class="fa fa-slideshare"></i>
     </a>
 
     <a title="Link" class="btn btn-sm btn-block" ng-class="[tool=='link'?'btn-primary':'btn-default']" ng-click="tool='link'">
