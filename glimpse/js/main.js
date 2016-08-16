@@ -1,8 +1,6 @@
 var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion"]);
 
-glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, utils, AtomsFactory) {
-
-  
+glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, $interval , utils, AtomsFactory) {
   // If slide mode is enabled, refresh every 5 secs
   var slideModeReset = false;
     $rootScope.$watch('slideMode', function( ) {
