@@ -75,18 +75,19 @@ angular.module('glimpse')
               }
               if(!found)arr[arr.length]=randomnumber;
             }
+            return arr;
           }
           $http({
             method: 'GET',
-            url: atomsFactory.server + 'api/v1.1/atoms?filterby=attentionalfocus'
+            url: atomsFactory.server + 'api/v1.1/atoms?filterby=attentionalfocus&includeOutgoing=true&includeIncoming=true'
           }).then(
             function (response){
               var responseAtoms = response.data.result.atoms;
-
               if (responseAtoms.length > sampleSize){
                 var randomAtoms = []
                 for(i in randIndex(sampleSize,responseAtoms.length)){
-                  randAtoms.push(responseAtoms[randIndex[i]]);
+                  var atom = responseAtoms[randIndex[i]];
+                  randomAtoms.push(atom);
                 }
                 atomsFactory.atoms = randomAtoms;
               }
