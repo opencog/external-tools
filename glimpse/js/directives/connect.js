@@ -1,5 +1,5 @@
 angular.module('glimpse')
-    .directive('connect', function (AtomsFactory) {
+    .directive('connect', function ($rootScope, AtomsFactory) {
         var link = function (scope, element, attributes) {
             scope.state = "idle";
 
@@ -19,8 +19,7 @@ angular.module('glimpse')
                     setTimeout(function () {
                         scope.dialog.destroy();
                     }, 1500);
-                    setTimeout(updateAtoms, 10000);
-			                    
+                    setTimeout(updateAtoms, 5000);
                 };
 
                 var onFailure = function () {
@@ -32,8 +31,14 @@ angular.module('glimpse')
                         scope.$apply();
                     }, 2000);
                 };
-
-                AtomsFactory.updateAtoms(onSuccess, onFailure);
+                
+                if($rootScope.slideMode == true){
+                  console.log("SlideMode activated");
+                  AtomsFactory.sampleAtomsInAF(onSuccess, onFailure);
+                }
+                else{
+                  AtomsFactory.updateAtoms(onSuccess, onFailure);
+                }
             };
 
             scope.connect = function () {

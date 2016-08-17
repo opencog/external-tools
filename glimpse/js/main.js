@@ -1,8 +1,7 @@
 var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion"]);
 
-glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, utils, AtomsFactory) {
-
-    // Global vars
+glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, $interval , utils, AtomsFactory) {
+   // Global vars
     var divDockManager, dockManager;
     var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel,
         filtersPanel, settingsPanel, addNodePanel, connectPanel;

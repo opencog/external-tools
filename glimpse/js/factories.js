@@ -62,10 +62,52 @@ angular.module('glimpse')
 		
             });
         };
+        
+        atomsFactory.sampleAtomsInAF = function (successCB, failureCB) {
+          var sampleSize = 100;
+          var randIndex = function(sampleSize, sampleSpaceSize){ 
+            var arr = []
+            while(arr.length < sampleSize){
+              var randomnumber=Math.ceil(Math.random()* sampleSpaceSize)
+              var found=false;
+              for(var i=0;i<arr.length;i++){
+                if(arr[i]==randomnumber){found=true;break;}
+              }
+              if(!found)arr[arr.length]=randomnumber;
+            }
+            return arr;
+          }
+          $http({
+            method: 'GET',
+            url: atomsFactory.server + 'api/v1.1/atoms?filterby=attentionalfocus&includeOutgoing=true&includeIncoming=true'
+          }).then(
+            function (response){
+              var responseAtoms = response.data.result.atoms;
+              console.log("ResponseAtomSize: "+responseAtoms.length);
+              /*if (responseAtoms.length > sampleSize){
+                var randomAtoms = []
+                for(i in randIndex(sampleSize,responseAtoms.length)){
+                  var atom = responseAtoms[randIndex[i]];
+                  randomAtoms.push(atom);
+                }
+                console.log("RandAtomSize: "+randomAtoms.length);
+                atomsFactory.atoms = randomAtoms;
+              }
+              else{*/
 
-	       
+                console.log("ResponseAtomSize: "+responseAtoms.length);
+                atomsFactory.atoms = responseAtoms;
+              //}
+
+              atomsFactory.atomsCount = atomsFactory.atoms.length;
+              if (typeof successCB === "function") successCB();
+            },
+            function (error) {
+              if (typeof failureCB === "function") failureCB();
+            }
+          );
+        };
+
         return atomsFactory;
     })
-
-
-;
+  ;
