@@ -83,17 +83,21 @@ angular.module('glimpse')
           }).then(
             function (response){
               var responseAtoms = response.data.result.atoms;
-              if (responseAtoms.length > sampleSize){
+              console.log("ResponseAtomSize: "+responseAtoms.length);
+              /*if (responseAtoms.length > sampleSize){
                 var randomAtoms = []
                 for(i in randIndex(sampleSize,responseAtoms.length)){
                   var atom = responseAtoms[randIndex[i]];
                   randomAtoms.push(atom);
                 }
+                console.log("RandAtomSize: "+randomAtoms.length);
                 atomsFactory.atoms = randomAtoms;
               }
-              else{
+              else{*/
+
+                console.log("ResponseAtomSize: "+responseAtoms.length);
                 atomsFactory.atoms = responseAtoms;
-              }
+              //}
 
               atomsFactory.atomsCount = atomsFactory.atoms.length;
               if (typeof successCB === "function") successCB();
