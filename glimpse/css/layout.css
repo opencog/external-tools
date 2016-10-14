@@ -37,6 +37,12 @@ body {
     padding: 10px;
 }
 
+#graph_panel {
+    background-color: #d3d3d3;
+    overflow: visible;
+    padding: 10px;
+}
+
 #settings_panel {
     background-color: #eaeaea;
     overflow: auto;
