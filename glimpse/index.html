@@ -55,10 +55,11 @@
                         <a href="">Displays</a>
                         <ul class="dropdown-menu">
                             <li><a href="#">3D</a></li>
-                            <li><a href="#">JSON</a></li>
-                            <li><a href="#">Planar</a></li>
+                            <li><a href="" ng-click="showPanel('json')">JSON</a></li>
+                            <li><a href="" ng-click="showPanel('planar')">Planar</a></li>
                             <li><a href="#">Scheme</a></li>
                             <li><a href="#">Tabular</a></li>
+                            <li><a href="" ng-click="showPanel('graph')">Graph</a></li>
                         </ul>
                     </li>
 
@@ -93,7 +94,8 @@
 
 <!--ToolBox-->
 <div id="toolbox_panel" caption="Toolbox" icon="">
-    <a title="Select" class="btn btn-sm btn-block" ng-class="[tool=='select'?'btn-primary':'btn-default']" ng-click="tool='select'">
+    <a title="Select" class="btn btn-sm btn-block" ng-class="[tool=='select'?'btn-primary':'btn-default']"
+       ng-click="tool='select'">
         <i class="fa fa-hand-pointer-o"></i>
     </a>
 
@@ -103,45 +105,56 @@
     <a title="Delete selected nodes" class="btn btn-sm btn-block btn-default" ng-click="deleteSelectedAtoms()">
         <i class="fa fa fa-trash-o"></i>
     </a>
-    <a title="Edit" class="btn btn-sm btn-block" ng-class="[tool=='edit'?'btn-primary':'btn-default']" ng-click="tool='edit'">
+    <a title="Edit" class="btn btn-sm btn-block" ng-class="[tool=='edit'?'btn-primary':'btn-default']"
+       ng-click="tool='edit'">
         <i class="fa fa-pencil-square-o"></i>
     </a>
 
     <!--SLIDE MODE-->
-    <a title="SlideMode" class="btn btn-sm btn-block" ng-class="['btn-primary']" ng-click="$root.slideMode = $root.slideMode ? false : true">
+    <a title="SlideMode" class="btn btn-sm btn-block" ng-class="['btn-primary']"
+       ng-click="$root.slideMode = $root.slideMode ? false : true">
         <i class="fa fa-slideshare"></i>
     </a>
 
-    <a title="Link" class="btn btn-sm btn-block" ng-class="[tool=='link'?'btn-primary':'btn-default']" ng-click="tool='link'">
+    <a title="Link" class="btn btn-sm btn-block" ng-class="[tool=='link'?'btn-primary':'btn-default']"
+       ng-click="tool='link'">
         <i class="fa fa-link"></i>
     </a>
-    <a title="Unlink" class="btn btn-sm btn-block" ng-class="[tool=='unlink'?'btn-primary':'btn-default']" ng-click="tool='unlink'">
+    <a title="Unlink" class="btn btn-sm btn-block" ng-class="[tool=='unlink'?'btn-primary':'btn-default']"
+       ng-click="tool='unlink'">
         <i class="fa fa-unlink"></i>
     </a>
-    <a title="Expand" class="btn btn-sm btn-block" ng-class="[tool=='expand'?'btn-primary':'btn-default']" ng-click="tool='expand'">
+    <a title="Expand" class="btn btn-sm btn-block" ng-class="[tool=='expand'?'btn-primary':'btn-default']"
+       ng-click="tool='expand'">
         <i class="fa fa-expand"></i>
     </a>
-    <a title="Collapse" class="btn btn-sm btn-block" ng-class="[tool=='collapse'?'btn-primary':'btn-default']" ng-click="tool='collapse'">
+    <a title="Collapse" class="btn btn-sm btn-block" ng-class="[tool=='collapse'?'btn-primary':'btn-default']"
+       ng-click="tool='collapse'">
         <i class="fa fa-compress"></i>
     </a>
-    <a title="Anchor" class="btn btn-sm btn-block" ng-class="[tool=='anchor'?'btn-primary':'btn-default']" ng-click="tool='anchor'">
+    <a title="Anchor" class="btn btn-sm btn-block" ng-class="[tool=='anchor'?'btn-primary':'btn-default']"
+       ng-click="tool='anchor'">
         <i class="fa fa-anchor"></i>
     </a>
-    <a title="Focus" class="btn btn-sm btn-block" ng-class="[tool=='focus'?'btn-primary':'btn-default']" ng-click="tool='focus'">
+    <a title="Focus" class="btn btn-sm btn-block" ng-class="[tool=='focus'?'btn-primary':'btn-default']"
+       ng-click="tool='focus'">
         <i class="fa fa-bullseye"></i>
     </a>
 
- <a title="Radial" class="btn btn-sm btn-block" ng-class="[tool=='center'?'btn-primary':'btn-default']" ng-click="tool='center'">
- <i class="fa fa-dot-circle-o"></i>
- </a>
- 
-<a title="Get-Root" class="btn btn-sm btn-block" ng-class="[tool=='getroot'?'btn-primary':'btn-default']" ng-click="tool='getroot'">
- <i class="fa fa-filter"></i>
- </a>
+    <a title="Radial" class="btn btn-sm btn-block" ng-class="[tool=='center'?'btn-primary':'btn-default']"
+       ng-click="tool='center'">
+        <i class="fa fa-dot-circle-o"></i>
+    </a>
 
-<a title="Tree" class="btn btn-sm btn-block" ng-class="[tool=='tree'?'btn-primary':'btn-default']" ng-click="tool='tree'">
- <i class="fa fa-tree"></i>
- </a>
+    <a title="Get-Root" class="btn btn-sm btn-block" ng-class="[tool=='getroot'?'btn-primary':'btn-default']"
+       ng-click="tool='getroot'">
+        <i class="fa fa-filter"></i>
+    </a>
+
+    <a title="Tree" class="btn btn-sm btn-block" ng-class="[tool=='tree'?'btn-primary':'btn-default']"
+       ng-click="tool='tree'">
+        <i class="fa fa-tree"></i>
+    </a>
 
 </div>
 <!--Atom Details-->
@@ -149,12 +162,12 @@
     <atom-details atoms="atoms" selected-handles="selected_handles"></atom-details>
 </div>
 <div class="dropdown">
-  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
-    <a href="#">Link 1</a>
-    <a href="#">Link 2</a>
-    <a href="#">Link 3</a>
-  </div>
+    <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+    <div id="myDropdown" class="dropdown-content">
+        <a href="#">Link 1</a>
+        <a href="#">Link 2</a>
+        <a href="#">Link 3</a>
+    </div>
 </div>
 
 <!--Terminal-->
@@ -171,13 +184,17 @@
     <planar-view id="planar-view-1" class="planar-view" atoms="atoms" selected-handles="selected_handles"
                  settings="settings.planar" tool="tool" filt="filt"></planar-view>
 </div>
+<!--PSI - Graph-->
+<div id="graph_panel" caption="Graph" icon="">
+    <graph atoms="atoms"></graph>
+</div>
 <!--Scheme-->
 <div id="scheme_panel" caption="Scheme" icon=""></div>
 <!--Tabular-->
 <div id="tabular_panel" caption="Tabular" icon=""></div>
 
 <div id="filters_panel" caption="Filters" icon="">
-   <filters filt="filt" ></filters>
+    <filters filt="filt"></filters>
 </div>
 <!--Settings-->
 <div id="settings_panel" caption="Planar Settings" icon="">
@@ -209,6 +226,7 @@
 <script type="application/javascript" src="js/directives/planar-settings.js"></script>
 <script type="application/javascript" src="js/directives/add-node.js"></script>
 <script type="application/javascript" src="js/directives/connect.js"></script>
+<script type="application/javascript" src="js/directives/graph.js"></script>
 
 </body>
 </html>

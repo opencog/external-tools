@@ -131,7 +131,7 @@ angular.module('glimpse')
 				filterStatus = 1;
 
 				filter = filter.substr(4);
-				console.log(filter)	;
+				//console.log(filter)	;
 			 	var selected = node.filter(function (d, i) {
 	          		  return d.type == filter;
 	       		   });
@@ -142,7 +142,7 @@ angular.module('glimpse')
 	       			});
 				var edgestoshow = [];
 				for(var x=0; x < selectededg.length; x++) { edgestoshow.push(selectededg[x].handle); }
-				console.log(edgestoshow);
+				//console.log(edgestoshow);
 				edge.style("opacity", function (d) {
 	                return (edgestoshow.indexOf(d["source"]["handle"]) > -1 && edgestoshow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0;
 	                });
@@ -151,7 +151,7 @@ angular.module('glimpse')
 			else{
 				filterStatus = 1;
 
-		        console.log(edge);
+		        //console.log(edge);
 				var selected = node.filter(function (d, i) {
 		          		  return d.type != filter;
 		       		});
@@ -162,7 +162,7 @@ angular.module('glimpse')
 		       		});
 				var edgestoshow = [];
 				for(var x=0; x < selectededg.length; x++) { edgestoshow.push(selectededg[x].handle); }
-				console.log(edgestoshow);
+				//console.log(edgestoshow);
 				edge.style("opacity", function (d) {
 		                    return (edgestoshow.indexOf(d["source"]["handle"]) > -1 && edgestoshow.indexOf(d["target"]["handle"]) > -1) ? 1 : 0;
 		                        });
@@ -326,16 +326,16 @@ angular.module('glimpse')
 						var marked={};
 						while (traversedNodes.length != 0) {
 						var v = traversedNodes.shift();
-						console.log(v);
+						//console.log(v);
 					if(v == grph.nodes[focusnode])
 						{ 
 						    v.x= w/2; v.y= h/2; v.fixed = true; v.px= w/2; v.py= h/2;
 						    marked[v.index]=true;
 						    var neghbours= [];
-						    console.log(grph);
+						    //console.log(grph);
 						    var adjList = [];
 						    adjList=findchilds(v, grph);
-						    console.log("childs" + adjList);
+						    //console.log("childs" + adjList);
 						    for (var a=0;a< adjList.length;a++){
 						       u=adjList[a];
 						       if(marked[u.index]!=true){
@@ -355,13 +355,13 @@ angular.module('glimpse')
 										}
 											}
 						traversedNodes.push(neghbours);
-						console.log("Traversed nodes" + traversedNodes);
+						//console.log("Traversed nodes" + traversedNodes);
 						}
 					else if(v.length > 0)
 					{
 						rad= radius * ring;
-						console.log(v);
-						console.log(radius);
+						//console.log(v);
+						//console.log(radius);
 						var neghbours= [];
 					
 						for(var j=0; j< v.length; j++)
@@ -394,7 +394,7 @@ angular.module('glimpse')
 					if(neghbours.length !=0) {traversedNodes.push(neghbours);}
 					}
 					ring++;
-					console.log(ring);
+					//console.log(ring);
 					}
 				}
 
@@ -529,7 +529,7 @@ angular.module('glimpse')
             				    }
 	            			nodeHandlesToShow = nodeHandlesToShow.concat(newHandlesToShow);
 	                                   	nodeHandlesToShow = $.unique(nodeHandlesToShow);
-	            			console.log(nodeHandlesToShow + "hide this" +linksTohide)	;
+	            			//console.log(nodeHandlesToShow + "hide this" +linksTohide)	;
 	            			node.style("opacity", function (d) {
 	                            return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0.3;
 	                                      });
@@ -550,7 +550,7 @@ angular.module('glimpse')
                     if(scope.tool == 'center'){
             			ring =1;
             			focusnode = sender.index;
-            			console.log(sender);
+            			//console.log(sender);
             			brfs(graph);
             			radmonitor();
             			force.on("tick", tick1);
@@ -590,13 +590,13 @@ angular.module('glimpse')
 	                  	{
 	                  		nodestoexpand[j].fixed = false;
 	                  	} 
-	                   console.log(nodestoexpand);
+	                   //console.log(nodestoexpand);
 	                   var expand = [];
 	                   for(i=0; i < nodestoexpand.length; i++)
 	                   {
 	                       expand=expand.concat(nodestoexpand[i].handle);        
 	                   }
-	                   console.log(expand.length);   
+	                   //console.log(expand.length);
 	                        node.style("opacity", function (d) {
 		                    return (expand.indexOf(d["handle"]) > -1 ) ? 1 : 0;
 		                       });
@@ -660,7 +660,7 @@ angular.module('glimpse')
                         	}
                         }
                 		nodeHandlesToShow = $.unique(nodeHandlesToShow);
-                        console.log(nodeHandlesToShow);
+                        //console.log(nodeHandlesToShow);
           				node.style("opacity", function (d) {
                         return (nodeHandlesToShow.indexOf(d["handle"]) > -1) ? 1 : 0;
                         });
