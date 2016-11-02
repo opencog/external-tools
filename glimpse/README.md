@@ -8,15 +8,14 @@ Setup on Ubuntu
 --------
 ```sh
 sudo apt-get install nodejs-legacy npm
-sudo npm install -g bower
 # From within the directory containing this file.
-bower install
+npm install
 ```
 
 Run
 ---
 ```sh
-./StartServer 8000
+npm start
 ```
 
 Goto http://localhost:8000 in your browser.
