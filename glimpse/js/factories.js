@@ -8,7 +8,7 @@ angular.module('glimpse')
         atomsFactory.atomsCount = 0;
         atomsFactory.server = "";
         atomsFactory.nodeTypes = [];
-	atomsFactory.types = [];
+        atomsFactory.types = [];
 	
        // Member functions
         atomsFactory.updateAtoms = function (successCB, failureCB) {
@@ -18,7 +18,7 @@ angular.module('glimpse')
                 cache: false
             }).then(
                 function (response) {
-		    atomsFactory.atoms = response.data.result.atoms;
+                    atomsFactory.atoms = response.data.result.atoms;
                     atomsFactory.atomsCount = response.data.result.total;
                     if (typeof successCB === "function") successCB();
 		     },
@@ -55,8 +55,8 @@ angular.module('glimpse')
                 method: 'GET',
                 url: atomsFactory.server + 'api/v1.1/types'
             }).then(function (response) {
-		atomsFactory.types = response.data.types;
-		atomsFactory.nodeTypes = response.data.types.filter(function (atom) {
+                atomsFactory.types = response.data.types;
+                atomsFactory.nodeTypes = response.data.types.filter(function (atom) {
                     return atom.indexOf("Node") > -1;
                 });
 		

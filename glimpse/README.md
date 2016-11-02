@@ -19,3 +19,12 @@ npm start
 ```
 
 Goto http://localhost:8000 in your browser.
+
+Test
+----
+
+```sh
+npm test
+```
+
+This spawns to express servers running on ports 8000 for the frontend and 5000 for a debug atomspace. The atoms served come from the `test_jsons` folder.
