@@ -28,39 +28,44 @@ angular.module('glimpse').factory('simplifications', function () {
             if (!atoms.hasOwnProperty(atom_index)) continue;
             var atom = atoms[atom_index];
             if (settings.logical && atom["incoming"].length == 0) {
+                var firstOutgHandle = atom["outgoing"][0]["handle"];
+                var secondOutgHandle = atom["outgoing"][1]["handle"];
+                
+                if (atoms[firstOutgHandle] == null) continue;
+                
                 if (atom.type == "InheritanceLink") {
-                    addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
-                        handle: atom["outgoing"][1]["handle"],
+                    addOutgoing(atoms[firstOutgHandle]["outgoing"], {
+                        handle: secondOutgHandle,
                         label: "inherits from",
                         arrow: ">"
                     });
-                    addIncoming(atoms[atom["outgoing"][1]["handle"]]["incoming"], atom["outgoing"][0]["handle"]);
+                    addIncoming(atoms[secondOutgHandle]["incoming"],firstOutgHandle);
                     atomsToDelete.push(atom_index);
                 } else if (atom.type == "ImplicationLink") {
 
-                    addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
-                        handle: atom["outgoing"][1]["handle"],
+                    addOutgoing(atoms[firstOutgHandle]["outgoing"], {
+                        handle: secondOutgHandle,
                         label: "implies<" + parseFloat(atom["truth_value"]["details"]["strength"]).toFixed(2) + ", " +
                         parseFloat(atom["truth_value"]["details"]["confidence"]).toFixed(2) + ">",
                         arrow: ">"
                     });
-                    addIncoming(atoms[atom["outgoing"][1]["handle"]]["incoming"], atom["outgoing"][0]["handle"]);
+                    addIncoming(atoms[secondOutgHandle]["incoming"], firstOutgHandle);
                     atomsToDelete.push(atom_index);
                 } else if (atom.type == "SimilarityLink") {
-                    addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
-                        handle: atom["outgoing"][1]["handle"],
+                    addOutgoing(firstOutgoing["outgoing"], {
+                        handle: secondOutgHandle,
                         label: "is similar to",
                         arrow: ">"
                     });
-                    addIncoming(atoms[atom["outgoing"][1]["handle"]]["incoming"], atom["outgoing"][0]["handle"]);
+                    addIncoming(atoms[secondOutgHandle]["incoming"], firstOutgHandle);
                     atomsToDelete.push(atom_index);
                 } else if (atom.type == "EquivalenceLink") {
-                    addOutgoing(atoms[atom["outgoing"][0]["handle"]]["outgoing"], {
-                        handle: atom["outgoing"][1]["handle"],
+                    addOutgoing(firstOutgoing["outgoing"], {
+                        handle: secondOutgHandle,
                         label: "is equivalent to",
                         arrow: ">"
                     });
-                    addIncoming(atoms[atom["outgoing"][1]["handle"]]["incoming"], atom["outgoing"][0]["handle"]);
+                    addIncoming(atoms[secondOutgHandle]["incoming"], firstOutgHandle);
                     atomsToDelete.push(atom_index);
                 }
             }
@@ -75,7 +80,8 @@ angular.module('glimpse').factory('simplifications', function () {
                             label: "",
                             arrow: ">"
                         });
-                        addIncoming(atoms[listLink["outgoing"][j]["handle"]]["incoming"], predicateNode["handle"]);
+                        if( (a = atoms[listLink["outgoing"][j]["handle"]]) != null) 
+                                 addIncoming(a["incoming"], predicateNode["handle"]);
                     }
                     atomsToDelete.push(atom_index);
                     atomsToDelete.push(listLink["handle"]);
