@@ -27,4 +27,4 @@ Test
 npm test
 ```
 
-This spawns to express servers running on ports 8000 for the frontend and 5000 for a debug atomspace. The atoms served come from the `test_jsons` folder.
+This spawns two express servers running on ports 8000 for the frontend and 5000 for a debug atomspace. The atoms served come from the `test_jsons` folder. Note that these test datasets are probably only suited for debugging of the Atomspace visualizer and only provide `atoms` and `types` endpoints via GET.
