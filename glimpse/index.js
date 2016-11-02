@@ -3,7 +3,7 @@ var express = require('express');
 var cors = require('cors');
 
 var environment = process.env.NODE_ENV || 'production';
-/*
+
 var app = express();
 
 app.use(express.static(__dirname + '/'));
@@ -11,7 +11,7 @@ app.use(express.static(__dirname + '/'));
 app.listen(8000, function () {
   console.log('Glimpse listening on port 8000!');
 });
-*/
+
 
 if (environment == "test") {
     var test_atoms = express();
