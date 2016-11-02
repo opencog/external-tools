@@ -1,0 +1,56 @@
+svg#atomspace {
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+
+    cursor: crosshair;
+}
+
+line {
+  stroke: white;
+
+}
+
+.node {
+  pointer-events: all;
+}
+
+circle {
+  stroke-width: 40px;
+  fill:white;
+}
+
+.node text {
+  font: 8px "SF Mono";
+  font-weight: 100;
+  fill:black;
+}
+
+
+text {
+  font: 18px "SF Mono";
+  font-weight: 100;
+  fill:white;
+}
+.axis--y path {
+  display: none;
+}
+
+.axis--y .containerlabel {
+  font-size:3em;
+
+
+}
+
+.axis--x {
+  display: none;
+}
+
+
+.line {
+  stroke: white;
+  stroke-width: 1.5px;
+  fill:none;
+}

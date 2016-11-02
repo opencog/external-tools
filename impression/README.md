@@ -1,8 +1,7 @@
-Glimpse
+Impression
 ================
 
-Atomspace Viewer
-https://github.com/opencog/atomspace
+Experimental OpenCog Visualizer for demo purposes.
 
 Setup on Ubuntu
 --------
