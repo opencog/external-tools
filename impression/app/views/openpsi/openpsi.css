@@ -1,0 +1,50 @@
+
+.axis--y path {
+  display: none;
+}
+
+.axis--y {
+  transform: scale(0.985) translateX(50px);
+
+}
+
+.axis--x {
+  display: none;
+}
+
+svg#arousal .area {
+    fill: url(#arousalGradient);
+
+    stroke-width: 1.0;
+    stroke:white;
+
+    opacity:0.4;
+
+}
+
+svg#sadness .area {
+    fill: url(#sadnessGradient);
+
+    stroke-width: 1.0;
+    stroke:white;
+
+    opacity:0.4;
+
+}
+
+
+
+
+
+svg#fun .area {
+    fill: url(#funGradient);
+
+    stroke-width: 1.0;
+    stroke:white;
+
+    opacity:0.4;
+
+}
+
+
+

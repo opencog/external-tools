@@ -1,4 +1,8 @@
 'use strict';
+/////////////////
+
+//////////TODO: update atoms dynamically (lift some code from glimpse for this)
+
 
 angular.module('impression.atomspaceView', ['ngRoute'])
 
@@ -9,44 +13,26 @@ angular.module('impression.atomspaceView', ['ngRoute'])
   });
 }])
 
-.controller('AtomspaceCtrl', function($scope, $routeParams, $http) {
+.controller('AtomspaceCtrl', function($scope, $routeParams, $http, $location, AtomsFactory, utils, simplifications) {
+
+    //bounce back to connect screen if disconnected.
+    if(!AtomsFactory.connected) { $location.path("/"); }
 
     var width = 1000,
         height = 1000;
 
-    var root = {
-        "name": "server1900",
-        "children": [{
-            "name": "server913",
-            "_children": null,
-            "children": [{
-                "name": "server948"
-            }, {
-                "name": "server946"
-            }]
-        }, {
-            "name": "server912",
-            "_children": null,
-            "children": [{
-                "name": "server984"
-            }, {
-                "name": "server983"
-            }]
-        }, {
-            "name": "server911",
-            "_children": null,
-            "children": [{
-                "name": "server999",
-                "_children": null,
-                "children": [{
-                    "name": "server992"
-                }]
-            }]
-        }]
+    //console.log(AtomsFactory.atoms);
+
+    var settings = {
+        simplifications: {
+            logical: true,
+            evaluation: true
+        }
     };
 
-    //initialising hierarchical data
-    root = d3.hierarchy(root);
+    var _atoms = utils.indexAtoms(AtomsFactory.atoms);
+    _atoms = simplifications.simplify(_atoms, settings.simplifications);
+    var graph = utils.atoms2Graph(_atoms);
 
     var i = 0;
 
@@ -74,8 +60,11 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     update();
 
     function update() {
-      var nodes = flatten(root);
-      var links = root.links();
+      var nodes = graph.nodes;
+      var links = graph.edges;
+
+    //console.log(nodes)
+    //console.log(links)
 
       linkSvg = svg.selectAll(".link")
         .data(links, function(d) { return d.target.id; })
@@ -95,7 +84,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
       var nodeEnter = nodeSvg.enter()
         .append("g")
-          .attr("class", "node")
+          .attr("class", function(d) { return "node "+d.type; })
           .on("click", click)
           .call(d3.drag()
             .on("start", dragstarted)
@@ -103,7 +92,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
             .on("end", dragended))
 
         nodeEnter.append("circle")
-          .attr("r", 4  )
+          .attr("r", function(d) { return d.attention_value.sti + 4; }  )
           .append("title")
             .text(function(d) { return d.data.name; })
 

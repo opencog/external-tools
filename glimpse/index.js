@@ -19,15 +19,18 @@ if (environment == "test") {
     test_atoms.use(cors());
 
     test_atoms.use('/api/v1.1/atoms', function(req, res) {
+       console.log("fetched atoms...");
        res.sendFile( __dirname + '/test_jsons/atoms.json');
     });
 
     test_atoms.use('/api/v1.1/types', function(req, res) {
+       console.log("fetched types...")
        res.sendFile( __dirname + '/test_jsons/types.json');
     });
 
     test_atoms.use('/api/v1.1/scheme', function(req, res) {
-       res.send('{\"arousal\": '+Math.random()+', \"sadness\": '+Math.random()+'}');
+      console.log("fetched scheme endpoint...")
+      res.send('{\"arousal\": '+Math.random()+', \"sadness\": '+Math.random()+'}');
     });
 
     test_atoms.listen(5000, function() {

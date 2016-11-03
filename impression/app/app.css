@@ -1,6 +1,6 @@
 /* app css stylesheet */
 body {
-  font-family: "SF Mono";
+  font-family: "SF Mono", monospace;
   color:white;
   height:100%;
 }
@@ -83,14 +83,14 @@ button {
   padding: 10px;
   border:0;
   background-color: rgba(0,0,0,0.5);
+  transition: background-color 0.5s;
 }
 
 div#atomspace {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#b8c6df+0,6d88b7+100;Grey+Blue+3D+%231 */
     background: rgb(184,198,223); /* Old browsers */
-    background: -moz-radial-gradient(center, ellipse cover, rgba(184,198,223,1) 0%, rgba(109,136,183,1) 100%); /* FF3.6-15 */
-    background: -webkit-radial-gradient(center, ellipse cover, rgba(184,198,223,1) 0%,rgba(109,136,183,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: radial-gradient(ellipse at center, rgba(184,198,223,1) 0%,rgba(109,136,183,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: -webkit-radial-gradient(center, ellipse cover, #91AA9D 0%, #193441 100%); /* Chrome10-25,Safari5.1-6 */
+    background: radial-gradient(ellipse at center, #91AA9D 0%, #193441 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 div#openpsi {
@@ -98,5 +98,5 @@ div#openpsi {
     background: rgb(169,3,41); /* Old browsers */
     background: -moz-radial-gradient(center, ellipse cover, rgba(169,3,41,1) 0%, rgba(143,2,34,1) 44%, rgba(109,0,25,1) 100%); /* FF3.6-15 */
     background: -webkit-radial-gradient(center, ellipse cover, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: radial-gradient(ellipse at center, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: radial-gradient(ellipse at center, #822B34 0%, #49152B 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }

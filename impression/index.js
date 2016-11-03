@@ -27,7 +27,7 @@ if (environment == "test") {
     });
 
     test_atoms.use('/api/v1.1/scheme', function(req, res) {
-       res.send('{\"arousal\": '+Math.random()+', \"sadness\": '+Math.random()+'}');
+       res.send('{\"arousal\": '+(0.1+(Math.random()*0.05))+', \"sadness\": '+(0.1+(Math.random()*0.05))+', \"fun\": '+(0.1+(Math.random()*0.05))+'}');
     });
 
     test_atoms.listen(5000, function() {

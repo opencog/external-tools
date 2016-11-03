@@ -3,10 +3,10 @@
   <h2>impression opencog visualizer</h2>
   <ul class="input-list style-1 clearfix">
     <li>
-      <input type="text" placeholder="http://localhost:5000" class="input">
+      <input id="serverField" type="text" value="http://localhost:5000/" class="input">
     </li>
     <li>
-      <button>connect</button>
+      <button style="background-color: {{connectButtonColor}}" ng-click="buttonPressed()">{{connectButtonLabel}}</button>
     </li>
   </ul>
 
