@@ -36,14 +36,11 @@ angular.module('impression.connectView', ['ngRoute'])
         $scope.connectButtonColor = "rgba(0,0,0,0.1)"
 
         AtomsFactory.setServer(serverURL);
-        AtomsFactory.updateAtomTypes(function(success) {
-            AtomsFactory.updateAtoms(function(success) {
-                $scope.connectionSucceeded();
-            }, function(error) {
-                console.log("error");
-            });
+
+        AtomsFactory.updateSTIRangeAtoms(function(success) {
+            $scope.connectionSucceeded();
         }, function(error) {
-            $scope.connectionFailed();
+            console.log("error");
         });
 
     };
@@ -54,10 +51,10 @@ angular.module('impression.connectView', ['ngRoute'])
         $scope.connectButtonLabel = "disconnect";
         $scope.connectButtonColor = "rgba(0,255,0,0.4)"
 
-        AtomsFactory.startPeriodicUpdate(5000,500);
+        AtomsFactory.startPeriodicUpdate(1000,-1);
 
         $timeout(function() {
-            $location.path("/atomspace");
+            $location.path("/atomspace-canvas");
         },1000);
     };
 

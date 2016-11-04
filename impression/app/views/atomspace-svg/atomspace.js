@@ -4,16 +4,16 @@
 //////////TODO: update atoms dynamically (lift some code from glimpse for this)
 
 
-angular.module('impression.atomspaceView', ['ngRoute'])
+angular.module('impression.atomspaceSVGView', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/atomspace', {
-    templateUrl: 'views/atomspace/atomspace.html',
-    controller: 'AtomspaceCtrl'
+  $routeProvider.when('/atomspace-svg', {
+    templateUrl: 'views/atomspace-svg/atomspace.html',
+    controller: 'AtomspaceSvgCtrl'
   });
 }])
 
-.controller('AtomspaceCtrl', function($scope, $routeParams, $http, $location, AtomsFactory, utils, simplifications) {
+.controller('AtomspaceSvgCtrl', function($scope, $routeParams, $http, $location, AtomsFactory, utils, simplifications) {
 
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); }
@@ -32,7 +32,17 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
     var _atoms = utils.indexAtoms(AtomsFactory.atoms);
     _atoms = simplifications.simplify(_atoms, settings.simplifications);
-    var graph = utils.atoms2Graph(_atoms);
+
+    var _atom_subset = {}
+    var i = 0;
+    for (var key in _atoms) {
+      _atom_subset[key] = _atoms[key]
+      i = i+1
+      if (i>1000) break;
+    }
+
+
+    var graph = utils.atoms2Graph(_atom_subset);
 
     var i = 0;
 
@@ -67,7 +77,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     //console.log(links)
 
       linkSvg = svg.selectAll(".link")
-        .data(links, function(d) { return d.target.id; })
+        .data(links, function(d) { if (d.target) return d.target.id; else return null; })
 
       linkSvg.exit().remove();
 
@@ -113,12 +123,14 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     }
 
     function ticked() {
+      if (linkSvg)
       linkSvg
           .attr("x1", function(d) { return d.source.x; })
           .attr("y1", function(d) { return d.source.y; })
           .attr("x2", function(d) { return d.target.x; })
           .attr("y2", function(d) { return d.target.y; });
 
+      if (nodeSvg)
       nodeSvg
           .attr("transform", function(d) { return "translate(" + d.x + ", " + d.y + ")"; });
     }

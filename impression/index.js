@@ -22,6 +22,12 @@ if (environment == "test") {
        res.sendFile( __dirname + '/test_jsons/atoms.json');
     });
 
+
+    test_atoms.use('/api/v1.1/atoms?filterby=stirange&stimin=1&stimax=30000&includeOutgoing=true&includeIncoming=true', function(req, res) {
+       res.sendFile( __dirname + '/test_jsons/atoms.json');
+    });
+
+
     test_atoms.use('/api/v1.1/types', function(req, res) {
        res.sendFile( __dirname + '/test_jsons/types.json');
     });

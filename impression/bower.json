@@ -13,6 +13,7 @@
     "html5-boilerplate": "^5.3.0",
     "angular-animate": "^1.5.8",
     "d3": "^4.3.0",
-    "angular-resource": "^1.5.8"
+    "angular-resource": "^1.5.8",
+    "dosis-googlefont": "*"
   }
 }

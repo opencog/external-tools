@@ -8,6 +8,16 @@ svg {
     cursor: crosshair;
 }
 
+canvas {
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+
+    cursor: crosshair;
+}
+
 
 line {
   stroke: rgba(255,255,255,0.2);

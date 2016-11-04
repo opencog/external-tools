@@ -29,5 +29,8 @@ This spawns two express servers running on ports 8000 for the frontend and 5000 
 ## TODO
 
   - dynamic updating of atoms
-  - ecann dynamic drawing of updates
+  - try with live chatbot instance
+
   - hook in to openpsi
+  - refactor factories out of app.js
+  - general refactoring....

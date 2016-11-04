@@ -1,6 +1,12 @@
+@font-face { 
+font-family: "DosisLight"; 
+src: url("../bower_components/dosis-googlefont/Dosis-Light.ttf"); 
+}
+
 /* app css stylesheet */
+
 body {
-  font-family: "SF Mono", monospace;
+  font-family: "DosisLight", sans-serif;
   color:white;
   height:100%;
 }
