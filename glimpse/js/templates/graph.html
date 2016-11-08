@@ -1,3 +1,20 @@
 <div>
-   <pre>[TODO]</pre>
-</div>
+   
+        <div class="span12">
+
+            <div class="row">Width <input ng-model="chartConfig.size.width"></div>
+            <div class="row">Height <input ng-model="chartConfig.size.height"></div>
+           
+            <div class="row">Default Type <select ng-model="chartConfig.options.chart.type" ng-options="t.id as t.title for t in chartTypes"></select></div>
+          
+            <div class="row">Min: <input type="number" ng-model="chartConfig.xAxis.currentMin"></div>
+            <div class="row">Max: <input type="number" ng-model="chartConfig.xAxis.currentMax"></div>
+          </div>
+        <div class="row">
+            <highchart id="chart1" config="chartConfig" class="span10"></highchart>
+        </div>
+           
+        </div> 
+        
+
+
