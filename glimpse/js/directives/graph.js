@@ -2,7 +2,7 @@ angular.module('glimpse')
     .directive('graph', function ($http) {
 
   //Todo: These should be read from config or set through the app
-  var psiVariables = ["arousal", "positive-valence", "negative-valence"];
+  var psiVariables = ["arousal", "positive-valence", "negative-valence", "power"];
   var numPlotLinePts = 10; //number of most recent values to plot
   var refreshRate = 1000;   // rate in ms that values are updated from server
 
@@ -82,6 +82,10 @@ angular.module('glimpse')
         //iterate over each psi variable and feed into chartseries object
         for (varName in results) {
           var value = results[varName];
+          // If var has no value set, set it to 0
+          if (value==null) {
+            value = 0;
+          }
 
           //figure out if data point is already in chartSeries
           var variableExists = false;
