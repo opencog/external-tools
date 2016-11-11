@@ -24,7 +24,7 @@ angular.module('glimpse').directive('graph', function ($http) {
                 //Note: Setting the default line type (and I'm guessing other properties
                 //in chartConfig.options) does not work when set in the directive link
                 //function, so setting it in the controller function instead.
-/*
+                /*
                 options: {
                     chart: {
                         type: 'spline'
@@ -35,7 +35,7 @@ angular.module('glimpse').directive('graph', function ($http) {
                         }
                     }
                 },
-*/
+                */
                 series: scope.chartSeries,
                 title: {
                     text: 'OpenPSI Variables'
@@ -44,6 +44,10 @@ angular.module('glimpse').directive('graph', function ($http) {
                     labels: {
                         enabled: false
                     }
+                },
+                yAxis: {
+                    min: 0,
+                    max: 1
                 },
                 credits: {
                     enabled: false
