@@ -6,7 +6,6 @@ angular.module('glimpse')
   var numPlotLinePts = 10; //number of most recent values to plot
   var refreshRate = 1000;   // rate in ms that values are updated from server
 
-
   var link = function (scope, element, attributes, $parent, $scope) {
     scope.chartTypes = [
       {"id": "line", "title": "Line"},
@@ -21,8 +20,12 @@ angular.module('glimpse')
 
     scope.init = function () {
       scope.chartSeries = [];
-  
+
       scope.chartConfig = {
+      // Note: Setting the default line type (and I'm guessing other properties in
+      // the options object) does not work when set in the directive link function,
+      // so setting it in the controller function instead
+      /*
         options: {
           chart: {
             type: 'spline'
@@ -33,6 +36,7 @@ angular.module('glimpse')
             }
           }
         },
+      */
         series: scope.chartSeries,
         title: {
           text: 'OpenPSI Variables'
@@ -58,7 +62,8 @@ angular.module('glimpse')
 
     scope.update = function() {
   
-      //TODO: endpoint URL should not be hardcoded but read from global config
+      //TODO: endpoint URL should use the same server/port as the main application,
+      //with "/api/v1.1/scheme" appended
       var endpointURL = "http://localhost:5000/api/v1.1/scheme";
 
       var vars = ""
@@ -106,7 +111,11 @@ angular.module('glimpse')
             console.log("Found new variable: " + varName)
             // plot the full line at the current value for initiating
             var values = Array(numPlotLinePts).fill(value);
-            scope.chartSeries.push({"name": varName, "data": values, connectNulls: true});
+            scope.chartSeries.push({name: varName, data: values, //type: 'spline',
+              connectNulls: true});
+            // Note: Setting the line type with the series because the default
+            // line type is not working when set in the directive link function.
+            // see: http://stackoverflow.com/questions/31733109/highcharts-ng-is-only-listening-to-some-of-my-chart-config-options
           }
         }
 
@@ -121,10 +130,29 @@ angular.module('glimpse')
     //TODO: This executes as soon as glimpse loads, it should only load when graph is loaded / server is connected...
     scope.init();
 
-  };
+  }; // link function
+
+  // Note: Setting the default line type (and I'm guessing other properties in
+  // the options object) does not work when set in the directive link function,
+  // so setting it in the controller function instead.
+  var controller = function($scope) {
+    $scope.chartConfig = {
+      options: {
+        chart: {
+          type: 'spline'
+        },
+        plotOptions: {
+          series: {
+            stacking: ''
+          }
+        }
+      },
+    };
+  }
 
   return {
       link: link,
+      controller: controller,
       restrict: 'E',
       scope: {atoms: '='},
       templateUrl: 'js/templates/graph.html'
