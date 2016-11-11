@@ -22,9 +22,9 @@ angular.module('glimpse')
       scope.chartSeries = [];
 
       scope.chartConfig = {
-      // Note: Setting the default line type (and I'm guessing other properties in
-      // the options object) does not work when set in the directive link function,
-      // so setting it in the controller function instead
+      // Note: Setting the default line type (and I'm guessing other properties
+      // in chartConfig.options) does not work when set in the directive link
+      // function, so setting it in the controller function instead.
       /*
         options: {
           chart: {
@@ -50,7 +50,7 @@ angular.module('glimpse')
           enabled: false
         },
         loading: false,
-        size: {}
+        size: {},
       };
 
       window.setInterval(function() {
@@ -111,11 +111,9 @@ angular.module('glimpse')
             console.log("Found new variable: " + varName)
             // plot the full line at the current value for initiating
             var values = Array(numPlotLinePts).fill(value);
-            scope.chartSeries.push({name: varName, data: values, //type: 'spline',
+            scope.chartSeries.push({name: varName, data: values,
+              marker: {enabled: false},
               connectNulls: true});
-            // Note: Setting the line type with the series because the default
-            // line type is not working when set in the directive link function.
-            // see: http://stackoverflow.com/questions/31733109/highcharts-ng-is-only-listening-to-some-of-my-chart-config-options
           }
         }
 
@@ -132,10 +130,11 @@ angular.module('glimpse')
 
   }; // link function
 
-  // Note: Setting the default line type (and I'm guessing other properties in
-  // the options object) does not work when set in the directive link function,
-  // so setting it in the controller function instead.
+
   var controller = function($scope) {
+    // Set the default line type in controller function because it doesn't work
+    // to set it in the directive link function (and I'm guessing the same for
+    // other properties in chartConfig.options).
     $scope.chartConfig = {
       options: {
         chart: {
@@ -144,6 +143,11 @@ angular.module('glimpse')
         plotOptions: {
           series: {
             stacking: ''
+          },
+          line: {
+            marker: {
+              enabled: false
+            }
           }
         }
       },
