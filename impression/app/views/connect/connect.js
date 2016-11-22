@@ -51,7 +51,7 @@ angular.module('impression.connectView', ['ngRoute'])
         $scope.connectButtonLabel = "disconnect";
         $scope.connectButtonColor = "rgba(0,255,0,0.4)"
 
-        AtomsFactory.startPeriodicUpdate(1000,-1);
+        AtomsFactory.startPeriodicUpdate(5000,400);
 
         $timeout(function() {
             $location.path("/atomspace-canvas");

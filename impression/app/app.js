@@ -30,15 +30,15 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
               $location.path("/");
           break;
 
-          case 2:
+ /*         case 2:
               $location.path("/atomspace-svg");
-          break;
+          break;*/
 
-          case 3: 
+          case 2: 
               $location.path("/atomspace-canvas");
           break;
 
-          case 4: 
+          case 3: 
               $location.path("/openpsi");
           break;
       }
