@@ -2,8 +2,11 @@ angular.module('glimpse').directive('graph', function ($http) {
 
     //Todo: These should be read from config or set through the app
     var psiVariables = ["arousal", "positive-valence", "negative-valence", "power"];
-    var numPlotLinePts = 10; //number of most recent values to plot
-    var refreshRate = 1000;   // rate in ms that values are updated from server
+    var historyTimeLength = 10; //length of plot line in number of seconds
+    var refreshRate = 100;   // rate in ms that values are updated from server
+
+    // Set number of plot line points to show data for specified time period
+    var numPlotLinePts = Math.round(1000/refreshRate)*historyTimeLength;
 
     var link = function (scope, element, attributes, $parent, $scope) {
         scope.chartTypes = [
