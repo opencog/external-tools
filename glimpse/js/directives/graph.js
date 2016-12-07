@@ -1,7 +1,8 @@
 angular.module('glimpse').directive('graph', function ($http) {
 
     //Todo: These should be read from config or set through the app
-    var psiVariables = ["arousal", "positive-valence", "negative-valence", "power"];
+    var psiVariables = ["arousal", "positive-valence", "negative-valence",
+        "power","voice width"];
     var historyTimeLength = 10; //length of plot line in number of seconds
     var refreshRate = 100;   // rate in ms that values are updated from server
 
