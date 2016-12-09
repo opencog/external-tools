@@ -1,3 +1,27 @@
+div.legend {
+    display:flex;
+    justify-content: center;
+
+    position:absolute;
+    top: 0;
+    left: 0;
+    width:80%;
+    height:8%;
+
+    margin-left:10%;
+}
+
+div.legend span {
+    text-align: center;
+    padding-top:2%;
+    flex-grow: 1;
+    font: 18px "SF Mono", monospace;
+    background-color:rgba(0,0,0,0.2);
+}
+
+div.legend span.valence { color:red; }
+div.legend span.arousal { color:blue; }
+
 
 .axis--y path {
   display: none;
@@ -15,36 +39,19 @@
 svg#arousal .area {
     fill: url(#arousalGradient);
 
-    stroke-width: 1.0;
+    stroke-width: 1.5;
     stroke:white;
 
-    opacity:0.4;
+    opacity:1.0;
 
 }
 
-svg#sadness .area {
-    fill: url(#sadnessGradient);
+svg#valence .area {
+    fill: url(#valenceGradient);
 
-    stroke-width: 1.0;
+    stroke-width: 1.5;
     stroke:white;
 
-    opacity:0.4;
+    opacity:1.0;
 
 }
-
-
-
-
-
-svg#fun .area {
-    fill: url(#funGradient);
-
-    stroke-width: 1.0;
-    stroke:white;
-
-    opacity:0.4;
-
-}
-
-
-

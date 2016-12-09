@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('impression.atomspaceCanvasView', ['ngRoute'])
+angular.module('impression.atomspaceView', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/atomspace-canvas', {
-        templateUrl: 'views/atomspace-canvas/atomspace.html',
-        controller: 'AtomspaceCanvasCtrl'
+    $routeProvider.when('/atomspace', {
+        templateUrl: 'views/atomspace/atomspace.html',
+        controller: 'AtomspaceCtrl'
     });
 }])
 
-.controller('AtomspaceCanvasCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory, utils, simplifications) {
+.controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory, utils, simplifications) {
 
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); } else {
@@ -46,8 +46,6 @@ angular.module('impression.atomspaceCanvasView', ['ngRoute'])
     // Create an in memory only element for drawing
     var detachedContainer = document.createElement("custom");
     var dataContainer = d3.select(detachedContainer);
-
-    
     
 
     function zoomed() {
@@ -85,34 +83,34 @@ angular.module('impression.atomspaceCanvasView', ['ngRoute'])
         atoms = utils.indexAtoms(AtomsFactory.atoms, atoms);
         atoms = simplifications.simplify(atoms, settings.simplifications);
 
-///------------------------------------------------------------//
-//This whole block is just horrible, replace by using filtered //
-//Sort Atoms by sti                                            //
-/*var _atoms = atoms;                                            //
-var atomArray = [];                                            //
-for(var key in _atoms) {                                       //
-  atomArray.push(_atoms[key]);                                 //
-}                                                              //
-function sti_sort(a, b) {                                      //
-    var x = a.attention_value.sti;                             //
-    var y = a.attention_value.sti;                             //
-                                                               //
-    return x<y;                                                //
-}                                                              //
-var atomArray = atomArray.sort(sti_sort);                      //
-                                                               //
-var _atom_subset = {}                                          //
-                                                               //
-for (var i in atomArray.slice(1,200)) {                        //
-  var atom = atomArray[i];                                     //
-  for (var j in _atoms) {                                      //
-    if (atom == _atoms[j]) {                                   //
-      _atom_subset[j] = atom;                                  //
-    }                                                          //
-  }                                                            // 
-}                                                              //
-atoms = _atom_subset;        */                                //
-///-----------------------------------------------------------///
+        ///------------------------------------------------------------//
+        //This whole block is just horrible, replace by using filtered //
+        //Sort Atoms by sti                                            //
+        /*var _atoms = atoms;                                            //
+        var atomArray = [];                                            //
+        for(var key in _atoms) {                                       //
+          atomArray.push(_atoms[key]);                                 //
+        }                                                              //
+        function sti_sort(a, b) {                                      //
+            var x = a.attention_value.sti;                             //
+            var y = a.attention_value.sti;                             //
+                                                                       //
+            return x<y;                                                //
+        }                                                              //
+        var atomArray = atomArray.sort(sti_sort);                      //
+                                                                       //
+        var _atom_subset = {}                                          //
+                                                                       //
+        for (var i in atomArray.slice(1,200)) {                        //
+          var atom = atomArray[i];                                     //
+          for (var j in _atoms) {                                      //
+            if (atom == _atoms[j]) {                                   //
+              _atom_subset[j] = atom;                                  //
+            }                                                          //
+          }                                                            // 
+        }                                                              //
+        atoms = _atom_subset;        */                                //
+        ///-----------------------------------------------------------///
 
         var graph = utils.atoms2Graph(atoms);
 

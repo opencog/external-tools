@@ -9,8 +9,7 @@ angular.module('impression', [
   'impression.simplificationsFactory',
   'impression.utilsFactory',
   'impression.connectView',
-  'impression.atomspaceCanvasView',
-  'impression.atomspaceSVGView',
+  'impression.atomspaceView',
   'impression.openpsiView'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
@@ -30,12 +29,8 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
               $location.path("/");
           break;
 
- /*         case 2:
-              $location.path("/atomspace-svg");
-          break;*/
-
           case 2: 
-              $location.path("/atomspace-canvas");
+              $location.path("/atomspace");
           break;
 
           case 3: 
