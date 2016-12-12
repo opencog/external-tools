@@ -11,6 +11,23 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
 .controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory) {
 
+    $scope.pollSettings = {
+      "filterby": "stirange",
+      "stimin": 1,
+      "stimax": 30000,
+      "includeIncoming": true,
+      "includeOutgoing": true 
+    }
+
+    //stuff for options:
+    $scope.applyFilter = function() {
+      console.log("apply options called")
+
+      AtomsFactory.pollSettings = $scope.pollSettings
+      AtomsFactory.updateAtoms()
+    };
+
+
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); } else {
 
@@ -95,7 +112,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
             .classed("circle", true)
 
         nodeEnter.append("text")
-            .text(function(d) { return d.name; });
+            .text(function(d) { return d.name.split("@")[0]; });
           
         nodeBinding = nodeEnter.merge(nodeBinding);
 

@@ -18,71 +18,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
     atomsFactory.nodes = {}
     atomsFactory.links = []
 
-    var notifyModification = function() {
-      //console.log("modifcation...")
-      if (typeof atomsFactory.modificationCB === "function") atomsFactory.modificationCB();
-    }
-
-    var vertexAdded = function(data) {
-      var key = data[0], value = data[1];
-      atomsFactory.nodes[key] = value;
-
-      notifyModification();
-    };
-
-    var vertexRemoved = function(data) {
-      var key = data[0];
-      delete atomsFactory.nodes.key
-
-      notifyModification();
-    };
-
-    var vertexModified = function(data) {
-      var key = data[0], value = data[1];
-      atomsFactory.nodes.key = value
-
-      notifyModification();
-    };
-
-    var edgeAdded = function(data) {
-
-      var from  = data[0][0],
-          to    = data[0][1],
-          value = data[0][2];
-
-      atomsFactory.links.push({source: atomsFactory.graph.vertexValue(from), target: atomsFactory.graph.vertexValue(to)})
-
-      notifyModification();
-    };
-
-    var edgeRemoved = function(data) {
-      // not implemented
-      notifyModification();
-    };
-
-    var edgeModified = function(data) {
-      // not implemented
-      notifyModification();
-    };
-
-    // Register Updates on Graph
-    atomsFactory.graph.on("vertex-added", vertexAdded);
-    atomsFactory.graph.on("vertex-removed", vertexRemoved);
-    atomsFactory.graph.on("vertex-modified", vertexModified);
-    atomsFactory.graph.on("edge-added", edgeAdded);
-    atomsFactory.graph.on("edge-removed", edgeRemoved);
-    atomsFactory.graph.on("edge-modified", edgeModified);
-
-
-    atomsFactory.pollSettings = {
-      "filterby": "stirange", // stirange | attentionalfocus
-      "stimin": 1,  // if stirange
-      "stimax": 30000, // if stirange
-      "includeIncoming": "true",
-      "includeOutgoing": "true" 
-    }
-
-    //no limit for testing
+    //no limit initially
     atomsFactory.pollSettings = { }
 
     atomsFactory.startPeriodicUpdate = function(updatePeriod) {      
@@ -122,9 +58,11 @@ angular.module('impression.atomsFactory', ['ngResource'])
                 var atomHandles = []
                 console.log("[AF] fetched atoms...")
 
+                //TODO: refactor this block, there must be a better way.
+
                 //update existing atoms
                 atomsResult.forEach(function(atom) {
-                  atomData = {name: atom.name, type: atom.type, attention_value: atom.attentionvalue, truth_value: atom.truthvalue}
+                  atomData = {name: atom.name, type: atom.type, attention_value: atom.attentionvalue, truth_value: atom.truthvalue, id: atom.handle}
 
                   if (atomsFactory.graph.hasVertex(atom.handle)) {
                     oldData = atomsFactory.graph.vertexValue(atom.handle)
@@ -144,6 +82,10 @@ angular.module('impression.atomsFactory', ['ngResource'])
                     }
 
                   } else {
+                    //initial spawn points
+                    atomData.x = 900
+                    atomData.y = 500
+
                     atomsFactory.graph.addNewVertex(atom.handle, atomData);
                   }
 
@@ -185,7 +127,59 @@ angular.module('impression.atomsFactory', ['ngResource'])
         );
     };
 
+    // Internal representation for d3
+    var notifyModification = function() {
+      //console.log("modifcation...")
+      if (typeof atomsFactory.modificationCB === "function") atomsFactory.modificationCB();
+    }
 
+    var vertexAdded = function(data) {
+      var key = data[0], value = data[1];
+      atomsFactory.nodes[key] = value;
+
+      notifyModification();
+    };
+
+    var vertexRemoved = function(data) {
+      var key = data;
+      delete atomsFactory.nodes[key]
+
+      notifyModification();
+    };
+
+    var vertexModified = function(data) {
+      var key = data[0], value = data[1];
+      atomsFactory.nodes[key] = value
+
+      notifyModification();
+    };
+
+    var edgeAdded = function(data) {
+      var from  = data[0][0],
+          to    = data[0][1],
+          value = data[0][2];
+
+      atomsFactory.links.push({source: atomsFactory.graph.vertexValue(from), target: atomsFactory.graph.vertexValue(to)})
+      notifyModification();
+    };
+
+    var edgeRemoved = function(data) {
+      // not implemented
+      notifyModification();
+    };
+
+    var edgeModified = function(data) {
+      // not implemented
+      notifyModification();
+    };
+
+    // Register Updates on Graph
+    atomsFactory.graph.on("vertex-added", vertexAdded);
+    atomsFactory.graph.on("vertex-removed", vertexRemoved);
+    atomsFactory.graph.on("vertex-modified", vertexModified);
+    atomsFactory.graph.on("edge-added", edgeAdded);
+    atomsFactory.graph.on("edge-removed", edgeRemoved);
+    atomsFactory.graph.on("edge-modified", edgeModified);
 
     return atomsFactory;
 })

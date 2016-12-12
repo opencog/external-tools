@@ -38,6 +38,24 @@ div.fullscreen#connect {
   height:20%;
 }
 
+select {
+  display: block;
+  margin: 0;
+  width: 100%;
+  font-size: 18px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+  text-align:center;
+  font-family: inherit;
+  padding: 10px;
+  border: none;
+  border-bottom: solid 2px #c9c9c9;
+  transition: border 0.3s;
+  box-sizing: border-box;
+  color:black;
+}
+
 input[type="text"] {
   display: block;
   margin: 0;

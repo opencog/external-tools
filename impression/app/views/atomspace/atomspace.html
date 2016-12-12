@@ -1,30 +1,40 @@
 <div class="fullscreen" id="atomspace">
     <div class="options" ng-if="showOptions">
         <h1>Options</h1>
-        <br>
-              
-        <h3>STI range</h3>
+
+        <h3>Filter By</h3>
         <ul>
             <li>
-              <input id="lowsti" type="text" value="0.2" class="input">
+              <select name="filterby" ng-model="pollSettings.filterby">
+                <option value="">All Atoms</option>
+                <option value="stirange">STI Range</option>
+                <option value="attentionalfocus">Attentional focus</option>
+              </select>
+            </li>
+        </ul>
+              
+        <ul ng-if="pollSettings.filterby == 'stirange'">
+            <h3>STI range</h3>
+            <li>
+              <input id="lowsti" type="text" ng-model="pollSettings.stimin" class="input">
             </li>
     
             <li>
-              <input id="lowsti" type="text" value="0.2" class="input">
+              <input id="lowsti" type="text" ng-model="pollSettings.stimax" class="input">
             </li>
         </ul>
 
-        <h3>Incoming edges</h3>
         <ul>
+            <h3>Incoming edges</h3>
             <li>
-              <input id="incoming" type="checkbox" value="1" class="input">
+              <input id="incoming" type="checkbox" ng-model="pollSettings.includeIncoming" class="input">
             </li>
         </ul>
 
-        <h3>Outgoing edges</h3>
         <ul>
+            <h3>Outgoing edges</h3>
             <li>
-              <input id="outgoing" type="checkbox" value="1" class="input">
+              <input id="outgoing" type="checkbox" ng-model="pollSettings.includeOutgoing" class="input">
             </li>
         </ul>
 
@@ -32,10 +42,10 @@
 
         <ul>
             <li>
-              <button ng-click="buttonPressed()">apply</button>
+              <button ng-click="applyFilter()">apply</button>
             </li>
         </ul>
     </div>
 
-    <!-- canvas injected via JS !-->
+    <!-- canvas injected beneath via JS !-->
 </div>
