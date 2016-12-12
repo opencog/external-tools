@@ -9,7 +9,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     });
 }])
 
-.controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory, utils, simplifications) {
+.controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory) {
 
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); } else {
@@ -67,57 +67,14 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
     var atoms = {};
 
-    update();
-    var stop = $interval(update, 2000);
+    update()
+    AtomsFactory.modificationCB = update;
 
     function update() {
-        console.log("update called");
+        console.log("[AS 🎑] update called");
         
-        var settings = {
-          simplifications: {
-                logical: true,
-                evaluation: true
-          }
-        };
-
-        atoms = utils.indexAtoms(AtomsFactory.atoms, atoms);
-        atoms = simplifications.simplify(atoms, settings.simplifications);
-
-        ///------------------------------------------------------------//
-        //This whole block is just horrible, replace by using filtered //
-        //Sort Atoms by sti                                            //
-        /*var _atoms = atoms;                                          //
-        var atomArray = [];                                            //
-        for(var key in _atoms) {                                       //
-          atomArray.push(_atoms[key]);                                 //
-        }                                                              //
-        function sti_sort(a, b) {                                      //
-            var x = a.attention_value.sti;                             //
-            var y = a.attention_value.sti;                             //
-                                                                       //
-            return x<y;                                                //
-        }                                                              //
-        var atomArray = atomArray.sort(sti_sort);                      //
-                                                                       //
-        var _atom_subset = {}                                          //
-                                                                       //
-        for (var i in atomArray.slice(1,200)) {                        //
-          var atom = atomArray[i];                                     //
-          for (var j in _atoms) {                                      //
-            if (atom == _atoms[j]) {                                   //
-              _atom_subset[j] = atom;                                  //
-            }                                                          //
-          }                                                            // 
-        }                                                              //
-        atoms = _atom_subset;        */                                //
-        ///-----------------------------------------------------------///
-
-        var graph = utils.atoms2Graph(atoms);
-
-        var nodes = graph.nodes;
-        var links = graph.edges;
-
-        console.log("nodecount: " + nodes.length);
+        var nodes = Object.values(AtomsFactory.nodes)
+        var links = AtomsFactory.links
 
         nodeBinding = dataContainer.selectAll("custom.circle").data(nodes);
         linkBinding = dataContainer.selectAll("custom.line").data(links);
@@ -138,7 +95,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
             .classed("circle", true)
 
         nodeEnter.append("text")
-            .text(function(d) { return d.data.name; });
+            .text(function(d) { return d.name; });
           
         nodeBinding = nodeEnter.merge(nodeBinding);
 
@@ -231,6 +188,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     }
 
     $scope.$on('$destroy', function() {
+      /* is this all we need? */
         $interval.cancel(stop);
         stop = undefined;
         simulation.stop();
