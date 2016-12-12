@@ -25,9 +25,8 @@ angular.module('impression.atomsFactory', ['ngResource'])
       atomsFactory.connected = true;
 
       if (updatePeriod>0) {
-        atomsFactory._timer = $interval(function() {
-          atomsFactory.updateAtoms();
-        }, updatePeriod);  
+        atomsFactory._timer = $interval(function() { atomsFactory.updateAtoms(); }, updatePeriod); 
+        atomsFactory.updateAtoms();
       }
     };
 
@@ -40,7 +39,6 @@ angular.module('impression.atomsFactory', ['ngResource'])
         atomsFactory.stopPeriodicUpdate();
         $location.path("/");
     };
-
 
     atomsFactory.updateAtoms = function () {
 
@@ -62,6 +60,8 @@ angular.module('impression.atomsFactory', ['ngResource'])
 
                 //update existing atoms
                 atomsResult.forEach(function(atom) {
+                  atomHandles.push(atom.handle);
+
                   atomData = {name: atom.name, type: atom.type, isNode: false, attention_value: atom.attentionvalue, truth_value: atom.truthvalue, id: atom.handle}
 
                   if (atom.type.search("Node") > -1) {
@@ -72,7 +72,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
                     oldData = atomsFactory.graph.vertexValue(atom.handle)
 
                     //console.log(oldData)
-                    if (oldData.type != atomData.type  || 
+                    if (oldData.type != atomData.type  || oldData.name != atomData.name  || 
                        JSON.stringify(oldData.attention_value) != JSON.stringify(atomData.attention_value) ||
                        JSON.stringify(oldData.truth_value) != JSON.stringify(atomData.truth_value) ) {
                       
@@ -93,14 +93,12 @@ angular.module('impression.atomsFactory', ['ngResource'])
                     atomsFactory.graph.addNewVertex(atom.handle, atomData);
                   }
 
-                  
-                  atomHandles.push(atom.handle);
                 });
 
                 atomsResult.forEach(function(atom) {
                   atom.incoming.concat(atom.outgoing).forEach(function(connection) {
                     if (atomsFactory.graph.hasVertex(connection)) {
-                      atomsFactory.graph.spanEdge(atom.handle, connection) //Set value?
+                      atomsFactory.graph.spanEdge(atom.handle, connection)
                     }
                   })
                 });
@@ -134,6 +132,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
     // Internal representation for d3
     var notifyModification = function() {
       //console.log("modifcation...")
+
       if (typeof atomsFactory.modificationCB === "function") atomsFactory.modificationCB();
     }
 
@@ -155,6 +154,13 @@ angular.module('impression.atomsFactory', ['ngResource'])
       var key = data[0], value = data[1];
       atomsFactory.nodes[key] = value
 
+      //stupidly update all edges
+      atomsFactory.links.forEach(function(link) {
+        //console.log(link)
+        link.source = atomsFactory.graph.vertexValue(link.sourceHandle)
+        link.target = atomsFactory.graph.vertexValue(link.targetHandle)
+      });
+
       notifyModification();
     };
 
@@ -163,7 +169,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
           to    = data[0][1],
           value = data[0][2];
 
-      atomsFactory.links.push({source: atomsFactory.graph.vertexValue(from), target: atomsFactory.graph.vertexValue(to)})
+      atomsFactory.links.push({sourceHandle: from, source: atomsFactory.graph.vertexValue(from), targetHandle: to, target: atomsFactory.graph.vertexValue(to)})
       notifyModification();
     };
 

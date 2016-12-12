@@ -6,6 +6,7 @@ angular.module('impression', [
   'ngAnimate',
   'ngResource',
   'impression.atomsFactory',
+  'impression.attentionFactory',
   'impression.connectView',
   'impression.atomspaceView',
   'impression.openpsiView'

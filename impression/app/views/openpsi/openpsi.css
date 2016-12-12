@@ -33,3 +33,21 @@ svg#valence .area {
     stroke:white;
     opacity:1.0;
 }
+
+line {
+  stroke: rgba(255,255,255,0.2);
+  stroke-width: 0.5px;
+
+}
+
+.line {
+  stroke: white;
+  stroke-width: 3.5px;
+  fill:none;
+}
+
+text {
+  font: 18px "SF Mono", monospace;
+  font-weight: 100;
+  fill:white;
+}

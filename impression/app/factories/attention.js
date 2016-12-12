@@ -1,11 +1,5 @@
 angular.module('impression.attentionFactory', ['ngResource'])
 
-/**********
-
-VERY MUCH UNFINISHED
-
-************/
-
 .factory('AttentionFactory', function ($http, $resource, $interval, $location) {
 
     var attentionFactory = {};
@@ -14,62 +8,63 @@ VERY MUCH UNFINISHED
     attentionFactory.server = "";
     attentionFactory.attention = {};
 
-    attentionFactory.timer = null;
-    attentionFactory.period = 0;
+    attentionFactory._timer = null;
 
     attentionFactory.connected = false;
+    attentionFactory.updateCB = null
 
-   // Member functions
-  
-    attentionFactory.updateAttention = function (successCB, failureCB) {
-       $http({
-            method: 'GET',
-            url: atomsFactory.server + "api/v1.1/scheme", //TODO: this is a placeholder and will just work for test data, should fetch POST w. correct scm command.
-            cache: false
-        }).then(
-            function (response) {
-                atomsFactory.attention = response.data;
-                console.log("[AF] updated attention...")
-                if (typeof successCB === "function") successCB();
-            },
-            function (error) {
-                if (typeof failureCB === "function") failureCB();
-            }
-        );
+    attentionFactory.psiVariables = ["arousal", "positive-valence", "negative-valence", "power","voice width"];
+
+
+    // Member functions
+    attentionFactory.startPeriodicUpdate = function(period) {
+      if (period>0) {
+        attentionFactory._timer = $interval(function() {
+          attentionFactory.updateAttention();
+        }, period);       
+      }
     };
 
-    attentionFactory.startPeriodicUpdate = function(atomsPeriod, attentionPeriod) {
-      attentionFactory.atomsPeriod = atomsPeriod;
-      attentionFactory.attentionPeriod = attentionPeriod;
-      
-      attentionFactory.connected = true;
-
-      if (attentionPeriod>0) {
-        atomsFactory.interval = $interval(function() {
-          atomsFactory.updateAttention(null, function() {atomsFactory.connectionFailed()});
-        }, attentionPeriod);       
-      }
-
+    attentionFactory.stopPeriodicUpdate = function() {
+      attentionFactory.connected = false;
+      $interval.cancel(attentionFactory._timer);
     };
 
     attentionFactory.connectionFailed = function() {
-        atomsFactory.stopPeriodicUpdate();
+        attentionFactory.stopPeriodicUpdate();
         $location.path("/");
     };
 
-    atomsFactory.stopPeriodicUpdate = function() {
-      atomsFactory.connected = false;
 
-      $interval.cancel(atomsFactory.atomsTimer);
-      $interval.cancel(atomsFactory.attentionTimer);
+    attentionFactory.updateAttention = function () {
+        var vars = ""
+
+        for (i in attentionFactory.psiVariables) {
+            vars += "\"" + attentionFactory.psiVariables[i] + "\"";
+        }
+
+        var scm = "(psi-get-number-values-for-vars" + vars + ")";
+
+       $http({
+            method: 'POST',
+            url: attentionFactory.server + "api/v1.1/scheme",
+            cache: false,
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            data: {command: scm}
+        }).then(
+            function (response) {
+                attentionFactory.connected = true;
+                attentionFactory.attention = response.data;
+                console.log("[AF] updated attention...")
+                if (typeof attentionFactory.updateCB === "function") attentionFactory.updateCB();
+            },
+            function (error) {
+                connectionFailed()
+            }
+        );
     };
-
-    atomsFactory.setServer = function (s) {
-        atomsFactory.server = s; 
-    };
-
-
-
 
     return attentionFactory;
 })

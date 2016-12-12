@@ -9,11 +9,10 @@ angular.module('impression.connectView', ['ngRoute'])
   });
 }])
 
-.controller('ConnectCtrl', function($scope, $routeParams, $http, $timeout, $interval, $location, AtomsFactory) {
+.controller('ConnectCtrl', function($scope, $routeParams, $http, $timeout, $interval, $location, AtomsFactory, AttentionFactory) {
 
     /* TODO:
         - refactor colours out of logic to CSS classes
-
     */
 
     if (!AtomsFactory.connected) {
@@ -41,22 +40,18 @@ angular.module('impression.connectView', ['ngRoute'])
         $scope.connectButtonColor = "rgba(0,0,0,0.1)"
 
         AtomsFactory.server = serverURL;
+        AttentionFactory.server = serverURL;
+        
+        AtomsFactory.successCB = $scope.connectionSucceeded;
 
         AtomsFactory.startPeriodicUpdate(1000);
-        AtomsFactory.updateAtoms()
-
-        AtomsFactory.successCB = $scope.connectionSucceeded;
-        
-
     };
 
     $scope.connectionSucceeded = function() {
         $scope.connectButtonLabel = "disconnect";
         $scope.connectButtonColor = "rgba(0,255,0,0.4)"
 
-        $timeout(function() {
-            $location.path("/atomspace");
-        },1000);
+        $timeout(function() { $location.path("/atomspace"); },1000);
     };
 
     $scope.connectionFailed = function() {

@@ -13,7 +13,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
     //stuff for options:
     $scope.pollSettings = {
-      "filterby": "stirange",
+      "filterby": "none",
       "stimin": 1,
       "stimax": 30000,
       "includeIncoming": true,
@@ -78,8 +78,8 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         .force('Y', d3.forceY().strength(function(d) { return getCenterGravityStrengthForAttentionValue(d); }).y(height / 2))
         .on("tick", ticked);
   
-      function getRadiusForAttentionValue(d) { if (d.isNode) { return d.attention_value.sti*2.5 + 3; } else { return d.attention_value.sti*0.5 + 3; }};
-      function getCenterGravityStrengthForAttentionValue(d) { if(d.isNode) return d.attention_value.sti * 0.09; else return 0; }; 
+      function getRadiusForAttentionValue(d) { if (d.isNode) { return d.attention_value.sti*3.5 + 3; } else { return d.attention_value.sti*0.5 + 3; }};
+      function getCenterGravityStrengthForAttentionValue(d) { if(d.isNode) return d.attention_value.sti * 0.07; else return 0; }; 
   
       var atoms = {};
   
@@ -179,7 +179,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
               context.fill();
               context.closePath();
               
-              context.font="10px DosisLight";
+              context.font=node.attr("radius")/2.0+"px DosisLight";
               context.textAlign="center"; 
               context.textBaseline="middle"; 
               context.fillStyle = "rgba(0,0,0,0.8)";
