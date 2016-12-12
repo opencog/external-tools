@@ -1,3 +1,41 @@
 <div class="fullscreen" id="atomspace">
+    <div class="options" ng-if="showOptions">
+        <h1>Options</h1>
+        <br>
+              
+        <h3>STI range</h3>
+        <ul>
+            <li>
+              <input id="lowsti" type="text" value="0.2" class="input">
+            </li>
+    
+            <li>
+              <input id="lowsti" type="text" value="0.2" class="input">
+            </li>
+        </ul>
+
+        <h3>Incoming edges</h3>
+        <ul>
+            <li>
+              <input id="incoming" type="checkbox" value="1" class="input">
+            </li>
+        </ul>
+
+        <h3>Outgoing edges</h3>
+        <ul>
+            <li>
+              <input id="outgoing" type="checkbox" value="1" class="input">
+            </li>
+        </ul>
+
+        <br>
+
+        <ul>
+            <li>
+              <button ng-click="buttonPressed()">apply</button>
+            </li>
+        </ul>
+    </div>
+
     <!-- canvas injected via JS !-->
 </div>

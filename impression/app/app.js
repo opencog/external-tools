@@ -17,8 +17,9 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
   $routeProvider.otherwise({redirectTo: '/'});
 }])
 
-.controller('MainCtrl', function($scope, $routeParams, $http, $location, AtomsFactory) {
-
+.controller('MainCtrl', function($scope, $rootScope, $routeParams, $http, $location, AtomsFactory) {
+    $rootScope.showOptions = false
+    
     $scope.handleKeypress = function(keyEvent) {
       if ([].slice.call(document.getElementsByClassName("input")).includes(document.activeElement)) return;
       if (!AtomsFactory.connected && keyEvent.which-48 > 1) return;
@@ -28,8 +29,12 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
               $location.path("/");
           break;
 
-          case 2: 
+          case 2:
+            if ($location.path() == "/atomspace") {
+              $rootScope.showOptions = !$rootScope.showOptions
+            } else {
               $location.path("/atomspace");
+            }
           break;
 
           case 3: 

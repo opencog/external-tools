@@ -64,6 +64,7 @@ angular.module('impression.openpsiView', ['ngRoute'])
             .duration(AtomsFactory.attentionPeriod)
             .ease(d3.easeLinear)
             .on("start", tick);
+
         function tick() {
           // Push a new data point onto the back.
           data.push(AtomsFactory.attention[containername]);
@@ -90,6 +91,10 @@ angular.module('impression.openpsiView', ['ngRoute'])
         }
     
     },100);
+
+    $scope.$on('$destroy', function() {
+        d3.selectAll('*').transition();
+    });
 
 });
 

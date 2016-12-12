@@ -68,7 +68,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     var atoms = {};
 
     update();
-    $interval(update, 2000);
+    var stop = $interval(update, 2000);
 
     function update() {
         console.log("update called");
@@ -229,6 +229,13 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
       drawCanvas();
     }
+
+    $scope.$on('$destroy', function() {
+        $interval.cancel(stop);
+        stop = undefined;
+        simulation.stop();
+        chart.remove();
+    });
 
 }
 });
