@@ -62,7 +62,11 @@ angular.module('impression.atomsFactory', ['ngResource'])
 
                 //update existing atoms
                 atomsResult.forEach(function(atom) {
-                  atomData = {name: atom.name, type: atom.type, attention_value: atom.attentionvalue, truth_value: atom.truthvalue, id: atom.handle}
+                  atomData = {name: atom.name, type: atom.type, isNode: false, attention_value: atom.attentionvalue, truth_value: atom.truthvalue, id: atom.handle}
+
+                  if (atom.type.search("Node") > -1) {
+                    atomData.isNode = true
+                  }
 
                   if (atomsFactory.graph.hasVertex(atom.handle)) {
                     oldData = atomsFactory.graph.vertexValue(atom.handle)
@@ -164,13 +168,27 @@ angular.module('impression.atomsFactory', ['ngResource'])
     };
 
     var edgeRemoved = function(data) {
-      // not implemented
+      //TODO performance improvements?
+      var source = atomsFactory.graph.vertexValue(data[0])
+      var target = atomsFactory.graph.vertexValue(data[1])
+
+      var toDelete = null
+
+      atomsFactory.links.forEach(function(link) {
+        if (link.source.name == source.name && link.target.name == target.name) {
+          toDelete = link
+        }
+      });
+
+      var index = atomsFactory.links.indexOf(toDelete);
+      if (index > 0) { atomsFactory.links.splice(index, 1); }
+
       notifyModification();
     };
 
     var edgeModified = function(data) {
       // not implemented
-      notifyModification();
+      //notifyModification();
     };
 
     // Register Updates on Graph
