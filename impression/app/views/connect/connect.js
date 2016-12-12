@@ -54,7 +54,7 @@ angular.module('impression.connectView', ['ngRoute'])
         AtomsFactory.startPeriodicUpdate(5000,400);
 
         $timeout(function() {
-            $location.path("/openpsi");
+            $location.path("/atomspace");
         },1000);
     };
 

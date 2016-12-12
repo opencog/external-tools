@@ -1,57 +1,35 @@
-div.legend {
-    display:flex;
-    justify-content: center;
+/* impression visualizer stylesheet */
 
+div#openpsi {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a90329+0,8f0222+44,6d0019+100;Brown+Red+3D */
+    background: rgb(169,3,41); /* Old browsers */
+    background: -moz-radial-gradient(center, ellipse cover, rgba(169,3,41,1) 0%, rgba(143,2,34,1) 44%, rgba(109,0,25,1) 100%); /* FF3.6-15 */
+    background: -webkit-radial-gradient(center, ellipse cover, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: radial-gradient(ellipse at center, #822B34 0%, #49152B 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.axis--y path { display: none; }
+.axis--y { transform: scale(0.985) translateX(50px); }
+.axis--x { display: none; }
+
+/* styles for individual plots */
+svg {
     position:absolute;
-    top: 0;
-    left: 0;
-    width:80%;
-    height:8%;
-
-    margin-left:10%;
-}
-
-div.legend span {
-    text-align: center;
-    padding-top:2%;
-    flex-grow: 1;
-    font: 18px "SF Mono", monospace;
-    background-color:rgba(0,0,0,0.2);
-}
-
-div.legend span.valence { color:red; }
-div.legend span.arousal { color:blue; }
-
-
-.axis--y path {
-  display: none;
-}
-
-.axis--y {
-  transform: scale(0.985) translateX(50px);
-
-}
-
-.axis--x {
-  display: none;
+    top:0; left:0;
+    width:100%;
+    height:100%;
 }
 
 svg#arousal .area {
     fill: url(#arousalGradient);
-
     stroke-width: 1.5;
     stroke:white;
-
     opacity:1.0;
-
 }
 
 svg#valence .area {
     fill: url(#valenceGradient);
-
     stroke-width: 1.5;
     stroke:white;
-
     opacity:1.0;
-
 }

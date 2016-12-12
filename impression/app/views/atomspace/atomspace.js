@@ -86,7 +86,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         ///------------------------------------------------------------//
         //This whole block is just horrible, replace by using filtered //
         //Sort Atoms by sti                                            //
-        /*var _atoms = atoms;                                            //
+        /*var _atoms = atoms;                                          //
         var atomArray = [];                                            //
         for(var key in _atoms) {                                       //
           atomArray.push(_atoms[key]);                                 //
