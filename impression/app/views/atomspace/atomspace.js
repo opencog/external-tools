@@ -11,6 +11,15 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
 .controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory) {
 
+    $scope.$on('$destroy', function() {
+        $interval.cancel(stop);
+        stop = undefined;
+        simulation.stop();
+        chart.remove();
+    });
+
+
+
     //stuff for options:
     $scope.pollSettings = {
       "filterby": "attentionalfocus",
@@ -36,6 +45,8 @@ angular.module('impression.atomspaceView', ['ngRoute'])
       AtomsFactory.updateAtoms()
     }, true);
 
+
+
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); } else {
 
@@ -48,12 +59,9 @@ angular.module('impression.atomspaceView', ['ngRoute'])
           width = document.getElementById("atomspace").clientWidth;
           height = document.getElementById("atomspace").clientHeight;
           
-          chart
-              .attr("width", width)
-              .attr("height", height);
+          chart.attr("width", width).attr("height", height);
           
-          simulation
-            .force("center", d3.forceCenter(width / 2, height / 2))
+          simulation.force("center", d3.forceCenter(width / 2, height / 2))
       });
   
       var transform = d3.zoomIdentity; //transform identity for pan/zoom
@@ -93,7 +101,6 @@ angular.module('impression.atomspaceView', ['ngRoute'])
   
       update()
       AtomsFactory.modificationCB = update;
-      //$interval(update, 1000)
 
       function update() {
           console.log("🎑 update called");
@@ -165,8 +172,6 @@ angular.module('impression.atomspaceView', ['ngRoute'])
           
           });
           
-          
-          
           var elements = dataContainer.selectAll("custom.circle");
           
               elements.each(function(d) {
@@ -218,14 +223,6 @@ angular.module('impression.atomspaceView', ['ngRoute'])
   
         drawCanvas();
       }
-  
-      $scope.$on('$destroy', function() {
-        /* is this all we need? */
-          $interval.cancel(stop);
-          stop = undefined;
-          simulation.stop();
-          chart.remove();
-      });
 
     }
 });

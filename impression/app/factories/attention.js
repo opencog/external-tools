@@ -57,7 +57,7 @@ angular.module('impression.attentionFactory', ['ngResource'])
             function (response) {
                 attentionFactory.connected = true;
                 attentionFactory.attention = response.data;
-                console.log("[AF] updated attention...")
+                console.log("🎢 updated attention...")
                 if (typeof attentionFactory.updateCB === "function") attentionFactory.updateCB();
             },
             function (error) {
