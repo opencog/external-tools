@@ -59,7 +59,7 @@
                             <li><a href="" ng-click="showPanel('planar')">Planar</a></li>
                             <li><a href="#">Scheme</a></li>
                             <li><a href="#">Tabular</a></li>
-                            <li><a href="" ng-click="showPanel('graph')">Graph</a></li>
+                            <li><a href="" ng-click="showPanel('graph2')">Graph</a></li>
                         </ul>
                     </li>
 
@@ -206,6 +206,10 @@
     <add-node atoms="atoms"></add-node>
 </div>
 
+<div id="add_series_panel" caption="Add new Graph series" icon="">
+    <add-node atoms="atoms"></add-node>
+</div>
+
 <!--Add -->
 <div id="connect_panel" caption="Connect" icon="">
     <connect atoms="atoms" settings="settings.general" dialog="connectDialog"></connect>
@@ -227,6 +231,12 @@
 <script type="application/javascript" src="js/directives/add-node.js"></script>
 <script type="application/javascript" src="js/directives/connect.js"></script>
 <script type="application/javascript" src="js/directives/graph.js"></script>
+<script type="application/javascript" src="js/directives/graph2.js"></script>
+<script type="application/javascript" src="js/directives/add-graphseries.js"></script>
+<script src="http://code.highcharts.com/stock/highstock.src.js"></script> 
+<script type="application/javascript" src="libs/highcharts-ng/dist/highcharts-ng.min.js"></script>
 
 </body>
+
+
 </html>
