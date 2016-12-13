@@ -19,7 +19,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
     atomsFactory.links = []
 
     //no limit initially
-    atomsFactory.pollSettings = { }
+    atomsFactory.pollSettings = { 'filterby': 'attentionalfocus' }
 
     atomsFactory.startPeriodicUpdate = function(updatePeriod) {      
       atomsFactory.connected = true;
@@ -114,7 +114,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
 
                 // TODO: remove old links
                 // How efficiently?
-
+                if (typeof atomsFactory.modificationCB === "function") atomsFactory.modificationCB();
                 console.log("[AF] updated internal graph")
 
                 //DEBUG
@@ -133,7 +133,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
     var notifyModification = function() {
       //console.log("modifcation...")
 
-      if (typeof atomsFactory.modificationCB === "function") atomsFactory.modificationCB();
+      //if (typeof atomsFactory.modificationCB === "function") atomsFactory.modificationCB();
     }
 
     var vertexAdded = function(data) {
@@ -154,7 +154,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
       var key = data[0], value = data[1];
       atomsFactory.nodes[key] = value
 
-      //stupidly update all edges
+      //TODO: stupidly update all edges
       atomsFactory.links.forEach(function(link) {
         //console.log(link)
         link.source = atomsFactory.graph.vertexValue(link.sourceHandle)

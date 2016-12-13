@@ -13,7 +13,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
     //stuff for options:
     $scope.pollSettings = {
-      "filterby": "none",
+      "filterby": "attentionalfocus",
       "stimin": 1,
       "stimax": 30000,
       "includeIncoming": true,
@@ -23,7 +23,13 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     $scope.applyFilter = function() {
       console.log("apply options called")
 
-      AtomsFactory.pollSettings = $scope.pollSettings
+      if ($scope.pollSettings["filterby"] == "none") {
+        AtomsFactory.pollSettings = {"includeIncoming": $scope.pollSettings.includeIncoming, 
+                                     "includeOutgoing": $scope.pollSettings.includeOutgoing}
+      } else {
+        AtomsFactory.pollSettings = $scope.pollSettings
+      }
+      
       AtomsFactory.updateAtoms()
     };
 
@@ -78,14 +84,15 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         .force('Y', d3.forceY().strength(function(d) { return getCenterGravityStrengthForAttentionValue(d); }).y(height / 2))
         .on("tick", ticked);
   
-      function getRadiusForAttentionValue(d) { if (d.isNode) { return d.attention_value.sti*3.5 + 3; } else { return d.attention_value.sti*0.5 + 3; }};
-      function getCenterGravityStrengthForAttentionValue(d) { if(d.isNode) return d.attention_value.sti * 0.07; else return 0; }; 
+      function getRadiusForAttentionValue(d) { if (d.isNode) { return d.attention_value.sti*0.006 + 3; } else { return d.attention_value.sti*0.0005 + 3; }};
+      function getCenterGravityStrengthForAttentionValue(d) { if(d.isNode) return d.attention_value.sti * 0.00007; else return 0; }; 
   
       var atoms = {};
   
       update()
       AtomsFactory.modificationCB = update;
-  
+      //$interval(update, 1000)
+
       function update() {
           console.log("[AS 🎑] update called");
           
@@ -169,7 +176,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
   
               if (d.isNode)
                 if (node.attr("sti")>0) {
-                  context.fillStyle = "rgba(255,255,255,"+node.attr("sti")/30+")";
+                  context.fillStyle = "rgba(255,255,255,"+node.attr("sti")*0.00032+")";
                 } else {
                   context.fillStyle = "rgba(255,255,255,0.3)";
                 }
