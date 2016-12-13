@@ -82,7 +82,7 @@ angular.module('impression.openpsiView', ['ngRoute'])
         }
     }
 
-    AttentionFactory.startPeriodicUpdate(200)
+    AttentionFactory.startPeriodicUpdate(500)
     //init the graphs.
     $timeout(function() {
 

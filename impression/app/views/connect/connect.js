@@ -65,6 +65,7 @@ angular.module('impression.connectView', ['ngRoute'])
         $scope.connectButtonColor = "rgba(0,0,0,0.3)"
 
         AtomsFactory.stopPeriodicUpdate();
+        AttentionFactory.stopPeriodicUpdate();
     };
 
 

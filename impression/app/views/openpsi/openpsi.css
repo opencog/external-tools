@@ -8,6 +8,19 @@ div#openpsi {
     background: radial-gradient(ellipse at center, #822B34 0%, #49152B 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
+div.legend {
+  position:absolute;
+  top:20px; right:20px;
+  padding:20px;
+
+  background-color:rgba(0,0,0,0.4);
+
+  z-index:100;
+}
+
+div.legend h1.arousal { color: #47E78A; }
+div.legend h1.valence { color: #38AFFC; }
+
 .axis--y path { display: none; }
 .axis--y { transform: scale(0.985) translateX(50px); }
 .axis--x { display: none; }
@@ -22,15 +35,15 @@ svg {
 
 svg#arousal .area {
     fill: url(#arousalGradient);
-    stroke-width: 1.5;
-    stroke:white;
+    stroke-width: 2.5;
+    stroke:#47E78A;
     opacity:1.0;
 }
 
 svg#valence .area {
     fill: url(#valenceGradient);
-    stroke-width: 1.5;
-    stroke:white;
+    stroke-width: 2.5;
+    stroke:#38AFFC;
     opacity:1.0;
 }
 
