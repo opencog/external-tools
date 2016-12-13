@@ -23,7 +23,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     $scope.pollSettings = {
       "filterby": "attentionalfocus",
       "stimin": 1,
-      "stimax": 30000,
+      "stimax": 40,
       "includeIncoming": true,
       "includeOutgoing": true 
     }
@@ -81,6 +81,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         .force('Y', d3.forceY().strength(function(d) { return getCenterGravityStrengthForAttentionValue(d); }).y(height / 2))
         .on("tick", ticked);
   
+      simulation.alphaTarget(0.1)
 
       function getRadiusForAttentionValue(d) { 
         if (d.isNode) { 
