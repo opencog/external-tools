@@ -52,8 +52,10 @@ angular.module('impression.atomsFactory', ['ngResource'])
        function serialize( obj ) {
          var str = "?";
          for (var key in obj) {
+            if (obj[key] != "") {
              if (str != "?")  str += "&"
-             if (obj[key] != "") str += key + "=" + encodeURIComponent(obj[key]);
+             str += key + "=" + encodeURIComponent(obj[key]);
+            }
          }
          return str
        }
@@ -86,8 +88,11 @@ angular.module('impression.atomsFactory', ['ngResource'])
                       atomsFactory.warningCB("Too many Atoms");
 
                     atomsResult = []
+                  } else {
+                    if (typeof atomsFactory.warningCB === "function")
+                      atomsFactory.warningCB(null);
                   }
-                }
+                }                
 
                 atomsFactory.modificationHappened = false
 
@@ -100,6 +105,10 @@ angular.module('impression.atomsFactory', ['ngResource'])
 
                   // preprocess data for d3
                   if (atom.type.search("Node") > -1) { atom.isNode = true }
+                  if (atom.type.search("NumberNode") > -1) { atom.name = atom.name.slice(0,5) }
+
+                  if (atom.name.search("LEFT-WALL") > -1) { atom.isNode = false } // hide left-wall stuff completely
+                  if (atom.name == ".") { atom.isNode = false }
 
                   if (atomsFactory.graph.hasVertex(atom.handle)) {
                     oldData = atomsFactory.graph.vertexValue(atom.handle)

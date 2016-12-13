@@ -16,6 +16,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         stop = undefined;
         simulation.stop();
         chart.remove();
+        AtomsFactory.pollSettings = { 'filterby': 'attentionalfocus', 'includeIncoming': 'true', 'includeOutgoing': 'true' }
     });
 
     //stuff for options:
@@ -80,8 +81,21 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         .force('Y', d3.forceY().strength(function(d) { return getCenterGravityStrengthForAttentionValue(d); }).y(height / 2))
         .on("tick", ticked);
   
-      function getRadiusForAttentionValue(d) { if (d.isNode) { return d.attentionvalue.sti*0.006 + 3; } else { return d.attentionvalue.sti*0.0005 + 3; }};
-      function getCenterGravityStrengthForAttentionValue(d) { if(d.isNode) return d.attentionvalue.sti * 0.00007; else return 0; }; 
+
+      function getRadiusForAttentionValue(d) { 
+        if (d.isNode) { 
+          return d.attentionvalue.sti*0.095 + 9; 
+        } else { 
+          return 1; 
+        }
+      };
+
+      function getCenterGravityStrengthForAttentionValue(d) { 
+        if(d.isNode) 
+          return d.attentionvalue.sti * 0.025; 
+        else 
+          return 0; 
+      }; 
   
       var atoms = {};
   
@@ -141,8 +155,9 @@ angular.module('impression.atomspaceView', ['ngRoute'])
           
           var elements = dataContainer.selectAll("custom.line");
           
-          context.strokeStyle = "rgba(0,0,0,0.2)";
-          context.lineWidth = 0.3;
+          context.strokeStyle = "rgba(0,0,0,0.4)";
+          context.lineWidth = 0.15;
+          context.globalCompositeOperation = "source-over";
           
           elements.each(function(d) {
               var node = d3.select(this);
@@ -162,17 +177,40 @@ angular.module('impression.atomspaceView', ['ngRoute'])
               var node = d3.select(this);
               
               context.beginPath();
-              
+              context.globalCompositeOperation = "screen";
+
               context.arc(node.attr("x"), node.attr("y"), node.attr("radius"), 0, 2*Math.PI, false);
   
-              if (d.isNode)
-                if (node.attr("sti")>0) {
-                  context.fillStyle = "rgba(255,255,255,"+node.attr("sti")*0.00032+")";
+              if (d.isNode) {
+                /*if (node.attr("sti")>0) {
+                  //context.fillStyle = "rgba(255,255,255,"+node.attr("sti")*0.00032+")";
+                  context.fillStyle = "rgb(255,255,255)";
                 } else {
-                  context.fillStyle = "rgba(255,255,255,0.3)";
-                }
-              else 
-                context.fillStyle = "rgba(0,0,0,0.5)";
+                  //context.fillStyle = "rgba(255,255,255,0.3)";
+                  context.fillStyle = "rgb(200,200,240)";
+                }*/
+
+                //var alpha = 0.5 + (node.attr("sti")*0.32)
+
+                     if (d.type == "WordNode")                      context.fillStyle = "rgb(255,252,247)";
+                else if (d.type == "WordInstanceNode")              context.fillStyle = "rgb(255,252,247)";
+                else if (d.type == "ConceptNode")                   context.fillStyle = "rgb(120,68,74)";
+                else if (d.type == "NumberNode")                    context.fillStyle = "rgba(62,66,58,0.5)";
+                else context.fillStyle = "rgba(108,110,88,0.5)";
+
+              } else {
+                // it's a link, color it black
+                context.fillStyle = "rgb(0,0,0)";
+              }
+
+
+                /*
+                    DefinedLinguisticConceptNode
+                    WordInstanceNode
+                    WordNode
+                    PredicateNode
+                    NumberNode
+                */
               
               context.fill();
               context.closePath();
@@ -180,8 +218,16 @@ angular.module('impression.atomspaceView', ['ngRoute'])
               context.font=node.attr("radius")/2.0+"px DosisLight";
               context.textAlign="center"; 
               context.textBaseline="middle"; 
-              context.fillStyle = "rgba(0,0,0,0.8)";
-              
+
+              if (d.type == "WordNode" || d.type == "WordInstanceNode") {
+                context.fillStyle = "rgb(0,0,0)";
+                context.globalCompositeOperation = "darken";
+              } else {
+                context.fillStyle = "rgb(255,255,255)";
+                context.globalCompositeOperation = "hard-light";                
+              }
+
+
               if (d.isNode)
                 context.fillText(node.text(),node.attr("x"), node.attr("y"));
           

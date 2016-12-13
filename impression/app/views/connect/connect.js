@@ -44,7 +44,7 @@ angular.module('impression.connectView', ['ngRoute'])
         
         AtomsFactory.successCB = $scope.connectionSucceeded;
 
-        AtomsFactory.startPeriodicUpdate(5000);
+        AtomsFactory.startPeriodicUpdate(1000);
     };
 
     $scope.connectionSucceeded = function() {
