@@ -18,8 +18,12 @@ div.legend {
   z-index:100;
 }
 
-div.legend h1.arousal { color: #47E78A; }
-div.legend h1.valence { color: #38AFFC; }
+
+div.legend h1.positive-valence { color: #3794A6; }
+div.legend h1.negative-valence { color: #FF615A; }
+div.legend h1.arousal { color: #FFD963; }
+div.legend h1.power { color: #4335D9; }
+div.legend h1.voicewidth { color: #63E340; }
 
 .axis--y path { display: none; }
 .axis--y { transform: scale(0.985) translateX(50px); }
@@ -33,18 +37,38 @@ svg {
     height:100%;
 }
 
-svg#arousal .area {
-    fill: url(#arousalGradient);
-    stroke-width: 2.5;
-    stroke:#47E78A;
-    opacity:1.0;
+svg .area {
+  opacity:1.0;
+  stroke-width: 2.5;
 }
 
-svg#valence .area {
-    fill: url(#valenceGradient);
-    stroke-width: 2.5;
-    stroke:#38AFFC;
-    opacity:1.0;
+
+svg#positive-valence .area {
+    fill: url(#positiveValenceGradient);
+    stroke:#3794A6;
+}
+
+
+svg#negative-valence .area {
+    fill: url(#positiveValenceGradient);
+    stroke:#FF615A;
+}
+
+svg#arousal .area {
+    fill: url(#arousalGradient);
+    stroke:#FFD963;
+}
+
+
+svg#power .area {
+    fill: url(#positiveValenceGradient);
+    stroke:#4335D9;
+}
+
+
+svg#voicewidth .area {
+    fill: url(#positiveValenceGradient);
+    stroke:#63E340;
 }
 
 line {

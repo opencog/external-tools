@@ -11,10 +11,9 @@ angular.module('impression.attentionFactory', ['ngResource'])
     attentionFactory._timer = null;
 
     attentionFactory.connected = false;
-    attentionFactory.updateCB = null
+    attentionFactory.successCB = null
 
-    attentionFactory.psiVariables = ["arousal", "positive-valence", "negative-valence", "power","voice width"];
-
+    attentionFactory.psiVariables = ["arousal", "positive-valence", "negative-valence", "power", "voice width"];
 
     // Member functions
     attentionFactory.startPeriodicUpdate = function(period) {
@@ -56,9 +55,11 @@ angular.module('impression.attentionFactory', ['ngResource'])
         }).then(
             function (response) {
                 attentionFactory.connected = true;
-                attentionFactory.attention = response.data;
+                attentionFactory.attention = JSON.parse(response.data.response);
                 console.log("🎢 updated attention...")
-                if (typeof attentionFactory.updateCB === "function") attentionFactory.updateCB();
+
+                if (typeof attentionFactory.successCB === "function") attentionFactory.successCB();
+                attentionFactory.successCB = null;
             },
             function (error) {
                 connectionFailed()

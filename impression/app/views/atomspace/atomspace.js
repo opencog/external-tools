@@ -17,6 +17,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         simulation.stop();
         chart.remove();
         AtomsFactory.pollSettings = { 'filterby': 'attentionalfocus', 'includeIncoming': 'true', 'includeOutgoing': 'true' }
+        //AtomsFactory.stopPeriodicUpdate() // TODO: this could happen here, but we do cleanup
     });
 
     //stuff for options:

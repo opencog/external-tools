@@ -1,16 +1,27 @@
 <div class="fullscreen" id="openpsi">
 
     <div class="legend">
-        <h1 class="valence">Valence</h1>
-        <br>
-        <h1 class="arousal">Arousal</h1>
+        <h1 class="positive-valence">positive valence</h1>
+        <h1 class="negative-valence">negative valence</h1>
+        <h1 class="arousal">arousal</h1>
+        <h1 class="power">power</h1>
+        <h1 class="voicewidth">voice width</h1>
     </div>
 
-    <svg id="valence">
+    <svg id="positive-valence">
       <defs>
-        <linearGradient id="valenceGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#2980B9" stop-opacity="0.2" />
-          <stop offset="80%" stop-color="#2980B9" stop-opacity="0.0" />
+        <linearGradient id="positiveValenceGradient" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#3794A6" stop-opacity="0.2" />
+          <stop offset="80%" stop-color="#3794A6" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <svg id="negative-valence">
+      <defs>
+        <linearGradient id="negativeValenceGradient" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#FF615A" stop-opacity="0.2" />
+          <stop offset="80%" stop-color="#FF615A" stop-opacity="0.0" />
         </linearGradient>
       </defs>
     </svg>
@@ -18,10 +29,30 @@
     <svg id="arousal">
       <defs>
         <linearGradient id="arousalGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#47E78A" stop-opacity="0.2" />
-          <stop offset="80%" stop-color="#47E78A" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#FFD963" stop-opacity="0.2" />
+          <stop offset="80%" stop-color="#FFD963" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <svg id="power">
+      <defs>
+        <linearGradient id="powerGradient" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#4335D9" stop-opacity="0.2" />
+          <stop offset="80%" stop-color="#4335D9" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <svg id="voicewidth">
+      <defs>
+        <linearGradient id="voiceWidthGradient" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#63E340" stop-opacity="0.2" />
+          <stop offset="80%" stop-color="#63E340" stop-opacity="0.0" />
         </linearGradient>
       </defs>
     </svg>
 
 </div>
+
+

@@ -67,6 +67,8 @@ angular.module('impression.openpsiView', ['ngRoute'])
 
         function tick() {
           // Push a new data point onto the back.
+          console.log(containername)
+          if (containername == "voicewidth") containername = "voice width"
           data.push(AttentionFactory.attention[containername]);
           // Redraw the line.
           d3.select(this)
@@ -82,19 +84,17 @@ angular.module('impression.openpsiView', ['ngRoute'])
         }
     }
 
-    AttentionFactory.startPeriodicUpdate(500)
-    //init the graphs.
-    $timeout(function() {
-
-        for (var item in AttentionFactory.attention) {
-          console.log(item);
-          makeGraphInContainer(item);
+    AttentionFactory.successCB = function() {
+        var keys = Object.keys(AttentionFactory.attention)
+        for (var i = 0; i < keys.length; i++) {
+          makeGraphInContainer(keys[i].replace(" ", ""));
         }
-    
-    },300);
+    }
+    AttentionFactory.startPeriodicUpdate(500)
 
     $scope.$on('$destroy', function() {
         d3.selectAll('*').transition();
+        AttentionFactory.stopPeriodicUpdate()
     });
 
 });
