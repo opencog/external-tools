@@ -60,6 +60,13 @@ angular.module('impression.atomsFactory', ['ngResource'])
             cache: false
         }).then(
             function (response) {
+
+                // sometimes the cogserver doesnt sent valid JSON... 
+                if (!response.data.result) {
+                  console.log("🏭 invalid JSON received");
+                  return
+                }
+
                 var atomsResult = response.data.result.atoms;
                 var atomHandles = [] //store new handles to determine removed atoms
 
