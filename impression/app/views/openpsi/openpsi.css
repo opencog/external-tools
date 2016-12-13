@@ -22,11 +22,11 @@ div.legend {
 div.legend h1.positive-valence { color: #3794A6; }
 div.legend h1.negative-valence { color: #FF615A; }
 div.legend h1.arousal { color: #FFD963; }
-div.legend h1.power { color: #4335D9; }
+div.legend h1.power { color: #4739DA; }
 div.legend h1.voicewidth { color: #63E340; }
 
 .axis--y path { display: none; }
-.axis--y { transform: scale(0.985) translateX(50px); }
+.axis--y { transform: scale(0.985) translateX(50px); z-index: 100; }
 .axis--x { display: none; }
 
 /* styles for individual plots */
@@ -40,6 +40,7 @@ svg {
 svg .area {
   opacity:1.0;
   stroke-width: 2.5;
+  z-index: 99;
 }
 
 
@@ -50,7 +51,7 @@ svg#positive-valence .area {
 
 
 svg#negative-valence .area {
-    fill: url(#positiveValenceGradient);
+    fill: url(#negativeValenceGradient);
     stroke:#FF615A;
 }
 
@@ -61,13 +62,13 @@ svg#arousal .area {
 
 
 svg#power .area {
-    fill: url(#positiveValenceGradient);
+    fill: url(#powerGradient);
     stroke:#4335D9;
 }
 
 
 svg#voicewidth .area {
-    fill: url(#positiveValenceGradient);
+    fill: url(#voiceWidthGradient);
     stroke:#63E340;
 }
 
@@ -87,4 +88,6 @@ text {
   font: 18px "SF Mono", monospace;
   font-weight: 100;
   fill:white;
+
+  z-index:100;
 }

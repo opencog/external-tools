@@ -3,8 +3,15 @@
         <h1>{{warning}}</h1>
     </div>
 
-    <div class="options" ng-if="showOptions">
+    <div class="options hud-animate" ng-if="showOptions">
         <h1>Options</h1>
+
+        <table style="width:100%">
+          <tr>
+            <th><input id="incoming" type="checkbox" ng-model="pollSettings.includeIncoming" class="input"> Incoming Edges</th>
+            <th><input id="outgoing" type="checkbox" ng-model="pollSettings.includeOutgoing" class="input"> Outgoing Edges</th> 
+          </tr>
+        </table>
 
         <h3>Filter By</h3>
         <ul>
@@ -41,22 +48,6 @@
               <input id="maxsti" type="text" ng-model="pollSettings.stimax" class="input">
             </li>
         </ul>
-
-        <ul>
-            <h3>Incoming edges</h3>
-            <li>
-              <input id="incoming" type="checkbox" ng-model="pollSettings.includeIncoming" class="input">
-            </li>
-        </ul>
-
-        <ul>
-            <h3>Outgoing edges</h3>
-            <li>
-              <input id="outgoing" type="checkbox" ng-model="pollSettings.includeOutgoing" class="input">
-            </li>
-        </ul>
-
-        <br>
     </div>
 
     <!-- canvas injected beneath via JS !-->

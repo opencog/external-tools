@@ -20,3 +20,15 @@
 .view-animate.ng-enter { opacity:0; }
 .view-animate.ng-enter.ng-enter-active { opacity:1; }
 .view-animate.ng-leave.ng-leave-active { opacity:0; }
+
+
+.hud-animate.ng-enter, .hud-animate.ng-leave {
+  display:block;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s;
+  opacity:1;
+  transform: translateX(0px);
+}
+
+.hud-animate.ng-enter { opacity:0; transform: translateX(20px); }
+.hud-animate.ng-enter.ng-enter-active { opacity:1; transform: translateX(0px); }
+.hud-animate.ng-leave.ng-leave-active { opacity:0; transform: translateX(20px); }
