@@ -18,8 +18,6 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         chart.remove();
     });
 
-
-
     //stuff for options:
     $scope.pollSettings = {
       "filterby": "attentionalfocus",
@@ -31,21 +29,9 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
     $scope.$watch('pollSettings', function(newValue) {
       console.log("🎑 new filter")
-
-      AtomsFactory.pollSettings = {"includeIncoming": newValue.includeIncoming, 
-                                   "includeOutgoing": newValue.includeOutgoing}
-
-      if (newValue.filterby == "attentionalfocus") {
-        AtomsFactory.pollSettings["filterby"] = "attentionalfocus"
-      } else {
-        //send all params for stirange
-        AtomsFactory.pollSettings = newValue
-      }
-
+      AtomsFactory.pollSettings = newValue
       AtomsFactory.updateAtoms()
     }, true);
-
-
 
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); } else {
@@ -102,17 +88,15 @@ angular.module('impression.atomspaceView', ['ngRoute'])
       update()
       AtomsFactory.modificationCB = update;
 
+      AtomsFactory.warningCB = function(msg) {
+        $scope.warning = msg
+      };
+
       function update() {
           console.log("🎑 update called");
+          $scope.warning = null
           
           var nodes = Object.values(AtomsFactory.nodes)
-  
-          /*var nodes = new Array;
-          for(var o in AtomsFactory.nodes) {
-              nodes[o] = AtomsFactory.nodes[o];
-              nodes[0] = AtomsFactory.nodes[o];
-          }*/
-  
           var links = AtomsFactory.links
   
           nodeBinding = dataContainer.selectAll("custom.circle").data(nodes, function(d) { return d.id;});

@@ -12,6 +12,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
     atomsFactory.server = "";
     atomsFactory.successCB = null;
     atomsFactory.modificationCB = null;
+    atomsFactory.warningCB = null;
     atomsFactory.modificationHappened = false;
     atomsFactory.graph = new Graph()
 
@@ -49,7 +50,12 @@ angular.module('impression.atomsFactory', ['ngResource'])
 
     atomsFactory.updateAtoms = function () {
        function serialize( obj ) {
-         return '?'+Object.keys(obj).reduce(function(a,k){a.push(k+'='+encodeURIComponent(obj[k]));return a},[]).join('&')
+         var str = "?";
+         for (var key in obj) {
+             if (str != "?")  str += "&"
+             if (obj[key] != "") str += key + "=" + encodeURIComponent(obj[key]);
+         }
+         return str
        }
 
        console.log("🏭 updateAtoms called with " + serialize(atomsFactory.pollSettings))
@@ -63,15 +69,29 @@ angular.module('impression.atomsFactory', ['ngResource'])
 
                 // sometimes the cogserver doesnt sent valid JSON... 
                 if (!response.data.result) {
-                  console.log("🏭 invalid JSON received");
-                  return
+                  console.log("🏭 invalid JSON received.");
+
+                  if (typeof atomsFactory.warningCB === "function") 
+                    atomsFactory.warningCB("Invalid JSON");
+
+                  var atomsResult = []
+                } else {
+                  var atomsResult = response.data.result.atoms;
+                  console.log("🏭 fetched "+ atomsResult.length +" atoms...")
+
+                  if (atomsResult.length > 800) {
+                    console.log("🏭 too many atoms received.");
+
+                    if (typeof atomsFactory.warningCB === "function") 
+                      atomsFactory.warningCB("Too many Atoms");
+
+                    atomsResult = []
+                  }
                 }
 
-                var atomsResult = response.data.result.atoms;
-                var atomHandles = [] //store new handles to determine removed atoms
-
-                console.log("🏭 fetched "+ atomsResult.length +" atoms...")
                 atomsFactory.modificationHappened = false
+
+                var atomHandles = [] //store new handles to determine removed atoms
 
                 //update existing atoms
                 for (var i = 0; i < atomsResult.length; i++) {
