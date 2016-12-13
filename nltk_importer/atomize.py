@@ -44,14 +44,22 @@ print("Finished counting word frequency\n")
 
 # Create the scheme file that has alist of the frequency distribution.
 print("Writing a scheme a-list of the frequency distribution to output.scm")
-with open("output.scm", "w") as scm:
-    output = "(define total-count {})\n".format(freq_dist.N())
-    output += "(define freq-dist (list \n"
-    for word in freq_dist.keys():
-        a_word =  "(cons \"{}\" {})".format(word.encode("utf-8"),
-            freq_dist[word])
-        output += a_word + "\n"
-    output += "\n))"
+output = """
+(use-modules (opencog))
+
+(define (create-stv count)
+    (define total-count {})
+    (define default-k 800) ; From TruthValue::DEFAULT_K
+    (stv (/ count total-count) (/ count (+ count default-k)))
+)
+""".format(freq_dist.N())
+
+for word in freq_dist.keys():
+    a_word =  "(Concept \"{}\" (create-stv {}))".format(word.encode("utf-8"),
+        freq_dist[word])
+    output += a_word + "\n"
+
+with open("nltk-en.scm", "w") as scm:
     scm.write(output)
 
 print("Finished writing to output.scm\n")

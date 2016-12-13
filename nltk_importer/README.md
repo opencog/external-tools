@@ -1,6 +1,12 @@
-The [script](import.py) is used to import frequency information of the
-[nltk-corpus](http://www.nltk.org/nltk_data/) into the atomspace. Only a subset of nltk-corpus, that are in english, are imported.
+#### NLTK Corpora importer
 
-A bit of cleanup is also perfromed.
+* The [script](import.py) is used to import frequency information of the
+[nltk-corpus](http://www.nltk.org/nltk_data/) into the atomspace.
 
-See the [script](import.py) for corpora ids used.
+* Only a subset of nltk-corpora, that are in english, are imported.
+
+* See the [script](import.py) for corpora ids used.
+
+* Run `python atomize.py` to get the output file `nltk-en.scm`.
+
+* It takes about 19 seconds to load the ouptut into the atomspace.
