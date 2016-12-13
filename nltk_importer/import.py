@@ -17,16 +17,41 @@ for i in corpora_used:
         nltk.data.find(i)
         print("Adding {} to word_list.".format(i))
         word_list += eval("nltk.corpus.{}.words()".format(i))
-        print len(word_list)
         print("Finished adding {} to word_list.\n".format(i))
     except LookupError:
         nltk.download(i)
         print("Adding {} to word_list.".format(i))
         word_list += eval("nltk.corpus.{}.words()".format(i))
-        print len(word_list)
         print("Finished adding {} to word_list.\n".format(i))
 
-# Start counting
-print("Start counting word frequency")
-frequency = nltk.FreqDist(word_list)
-print("Finished counting word frequency")
+
+def keep_word(word):
+    """
+    If the word has one of the characters specified then return False.
+    """
+    skip_words_with = ["\"", "/", "\\", "*", "+", "=", "[", "]", "(", ")", "{",
+        "}", "<", ">", ",", ";", ":", "|", "#", "@", "%", "$", "^"]
+    for i in skip_words_with:
+        if i in word:
+            return False
+
+    return True
+
+# Clean and start counting
+print("Starting counting word frequency")
+freq_dist = nltk.FreqDist(filter(keep_word, word_list))
+print("Finished counting word frequency\n")
+
+# Create the scheme file that has alist of the frequency distribution.
+print("Writing a scheme a-list of the frequency distribution to output.scm")
+with open("output.scm", "w") as scm:
+    output = "(define total-count {})\n".format(freq_dist.N())
+    output += "(define freq-dist (list \n"
+    for word in freq_dist.keys():
+        a_word =  "(cons \"{}\" {})".format(word.encode("utf-8"),
+            freq_dist[word])
+        output += a_word + "\n"
+    output += "\n))"
+    scm.write(output)
+
+print("Finished writing to output.scm\n")
