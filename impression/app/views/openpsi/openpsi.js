@@ -67,7 +67,6 @@ angular.module('impression.openpsiView', ['ngRoute'])
 
         function tick() {
           // Push a new data point onto the back.
-          console.log(containername)
           if (containername == "voicewidth") containername = "voice width"
           data.push(AttentionFactory.attention[containername]);
           // Redraw the line.
