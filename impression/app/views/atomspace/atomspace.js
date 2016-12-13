@@ -181,6 +181,10 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
               context.arc(node.attr("x"), node.attr("y"), node.attr("radius"), 0, 2*Math.PI, false);
   
+
+              //TODO: here we should use an external json as stylesheet substitute
+
+
               if (d.isNode) {
                 /*if (node.attr("sti")>0) {
                   //context.fillStyle = "rgba(255,255,255,"+node.attr("sti")*0.00032+")";
@@ -203,15 +207,6 @@ angular.module('impression.atomspaceView', ['ngRoute'])
                 context.fillStyle = "rgb(0,0,0)";
               }
 
-
-                /*
-                    DefinedLinguisticConceptNode
-                    WordInstanceNode
-                    WordNode
-                    PredicateNode
-                    NumberNode
-                */
-              
               context.fill();
               context.closePath();
               
