@@ -9,4 +9,4 @@
 
 * Run `python atomize.py` to get the output file `nltk-en.scm`.
 
-* It takes about 19 seconds to load the ouptut into the atomspace.
+* It takes about 20 seconds to load the ouptut into the atomspace.

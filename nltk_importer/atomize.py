@@ -43,7 +43,12 @@ freq_dist = nltk.FreqDist(filter(keep_word, word_list))
 print("Finished counting word frequency\n")
 
 # Create the scheme file that has alist of the frequency distribution.
-print("Writing a scheme a-list of the frequency distribution to output.scm")
+print("Writing a scheme a-list of the frequency distribution to nltk-en.scm")
+# TODO:
+# 1. Add creation date of OUTPUT_FILE and the git-sha when creating the
+#    the file.
+# 2. Move to octool.
+
 output = """
 (use-modules (opencog))
 
@@ -62,4 +67,4 @@ for word in freq_dist.keys():
 with open("nltk-en.scm", "w") as scm:
     scm.write(output)
 
-print("Finished writing to output.scm\n")
+print("Finished writing to nltk-en.scm\n")

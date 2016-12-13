@@ -11,6 +11,10 @@ wget -O "$INPUT_FILE" http://norvig.com/ngrams/count_1w.txt
 # Output file name
 OUTPUT_FILE="gtwc-en-333333-words.scm"
 
+# TODO:
+# 1. Add creation date of OUTPUT_FILE and the git-sha when creating the
+#    the file.
+# 2. Move to octool.
 cat > "$OUTPUT_FILE" << SCM
 (use-modules (opencog))
 
