@@ -20,19 +20,21 @@ angular.module('impression.atomspaceView', ['ngRoute'])
       "includeOutgoing": true 
     }
 
-    $scope.applyFilter = function() {
-      console.log("apply options called")
+    $scope.$watch('pollSettings', function(newValue) {
+      console.log("🎑 new filter")
 
-      if ($scope.pollSettings["filterby"] == "none") {
-        AtomsFactory.pollSettings = {"includeIncoming": $scope.pollSettings.includeIncoming, 
-                                     "includeOutgoing": $scope.pollSettings.includeOutgoing}
+      AtomsFactory.pollSettings = {"includeIncoming": newValue.includeIncoming, 
+                                   "includeOutgoing": newValue.includeOutgoing}
+
+      if (newValue.filterby == "attentionalfocus") {
+        AtomsFactory.pollSettings["filterby"] = "attentionalfocus"
       } else {
-        AtomsFactory.pollSettings = $scope.pollSettings
+        //send all params for stirange
+        AtomsFactory.pollSettings = newValue
       }
-      
-      AtomsFactory.updateAtoms()
-    };
 
+      AtomsFactory.updateAtoms()
+    }, true);
 
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); } else {
@@ -84,8 +86,8 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         .force('Y', d3.forceY().strength(function(d) { return getCenterGravityStrengthForAttentionValue(d); }).y(height / 2))
         .on("tick", ticked);
   
-      function getRadiusForAttentionValue(d) { if (d.isNode) { return d.attention_value.sti*0.006 + 3; } else { return d.attention_value.sti*0.0005 + 3; }};
-      function getCenterGravityStrengthForAttentionValue(d) { if(d.isNode) return d.attention_value.sti * 0.00007; else return 0; }; 
+      function getRadiusForAttentionValue(d) { if (d.isNode) { return d.attentionvalue.sti*0.006 + 3; } else { return d.attentionvalue.sti*0.0005 + 3; }};
+      function getCenterGravityStrengthForAttentionValue(d) { if(d.isNode) return d.attentionvalue.sti * 0.00007; else return 0; }; 
   
       var atoms = {};
   
@@ -94,7 +96,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
       //$interval(update, 1000)
 
       function update() {
-          console.log("[AS 🎑] update called");
+          console.log("🎑 update called");
           
           var nodes = Object.values(AtomsFactory.nodes)
   
@@ -209,7 +211,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
             .attr("y2", function(d) { return d.target.y; });
   
         nodeBinding
-            .attr("sti", function(d) { return d.attention_value.sti; })
+            .attr("sti", function(d) { return d.attentionvalue.sti; })
             .attr("radius", function(d) { return getRadiusForAttentionValue(d); })
             .attr("x", function(d) { return d.x; })
             .attr("y", function(d) { return d.y; });

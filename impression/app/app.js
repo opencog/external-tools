@@ -19,6 +19,11 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
 .controller('MainCtrl', function($scope, $rootScope, $routeParams, $http, $location, AtomsFactory) {
     $rootScope.showOptions = false
     
+    // This handles the keypresses for the UI.
+    // 1 - go to connection screen
+    // 2 - go to atomspace, or show/hide the option menu
+    // 3 - go to openpsi graph view
+    
     $scope.handleKeypress = function(keyEvent) {
       if ([].slice.call(document.getElementsByClassName("input")).includes(document.activeElement)) return;
       if (!AtomsFactory.connected && keyEvent.which-48 > 1) return;
