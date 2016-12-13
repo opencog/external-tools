@@ -27,6 +27,6 @@ cat > "$OUTPUT_FILE" << SCM
 
 SCM
 
-# Create the 
+# Write the ConceptNodes
 sed 's/\([a-zA-Z0-9]*\)\t\([a-zA-Z0-9]*\)/(Concept "\1" (create-stv \2))/' \
     "$INPUT_FILE" >> "$OUTPUT_FILE"
