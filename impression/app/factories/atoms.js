@@ -1,7 +1,7 @@
 angular.module('impression.atomsFactory', ['ngResource'])
 
 
-.factory('AtomsFactory', function ($http, $resource, $interval, $location) {
+.factory('AtomsFactory', function ($http, $resource, $interval, $location, config) {
 
     var atomsFactory = {};
 
@@ -21,7 +21,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
     atomsFactory.links = []
 
     // limit to attentional focus initally to avoid pulling in entire AS.
-    atomsFactory.pollSettings = { 'filterby': 'attentionalfocus', 'includeIncoming': 'true', 'includeOutgoing': 'true' }
+    atomsFactory.pollSettings = config.atomspaceDefaultPoll
 
 
     atomsFactory.startPeriodicUpdate = function(updatePeriod) {      

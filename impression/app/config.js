@@ -1,12 +1,19 @@
 app.constant('config', {
     version: 'hr demo branch',
+
+    /* refresh rates in ms */
     atomspaceRefreshrate: 1000,
-    openpsiRefreshrate: 500
+    openpsiRefreshrate: 500,
+
+    /* default options for as query */
+    atomspaceDefaultPoll: { 'filterby': 'attentionalfocus', 
+                            'includeIncoming': 'true', 
+                            'includeOutgoing': 'true' }
 });
 
 app.constant('atomspaceStyle', {
     'Font': 'DosisLight',
-    
+
     'DrawNodeText': true,
     'DrawLinkText': false,
 
@@ -28,6 +35,7 @@ app.constant('atomspaceStyle', {
 // TODO: this is not in use.
 app.constant('openpsiColors', {
 
+    /* these colors don't have to be in the result, but can be */
     'negative-valence' : '#FF615A',
     'positive-valence' : '#3794A6',
     'arousal'          : '#FFD963',
