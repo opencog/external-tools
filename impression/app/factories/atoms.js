@@ -65,7 +65,8 @@ angular.module('impression.atomsFactory', ['ngResource'])
        $http({
             method: 'GET',
             url: atomsFactory.server + "api/v1.1/atoms"+serialize(atomsFactory.pollSettings),
-            cache: false
+            cache: false,
+            timeout: config.atomspaceRefreshrate*0.9
         }).then(
             function (response) {
 
