@@ -4,10 +4,28 @@ app.constant('config', {
     openpsiRefreshrate: 500
 });
 
-app.constant('nodeStyles', {
+app.constant('atomspaceStyle', {
+    'Font': 'DosisLight',
+    
+    'DrawNodeText': true,
+    'DrawLinkText': false,
+
+    'LineColor': 'rgba(0,0,0,0.4)',
+    'LineWidth': 0.15,
+
+    'DefaultNodes':     {'nodeColor': 'rgba(108,110,88,0.5)', 'textColor': 'rgb(0,0,0)'},
+    'DefaultLinks':     {'nodeColor': 'rgb(0,0,0)',           'textColor': 'rgb(255,255,255)'},
+
+    'WordNode':         {'nodeColor': 'rgb(255,252,247)',     'textColor': 'rgb(0,0,0)'},
+    'WordInstanceNode': {'nodeColor': 'rgb(255,252,247)',     'textColor': 'rgb(0,0,0)'},
+    'ConceptNode':      {'nodeColor': 'rgb(120,68,74)',       'textColor': 'rgb(255,255,255)'},
+    'NumberNode':       {'nodeColor': 'rgba(62,66,58,0.5)',   'textColor': 'rgb(255,255,255)'}
+
+    /* insert arbitrary per-node colors and styles here */
 
 });
 
+// TODO: this is not in use.
 app.constant('openpsiColors', {
 
     'negative-valence' : '#FF615A',

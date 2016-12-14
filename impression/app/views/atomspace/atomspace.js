@@ -9,7 +9,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     });
 }])
 
-.controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory) {
+.controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory, atomspaceStyle) {
 
     $scope.$on('$destroy', function() {
         $interval.cancel(stop);
@@ -17,7 +17,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         simulation.stop();
         chart.remove();
         AtomsFactory.pollSettings = { 'filterby': 'attentionalfocus', 'includeIncoming': 'true', 'includeOutgoing': 'true' }
-        //AtomsFactory.stopPeriodicUpdate() // TODO: this could happen here, but we do cleanup
+        //AtomsFactory.stopPeriodicUpdate() // TODO: this could happen here, but we do cleanup there already...
     });
 
     //stuff for options:
@@ -149,17 +149,21 @@ angular.module('impression.atomspaceView', ['ngRoute'])
   
       function drawCanvas() {
           context.save();
-  
+          
+          // default source-over composite operation
+          context.globalCompositeOperation = "source-over";
+
           // clear canvas
           context.clearRect(0,0,width,height);
           context.translate(transform.x, transform.y);
           context.scale(transform.k, transform.k);
           
+
+          // draw the edges
           var elements = dataContainer.selectAll("custom.line");
           
-          context.strokeStyle = "rgba(0,0,0,0.4)";
-          context.lineWidth = 0.15;
-          context.globalCompositeOperation = "source-over";
+          context.strokeStyle = atomspaceStyle.LineColor;
+          context.lineWidth = atomspaceStyle.LineWidth;
           
           elements.each(function(d) {
               var node = d3.select(this);
@@ -170,64 +174,52 @@ angular.module('impression.atomspaceView', ['ngRoute'])
               context.lineTo(node.attr("x2"), node.attr("y2"));
               context.stroke();
               context.closePath();
-          
           });
           
+
+          // use screen composite operation for nodes
+          context.globalCompositeOperation = "screen";
+
+          // draw the nodes
           var elements = dataContainer.selectAll("custom.circle");
           
-              elements.each(function(d) {
+          elements.each(function(d) {
               var node = d3.select(this);
               
               context.beginPath();
-              context.globalCompositeOperation = "screen";
-
-              context.arc(node.attr("x"), node.attr("y"), node.attr("radius"), 0, 2*Math.PI, false);
-  
-
-              //TODO: here we should use an external json as stylesheet substitute
-
+              context.arc(node.attr("x"), node.attr("y"), node.attr("radius"), 0, 2 * Math.PI, false);
 
               if (d.isNode) {
-                /*if (node.attr("sti")>0) {
-                  //context.fillStyle = "rgba(255,255,255,"+node.attr("sti")*0.00032+")";
-                  context.fillStyle = "rgb(255,255,255)";
-                } else {
-                  //context.fillStyle = "rgba(255,255,255,0.3)";
-                  context.fillStyle = "rgb(200,200,240)";
-                }*/
-
-                //var alpha = 0.5 + (node.attr("sti")*0.32)
-
-                     if (d.type == "WordNode")                      context.fillStyle = "rgb(255,252,247)";
-                else if (d.type == "WordInstanceNode")              context.fillStyle = "rgb(255,252,247)";
-                else if (d.type == "ConceptNode")                   context.fillStyle = "rgb(120,68,74)";
-                else if (d.type == "NumberNode")                    context.fillStyle = "rgba(62,66,58,0.5)";
-                else context.fillStyle = "rgba(108,110,88,0.5)";
-
+                var nodeColor = atomspaceStyle.DefaultNodes.nodeColor
+                var textColor = atomspaceStyle.DefaultNodes.textColor
               } else {
-                // it's a link, color it black
-                context.fillStyle = "rgb(0,0,0)";
+                var nodeColor = atomspaceStyle.DefaultLinks.nodeColor
+                var textColor = atomspaceStyle.DefaultLinks.textColor
               }
 
+              if (Object.keys(atomspaceStyle).includes(d.type)) {
+                var nodeColor = atomspaceStyle[d.type].nodeColor
+                var textColor = atomspaceStyle[d.type].textColor
+              }
+
+              context.fillStyle = nodeColor;
               context.fill();
               context.closePath();
               
-              context.font=node.attr("radius")/2.0+"px DosisLight";
+              context.font = node.attr("radius")/2.0+"px "+atomspaceStyle.Font;
+              context.fillStyle = textColor;
               context.textAlign="center"; 
               context.textBaseline="middle"; 
+              context.globalCompositeOperation = "source-over";                
 
-              if (d.type == "WordNode" || d.type == "WordInstanceNode") {
-                context.fillStyle = "rgb(0,0,0)";
-                context.globalCompositeOperation = "darken";
+              if (d.isNode) {
+                if (atomspaceStyle.DrawNodeText)
+                  context.fillText(node.text(),node.attr("x"), node.attr("y"));
               } else {
-                context.fillStyle = "rgb(255,255,255)";
-                context.globalCompositeOperation = "hard-light";                
+                if (atomspaceStyle.DrawLinkText)
+                  context.fillText(node.text(),node.attr("x"), node.attr("y"));
               }
 
-
-              if (d.isNode)
-                context.fillText(node.text(),node.attr("x"), node.attr("y"));
-          
           });
   
           context.restore();
