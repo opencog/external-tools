@@ -1,26 +1,30 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-angular.module('impression', [
+var app = angular.module('impression', [
   'ngRoute',
   'ngAnimate',
   'ngResource',
   'impression.atomsFactory',
-  'impression.simplificationsFactory',
-  'impression.utilsFactory',
+  'impression.attentionFactory',
   'impression.connectView',
-  'impression.atomspaceCanvasView',
-  'impression.atomspaceSVGView',
+  'impression.atomspaceView',
   'impression.openpsiView'
 ]).
+
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.hashPrefix('!');
-
   $routeProvider.otherwise({redirectTo: '/'});
 }])
 
-.controller('MainCtrl', function($scope, $routeParams, $http, $location, AtomsFactory) {
-
+.controller('MainCtrl', function($scope, $rootScope, $routeParams, $http, $location, AtomsFactory) {
+    $rootScope.showOptions = false
+    
+    // This handles the keypresses for the UI.
+    // 1 - go to connection screen
+    // 2 - go to atomspace, or show/hide the option menu
+    // 3 - go to openpsi graph view
+    
     $scope.handleKeypress = function(keyEvent) {
       if ([].slice.call(document.getElementsByClassName("input")).includes(document.activeElement)) return;
       if (!AtomsFactory.connected && keyEvent.which-48 > 1) return;
@@ -30,12 +34,12 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
               $location.path("/");
           break;
 
- /*         case 2:
-              $location.path("/atomspace-svg");
-          break;*/
-
-          case 2: 
-              $location.path("/atomspace-canvas");
+          case 2:
+            if ($location.path() == "/atomspace") {
+              $rootScope.showOptions = !$rootScope.showOptions
+            } else {
+              $location.path("/atomspace");
+            }
           break;
 
           case 3: 
@@ -45,6 +49,4 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
     }
 
 })
-
-
 

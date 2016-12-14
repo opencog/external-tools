@@ -1,0 +1,42 @@
+
+ol, ul {
+  list-style: none;
+  background: transparent;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+span.version {
+  display: block;
+  position:absolute;
+  bottom:5px;
+  width:100%;
+  left:0px;
+  font-size: 10px;
+  opacity: 0.5;
+  text-align: center;
+}
+
+
+div.fullscreen {
+    position: absolute;
+    width:100%;
+    height:100%;
+    
+    /* force hw acceleration for better font rendering */
+    -webkit-transform: translateZ(0px);
+}
+
+div.fullscreen#connect {
+  text-align: center;
+
+  width:80%;
+  left:10%;
+  top:38%;
+  height:20%;
+}
+
+
+

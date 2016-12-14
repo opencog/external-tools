@@ -9,7 +9,15 @@ angular.module('impression.connectView', ['ngRoute'])
   });
 }])
 
-.controller('ConnectCtrl', function($scope, $routeParams, $http, $timeout, $interval, $location, AtomsFactory) {
+.controller('ConnectCtrl', function($scope, $routeParams, $http, $timeout, $interval, $location, AtomsFactory, AttentionFactory, config) {
+
+    /* TODO:
+        - refactor colours out of logic to CSS classes
+        - connection failed never triggered..
+    */
+
+    $scope.header = config.header
+    $scope.version = config.version
 
     if (!AtomsFactory.connected) {
         $scope.connectButtonLabel = "connect"
@@ -35,27 +43,17 @@ angular.module('impression.connectView', ['ngRoute'])
         $scope.connectButtonLabel = "connecting...";
         $scope.connectButtonColor = "rgba(0,0,0,0.1)"
 
-        AtomsFactory.setServer(serverURL);
-
-        AtomsFactory.updateSTIRangeAtoms(function(success) {
-            $scope.connectionSucceeded();
-        }, function(error) {
-            console.log("error");
-        });
-
+        AtomsFactory.server = serverURL;
+        AttentionFactory.server = serverURL;
+        
+        $scope.connectionSucceeded()
     };
 
     $scope.connectionSucceeded = function() {
-        console.log("success! nr of atoms: ", AtomsFactory.atomsCount);
-
         $scope.connectButtonLabel = "disconnect";
         $scope.connectButtonColor = "rgba(0,255,0,0.4)"
 
-        AtomsFactory.startPeriodicUpdate(5000,400);
-
-        $timeout(function() {
-            $location.path("/atomspace-canvas");
-        },1000);
+        $timeout(function() { $location.path("/atomspace"); },1000);
     };
 
     $scope.connectionFailed = function() {
@@ -69,6 +67,7 @@ angular.module('impression.connectView', ['ngRoute'])
         $scope.connectButtonColor = "rgba(0,0,0,0.3)"
 
         AtomsFactory.stopPeriodicUpdate();
+        AttentionFactory.stopPeriodicUpdate();
     };
 
 

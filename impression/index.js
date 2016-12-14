@@ -1,4 +1,5 @@
 
+
 var express = require('express');
 var cors = require('cors');
 
@@ -8,8 +9,8 @@ var app = express();
 
 app.use(express.static(__dirname + '/app'));
 
-app.listen(8000, function () {
-  console.log('Impression listening on port 8000!');
+app.listen(8006, function () {
+  console.log('Impression listening on port 8006!');
 });
 
 
@@ -18,22 +19,29 @@ if (environment == "test") {
 
     test_atoms.use(cors());
 
-    test_atoms.use('/api/v1.1/atoms', function(req, res) {
-       res.sendFile( __dirname + '/test_jsons/atoms.json');
+    test_atoms.use(/\/api\/v1.1\/atoms.*/, function(req, res) {
+       if (req.query.filterby == "stirange") {
+          res.sendFile( __dirname + '/test_jsons/psi/atoms.json');
+       } else if (req.query.filterby == "attentionalfocus") {
+          res.sendFile( __dirname + '/test_jsons/relex/atoms.json');
+       } else {
+          res.sendFile( __dirname + '/test_jsons/emoji/atoms.json');
+       }
     });
-
-
-    test_atoms.use('/api/v1.1/atoms?filterby=stirange&stimin=1&stimax=30000&includeOutgoing=true&includeIncoming=true', function(req, res) {
-       res.sendFile( __dirname + '/test_jsons/atoms.json');
-    });
-
 
     test_atoms.use('/api/v1.1/types', function(req, res) {
        res.sendFile( __dirname + '/test_jsons/types.json');
     });
 
     test_atoms.use('/api/v1.1/scheme', function(req, res) {
-       res.send('{\"arousal\": '+(0.1+(Math.random()*0.08))+', \"sadness\": '+(0.4+(Math.random()*0.1))+', \"fun\": '+(0.7+(Math.random()*0.05))+'}');
+       var foo = { 
+        'negative-valence': (0.1+(Math.random()*0.015)),
+        'positive-valence': (0.2+(Math.random()*0.04)),
+        'arousal': (0.3+(Math.random()*0.019)),
+        'power': (0.35+(Math.random()*0.024)),
+        'voice width': (0.8+(Math.random()*0.021))
+       }
+       res.send({ 'response' : JSON.stringify(foo)});
     });
 
     test_atoms.listen(5000, function() {

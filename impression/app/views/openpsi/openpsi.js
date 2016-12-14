@@ -9,10 +9,13 @@ angular.module('impression.openpsiView', ['ngRoute'])
   });
 }])
 
-.controller('OpenpsiCtrl', function($scope, $routeParams, $http, $interval, $location, AtomsFactory, $timeout) {
+.controller('OpenpsiCtrl', function($scope, $routeParams, $http, $interval, $location, AttentionFactory, AtomsFactory, $timeout, config, openpsiVariables) {
 
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); }
+
+    //fetch psi variables from config to our scope
+    $scope.psiVariables = openpsiVariables
 
     var makeGraphInContainer = function(containername) {
         var container = document.getElementById(containername);
@@ -61,12 +64,14 @@ angular.module('impression.openpsiView', ['ngRoute'])
             .datum(data)
             .attr("class", "area")
           .transition()
-            .duration(AtomsFactory.attentionPeriod)
+            .duration(200)
             .ease(d3.easeLinear)
             .on("start", tick);
+
         function tick() {
           // Push a new data point onto the back.
-          data.push(AtomsFactory.attention[containername]);
+          if (containername == "voicewidth") containername = "voice width"
+          data.push(AttentionFactory.attention[containername]);
           // Redraw the line.
           d3.select(this)
               .attr("d", line)
@@ -81,15 +86,19 @@ angular.module('impression.openpsiView', ['ngRoute'])
         }
     }
 
-    //init the graphs.
-    $timeout(function() {
-
-        for (var item in AtomsFactory.attention) {
-          console.log(item);
-          makeGraphInContainer(item);
+    AttentionFactory.successCB = function() {
+        var keys = Object.keys(AttentionFactory.attention)
+        for (var i = 0; i < keys.length; i++) {
+          makeGraphInContainer(keys[i].replace(" ", ""));
         }
+    }
     
-    },100);
+    AttentionFactory.startPeriodicUpdate(config.openpsiRefreshrate)
+
+    $scope.$on('$destroy', function() {
+        d3.selectAll('*').transition();
+        AttentionFactory.stopPeriodicUpdate()
+    });
 
 });
 
