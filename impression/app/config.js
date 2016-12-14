@@ -14,7 +14,7 @@ app.constant('config', {
     simulationAlphaTarget: 0.1,
 
     /* params for radius of nodes acc. to STI */
-    atomspaceNodeRadiusCoefficient: 0.0095,
+    atomspaceNodeRadiusCoefficient: 0.0055,
     atomspaceNodeMinimalRadius: 9,
 
     /* specifies how strong nodes are pulled to center acc. to STI */
