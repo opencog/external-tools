@@ -6,6 +6,14 @@ body {
     position: fixed;
 }
 
+input {
+    width:100%;
+}
+
+select {
+    width:100%;
+}
+
 #dock_manager {
     clear: both;
     font-size: smaller;

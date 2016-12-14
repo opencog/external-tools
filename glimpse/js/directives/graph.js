@@ -63,6 +63,8 @@ angular.module('glimpse').directive('graph', function ($http) {
             window.setInterval(function() {
                 //periodically update data
                 scope.update();
+                //this fixes a bug where the graph doesn't update it's size
+                scope.$broadcast('highchartsng.reflow');
             }, refreshRate);
 
         };
