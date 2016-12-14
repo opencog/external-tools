@@ -1,10 +1,10 @@
-var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion"]);
+var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion", "highcharts-ng"]);
 
 glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, $interval, utils, AtomsFactory) {
     // Global vars
     var divDockManager, dockManager;
     var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel,
-        filtersPanel, settingsPanel, addNodePanel, connectPanel, graphPanel;
+        filtersPanel, settingsPanel, addNodePanel, connectPanel, graphPanel, addSeriesPanel;
     var documentManagerNode, toolboxNode, jsonNode, threeDNode, terminalNode, planarNode, atomDetailsNode,
         settingsDialog, filtersDialog, addNodeDialog, connectDialog, graphNode;
 
@@ -29,10 +29,17 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         else if (panel == 'add_node') {
             addNodeDialog = new dockspawn.Dialog(addNodePanel, dockManager);
             addNodeDialog.setPosition((window.innerWidth - addNodePanel._cachedWidth) / 2, (window.innerHeight - connectPanel._cachedHeight) / 2);
-        } else if (panel == 'connect') {
+        } 
+        else if (panel == 'add_graph_series') {
+            //var addSeriesDialog;
+            addSeriesDialog = new dockspawn.Dialog(addSeriesPanel, dockManager);
+            addseriesDialog.setPosition((window.innerWidth - addSeriesPanel._cachedWidth) / 2, (window.innerHeight - connectPanel._cachedHeight) / 2);
+        }
+
+        else if (panel == 'connect') {
             connectDialog = new dockspawn.Dialog(connectPanel, dockManager);
             connectDialog.setPosition((window.innerWidth - connectPanel._cachedWidth) / 2, (window.innerHeight - connectPanel._cachedHeight) / 2);
-        } else if (panel == 'graph' && documentManagerNode.children.indexOf(graphNode) == -1) {
+        } else if (panel == 'graph2' && documentManagerNode.children.indexOf(graphNode) == -1) {
             graphNode = dockManager.dockFill(documentManagerNode, graphPanel);
         } else if (panel == 'json' && documentManagerNode.children.indexOf(jsonNode) == -1) {
             jsonNode = dockManager.dockFill(documentManagerNode, jsonPanel);
@@ -82,6 +89,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         addNodePanel = new dockspawn.PanelContainer(document.getElementById("add_node_panel"), dockManager);
         connectPanel = new dockspawn.PanelContainer(document.getElementById("connect_panel"), dockManager);
         graphPanel = new dockspawn.PanelContainer(document.getElementById("graph_panel"), dockManager);
+        addSeriesPanel = new dockspawn.PanelContainer(document.getElementById("add_series_panel"), dockManager);
 
         // Dock windows
         documentManagerNode = dockManager.context.model.documentManagerNode;
