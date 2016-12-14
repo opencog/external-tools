@@ -8,7 +8,17 @@ app.constant('config', {
     /* default options for as query */
     atomspaceDefaultPoll: { 'filterby': 'attentionalfocus', 
                             'includeIncoming': true, 
-                            'includeOutgoing': true }
+                            'includeOutgoing': true },
+
+    /* specified wobbliness of simulation, default is 0.001 */
+    simulationAlphaTarget: 0.1,
+
+    /* params for radius of nodes acc. to STI */
+    atomspaceNodeRadiusCoefficient: 0.0095,
+    atomspaceNodeMinimalRadius: 9,
+
+    /* specifies how strong nodes are pulled to center acc. to STI */
+    atomspaceCenterGravityCoefficient: 0.00025
 });
 
 app.constant('atomspaceStyle', {

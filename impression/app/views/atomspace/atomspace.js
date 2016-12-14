@@ -9,7 +9,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     });
 }])
 
-.controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory, atomspaceStyle) {
+.controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory, config, atomspaceStyle) {
 
     $scope.$on('$destroy', function() {
         AtomsFactory.stopPeriodicUpdate()
@@ -77,11 +77,11 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         .force('Y', d3.forceY().strength(function(d) { return getCenterGravityStrengthForAttentionValue(d); }).y(height / 2))
         .on("tick", ticked);
   
-      simulation.alphaTarget(0.1)
+      simulation.alphaTarget(config.simulationAlphaTarget)
 
       function getRadiusForAttentionValue(d) { 
         if (d.isNode) { 
-          return d.attentionvalue.sti*0.0095 + 9; 
+          return d.attentionvalue.sti * config.atomspaceNodeRadiusCoefficient + config.atomspaceNodeMinimalRadius; 
         } else { 
           return 1; 
         }
@@ -89,7 +89,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
       function getCenterGravityStrengthForAttentionValue(d) { 
         if(d.isNode) 
-          return d.attentionvalue.sti * 0.00025; 
+          return d.attentionvalue.sti * config.atomspaceCenterGravityCoefficient; 
         else 
           return 0; 
       }; 
