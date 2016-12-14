@@ -1,6 +1,6 @@
 app.constant('config', {
     header: 'impression opencog visualizer 🎉',
-    version: 'hr-demo branch',
+    version: 'master branch v0.0.1',
 
     /* refresh rates in ms */
     atomspaceRefreshrate: 1000,
@@ -14,9 +14,12 @@ app.constant('config', {
     /* specified wobbliness of simulation, default is 0.001 */
     simulationAlphaTarget: 0.1,
 
-    /* params for radius of nodes acc. to STI^2 */
-    atomspaceNodeRadiusCoefficient: 0.00045,
-    atomspaceNodeMinimalRadius: 4,
+    /* params for radius of nodes acc. to log function */
+    // TODO: tweak these params to be applicable to a wider range of STI's
+    atomspaceNodeScalingSteepness: 0.1,
+    atomspaceNodeScalingInputMidpoint: 200,
+    atomspaceNodeScalingOutputMaxpoint: 20,
+    atomspaceNodeScalingMinimal: 4,
 
     /* specifies how strong nodes are pulled to center acc. to STI */
     atomspaceCenterGravityCoefficient: 0.00025,

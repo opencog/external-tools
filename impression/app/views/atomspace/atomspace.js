@@ -83,8 +83,10 @@ angular.module('impression.atomspaceView', ['ngRoute'])
         }
 
         if (d.isNode) {
-          // TODO: tweak these params to be applicable to a wider range of STI's
-          var radius = sigmoid(d.attentionvalue.sti, 0.1, 200, 20)  + config.atomspaceNodeMinimalRadius
+          var radius = sigmoid(d.attentionvalue.sti, 
+                               config.atomspaceNodeScalingSteepness, 
+                               config.atomspaceNodeScalingInputMidpoint, 
+                               config.atomspaceNodeScalingOutputMaxpoint) + config.atomspaceNodeScalingMinimal
           return radius;
         } else { 
           return 1; 
