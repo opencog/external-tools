@@ -44,9 +44,7 @@ angular.module('impression.connectView', ['ngRoute'])
         AtomsFactory.server = serverURL;
         AttentionFactory.server = serverURL;
         
-        AtomsFactory.successCB = $scope.connectionSucceeded;
-
-        AtomsFactory.startPeriodicUpdate(config.atomspaceRefreshrate);
+        $scope.connectionSucceeded()
     };
 
     $scope.connectionSucceeded = function() {

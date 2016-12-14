@@ -11,16 +11,6 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
 .controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory, config, atomspaceStyle) {
 
-    $scope.$on('$destroy', function() {
-        AtomsFactory.stopPeriodicUpdate()
-
-        $interval.cancel(stop);
-        stop = undefined;
-        simulation.stop();
-        chart.remove();
-
-    });
-
     //stuff for options:
     $scope.pollSettings = AtomsFactory.pollSettings 
 
@@ -31,7 +21,14 @@ angular.module('impression.atomspaceView', ['ngRoute'])
     }, true);
 
     //bounce back to connect screen if disconnected.
-    if(!AtomsFactory.connected) { $location.path("/"); } else {
+    var connectionSucceeded = function() {
+
+      $scope.$on('$destroy', function() {
+        AtomsFactory.stopPeriodicUpdate()
+        simulation.stop();
+        simulation = null;
+        chart.remove();
+      });
 
       //Initialize size for canvas drawing
       var width = document.getElementById("atomspace").clientWidth,
@@ -239,4 +236,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
       }
 
     }
+
+    AtomsFactory.successCB = connectionSucceeded;
+    AtomsFactory.startPeriodicUpdate(config.atomspaceRefreshrate);
 });
