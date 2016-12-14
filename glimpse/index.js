@@ -8,8 +8,8 @@ var app = express();
 
 app.use(express.static(__dirname + '/'));
 
-app.listen(8000, function () {
-  console.log('Glimpse listening on port 8000!');
+app.listen(9000, function () {
+  console.log('Glimpse listening on port 9000!');
 });
 
 
@@ -19,18 +19,15 @@ if (environment == "test") {
     test_atoms.use(cors());
 
     test_atoms.use('/api/v1.1/atoms', function(req, res) {
-       console.log("fetched atoms...");
        res.sendFile( __dirname + '/test_jsons/atoms.json');
     });
 
     test_atoms.use('/api/v1.1/types', function(req, res) {
-       console.log("fetched types...")
        res.sendFile( __dirname + '/test_jsons/types.json');
     });
 
     test_atoms.use('/api/v1.1/scheme', function(req, res) {
-      console.log("fetched scheme endpoint...")
-      res.send('{\"arousal\": '+Math.random()+', \"sadness\": '+Math.random()+'}');
+       res.send('{\"arousal\": '+Math.random()+', \"sadness\": '+Math.random()+'}');
     });
 
     test_atoms.listen(5000, function() {
