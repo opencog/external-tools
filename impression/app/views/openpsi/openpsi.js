@@ -9,7 +9,7 @@ angular.module('impression.openpsiView', ['ngRoute'])
   });
 }])
 
-.controller('OpenpsiCtrl', function($scope, $routeParams, $http, $interval, $location, AttentionFactory, AtomsFactory, $timeout) {
+.controller('OpenpsiCtrl', function($scope, $routeParams, $http, $interval, $location, AttentionFactory, AtomsFactory, $timeout, config) {
 
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); }
@@ -89,7 +89,7 @@ angular.module('impression.openpsiView', ['ngRoute'])
           makeGraphInContainer(keys[i].replace(" ", ""));
         }
     }
-    AttentionFactory.startPeriodicUpdate(500)
+    AttentionFactory.startPeriodicUpdate(config.openpsiRefreshrate)
 
     $scope.$on('$destroy', function() {
         d3.selectAll('*').transition();

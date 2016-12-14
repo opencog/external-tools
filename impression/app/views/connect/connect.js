@@ -9,11 +9,13 @@ angular.module('impression.connectView', ['ngRoute'])
   });
 }])
 
-.controller('ConnectCtrl', function($scope, $routeParams, $http, $timeout, $interval, $location, AtomsFactory, AttentionFactory) {
+.controller('ConnectCtrl', function($scope, $routeParams, $http, $timeout, $interval, $location, AtomsFactory, AttentionFactory, config) {
 
     /* TODO:
         - refactor colours out of logic to CSS classes
     */
+
+    $scope.version = config.version
 
     if (!AtomsFactory.connected) {
         $scope.connectButtonLabel = "connect"
@@ -44,7 +46,7 @@ angular.module('impression.connectView', ['ngRoute'])
         
         AtomsFactory.successCB = $scope.connectionSucceeded;
 
-        AtomsFactory.startPeriodicUpdate(1000);
+        AtomsFactory.startPeriodicUpdate(config.atomspaceRefreshrate);
     };
 
     $scope.connectionSucceeded = function() {
