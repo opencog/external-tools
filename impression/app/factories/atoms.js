@@ -33,7 +33,6 @@ angular.module('impression.atomsFactory', ['ngResource'])
     };
 
     atomsFactory.stopPeriodicUpdate = function() {
-      atomsFactory.connected = false;
       $interval.cancel(atomsFactory.timer);
 
       //clear internal data representation
@@ -44,6 +43,7 @@ angular.module('impression.atomsFactory', ['ngResource'])
 
     atomsFactory.connectionFailed = function() {
         atomsFactory.stopPeriodicUpdate();
+        atomsFactory.connected = false;
         $location.path("/");
     };
 

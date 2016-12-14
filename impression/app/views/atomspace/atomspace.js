@@ -12,22 +12,17 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 .controller('AtomspaceCtrl', function($scope, $interval, $routeParams, $http, $location, AtomsFactory, atomspaceStyle) {
 
     $scope.$on('$destroy', function() {
+        AtomsFactory.stopPeriodicUpdate()
+
         $interval.cancel(stop);
         stop = undefined;
         simulation.stop();
         chart.remove();
-        AtomsFactory.pollSettings = { 'filterby': 'attentionalfocus', 'includeIncoming': 'true', 'includeOutgoing': 'true' }
-        //AtomsFactory.stopPeriodicUpdate() // TODO: this could happen here, but we do cleanup there already...
+
     });
 
     //stuff for options:
-    $scope.pollSettings = {
-      "filterby": "attentionalfocus",
-      "stimin": 1,
-      "stimax": 40,
-      "includeIncoming": true,
-      "includeOutgoing": true 
-    }
+    $scope.pollSettings = AtomsFactory.pollSettings 
 
     $scope.$watch('pollSettings', function(newValue) {
       console.log("🎑 new filter")

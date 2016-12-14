@@ -92,6 +92,7 @@ angular.module('impression.openpsiView', ['ngRoute'])
           makeGraphInContainer(keys[i].replace(" ", ""));
         }
     }
+    
     AttentionFactory.startPeriodicUpdate(config.openpsiRefreshrate)
 
     $scope.$on('$destroy', function() {

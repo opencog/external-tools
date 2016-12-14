@@ -7,8 +7,8 @@ app.constant('config', {
 
     /* default options for as query */
     atomspaceDefaultPoll: { 'filterby': 'attentionalfocus', 
-                            'includeIncoming': 'true', 
-                            'includeOutgoing': 'true' }
+                            'includeIncoming': true, 
+                            'includeOutgoing': true }
 });
 
 app.constant('atomspaceStyle', {
@@ -27,18 +27,15 @@ app.constant('atomspaceStyle', {
     'WordInstanceNode': {'nodeColor': 'rgb(255,252,247)',     'textColor': 'rgb(0,0,0)'},
     'ConceptNode':      {'nodeColor': 'rgb(120,68,74)',       'textColor': 'rgb(255,255,255)'},
     'NumberNode':       {'nodeColor': 'rgba(62,66,58,0.5)',   'textColor': 'rgb(255,255,255)'}
-
     /* insert arbitrary per-node colors and styles here */
 
 });
 
 app.constant('openpsiVariables', {
-
     /* keys of this object are also used for queries to OpenPSI */
     'positive-valence' : '#3794A6',
     'negative-valence' : '#FF615A',
     'arousal'          : '#FFD963',
     'power'            : '#4739DA',
     'voice width'      : '#63E340'
-
 })
