@@ -27,7 +27,14 @@ if (environment == "test") {
     });
 
     test_atoms.use('/api/v1.1/scheme', function(req, res) {
-       res.send('{\"arousal\": '+Math.random()+', \"sadness\": '+Math.random()+'}');
+       var foo = { 
+        'negative-valence': (0.1+(Math.random()*0.15)),
+        'positive-valence': (0.2+(Math.random()*0.4)),
+        'arousal': (0.3+(Math.random()*0.19)),
+        'power': (0.35+(Math.random()*0.24)),
+        'voice width': (0.8+(Math.random()*0.21))
+       }
+       res.send({ 'response' : JSON.stringify(foo)});
     });
 
     test_atoms.listen(5000, function() {
