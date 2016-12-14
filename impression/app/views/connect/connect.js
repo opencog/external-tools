@@ -13,8 +13,10 @@ angular.module('impression.connectView', ['ngRoute'])
 
     /* TODO:
         - refactor colours out of logic to CSS classes
+        - connection failed never triggered..
     */
 
+    $scope.header = config.header
     $scope.version = config.version
 
     if (!AtomsFactory.connected) {

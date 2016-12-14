@@ -1,5 +1,6 @@
 app.constant('config', {
-    version: 'hr demo branch',
+    header: 'impression opencog visualizer 🎉',
+    version: 'hr-demo branch',
 
     /* refresh rates in ms */
     atomspaceRefreshrate: 1000,
@@ -14,11 +15,13 @@ app.constant('config', {
     simulationAlphaTarget: 0.1,
 
     /* params for radius of nodes acc. to STI */
-    atomspaceNodeRadiusCoefficient: 0.0055,
-    atomspaceNodeMinimalRadius: 9,
+    atomspaceNodeRadiusCoefficient: 0.055,
+    atomspaceNodeMinimalRadius: 5,
 
     /* specifies how strong nodes are pulled to center acc. to STI */
-    atomspaceCenterGravityCoefficient: 0.00025
+    atomspaceCenterGravityCoefficient: 0.00025,
+    atomspaceMinimalCenterGravity: 0.1
+
 });
 
 app.constant('atomspaceStyle', {

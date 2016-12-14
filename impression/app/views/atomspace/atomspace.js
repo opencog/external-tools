@@ -78,7 +78,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
       function getRadiusForAttentionValue(d) { 
         if (d.isNode) { 
-          return d.attentionvalue.sti * config.atomspaceNodeRadiusCoefficient + config.atomspaceNodeMinimalRadius; 
+          return (d.attentionvalue.sti * config.atomspaceNodeRadiusCoefficient) + config.atomspaceNodeMinimalRadius; 
         } else { 
           return 1; 
         }
@@ -86,7 +86,7 @@ angular.module('impression.atomspaceView', ['ngRoute'])
 
       function getCenterGravityStrengthForAttentionValue(d) { 
         if(d.isNode) 
-          return d.attentionvalue.sti * config.atomspaceCenterGravityCoefficient; 
+          return (d.attentionvalue.sti * config.atomspaceCenterGravityCoefficient) + config.atomspaceMinimalCenterGravity; 
         else 
           return 0; 
       }; 
