@@ -107,8 +107,9 @@ angular.module('impression.atomsFactory', ['ngResource'])
                   if (atom.type.search("Node") > -1) { atom.isNode = true }
                   if (atom.type.search("NumberNode") > -1) { atom.name = atom.name.slice(0,5) }
 
-                  if (atom.name.search("LEFT-WALL") > -1) { atom.isNode = false } // hide left-wall stuff completely
-                  if (atom.name == ".") { atom.isNode = false }
+                  if (atom.name.search("LEFT-WALL") > -1) { atom.type = "MiscNode" } // hide left-wall stuff completely
+                  if (atom.name == ".") { atom.type = "MiscNode" }
+                  if (atom.name == ",") { atom.type = "MiscNode" }
 
                   if (atomsFactory.graph.hasVertex(atom.handle)) {
                     oldData = atomsFactory.graph.vertexValue(atom.handle)

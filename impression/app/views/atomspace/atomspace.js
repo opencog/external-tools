@@ -76,9 +76,16 @@ angular.module('impression.atomspaceView', ['ngRoute'])
   
       simulation.alphaTarget(config.simulationAlphaTarget)
 
-      function getRadiusForAttentionValue(d) { 
-        if (d.isNode) { 
-          return (d.attentionvalue.sti * config.atomspaceNodeRadiusCoefficient) + config.atomspaceNodeMinimalRadius; 
+      function getRadiusForAttentionValue(d) {
+
+        function sigmoid(x,steepness,mid,max) {
+            return max/(1+Math.pow(Math.E, -steepness*(x-mid)));
+        }
+
+        if (d.isNode) {
+          // TODO: tweak these params to be applicable to a wider range of STI's
+          var radius = sigmoid(d.attentionvalue.sti, 0.1, 200, 20)  + config.atomspaceNodeMinimalRadius
+          return radius;
         } else { 
           return 1; 
         }
