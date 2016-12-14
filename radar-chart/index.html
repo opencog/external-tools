@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/ >
+        <title>Smoothed D3.js Radar Chart</title>
+
+        <!-- Google fonts -->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+        <!-- D3.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+        
+        <style>
+            body {
+                height:100%;
+                font-family: 'Open Sans', sans-serif;
+                font-size: 11px;
+                font-weight: 300;
+                fill: #242424;
+                text-align: center;
+                cursor: default;
+                /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#b8c6df+0,6d88b7+100;Grey+Blue+3D+%231 */
+                background: rgb(169,3,41); /* Old browsers */
+                background: -moz-radial-gradient(center, ellipse cover, rgba(169,3,41,1) 0%, rgba(143,2,34,1) 44%, rgba(109,0,25,1) 100%); /* FF3.6-15 */
+                background: -webkit-radial-gradient(center, ellipse cover, rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%); /* Chrome10-25,Safari5.1-6 */
+                background: radial-gradient(ellipse at center, #822B34 0%, #49152B 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            }
+
+            .radarChart {
+                height:100%;
+                width:100%;
+            }
+            
+            .legend {
+                font-family: 'Raleway', sans-serif;
+                fill: #fff;
+            }
+
+            .axisLabel {
+                font-family: 'Raleway', sans-serif;
+                fill: #fff;
+            }
+            
+            .tooltip {
+                fill: #333333;
+            }
+
+            .gridCircle {
+                opacity:0.45;
+            }
+
+            .radarCircle {
+                opacity:0.0;
+            }
+        </style>
+    
+    </head>
+    <body>
+
+        <div class="radarChart"></div>
+
+        <script src="radarChart.js"></script>   
+        <script>
+            ////////////////////////////////////////////////////////////// 
+            //////////////////////// Set-Up ////////////////////////////// 
+            ////////////////////////////////////////////////////////////// 
+
+            var margin = {top: 100, right: 100, bottom: 100, left: 100},
+                width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
+                height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+                    
+            ////////////////////////////////////////////////////////////// 
+            ////////////////////////// Data ////////////////////////////// 
+            ////////////////////////////////////////////////////////////// 
+
+            var data = [
+                      [//iPhone
+                        {axis:"Arousal",value:1.0},
+                        {axis:"Happy",value:1.0},
+                        {axis:"Pleasant",value:1.0},
+                        {axis:"Relaxed",value:1.0},
+                        {axis:"",value:1.0},
+                        {axis:"Sad",value:1.0},
+                        {axis:"Unpleasant",value:1.0},
+                        {axis:"Angry",value:1.0}
+                      ],
+                      [//Historycircle
+                        {axis:"dsa",value:0.3},
+                        {axis:"dsa",value:0.6},
+                        {axis:"dsa",value:0.6}
+                      ]
+                    ];
+            ////////////////////////////////////////////////////////////// 
+            //////////////////// Draw the Chart ////////////////////////// 
+            ////////////////////////////////////////////////////////////// 
+
+            var color = d3.scale.ordinal()
+                .range(["rgba(0,0,0,0)","#EDC951","#00A0B0"]);
+                
+            var radarChartOptions = {
+              w: width,
+              h: height,
+              margin: margin,
+              maxValue: 0.5,
+              levels: 5,
+              roundStrokes: true,
+              color: color
+            };
+            //Call function to draw the Radar chart
+            RadarChart(".radarChart", data, radarChartOptions);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<div class="fullscreen" id="atomspace">
+    <div class="warning" ng-if="warning">
+        <h1>{{warning}}</h1>
+    </div>
+
+    <div class="options hud-animate" ng-if="showOptions">
+        <h1>Options</h1>
+
+        <table style="width:100%">
+          <tr>
+            <th><input id="incoming" type="checkbox" ng-model="pollSettings.includeIncoming" class="input"> Incoming Edges</th>
+            <th><input id="outgoing" type="checkbox" ng-model="pollSettings.includeOutgoing" class="input"> Outgoing Edges</th> 
+          </tr>
+        </table>
+
+        <h3>Filter By</h3>
+        <ul>
+            <li>
+              <select name="filterby" ng-model="pollSettings.filterby">
+                <option value="">All Atoms</option>
+                <option value="stirange">STI Range</option>
+                <option value="attentionalfocus">Attentional focus</option>
+              </select>
+            </li>
+        </ul>
+
+        <ul ng-if="pollSettings.filterby == ''">
+            <h3>Name</h3>
+            <li>
+              <input id="name" type="text" ng-model="pollSettings.name" class="input">
+            </li>
+        </ul>
+
+        <ul ng-if="pollSettings.filterby == ''">
+            <h3>Type</h3>
+            <li>
+              <input id="type" type="text" ng-model="pollSettings.type" class="input">
+            </li>
+        </ul>
+
+        <ul ng-if="pollSettings.filterby == 'stirange'">
+            <h3>STI range</h3>
+            <li>
+              <input id="lowsti" type="text" ng-model="pollSettings.stimin" class="input">
+            </li>
+    
+            <li>
+              <input id="maxsti" type="text" ng-model="pollSettings.stimax" class="input">
+            </li>
+        </ul>
+    </div>
+
+    <!-- canvas injected beneath via JS !-->
+</div>

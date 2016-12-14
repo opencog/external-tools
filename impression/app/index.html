@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="impression" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="impression" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="impression" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="impression" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Impression Visualizer</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+
+  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="animate.css">
+  <link rel="stylesheet" href="views/atomspace/atomspace.css">
+  <link rel="stylesheet" href="views/connect/connect.css">
+  <link rel="stylesheet" href="views/openpsi/openpsi.css">
+
+  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body ng-controller="MainCtrl" ng-keyup="handleKeypress($event)">
+
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <div class="view-animate-container">
+    <div ng-view class="view-animate"></div>
+  </div>
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+  <script src="bower_components/graph.js/dist/graph.full.js"></script>
+  <script src="bower_components/d3/d3.min.js"></script>
+
+  <script src="app.js"></script>
+  <script src="config.js"></script>
+  <script src="factories/atoms.js"></script>
+  <script src="factories/attention.js"></script>
+  <script src="views/connect/connect.js"></script>
+  <script src="views/atomspace/atomspace.js"></script>
+  <script src="views/openpsi/openpsi.js"></script>
+</body>
+</html>

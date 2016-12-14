@@ -1,0 +1,27 @@
+{
+  "name": "impression",
+  "version": "0.0.1",
+  "description": "The Impression demo visualizer for the OpenCog framework.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "install": "node_modules/bower/bin/bower install",
+    "prestart": "npm install",
+    "test": "NODE_ENV=test node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opencog/external-tools.git"
+  },
+  "author": "OpenCog Foundation",
+  "license": "SEE LICENSE IN ../LICENSE",
+  "bugs": {
+    "url": "https://github.com/opencog/external-tools/issues"
+  },
+  "homepage": "https://github.com/opencog/external-tools#readme",
+  "dependencies": {
+    "bower": "^1.7.9",
+    "cors": "^2.8.1",
+    "express": "^4.14.0"
+  }
+}
