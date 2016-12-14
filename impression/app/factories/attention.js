@@ -1,6 +1,6 @@
 angular.module('impression.attentionFactory', ['ngResource'])
 
-.factory('AttentionFactory', function ($http, $resource, $interval, $location) {
+.factory('AttentionFactory', function ($http, $resource, $interval, $location, openpsiVariables) {
 
     var attentionFactory = {};
 
@@ -12,8 +12,6 @@ angular.module('impression.attentionFactory', ['ngResource'])
 
     attentionFactory.connected = false;
     attentionFactory.successCB = null
-
-    attentionFactory.psiVariables = ["arousal", "positive-valence", "negative-valence", "power", "voice width"];
 
     // Member functions
     attentionFactory.startPeriodicUpdate = function(period) {
@@ -36,10 +34,11 @@ angular.module('impression.attentionFactory', ['ngResource'])
 
 
     attentionFactory.updateAttention = function () {
+        
         var vars = ""
 
-        for (i in attentionFactory.psiVariables) {
-            vars += "\"" + attentionFactory.psiVariables[i] + "\"";
+        for (i in Object.keys(openpsiVariables)) {
+            vars += "\"" + Object.keys(openpsiVariables)[i] + "\"";
         }
 
         var scm = "(psi-get-number-values-for-vars" + vars + ")";

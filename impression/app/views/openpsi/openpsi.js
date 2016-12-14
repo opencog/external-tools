@@ -9,10 +9,13 @@ angular.module('impression.openpsiView', ['ngRoute'])
   });
 }])
 
-.controller('OpenpsiCtrl', function($scope, $routeParams, $http, $interval, $location, AttentionFactory, AtomsFactory, $timeout, config) {
+.controller('OpenpsiCtrl', function($scope, $routeParams, $http, $interval, $location, AttentionFactory, AtomsFactory, $timeout, config, openpsiVariables) {
 
     //bounce back to connect screen if disconnected.
     if(!AtomsFactory.connected) { $location.path("/"); }
+
+    //fetch psi variables from config to our scope
+    $scope.psiVariables = openpsiVariables
 
     var makeGraphInContainer = function(containername) {
         var container = document.getElementById(containername);

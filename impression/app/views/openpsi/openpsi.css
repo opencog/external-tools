@@ -18,13 +18,6 @@ div.legend {
   z-index:100;
 }
 
-
-div.legend h1.positive-valence { color: #3794A6; }
-div.legend h1.negative-valence { color: #FF615A; }
-div.legend h1.arousal { color: #FFD963; }
-div.legend h1.power { color: #4739DA; }
-div.legend h1.voicewidth { color: #63E340; }
-
 .axis--y path { display: none; }
 .axis--y { transform: scale(0.985) translateX(50px); z-index: 100; }
 .axis--x { display: none; }
@@ -43,39 +36,9 @@ svg .area {
   z-index: 99;
 }
 
-
-svg#positive-valence .area {
-    fill: url(#positiveValenceGradient);
-    stroke:#3794A6;
-}
-
-
-svg#negative-valence .area {
-    fill: url(#negativeValenceGradient);
-    stroke:#FF615A;
-}
-
-svg#arousal .area {
-    fill: url(#arousalGradient);
-    stroke:#FFD963;
-}
-
-
-svg#power .area {
-    fill: url(#powerGradient);
-    stroke:#4335D9;
-}
-
-
-svg#voicewidth .area {
-    fill: url(#voiceWidthGradient);
-    stroke:#63E340;
-}
-
 line {
   stroke: rgba(255,255,255,0.2);
   stroke-width: 0.5px;
-
 }
 
 .line {

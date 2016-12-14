@@ -1,56 +1,22 @@
 <div class="fullscreen" id="openpsi">
 
     <div class="legend">
-        <h1 class="positive-valence">positive valence</h1>
-        <h1 class="negative-valence">negative valence</h1>
-        <h1 class="arousal">arousal</h1>
-        <h1 class="power">power</h1>
-        <h1 class="voicewidth">voice width</h1>
+        <h1 ng-repeat="(name, color) in psiVariables" class="{{name.replace(' ', '')}}" style="color: {{color}};">{{name}}</h1>
     </div>
 
-    <svg id="positive-valence">
+    <svg ng-repeat="(name, color) in psiVariables" id="{{name.replace(' ', '')}}">
       <defs>
-        <linearGradient id="positiveValenceGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#3794A6" stop-opacity="0.4" />
-          <stop offset="50%" stop-color="#3794A6" stop-opacity="0.0" />
+        <linearGradient id="{{name.replace(' ', '')}}Gradient" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="{{color}}" stop-opacity="0.4" />
+          <stop offset="50%" stop-color="{{color}}" stop-opacity="0.0" />
         </linearGradient>
       </defs>
-    </svg>
-
-    <svg id="negative-valence">
-      <defs>
-        <linearGradient id="negativeValenceGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#FF615A" stop-opacity="0.4" />
-          <stop offset="50%" stop-color="#FF615A" stop-opacity="0.0" />
-        </linearGradient>
-      </defs>
-    </svg>
-
-    <svg id="arousal">
-      <defs>
-        <linearGradient id="arousalGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#FFD963" stop-opacity="0.4" />
-          <stop offset="50%" stop-color="#FFD963" stop-opacity="0.0" />
-        </linearGradient>
-      </defs>
-    </svg>
-
-    <svg id="power">
-      <defs>
-        <linearGradient id="powerGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#4335D9" stop-opacity="0.4" />
-          <stop offset="50%" stop-color="#4335D9" stop-opacity="0.0" />
-        </linearGradient>
-      </defs>
-    </svg>
-
-    <svg id="voicewidth">
-      <defs>
-        <linearGradient id="voiceWidthGradient" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#63E340" stop-opacity="0.4" />
-          <stop offset="50%" stop-color="#63E340" stop-opacity="0.0" />
-        </linearGradient>
-      </defs>
+      <style>
+        svg#{{name.replace(' ', '')}} .area {
+            fill: url(#{{name.replace(' ', '')}}Gradient);
+            stroke:{{color}};
+        }
+      </style>
     </svg>
 
 </div>

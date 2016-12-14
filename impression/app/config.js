@@ -32,12 +32,11 @@ app.constant('atomspaceStyle', {
 
 });
 
-// TODO: this is not in use.
-app.constant('openpsiColors', {
+app.constant('openpsiVariables', {
 
-    /* these colors don't have to be in the result, but can be */
-    'negative-valence' : '#FF615A',
+    /* keys of this object are also used for queries to OpenPSI */
     'positive-valence' : '#3794A6',
+    'negative-valence' : '#FF615A',
     'arousal'          : '#FFD963',
     'power'            : '#4739DA',
     'voice width'      : '#63E340'
