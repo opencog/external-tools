@@ -13,6 +13,8 @@ angular.module('glimpse')
 
                 var onSuccess = function () {
                     scope.atoms = AtomsFactory.atoms;
+                    scope.nodes = AtomsFactory.nodes;
+                    scope.links = AtomsFactory.links;
                     scope.state = "message";
                     scope.message = "Successfully fetched " + AtomsFactory.atomsCount + " atoms.";
                     scope.message_class = "success";
@@ -43,7 +45,7 @@ angular.module('glimpse')
 
             scope.connect = function () {
                 scope.state = "loading";
-                AtomsFactory.setServer(scope.settings.server);
+                AtomsFactory.server = scope.settings.server;
                 AtomsFactory.updateAtomTypes();
                 updateAtoms();
             };

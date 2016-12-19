@@ -202,53 +202,11 @@ angular.module('glimpse')
         // Update display whenever atoms change
         scope.$watch('atoms', function (atoms) {
 		
-                // Index and simplify atoms from the server
-                var _atoms = utils.indexAtoms(atoms);
-                _atoms = simplifications.simplify(_atoms, scope.settings.simplifications);
-                var graph = utils.atoms2Graph(_atoms);
-				
-		        // Add new nodes and update existing ones
-                for (var i = 0; i < graph.nodes.length; i++) {
-                    var nodeIndex = utils.indexOfNode(force.nodes(), graph.nodes[i]);
-                    if (nodeIndex == -1) { //New Node
-                        force.nodes().push(graph.nodes[i]);
-                    }
-                    else { // Update existing
-                        force.nodes()[nodeIndex].label = graph.nodes[i].label;
-                        force.nodes()[nodeIndex].type = graph.nodes[i].type;
-                    }
-                }
+                // Get Atoms from Factory
+                force.nodes(Object.values(AtomsFactory.nodes))
+                force.links(AtomsFactory.links)
 
-                // Remove nodes not in the updated atoms
-                force.nodes(force.nodes().filter(function (n) {
-                    return utils.indexOfNode(graph.nodes, n) > -1;
-                }));
-
-                // Add new links and update existing ones
-                for (i = 0; i < graph.edges.length; i++) {
-                    var linkIndex = utils.indexOfLink(force.links(), graph.edges[i]);
-                    if (linkIndex == -1) {
-                        force.links().push({
-                            source: utils.getAtomByHandle(force.nodes(), graph.edges[i]["source"]),
-                            target: utils.getAtomByHandle(force.nodes(), graph.edges[i]["target"]),
-                            label: graph.edges[i]["label"],
-                            arrow: graph.edges[i]["arrow"]
-                        });
-                    }
-                    else {
-                        force.links()[linkIndex].label = graph.edges[i].label;
-                        force.links()[linkIndex].arrow = graph.edges[i].arrow;
-                    }
-                }
-
-                // Remove links...
-                force.links(force.links().filter(function (n) {
-                    for (var i = 0; i < graph.edges.length; i++) {
-                        if (n.source && n.target)
-                            if (graph.edges[i].source == n.source.handle && graph.edges[i].target == n.target.handle) return true;
-                    }
-                    return false;
-                }));
+                console.log(force.links())
 
                 // Clear canvas
                 svg_g.selectAll(".node").remove();
@@ -301,19 +259,20 @@ angular.module('glimpse')
 					}
 
 				// get nodes with no incoming node
-				function getRoot(grph){
+				function getRoot(nodes){
 					var rootNodes=[];
-					for (var a=0;a<grph.nodes.length;a++)
+					for (var a=0;a<nodes.length;a++)
 					{
-						if (graph.nodes[a].incoming.length==0)
+						if (nodes[a].incoming.length==0)
 						{
-							rootNodes.push(graph.nodes[a]);
+							rootNodes.push(nodes[a]);
 						}
 
 					}
 					return rootNodes;
 				}
-				var root = getRoot(graph);
+
+				var root = getRoot(AtomsFactory.nodes);
 				for(a=0; a < root.length; a++)
 				{
 					roothandles.push(root[a].handle);		
