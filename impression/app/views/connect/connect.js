@@ -19,6 +19,12 @@ angular.module('impression.connectView', ['ngRoute'])
     $scope.header = config.header
     $scope.version = config.version
 
+    if (AtomsFactory.server == "") {
+        $scope.serverURL = "http://localhost:5000/"
+    } else {
+        $scope.serverURL = AtomsFactory.server
+    }
+
     if (!AtomsFactory.connected) {
         $scope.connectButtonLabel = "connect"
         $scope.connectButtonColor = "rgba(0,0,0,0.3)"
@@ -38,13 +44,12 @@ angular.module('impression.connectView', ['ngRoute'])
     };
 
     $scope.connect = function() {
-        var serverURL = document.getElementById("serverField").value;
     
         $scope.connectButtonLabel = "connecting...";
         $scope.connectButtonColor = "rgba(0,0,0,0.1)"
 
-        AtomsFactory.server = serverURL;
-        AttentionFactory.server = serverURL;
+        AtomsFactory.server = $scope.serverURL;
+        AttentionFactory.server = $scope.serverURL;
         
         $scope.connectionSucceeded()
     };
