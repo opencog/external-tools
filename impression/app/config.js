@@ -1,6 +1,6 @@
 app.constant('config', {
-    header: 'impression opencog visualizer 🎉',
-    version: 'master branch v0.0.1',
+    header: 'impression opencog visualizer',
+    version: 'master branch v0.0.2',
 
     /* refresh rates in ms */
     atomspaceRefreshrate: 1000,
