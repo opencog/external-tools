@@ -64,7 +64,7 @@ angular.module('impression.openpsiView', ['ngRoute'])
             .datum(data)
             .attr("class", "area")
           .transition()
-            .duration(200)
+            .duration(config.openpsiRefreshrate)
             .ease(d3.easeLinear)
             .on("start", tick);
 
