@@ -1,7 +1,7 @@
 AtomSpaceSubscriber
 ===================
 
-AtomSpaceSubscriber contains sample clients for usage with the [AtomSpacePublisherModule](https://github.com/opencog/opencog/tree/master/opencog/persist/zmq/events) that can be extended to monitor the activity of the OpenCog system.
+AtomSpaceSubscriber contains sample clients for usage with the [AtomSpacePublisherModule](https://github.com/opencog/opencog/blob/master/opencog/cogserver/modules/events) that can be extended to monitor the activity of the OpenCog system.
 
 ##### Potential usage examples:
 
@@ -23,6 +23,4 @@ Clients can subscribe to the events by subscribing to a ZeroMQ socket.
 *   **addAF**      (Atom was added to the AttentionalFocus)
 *   **removeAF**   (Atom was removed from the AttentionalFocus)
 
-Visit this link for the documentation of the AtomSpacePublisherModule:
-https://github.com/opencog/opencog/blob/master/opencog/persist/zmq/events/README.md
-
+The documentation of the AtomSpacePublisherModule is [here](https://github.com/opencog/opencog/blob/master/opencog/cogserver/modules/events/README.md).
