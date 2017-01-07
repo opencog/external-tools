@@ -28,6 +28,7 @@
     "d3": "3.5.16",
     "angular-resource": "1.5",
     "v-accordion": "^1.5.1",
-    "dock-spawn": "https://github.com/Selameab/dock-spawn.git#23e7be1da69aa2095dd51e2cee7854598a2b8a5b"
+    "dock-spawn": "https://github.com/Selameab/dock-spawn.git#23e7be1da69aa2095dd51e2cee7854598a2b8a5b",
+    "highcharts-ng": "^0.0.13"
   }
 }

@@ -2,9 +2,13 @@ angular.module('glimpse').directive('graph', function ($http) {
 
     //Todo: These should be read from config or set through the app
     var psiVariables = ["arousal", "positive-valence", "negative-valence",
-        "power","voice width"];
+        "power"];  //,"voice width"];
+    var psiVariablesEmotions = ["happy","sad","angry","relaxed"];
+
     var historyTimeLength = 10; //length of plot line in number of seconds
     var refreshRate = 100;   // rate in ms that values are updated from server
+
+    var allPsiVars = psiVariables.concat(psiVariablesEmotions);
 
     // Set number of plot line points to show data for specified time period
     var numPlotLinePts = Math.round(1000/refreshRate)*historyTimeLength;
@@ -23,6 +27,7 @@ angular.module('glimpse').directive('graph', function ($http) {
 
         scope.init = function () {
             scope.chartSeries = [];
+            scope.chartSeriesEmotions = [];
 
             scope.chartConfig = {
                 //Note: Setting the default line type (and I'm guessing other properties
@@ -60,6 +65,43 @@ angular.module('glimpse').directive('graph', function ($http) {
                 size: {},
             };
 
+            scope.chartConfigEmotions = {
+                //Note: Setting the default line type (and I'm guessing other properties
+                //in chartConfig.options) does not work when set in the directive link
+                //function, so setting it in the controller function instead.
+                /*
+                 options: {
+                 chart: {
+                 type: 'spline'
+                 },
+                 plotOptions: {
+                 series: {
+                 stacking: ''
+                 }
+                 }
+                 },
+                 */
+                series: scope.chartSeriesEmotions,
+                title: {
+                    text: 'OpenPSI Emotions'
+                },
+                xAxis: {
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    max: 1
+                },
+                credits: {
+                    enabled: false
+                },
+                loading: false,
+                size: {},
+            };
+
+
             window.setInterval(function() {
                 //periodically update data
                 scope.update();
@@ -74,8 +116,8 @@ angular.module('glimpse').directive('graph', function ($http) {
             var endpointURL = "http://localhost:5000/api/v1.1/scheme";
 
             var vars = ""
-            for (i in psiVariables) {
-                vars += "\"" + psiVariables[i] + "\"";
+            for (i in allPsiVars) {
+                vars += "\"" + allPsiVars[i] + "\"";
             }
             //var scm = "(psi-get-number-values-for-vars \"arousal\" \"positive-valence\" \"negative-valence\")";
             var scm = "(psi-get-number-values-for-vars" + vars + ")";
@@ -99,28 +141,65 @@ angular.module('glimpse').directive('graph', function ($http) {
                         value = 0;
                     }
 
-                    //figure out if data point is already in chartSeries
-                    var variableExists = false;
+                    // Plot psi modulators and psi emotion vars in separate graphs
+                    // Todo: Refactor this
+                    // Handle chartseries for modulator vars first
+                    if (psiVariables.includes(varName)) {
 
-                    for (i in scope.chartSeries) {
-                        chartSeriesObject = scope.chartSeries[i];
-                        if (chartSeriesObject.name == varName) {
-                            //it already exists, update array
-                            //remove the first element and add current value to the end
-                            chartSeriesObject.data.shift();
-                            chartSeriesObject.data.push(value);
-                            variableExists = true;
+                        //figure out if data point is already in chartSeries
+                        var variableExists = false;
+
+                        for (i in scope.chartSeries) {
+                            chartSeriesObject = scope.chartSeries[i];
+                            if (chartSeriesObject.name == varName) {
+                                //it already exists, update array
+                                //remove the first element and add current value to the end
+                                chartSeriesObject.data.shift();
+                                chartSeriesObject.data.push(value);
+                                variableExists = true;
+                            }
+                        }
+
+                        if (!variableExists) {
+                            //The variable doesn't exist in chartSeries yet, create new entry
+                            console.log("Found new variable: " + varName)
+                            // plot the full line at the current value for initiating
+                            var values = Array(numPlotLinePts).fill(value);
+                            scope.chartSeries.push({
+                                name: varName, data: values,
+                                marker: {enabled: false},
+                                connectNulls: true
+                            });
                         }
                     }
 
-                    if (!variableExists) {
-                        //The variable doesn't exist in chartSeries yet, create new entry
-                        console.log("Found new variable: " + varName)
-                        // plot the full line at the current value for initiating
-                        var values = Array(numPlotLinePts).fill(value);
-                        scope.chartSeries.push({name: varName, data: values,
-                            marker: {enabled: false},
-                            connectNulls: true});
+                    // Handle the emotion variables chartseries
+                    else if (psiVariablesEmotions.includes(varName)) {
+                        //figure out if data point is already in chartSeries
+                        var variableExists = false;
+
+                        for (i in scope.chartSeriesEmotions) {
+                            chartSeriesObject = scope.chartSeriesEmotions[i];
+                            if (chartSeriesObject.name == varName) {
+                                //it already exists, update array
+                                //remove the first element and add current value to the end
+                                chartSeriesObject.data.shift();
+                                chartSeriesObject.data.push(value);
+                                variableExists = true;
+                            }
+                        }
+
+                        if (!variableExists) {
+                            //The variable doesn't exist in chartSeries yet, create new entry
+                            console.log("Found new variable: " + varName)
+                            // plot the full line at the current value for initiating
+                            var values = Array(numPlotLinePts).fill(value);
+                            scope.chartSeriesEmotions.push({
+                                name: varName, data: values,
+                                marker: {enabled: false},
+                                connectNulls: true
+                            });
+                        }
                     }
                 }
 
