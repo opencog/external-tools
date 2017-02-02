@@ -96,6 +96,7 @@ angular.module('glimpse')
                 var atomHandles = [] //store new handles to determine removed atoms
 
                 //update existing atoms
+                console.log("HHHH" + atomsResult.length)
                 for (var i = 0; i < atomsResult.length; i++) {
                   var atom = atomsResult[i]
                   atomHandles.push(atom.handle);
@@ -103,6 +104,13 @@ angular.module('glimpse')
                   // preprocess data
                   if (atom.type.search("Node") > -1) { atom.isNode = true }
 
+                  // set label from name
+                  if (atom.isNode) {
+                    atom.label = atom.name
+                  } else {
+                    atom.label = atom.type
+                  }
+                  
                   if (atomsFactory.graph.hasVertex(atom.handle)) {
                     oldData = atomsFactory.graph.vertexValue(atom.handle)
 
@@ -115,17 +123,21 @@ angular.module('glimpse')
                       //console.log(oldData)
                       atom.x = oldData.x
                       atom.y = oldData.y
-                      atom.vx = oldData.vx
-                      atom.vy = oldData.vy
+                      atom.px = oldData.px
+                      atom.py = oldData.py
+                    console.log("OOO")
 
                       atomsFactory.graph.setVertex(atom.handle, atom);
                     }
 
                   } else {
                     //initial spawn points
-                    atom.x = 900
-                    atom.y = 500
+                    //atom.x = Math.random() * 500
+                    //atom.y = Math.random() * 500
+                    //atom.px = Math.random() * 500
+                    //atom.py = Math.random() * 500
 
+                    console.log("HHH")
                     atomsFactory.graph.addNewVertex(atom.handle, atom);
                   }
                     
@@ -140,7 +152,9 @@ angular.module('glimpse')
                     var connection = connections[j];
 
                     if (atomsFactory.graph.hasVertex(connection)) {
-                      atomsFactory.graph.spanEdge(atom.handle, connection)
+                      if (!atomsFactory.graph.hasEdge(connection, atom.handle)) {
+                        atomsFactory.graph.spanEdge(atom.handle, connection)
+                      }
                     }
                   }
                 };
@@ -207,7 +221,7 @@ angular.module('glimpse')
           to    = data[0][1],
           value = data[0][2];
 
-      atomsFactory.links.push({sourceHandle: from, targetHandle: to})
+      atomsFactory.links.push({sourceHandle: from, targetHandle: to, arrow: "<>", label: "value"})
       notifyModification();
     };
 

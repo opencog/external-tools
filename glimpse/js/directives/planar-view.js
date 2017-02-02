@@ -1,5 +1,5 @@
 angular.module('glimpse')
-    .directive('planarView', function (utils, simplifications, AtomsFactory) {
+    .directive('planarView', function (utils, simplifications, AtomsFactory, $timeout) {
 
         function linkDirective(scope, element, attributes) {
 
@@ -199,16 +199,19 @@ angular.module('glimpse')
 	                   }
 	                        };
 
-        // Update display whenever atoms change
-        scope.$watch('atoms', function (atoms) {
+        AtomsFactory.modificationCB = updateView
+
+        function updateView() {
 		
                 // Get Atoms from Factory
                 force.nodes(Object.values(AtomsFactory.nodes))
                 force.links(AtomsFactory.links)
 
-                console.log(force.links())
+                console.log(force.nodes().length)
+                console.log(force.nodes()[1])
 
                 // Clear canvas
+                //TODO: this needed?
                 svg_g.selectAll(".node").remove();
                 svg_g.selectAll(".edge").remove();
 
@@ -634,7 +637,8 @@ angular.module('glimpse')
                 settingsChanged.text(scope.settings.text);
 		
                 force.start();
-            }, true);
+            }
+
             scope.$watch('settings.size', settingsChanged.size, true);
             scope.$watch('settings.force', settingsChanged.force, true);
             scope.$watch('settings.text', settingsChanged.text, true);

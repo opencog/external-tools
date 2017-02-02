@@ -12,11 +12,12 @@ angular.module('glimpse')
             var updateAtoms = function () {
 
                 var onSuccess = function () {
+                    console.log("Success")
                     scope.atoms = AtomsFactory.atoms;
                     scope.nodes = AtomsFactory.nodes;
                     scope.links = AtomsFactory.links;
                     scope.state = "message";
-                    scope.message = "Successfully fetched " + AtomsFactory.atomsCount + " atoms.";
+                    scope.message = "Successfully fetched " + Object.keys(AtomsFactory.nodes).length + " atoms.";
                     scope.message_class = "success";
                     setTimeout(function () {
                         scope.dialog.destroy();
