@@ -96,7 +96,6 @@ angular.module('glimpse')
                 var atomHandles = [] //store new handles to determine removed atoms
 
                 //update existing atoms
-                console.log("HHHH" + atomsResult.length)
                 for (var i = 0; i < atomsResult.length; i++) {
                   var atom = atomsResult[i]
                   atomHandles.push(atom.handle);
@@ -114,30 +113,20 @@ angular.module('glimpse')
                   if (atomsFactory.graph.hasVertex(atom.handle)) {
                     oldData = atomsFactory.graph.vertexValue(atom.handle)
 
-                    //console.log(oldData)
                     if (JSON.stringify(oldData.name) != JSON.stringify(atom.name) ||
                         JSON.stringify(oldData.type) != JSON.stringify(atom.type) ||
                         JSON.stringify(oldData.attentionvalue) != JSON.stringify(atom.attentionvalue) ||
                         JSON.stringify(oldData.truthvalue) != JSON.stringify(atom.truthvalue)) {
                       
-                      //console.log(oldData)
                       atom.x = oldData.x
                       atom.y = oldData.y
                       atom.px = oldData.px
                       atom.py = oldData.py
-                    console.log("OOO")
 
                       atomsFactory.graph.setVertex(atom.handle, atom);
                     }
 
                   } else {
-                    //initial spawn points
-                    //atom.x = Math.random() * 500
-                    //atom.y = Math.random() * 500
-                    //atom.px = Math.random() * 500
-                    //atom.py = Math.random() * 500
-
-                    console.log("HHH")
                     atomsFactory.graph.addNewVertex(atom.handle, atom);
                   }
                     
