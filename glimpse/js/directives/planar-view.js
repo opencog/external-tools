@@ -1,3 +1,9 @@
+/* TODO:
+  There are two seperate layout algorithms here,
+  refactor this such that we can dynamically add more algorithms and choose
+  via dropdown.
+*/
+
 angular.module('glimpse')
     .directive('planarView', function (utils, simplifications, AtomsFactory, $timeout) {
 
@@ -207,6 +213,8 @@ angular.module('glimpse')
                 // Get Atoms from Factory
                 force.nodes(Object.values(AtomsFactory.nodes))
                 force.links(AtomsFactory.links)
+
+                console.log(force.links().length)
     
                 // Clear canvas
                 //TODO: this needed?

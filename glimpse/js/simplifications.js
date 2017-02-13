@@ -1,5 +1,7 @@
 angular.module('glimpse').factory('simplifications', function () {
 
+  // TODO: This here doesn't really simplify anymore, it is a more specialized
+  //       form of pre-processing... Will this be something we need in Glimpse?
 
     var simplify = function (atoms, settings) {
 

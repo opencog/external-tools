@@ -135,15 +135,15 @@ angular.module('glimpse')
                 //make new edges
                 for (var i = 0; i < atomsResult.length; i++) {
                   var atom = atomsResult[i] 
-                  var connections = atom.incoming.concat(atom.outgoing)
+                  //Only use outgoing links to reduce doubles
+                  //var connections = atom.incoming.concat(atom.outgoing)
+                  var connections = atom.outgoing
 
                   for (var j = 0; j < connections.length; j++) {
                     var connection = connections[j];
 
                     if (atomsFactory.graph.hasVertex(connection)) {
-                      if (!atomsFactory.graph.hasEdge(connection, atom.handle)) {
-                        atomsFactory.graph.spanEdge(atom.handle, connection)
-                      }
+                        atomsFactory.graph.spanEdge(atom.handle, connection, {arrow:"", label:""})
                     }
                   }
                 };
@@ -208,9 +208,9 @@ angular.module('glimpse')
     var edgeAdded = function(data) {
       var from  = data[0][0],
           to    = data[0][1],
-          value = data[0][2];
+          value = data[1];
 
-      atomsFactory.links.push({sourceHandle: from, targetHandle: to, arrow: "<>", label: "value"})
+      atomsFactory.links.push({sourceHandle: from, targetHandle: to, arrow: value.arrow, label: value.label})
       notifyModification();
     };
 
