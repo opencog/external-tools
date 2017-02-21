@@ -30,6 +30,7 @@
     "v-accordion": "^1.5.1",
     "dock-spawn": "https://github.com/Selameab/dock-spawn.git#23e7be1da69aa2095dd51e2cee7854598a2b8a5b",
     "highcharts-ng": "^0.0.13",
-    "graph.js": "^1.20.12"
+    "graph.js": "^1.20.12",
+    "highstock": "^3.0.1"
   }
 }
