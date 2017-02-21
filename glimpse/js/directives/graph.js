@@ -4,7 +4,7 @@ angular.module('glimpse').directive('graph', function ($http) {
     var psiVariables = ["arousal", "positive-valence", "negative-valence",
         "power","voice width"];
     var historyTimeLength = 10; //length of plot line in number of seconds
-    var refreshRate = 100;   // rate in ms that values are updated from server
+    var refreshRate = 500;   // rate in ms that values are updated from server
 
     // Set number of plot line points to show data for specified time period
     var numPlotLinePts = Math.round(1000/refreshRate)*historyTimeLength;
@@ -62,9 +62,9 @@ angular.module('glimpse').directive('graph', function ($http) {
 
             window.setInterval(function() {
                 //periodically update data
-                //scope.update();
+                scope.update();
                 //this fixes a bug where the graph doesn't update it's size
-                //scope.$broadcast('highchartsng.reflow');
+                scope.$broadcast('highchartsng.reflow');
             }, refreshRate);
 
         };
