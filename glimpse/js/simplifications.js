@@ -39,6 +39,9 @@ angular.module('glimpse').factory('simplifications', function () {
             if (!atoms.hasOwnProperty(atom_index)) continue;
             var atom = atoms[atom_index];
             if (settings.logical && atom["incoming"].length == 0) {
+                if (!atom["outgoing"][0]) continue;
+                if (!atom["outgoing"][1]) continue;
+              
                 var firstOutgHandle = atom["outgoing"][0]["handle"];
                 var secondOutgHandle = atom["outgoing"][1]["handle"];
                 
