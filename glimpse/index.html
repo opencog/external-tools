@@ -112,7 +112,7 @@
     </a>
 
     <!--SLIDE MODE-->
-    <a title="SlideMode" class="btn btn-sm btn-block" ng-class="['btn-primary']"
+    <a title="SlideMode" class="btn btn-sm btn-block" ng-class="[$root.slideMode?'btn-primary':'btn-default']"
        ng-click="$root.slideMode = $root.slideMode ? false : true">
         <i class="fa fa-slideshare"></i>
     </a>

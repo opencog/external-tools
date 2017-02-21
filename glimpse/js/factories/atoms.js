@@ -21,7 +21,7 @@ angular.module('glimpse')
     atomsFactory.links = []
 
     // limit to attentional focus initally to avoid pulling in entire AS.
-    atomsFactory.pollSettings = { 'filterby': 'attentionalfocus', 
+    atomsFactory.pollSettings = { 'filterby': '', 
                                   'includeIncoming': true, 
                                   'includeOutgoing': true }
 
@@ -38,12 +38,6 @@ angular.module('glimpse')
     
         });
     };
-
-    //TODO  implement updateAtomsin AF
-    
-    atomsFactory.updateAtomsInAF = function(successCB, errorCB) {
-      console.log("nope")
-    }
 
     atomsFactory.updateAtoms = function (successCB, errorCB) {
        function serialize( obj ) {
