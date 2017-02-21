@@ -1,5 +1,5 @@
 angular.module('glimpse')
-  .factory('AtomsFactory', function ($http, $resource, $interval, $location) {
+  .factory('AtomsFactory', function ($http, $resource, $interval, $location, simplifications) {
 
     var atomsFactory = {};
 
@@ -39,7 +39,11 @@ angular.module('glimpse')
         });
     };
 
-    //TODO maybe implement updateAtomsin AF
+    //TODO  implement updateAtomsin AF
+    
+    atomsFactory.updateAtomsInAF = function(successCB, errorCB) {
+      console.log("nope")
+    }
 
     atomsFactory.updateAtoms = function (successCB, errorCB) {
        function serialize( obj ) {
@@ -89,8 +93,8 @@ angular.module('glimpse')
                 }                
 
                 //store for global access
-                atomsFactory.atoms = atomsResult
-
+                atomsFactory.atoms = simplifications.simplify(atomsResult, {logical: true, evaluation: true})
+                
                 atomsFactory.modificationHappened = false
 
                 var atomHandles = [] //store new handles to determine removed atoms
@@ -140,10 +144,10 @@ angular.module('glimpse')
                   var connections = atom.outgoing
 
                   for (var j = 0; j < connections.length; j++) {
-                    var connection = connections[j];
-
-                    if (atomsFactory.graph.hasVertex(connection)) {
-                        atomsFactory.graph.spanEdge(atom.handle, connection, {arrow:"", label:""})
+                    var conn = connections[j];
+                  
+                    if (atomsFactory.graph.hasVertex(conn.handle)) {
+                        atomsFactory.graph.spanEdge(atom.handle, conn.handle, {arrow:conn.arrow, label:conn.label})
                     }
                   }
                 };
