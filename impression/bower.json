@@ -16,5 +16,8 @@
     "angular-resource": "^1.5.8",
     "dosis-googlefont": "*",
     "graph.js": "^1.20.12"
+  },
+  "resolutions": {
+    "angular": "1.6.0"
   }
 }
