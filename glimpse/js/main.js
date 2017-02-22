@@ -1,6 +1,6 @@
 var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion", "highcharts-ng"]);
 
-glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, $interval, utils, AtomsFactory) {
+glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, $interval, utils, AtomsFactory, AttentionFactory) {
     // Global vars
     var divDockManager, dockManager;
     var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel,
