@@ -12,14 +12,17 @@ app.listen(9000, function () {
   console.log('Glimpse listening on port 9000!');
 });
 
-
 if (environment == "test") {
     var test_atoms = express();
 
     test_atoms.use(cors());
 
-    test_atoms.use('/api/v1.1/atoms', function(req, res) {
-       res.sendFile( __dirname + '/test_jsons/atoms.json');
+    test_atoms.use(/\/api\/v1.1\/atoms.*/, function(req, res) {
+       if (req.query.filterby == "attentionalfocus") {
+          res.sendFile( __dirname + '/test_jsons/psi/atoms.json');
+       } else {
+          res.sendFile( __dirname + '/test_jsons/relex/atoms.json');
+       }
     });
 
     test_atoms.use('/api/v1.1/types', function(req, res) {
@@ -27,7 +30,14 @@ if (environment == "test") {
     });
 
     test_atoms.use('/api/v1.1/scheme', function(req, res) {
-       res.send('{\"arousal\": '+Math.random()+', \"sadness\": '+Math.random()+'}');
+       var foo = { 
+        'negative-valence': (0.1+(Math.random()*0.015)),
+        'positive-valence': (0.2+(Math.random()*0.04)),
+        'arousal': (0.3+(Math.random()*0.019)),
+        'power': (0.35+(Math.random()*0.024)),
+        'voice width': (0.8+(Math.random()*0.021))
+       }
+       res.send({ 'response' : JSON.stringify(foo)});
     });
 
     test_atoms.listen(5000, function() {

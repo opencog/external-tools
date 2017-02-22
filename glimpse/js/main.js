@@ -1,6 +1,6 @@
 var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion", "highcharts-ng"]);
 
-glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, $interval, utils, AtomsFactory) {
+glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, $interval, utils, AtomsFactory, AttentionFactory) {
     // Global vars
     var divDockManager, dockManager;
     var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel,
@@ -40,6 +40,7 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
             connectDialog = new dockspawn.Dialog(connectPanel, dockManager);
             connectDialog.setPosition((window.innerWidth - connectPanel._cachedWidth) / 2, (window.innerHeight - connectPanel._cachedHeight) / 2);
         } else if (panel == 'graph2' && documentManagerNode.children.indexOf(graphNode) == -1) {
+            $rootScope.$broadcast('openPsiPanelAppears');
             graphNode = dockManager.dockFill(documentManagerNode, graphPanel);
         } else if (panel == 'json' && documentManagerNode.children.indexOf(jsonNode) == -1) {
             jsonNode = dockManager.dockFill(documentManagerNode, jsonPanel);

@@ -12,9 +12,12 @@ angular.module('glimpse')
             var updateAtoms = function () {
 
                 var onSuccess = function () {
+                    console.log("Success")
                     scope.atoms = AtomsFactory.atoms;
+                    scope.nodes = AtomsFactory.nodes;
+                    scope.links = AtomsFactory.links;
                     scope.state = "message";
-                    scope.message = "Successfully fetched " + AtomsFactory.atomsCount + " atoms.";
+                    scope.message = "Successfully fetched " + Object.keys(AtomsFactory.nodes).length + " atoms.";
                     scope.message_class = "success";
                     setTimeout(function () {
                         scope.dialog.destroy();
@@ -33,17 +36,17 @@ angular.module('glimpse')
                 };
                 
                 if($rootScope.slideMode == true){
-                  console.log("SlideMode activated");
-                  AtomsFactory.sampleAtomsInAF(onSuccess, onFailure);
+                  AtomsFactory.pollSettings.filterby = "attentionalfocus"
+                } else {
+                  AtomsFactory.pollSettings.filterby = ""
                 }
-                else{
-                  AtomsFactory.updateAtoms(onSuccess, onFailure);
-                }
+                
+                AtomsFactory.updateAtoms(onSuccess, onFailure);
             };
 
             scope.connect = function () {
                 scope.state = "loading";
-                AtomsFactory.setServer(scope.settings.server);
+                AtomsFactory.server = scope.settings.server;
                 AtomsFactory.updateAtomTypes();
                 updateAtoms();
             };
