@@ -25,18 +25,6 @@ angular.module('glimpse').directive('graph', function ($http, AttentionFactory) 
                 //Note: Setting the default line type (and I'm guessing other properties
                 //in chartConfig.options) does not work when set in the directive link
                 //function, so setting it in the controller function instead.
-                /*
-                options: {
-                    chart: {
-                        type: 'spline'
-                    },
-                    plotOptions: {
-                        series: {
-                            stacking: ''
-                        }
-                    }
-                },
-                */
                 series: scope.chartSeries,
                 title: {
                     text: 'OpenPSI Variables'
@@ -101,9 +89,10 @@ angular.module('glimpse').directive('graph', function ($http, AttentionFactory) 
             }
         }
 
-        //TODO: This executes as soon as glimpse loads, it should only load when graph is loaded / server is connected...
-        scope.init();
-
+        //TODO: Stop updates when panel disappears...
+        scope.$on('openPsiPanelAppears', function(event) { scope.init(); });
+        
+        
     }; // link function
 
 
