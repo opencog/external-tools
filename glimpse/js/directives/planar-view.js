@@ -213,6 +213,9 @@ angular.module('glimpse')
                 // Get Atoms from Factory
                 force.nodes(Object.values(AtomsFactory.nodes))
                 force.links(AtomsFactory.links)
+                
+                // Graph object for radial layout
+                var graph = {nodes: AtomsFactory.nodes, links: AtomsFactory.links}
 
                 console.log(force.links().length)
     
@@ -293,73 +296,69 @@ angular.module('glimpse')
                         traversedNodes.push(grph.nodes[focusnode]);
                         var marked={};
                         while (traversedNodes.length != 0) {
-                        var v = traversedNodes.shift();
-                        //console.log(v);
-                        if(v == grph.nodes[focusnode])
-                        { 
-                            v.x= w/2; v.y= h/2; v.fixed = true; v.px= w/2; v.py= h/2;
-                            marked[v.index]=true;
-                            var neghbours= [];
-                            //console.log(grph);
-                            var adjList = [];
-                            adjList=findchilds(v, grph);
-                            //console.log("childs" + adjList);
-                            for (var a=0;a< adjList.length;a++){
-                               u=adjList[a];
-                               if(marked[u.index]!=true){
-                                  marked[u.index]=true;
-                                   neghbours.push(u);
-                              var currentAngle = startAngle + ((360/adjList.length) * (a));
-                              var currentAngleRadians = currentAngle * D2R;
-                              var radialPoint = {
-                                 x: (w / 2) + radius * Math.cos(currentAngleRadians), 
-                                 y: (h / 2) + radius * Math.sin(currentAngleRadians)
+                            var v = traversedNodes.shift();
+                            //console.log(v);
+                            if(v == grph.nodes[focusnode])
+                            { 
+                                v.x= w/2; v.y= h/2; v.fixed = true; v.px= w/2; v.py= h/2;
+                                marked[v.index]=true;
+                                var neghbours= [];
+                                //console.log(grph);
+                                var adjList = [];
+                                adjList=findchilds(v, grph);
+                                //console.log("childs" + adjList);
+                                for (var a=0;a< adjList.length;a++) {
+                                    u=adjList[a];
+                                    if(marked[u.index]!=true){
+                                        marked[u.index]=true;
+                                        neghbours.push(u);
+                                        var currentAngle = startAngle + ((360/adjList.length) * (a));
+                                        var currentAngleRadians = currentAngle * D2R;
+                                        var radialPoint = {
+                                            x: (w / 2) + radius * Math.cos(currentAngleRadians), 
+                                            y: (h / 2) + radius * Math.sin(currentAngleRadians)
                                         };
-                        u.x = radialPoint.x;
-                        u.px = radialPoint.x;
-                        u.y = radialPoint.y;
-                        u.py = radialPoint.y;
-                        u.fixed = true;
-                                        }
-                                            }
-                        traversedNodes.push(neghbours);
-                        //console.log("Traversed nodes" + traversedNodes);
-                        }
-                    else if(v.length > 0)
-                    {
-                        rad= radius * ring;
-                        //console.log(v);
-                        //console.log(radius);
-                        var neghbours= [];
+                                        u.x = radialPoint.x;
+                                        u.px = radialPoint.x;
+                                        u.y = radialPoint.y;
+                                        u.py = radialPoint.y;
+                                        u.fixed = true;
+                                    }
+                                }
+                                traversedNodes.push(neghbours);
+                                //console.log("Traversed nodes" + traversedNodes);
+                            } else if(v.length > 0) {
+                                rad= radius * ring;
+                                //console.log(v);
+                                //console.log(radius);
+                                var neghbours= [];
                     
-                        for(var j=0; j< v.length; j++)
-                        {
-                        if (marked[v[j].label]=== false) {marked[v[j].label]=true;}
+                        for(var j=0; j< v.length; j++) {
+                            if (marked[v[j].label]=== false) {marked[v[j].label]=true;}
                             adjList=findchilds(v[j], grph );
-                            for (var a=0; a< adjList.length; a++){
+                            for (var a=0; a< adjList.length; a++) {
                                 u=adjList[a];
                                 if(marked[u.index]!=true){
-                                marked[u.index]=true;
-                                neghbours.push(u);
-                                            }
+                                    marked[u.index]=true;
+                                    neghbours.push(u);
+                                }
                             }
-                    
                         }
-                        for (var loc= 0; loc < neghbours.length; loc++)
-                        {   
-                        var currentAngle = startAngle + ((360/neghbours.length) * (loc));
-                        var currentAngleRadians = currentAngle * D2R;
-                        var radialPoint = {
-                             x: (w / 2) + rad * Math.cos(currentAngleRadians), 
-                             y: (h / 2) + rad * Math.sin(currentAngleRadians)
+                        for (var loc= 0; loc < neghbours.length; loc++) {   
+                            var currentAngle = startAngle + ((360/neghbours.length) * (loc));
+                            var currentAngleRadians = currentAngle * D2R;
+                            var radialPoint = {
+                                x: (w / 2) + rad * Math.cos(currentAngleRadians), 
+                                y: (h / 2) + rad * Math.sin(currentAngleRadians)
                             };
-                        neghbours[loc].x = radialPoint.x;
-                        neghbours[loc].y = radialPoint.y;
-                        neghbours[loc].px = radialPoint.x;
-                        neghbours[loc].py = radialPoint.y;
-                        neghbours[loc].fixed = true;
+                            neghbours[loc].x = radialPoint.x;
+                            neghbours[loc].y = radialPoint.y;
+                            neghbours[loc].px = radialPoint.x;
+                            neghbours[loc].py = radialPoint.y;
+                            neghbours[loc].fixed = true;
                         }
-                    if(neghbours.length !=0) {traversedNodes.push(neghbours);}
+                        
+                        if(neghbours.length !=0) {traversedNodes.push(neghbours);}
                     }
                     ring++;
                     //console.log(ring);
@@ -367,22 +366,25 @@ angular.module('glimpse')
                 }
     
                 function findchilds(node, grph){
+                    //console.log(grph)
                     var outnode=[];
                     for(x=0; x< node.outgoing.length; x++) {
                         outnode.push(node.outgoing[x].handle);
                     }
-            
-                    var nodehandles = (node.incoming).concat(outnode);
+                    
+                    var innode=[]
+                    for(x=0; x< node.incoming.length; x++) {
+                        innode.push(node.incoming[x].handle);
+                    }
+
+                    var nodehandles = innode.concat(outnode);
                     var n = [];
             
-                    for(a=0; a< grph.nodes.length; a++) {
-                        for(x=0; x< nodehandles.length; x++) {
-                            if(grph.nodes[a].handle == nodehandles[x]) {
-                                n.push(grph.nodes[a]);
-                            }
+                    for(x=0; x < nodehandles.length; x++) {
+                        if (grph.nodes[nodehandles[x]]) {
+                            n.push(grph.nodes[nodehandles[x]])
                         }
                     }
-            
                     return n;
                 }               
     
@@ -473,7 +475,7 @@ angular.module('glimpse')
                                 
                         if (scope.tool == 'focus') {
                             ring =1;
-                            focusnode = sender.index;
+                            focusnode = sender.handle
                             brfs(graph);
                             radmonitor();
                             var linksTohide = [];
@@ -482,8 +484,8 @@ angular.module('glimpse')
                                 for (var depth = 0; depth < 2; depth++) {
                                     var newHandlesToShow = [];
                                     for (var i = 0; i < nodeHandlesToShow.length; i++) {
-                                    if (_atoms.hasOwnProperty(nodeHandlesToShow[i]))
-                                newHandlesToShow = newHandlesToShow.concat(utils.getAllNeighborHandles(_atoms[nodeHandlesToShow[i]]));
+                                    if (AtomsFactory.atoms.hasOwnProperty(nodeHandlesToShow[i]))
+                                newHandlesToShow = newHandlesToShow.concat(utils.getAllNeighborHandles(AtomsFactory.atoms[nodeHandlesToShow[i]]));
                                 }
                                 for(a=0; a < newHandlesToShow.length; a++){
                                 for(b=0; b < graph.nodes.length; b++)
@@ -492,7 +494,7 @@ angular.module('glimpse')
                                         { if(graph.nodes[b].type == 'ListLink' || graph.nodes[b].type == 'SetLink') 
                                          {
                                             linksTohide = linksTohide.concat(graph.nodes[b].handle);
-                                        newHandlesToShow = newHandlesToShow.concat(utils.getAllNeighborHandles(_atoms[newHandlesToShow[a]]));
+                                        newHandlesToShow = newHandlesToShow.concat(utils.getAllNeighborHandles(AtomsFactory.atoms[newHandlesToShow[a]]));
                                              }
                                         }   
                                   }
@@ -519,7 +521,7 @@ angular.module('glimpse')
     
                         if(scope.tool == 'center'){
                             ring =1;
-                            focusnode = sender.index;
+                            focusnode = sender.handle
                             //console.log(sender);
                             brfs(graph);
                             radmonitor();
@@ -588,7 +590,7 @@ angular.module('glimpse')
                 
                     if (scope.tool == 'getroot') {
                             ring =1;
-                            focusnode = sender.index;
+                            focusnode = sender.handle
                             brfs(graph);
                             radmonitor();
                             var nodeHandlesToShow = [ sender["handle"] ];
