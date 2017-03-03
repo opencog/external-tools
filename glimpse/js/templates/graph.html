@@ -1,0 +1,24 @@
+<div>
+   
+    <div class="row">
+        <div class="col-md-2">Width <input ng-model="chartConfig.size.width"></div>
+        <div class="col-md-2">Height <input ng-model="chartConfig.size.height"></div>
+       
+        <div class="col-md-2">Default Type <select ng-model="chartConfig.options.chart.type" ng-options="t.id as t.title for t in chartTypes"></select></div>
+      
+        <div class="col-md-2">Min: <input type="number" ng-model="chartConfig.xAxis.currentMin"></div>
+        <div class="col-md-2">Max: <input type="number" ng-model="chartConfig.xAxis.currentMax"></div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="col-md-12">
+            <highchart id="chart1" config="chartConfig"></highchart>
+        </div>
+    </div>
+           
+</div> 
+        
+
+

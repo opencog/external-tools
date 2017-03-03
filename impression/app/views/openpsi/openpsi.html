@@ -1,0 +1,22 @@
+<div class="fullscreen" id="openpsi">
+
+    <div class="legend">
+        <h1 ng-repeat="(name, color) in psiVariables" class="{{name.replace(' ', '')}}" style="color: {{color}};">{{name}}</h1>
+    </div>
+
+    <svg ng-repeat="(name, color) in psiVariables" id="{{name.replace(' ', '')}}">
+      <defs>
+        <linearGradient id="{{name.replace(' ', '')}}Gradient" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="{{color}}" stop-opacity="0.1" />
+          <stop offset="50%" stop-color="{{color}}" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+      <style>
+        svg#{{name.replace(' ', '')}} .area {
+            fill: url(#{{name.replace(' ', '')}}Gradient);
+            stroke:{{color}};
+        }
+      </style>
+    </svg>
+
+</div>

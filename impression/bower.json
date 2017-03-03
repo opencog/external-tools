@@ -1,0 +1,23 @@
+{
+  "name": "impression",
+  "version": "0.0.1",
+  "description": "The Impression demo visualizer for the OpenCog framework.",
+  "homepage": "https://github.com/opencog/external-tools#readme",
+  "license": "SEE ../LICENSE",
+  "private": false,
+  "dependencies": {
+    "angular": "~1.5.0",
+    "angular-route": "~1.5.0",
+    "angular-loader": "~1.5.0",
+    "angular-mocks": "~1.5.0",
+    "html5-boilerplate": "^5.3.0",
+    "angular-animate": "^1.5.8",
+    "d3": "^4.3.0",
+    "angular-resource": "^1.5.8",
+    "dosis-googlefont": "*",
+    "graph.js": "^1.20.12"
+  },
+  "resolutions": {
+    "angular": "1.6.0"
+  }
+}

@@ -1,13 +1,12 @@
-var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion"]);
+var glimpse = angular.module("glimpse", ["ngResource", "ngAnimate", "vAccordion", "highcharts-ng"]);
 
-glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, utils, AtomsFactory) {
-
+glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, $interval, utils, AtomsFactory, AttentionFactory) {
     // Global vars
     var divDockManager, dockManager;
     var toolboxPanel, atomDetailsPanel, terminalPanel, threeDPanel, jsonPanel, planarPanel, schemePanel, tabularPanel,
-        filtersPanel, settingsPanel, addNodePanel, connectPanel;
+        filtersPanel, settingsPanel, addNodePanel, connectPanel, graphPanel, addSeriesPanel;
     var documentManagerNode, toolboxNode, jsonNode, threeDNode, terminalNode, planarNode, atomDetailsNode,
-        settingsDialog, filtersDialog, addNodeDialog, connectDialog;
+        settingsDialog, filtersDialog, addNodeDialog, connectDialog, graphNode;
 
     var planarView1;
 
@@ -30,9 +29,29 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         else if (panel == 'add_node') {
             addNodeDialog = new dockspawn.Dialog(addNodePanel, dockManager);
             addNodeDialog.setPosition((window.innerWidth - addNodePanel._cachedWidth) / 2, (window.innerHeight - connectPanel._cachedHeight) / 2);
-        } else if (panel == 'connect') {
+        } 
+        else if (panel == 'add_graph_series') {
+            //var addSeriesDialog;
+            addSeriesDialog = new dockspawn.Dialog(addSeriesPanel, dockManager);
+            addseriesDialog.setPosition((window.innerWidth - addSeriesPanel._cachedWidth) / 2, (window.innerHeight - connectPanel._cachedHeight) / 2);
+        }
+
+        else if (panel == 'connect') {
             connectDialog = new dockspawn.Dialog(connectPanel, dockManager);
             connectDialog.setPosition((window.innerWidth - connectPanel._cachedWidth) / 2, (window.innerHeight - connectPanel._cachedHeight) / 2);
+        } else if (panel == 'graph2' && documentManagerNode.children.indexOf(graphNode) == -1) {
+            $rootScope.$broadcast('openPsiPanelAppears');
+            graphNode = dockManager.dockFill(documentManagerNode, graphPanel);
+        } else if (panel == 'json' && documentManagerNode.children.indexOf(jsonNode) == -1) {
+            jsonNode = dockManager.dockFill(documentManagerNode, jsonPanel);
+        } else if (panel == 'planar' && documentManagerNode.children.indexOf(planarNode) == -1) {
+            planarPanel = dockManager.dockFill(documentManagerNode, planarPanel);
+        } else if (panel == 'terminal' && documentManagerNode.children.indexOf(terminalNode) == -1) {
+            terminalNode = dockManager.dockDown(documentManagerNode, terminalPanel, 0.2);
+        } else if (panel == 'toolbox' && documentManagerNode.children.indexOf(toolboxNode) == -1) {
+            toolboxNode = dockManager.dockLeft(documentManagerNode, toolboxPanel);
+        } else if (panel == 'atom_details' && documentManagerNode.children.indexOf(atomDetailsNode) == -1) {
+            atomDetailsNode = dockManager.dockRight(documentManagerNode, atomDetailsPanel);
         }
     };
 
@@ -70,18 +89,21 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
         settingsPanel = new dockspawn.PanelContainer(document.getElementById("settings_panel"), dockManager);
         addNodePanel = new dockspawn.PanelContainer(document.getElementById("add_node_panel"), dockManager);
         connectPanel = new dockspawn.PanelContainer(document.getElementById("connect_panel"), dockManager);
+        graphPanel = new dockspawn.PanelContainer(document.getElementById("graph_panel"), dockManager);
+        addSeriesPanel = new dockspawn.PanelContainer(document.getElementById("add_series_panel"), dockManager);
 
         // Dock windows
         documentManagerNode = dockManager.context.model.documentManagerNode;
 
-        jsonNode = dockManager.dockFill(documentManagerNode, jsonPanel);
-        //threeDNode = dockManager.dockFill(documentManagerNode, threeDPanel);
-        planarNode = dockManager.dockFill(documentManagerNode, planarPanel);
-        //dockManager.dockFill(documentManagerNode, scheme_window);
-        //dockManager.dockFill(documentManagerNode, tabular_window);
-        terminalNode = dockManager.dockDown(documentManagerNode, terminalPanel, 0.2);
-        toolboxNode = dockManager.dockLeft(documentManagerNode, toolboxPanel);
-        atomDetailsNode = dockManager.dockRight(documentManagerNode, atomDetailsPanel);
+        $scope.showPanel("json");
+        $scope.showPanel("planar");
+        $scope.showPanel("terminal");
+        $scope.showPanel("toolbox");
+        $scope.showPanel("atom_details");
+
+        //terminalNode = dockManager.dockDown(documentManagerNode, terminalPanel, 0.2);
+        //toolboxNode = dockManager.dockLeft(documentManagerNode, toolboxPanel);
+        //atomDetailsNode = dockManager.dockRight(documentManagerNode, atomDetailsPanel);
         if (!utils.getUrlParameter("d"))
             $scope.showPanel("connect");
         $scope.connectDialog = connectDialog;
@@ -134,5 +156,5 @@ glimpse.controller("mainCtrl", function ($rootScope, $scope, $window, $timeout, 
     };
 
     $scope.selectedIndices = [];
-   
+
 });

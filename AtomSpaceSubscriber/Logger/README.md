@@ -9,18 +9,14 @@ Currently used for analyzing the ECAN Attention Allocation system
 1. Install prerequisites:
 
     ```
-    sudo pip install tornado
-    sudo pip install pyzmq
-    sudo pip install pymongo
+    sudo pip install tornado pyzmq pymongo
     ```
 
 2. Configure a MongoDB server:
 
     http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
-3. Ensure that the OpenCog event publisher is enabled. Follow the instructions here:
-
-    https://github.com/opencog/opencog/blob/master/opencog/persist/zmq/events/README.md
+3. Ensure that the OpenCog event publisher is enabled. Follow the instructions [here](https://github.com/opencog/opencog/blob/master/opencog/cogserver/modules/events/README.md).
 
 4. Configure the following parameters (optional):
 

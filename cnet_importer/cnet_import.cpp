@@ -168,7 +168,7 @@ inline QString to_scm_str(QStringList assertions,int templt,QString linktype,con
     QString cn2 = "(ConceptNode \""+cn_argument2+"\" (stv "+QString::number(mean)+" "+QString::number(confidence)+"))";
 
     if(templt == 1){
-        QString link = QString("(") + linktype + "("  + QString::number(confidence_value) + " " +QString::number(0.9) + ")\n " + cn1 + cn2 + ")\n";
+        QString link = QString("(") + linktype + "(stv "  + QString::number(confidence_value) + " " +QString::number(0.9) + ")\n " + cn1 + cn2 + ")\n";
         return link;
     }
     else if(templt == 2){

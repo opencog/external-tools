@@ -1,0 +1,85 @@
+/* impression visualizer stylesheet */
+
+/* external font declarations */
+
+@font-face { 
+  font-family: "DosisLight"; 
+  src: url("../bower_components/dosis-googlefont/Dosis-Light.ttf"); 
+}
+
+/* global body style */
+
+body {
+  font-family: "DosisLight", sans-serif;
+  color:white;
+  height:100%;
+}
+
+.view-animate-container {
+  /* Background for connect screen and transitions */
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#6d6f77+0,28343b+100 */
+  background: rgb(109,111,119); /* Old browsers */
+  background: -moz-radial-gradient(center, ellipse cover, rgba(109,111,119,1) 0%, rgba(40,52,59,1) 100%); /* FF3.6-15 */
+  background: -webkit-radial-gradient(center, ellipse cover, rgba(109,111,119,1) 0%,rgba(40,52,59,1) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: radial-gradient(ellipse at center, rgba(109,111,119,1) 0%,rgba(40,52,59,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+select {
+  display: block;
+  margin: 0;
+  width: 100%;
+  font-size: 18px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+  text-align:center;
+  font-family: inherit;
+  padding: 10px;
+  border: none;
+  border-bottom: solid 2px #c9c9c9;
+  transition: border 0.3s;
+  box-sizing: border-box;
+  color:black;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0px;
+}
+
+input[type="text"] {
+  display: block;
+  margin: 0;
+  width: 100%;
+  font-size: 18px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+  text-align:center;
+  font-family: inherit;
+  padding: 10px;
+  border: none;
+  border-bottom: solid 2px #c9c9c9;
+  transition: border 0.3s;
+  box-sizing: border-box;
+  color:black;
+}
+
+input[type="text"]:focus,
+input[type="text"].focus {
+  border-bottom: solid 2px #969696;
+}
+
+button {
+  display: block;
+  margin: 0;
+  margin-top:10px;
+  width: 100%;
+  font-size: 18px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+  text-align:center;
+  font-family: inherit;
+  padding: 10px;
+  border:0;
+  background-color: rgba(0,0,0,0.5);
+  transition: background-color 0.5s;
+}

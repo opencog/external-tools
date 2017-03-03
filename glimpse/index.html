@@ -20,6 +20,7 @@
     <!--JS Libs-->
     <script type="application/javascript" src="libs/jquery/dist/jquery.min.js"></script>
     <script type="application/javascript" src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="application/javascript" src="libs/graph.js/dist/graph.full.js"></script>
     <script type="application/javascript" src="libs/angular/angular.min.js"></script>
     <script type="application/javascript" src="libs/angular-resource/angular-resource.min.js"></script>
     <script type="application/javascript" src="libs/angular-animate/angular-animate.min.js"></script>
@@ -31,7 +32,7 @@
     <title>Glimpse - Atomspace Viewer</title>
 </head>
 
-<body ng-controller="mainCtrl">
+<body ng-controller="mainCtrl" ng-init="slideMode=false">
 
 <!--Nav Bar-->
 <div class="navbar navbar-inverse navbar-fixed-top">
@@ -55,10 +56,11 @@
                         <a href="">Displays</a>
                         <ul class="dropdown-menu">
                             <li><a href="#">3D</a></li>
-                            <li><a href="#">JSON</a></li>
-                            <li><a href="#">Planar</a></li>
+                            <li><a href="" ng-click="showPanel('json')">JSON</a></li>
+                            <li><a href="" ng-click="showPanel('planar')">Planar</a></li>
                             <li><a href="#">Scheme</a></li>
                             <li><a href="#">Tabular</a></li>
+                            <li><a href="" ng-click="showPanel('graph2')">Graph</a></li>
                         </ul>
                     </li>
 
@@ -93,7 +95,8 @@
 
 <!--ToolBox-->
 <div id="toolbox_panel" caption="Toolbox" icon="">
-    <a title="Select" class="btn btn-sm btn-block" ng-class="[tool=='select'?'btn-primary':'btn-default']" ng-click="tool='select'">
+    <a title="Select" class="btn btn-sm btn-block" ng-class="[tool=='select'?'btn-primary':'btn-default']"
+       ng-click="tool='select'">
         <i class="fa fa-hand-pointer-o"></i>
     </a>
 
@@ -103,40 +106,56 @@
     <a title="Delete selected nodes" class="btn btn-sm btn-block btn-default" ng-click="deleteSelectedAtoms()">
         <i class="fa fa fa-trash-o"></i>
     </a>
-    <a title="Edit" class="btn btn-sm btn-block" ng-class="[tool=='edit'?'btn-primary':'btn-default']" ng-click="tool='edit'">
+    <a title="Edit" class="btn btn-sm btn-block" ng-class="[tool=='edit'?'btn-primary':'btn-default']"
+       ng-click="tool='edit'">
         <i class="fa fa-pencil-square-o"></i>
     </a>
 
-    <a title="Link" class="btn btn-sm btn-block" ng-class="[tool=='link'?'btn-primary':'btn-default']" ng-click="tool='link'">
+    <!--SLIDE MODE-->
+    <a title="SlideMode" class="btn btn-sm btn-block" ng-class="[$root.slideMode?'btn-primary':'btn-default']"
+       ng-click="$root.slideMode = $root.slideMode ? false : true">
+        <i class="fa fa-slideshare"></i>
+    </a>
+
+    <a title="Link" class="btn btn-sm btn-block" ng-class="[tool=='link'?'btn-primary':'btn-default']"
+       ng-click="tool='link'">
         <i class="fa fa-link"></i>
     </a>
-    <a title="Unlink" class="btn btn-sm btn-block" ng-class="[tool=='unlink'?'btn-primary':'btn-default']" ng-click="tool='unlink'">
+    <a title="Unlink" class="btn btn-sm btn-block" ng-class="[tool=='unlink'?'btn-primary':'btn-default']"
+       ng-click="tool='unlink'">
         <i class="fa fa-unlink"></i>
     </a>
-    <a title="Expand" class="btn btn-sm btn-block" ng-class="[tool=='expand'?'btn-primary':'btn-default']" ng-click="tool='expand'">
+    <a title="Expand" class="btn btn-sm btn-block" ng-class="[tool=='expand'?'btn-primary':'btn-default']"
+       ng-click="tool='expand'">
         <i class="fa fa-expand"></i>
     </a>
-    <a title="Collapse" class="btn btn-sm btn-block" ng-class="[tool=='collapse'?'btn-primary':'btn-default']" ng-click="tool='collapse'">
+    <a title="Collapse" class="btn btn-sm btn-block" ng-class="[tool=='collapse'?'btn-primary':'btn-default']"
+       ng-click="tool='collapse'">
         <i class="fa fa-compress"></i>
     </a>
-    <a title="Anchor" class="btn btn-sm btn-block" ng-class="[tool=='anchor'?'btn-primary':'btn-default']" ng-click="tool='anchor'">
+    <a title="Anchor" class="btn btn-sm btn-block" ng-class="[tool=='anchor'?'btn-primary':'btn-default']"
+       ng-click="tool='anchor'">
         <i class="fa fa-anchor"></i>
     </a>
-    <a title="Focus" class="btn btn-sm btn-block" ng-class="[tool=='focus'?'btn-primary':'btn-default']" ng-click="tool='focus'">
+    <a title="Focus" class="btn btn-sm btn-block" ng-class="[tool=='focus'?'btn-primary':'btn-default']"
+       ng-click="tool='focus'">
         <i class="fa fa-bullseye"></i>
     </a>
 
- <a title="Radial" class="btn btn-sm btn-block" ng-class="[tool=='center'?'btn-primary':'btn-default']" ng-click="tool='center'">
- <i class="fa fa-dot-circle-o"></i>
- </a>
- 
-<a title="Get-Root" class="btn btn-sm btn-block" ng-class="[tool=='getroot'?'btn-primary':'btn-default']" ng-click="tool='getroot'">
- <i class="fa fa-filter"></i>
- </a>
+    <a title="Radial" class="btn btn-sm btn-block" ng-class="[tool=='center'?'btn-primary':'btn-default']"
+       ng-click="tool='center'">
+        <i class="fa fa-dot-circle-o"></i>
+    </a>
 
-<a title="Tree" class="btn btn-sm btn-block" ng-class="[tool=='tree'?'btn-primary':'btn-default']" ng-click="tool='tree'">
- <i class="fa fa-tree"></i>
- </a>
+    <a title="Get-Root" class="btn btn-sm btn-block" ng-class="[tool=='getroot'?'btn-primary':'btn-default']"
+       ng-click="tool='getroot'">
+        <i class="fa fa-filter"></i>
+    </a>
+
+    <a title="Tree" class="btn btn-sm btn-block" ng-class="[tool=='tree'?'btn-primary':'btn-default']"
+       ng-click="tool='tree'">
+        <i class="fa fa-tree"></i>
+    </a>
 
 </div>
 <!--Atom Details-->
@@ -144,12 +163,12 @@
     <atom-details atoms="atoms" selected-handles="selected_handles"></atom-details>
 </div>
 <div class="dropdown">
-  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
-    <a href="#">Link 1</a>
-    <a href="#">Link 2</a>
-    <a href="#">Link 3</a>
-  </div>
+    <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+    <div id="myDropdown" class="dropdown-content">
+        <a href="#">Link 1</a>
+        <a href="#">Link 2</a>
+        <a href="#">Link 3</a>
+    </div>
 </div>
 
 <!--Terminal-->
@@ -166,13 +185,17 @@
     <planar-view id="planar-view-1" class="planar-view" atoms="atoms" selected-handles="selected_handles"
                  settings="settings.planar" tool="tool" filt="filt"></planar-view>
 </div>
+<!--PSI - Graph-->
+<div id="graph_panel" caption="Graph" icon="">
+    <graph atoms="atoms"></graph>
+</div>
 <!--Scheme-->
 <div id="scheme_panel" caption="Scheme" icon=""></div>
 <!--Tabular-->
 <div id="tabular_panel" caption="Tabular" icon=""></div>
 
 <div id="filters_panel" caption="Filters" icon="">
-   <filters filt="filt" ></filters>
+    <filters filt="filt"></filters>
 </div>
 <!--Settings-->
 <div id="settings_panel" caption="Planar Settings" icon="">
@@ -184,6 +207,10 @@
     <add-node atoms="atoms"></add-node>
 </div>
 
+<div id="add_series_panel" caption="Add new Graph series" icon="">
+    <add-node atoms="atoms"></add-node>
+</div>
+
 <!--Add -->
 <div id="connect_panel" caption="Connect" icon="">
     <connect atoms="atoms" settings="settings.general" dialog="connectDialog"></connect>
@@ -191,9 +218,12 @@
 
 <!--More JS-->
 <script type="application/javascript" src="js/main.js"></script>
-<script type="application/javascript" src="js/factories.js"></script>
 <script type="application/javascript" src="js/utils.js"></script>
 <script type="application/javascript" src="js/simplifications.js"></script>
+
+<!--Factories-->
+<script type="application/javascript" src="js/factories/atoms.js"></script>
+<script type="application/javascript" src="js/factories/attention.js"></script>
 
 <!--Directives-->
 <script type="application/javascript" src="js/directives/json-view.js"></script>
@@ -204,6 +234,11 @@
 <script type="application/javascript" src="js/directives/planar-settings.js"></script>
 <script type="application/javascript" src="js/directives/add-node.js"></script>
 <script type="application/javascript" src="js/directives/connect.js"></script>
+<script type="application/javascript" src="js/directives/graph.js"></script>
+<script type="application/javascript" src="libs/highstock/highstock.src.js"></script>
+<script type="application/javascript" src="libs/highcharts-ng/dist/highcharts-ng.min.js"></script>
 
 </body>
+
+
 </html>
