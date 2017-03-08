@@ -2,14 +2,15 @@ import fileinput                     #*******
 from opencog.atomspace import AtomSpace, TruthValue, types
 import sys
 reload(sys)  
-sys.setdefaultencoding('Cp1252')
+#sys.setdefaultencoding('Cp1252')
+#sys.setdefaultencoding('utf8')
+
 DEFAULT_NODE_TV = TruthValue(0.01, 1000)
 DEFAULT_LINK_TV = TruthValue(0.9, 100)
 DEFAULT_PREDICATE_TV = TruthValue(0.1, 100)
 
 atomspace=None
 
-parsedData = open ("/home/tanksha/test.txt", 'w')  
 
 def removeExtra (orgString, index):
    #removes the parenthesis at the given index
@@ -90,7 +91,7 @@ def parse_kif_string(inputdata):
     #*** Check that parenthisis is mathced on input data
     matched = match_parenthesis(inputdata)
     # print "GOING SMOOTH!!"
-    parsedData.write(str( "INPUT DATA = "+ matched + " OUTPUT DATA = "))
+ 
     from pyparsing import OneOrMore, nestedExpr
     data = OneOrMore(nestedExpr()).parseString(matched)
            # The sExpression (i.e. lisp) parser is cool, but doesn't work for some reason (it might be the '?' characters at the start of variable names?)
@@ -103,7 +104,6 @@ def parse_kif_string(inputdata):
            #    print "Error:", pfe.msg
            #    print pfe.markInputline('^')
   
-    parsedData.write (str(data))      # for crosschecking 
     return data
  
 
@@ -137,7 +137,7 @@ def convert_list(expression, link_tv):
 
 def link(predicate, arguments, link_tv):
     # Remove things with "" in them
-    if predicate in ['documentation','termFormat','externalImage','abbreviation']:
+    if predicate in ['documentation','externalImage']:
         return None
 
     link_type = special_link_type(predicate)
