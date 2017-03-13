@@ -1,0 +1,58 @@
+### Properties used by jEdit
+
+plugin.com.swabunga.spell.jedit.JazzyPlugin.name=Jazzy
+plugin.com.swabunga.spell.jedit.JazzyPlugin.author=Anthony Roy
+plugin.com.swabunga.spell.jedit.JazzyPlugin.version=0.3.0
+plugin.com.swabunga.spell.jedit.JazzyPlugin.docs=index.html
+#4.2 API - activate plugin
+plugin.com.swabunga.spell.jedit.JazzyPlugin.activate=defer
+
+### These tell jEdit what JDK and jEdit version we require
+
+plugin.com.swabunga.spell.jedit.JazzyPlugin.depend.0=jedit 04.02.06.00
+plugin.com.swabunga.spell.jedit.JazzyPlugin.depend.1=jdk 1.3
+
+### Option panel labels
+options.jazzy.label=Jazzy
+
+#4.2 API - options dialog
+plugin.com.swabunga.spell.jedit.JazzyPlugin.option-group=jazzy
+options.jazzy.label = General Options
+options.jazzy.code = new com.swabunga.spell.jedit.JazzyOptionPane();
+
+
+### Menu item labels
+plugin.com.swabunga.spell.jedit.JazzyPlugin.menu=\
+    spell-check \
+    reset-ignore-list \
+    unload-dictionary
+
+jazzy.menu.label=Jazzy
+
+spell-check.label=Check Spelling
+reset-ignore-list.label=Reset Ignored Words
+unload-dictionary.label=Unload dictionary
+
+options.jazzy.load-dictionary=false
+options.jazzy.reset-spellchecker=false
+options.jazzy.dictionary=
+options.jazzy.default-checker=false
+options.jazzy.disk-based=false
+
+options.jazzy.EDIT_DEL1=95
+options.jazzy.EDIT_DEL2=95
+options.jazzy.EDIT_SWAP=90
+options.jazzy.EDIT_SUB=100
+options.jazzy.EDIT_SIMILAR=10
+options.jazzy.EDIT_MIN=90
+options.jazzy.EDIT_MAX=100
+
+options.jazzy.SPELL_THRESHOLD=140
+options.jazzy.SPELL_IGNOREUPPERCASE=false
+options.jazzy.SPELL_IGNOREMIXEDCASE=true
+options.jazzy.SPELL_IGNOREINTERNETADDRESS=false
+options.jazzy.SPELL_IGNOREDIGITWORDS=false
+options.jazzy.SPELL_IGNOREMULTIPLEWORDS=false
+options.jazzy.SPELL_IGNORESENTENCECAPTILIZATION=true
+
+

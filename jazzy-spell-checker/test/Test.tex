@@ -1,0 +1,43 @@
+\documentclass[11pt,a4paper]{article}
+
+\begin{document}
+
+\tableofcontents
+
+\section{Tests for Jazzy Spellchecker}
+
+The following itemized list gives various tests to try to break the 
+spell checker's code.
+
+\begin{enumerate}
+\item Misspelled word in middle of sentence.
+This string of charracters is a sentence.
+
+\item Misspelled word at the start of sentence. Note - suggestions should be capitalized.
+Thhis string of characters is a sentence.
+
+\item Misspelled word at the end of sentence.
+This string of characters is a sentance.
+
+\item Misspelled word at the start of a line in the middle of sentence.
+This string of 
+charracters is a sentence.
+
+\item Capitalized word in the middle of sentence. Note - suggestions should not be capitalized.
+This string Of characters is a sentence.
+
+\item Lower case word at the start of sentence. 
+this string of characters is a sentence.
+\end{enumerate}
+%---------------------------------------------
+%Bibliography
+%
+%GATHER{test.bib}   % For Gather Purpose Only - same filename
+%GATHER{test.bbl}   % as bib file below.
+%---------------------------------------------
+
+\bibliographystyle{alpha}
+\bibliography{test}
+
+\end{document}
+

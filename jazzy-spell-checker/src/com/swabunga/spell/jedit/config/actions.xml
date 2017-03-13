@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE ACTIONS SYSTEM "actions.dtd">
+
+<!-- This file defines actions. Each action is a short snippet of
+     BeanShell code that may be bound to a menu item or keystroke.
+
+     Menu item labels for actions should be defined in properties named
+     <action>.label.
+
+     Shortcuts for actions should *not* be assigned by plugins. -->
+
+<ACTIONS>
+  <!-- Menu action for spell checking the current selection -->
+  <ACTION NAME="spell-check">
+    <CODE>
+      com.swabunga.spell.jedit.JazzyPlugin.showJazzyDialog(view);
+    </CODE>
+  </ACTION>
+
+  <!-- Menu action for spell checking the current selection with a specified lang -->
+  <ACTION NAME="unload-dictionary">
+    <CODE>
+      com.swabunga.spell.jedit.JazzyPlugin.unloadDictionary();
+    </CODE>
+  </ACTION>
+  <!-- Menu action for spell checking the current selection with a specified lang -->
+
+  <ACTION NAME="reset-ignore-list">
+    <CODE>
+      com.swabunga.spell.jedit.JazzyPlugin.resetSpellChecker();
+    </CODE>
+  </ACTION>
+</ACTIONS>

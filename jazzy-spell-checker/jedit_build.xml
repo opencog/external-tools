@@ -1,0 +1,132 @@
+<project name="Jazzy - jEdit Plugin." default="jedit-install" basedir=".">
+
+  <!-- set global properties for this build (directory names) -->
+
+  <property file="build.properties"/>
+  <property file="../build.properties"/>
+  <property file="${user.home}/.build.properties"/>
+  <property file="${user.home}/build.properties"/>
+
+
+
+  <property name="src" value="src"/>
+  <property name="build" value="bin"/>
+  <property name="dist"  value="dist"/>
+  <property name="dict" value="dict"/>
+  <property name="javadoc"  value="javadoc"/>
+  <property name="jedit-config" value="${src}/com/swabunga/spell/jedit/config"/>
+  <property name="target" value="1.3"/>
+  <property name="package" value="com.swabunga.spell.event"/>
+  <property name="jedit" value=""/>
+  <property name="test-class" value="DefaultWordFinder"/>
+<!--  <property name="local.jedit.jars" value=".."/>
+--> 
+  <!-- Build classpath -->
+  <path id="classpath">
+    <pathelement path="${classpath}"/>
+    <!-- external libs needed for build
+    <fileset dir="lib">
+      <include name="**/*.jar"/>
+    </fileset>
+    -->
+  </path>
+  
+  <path id="bootclass.path">
+    <fileset dir="${crosscompiler.lib}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+  
+  <selector id="jedit-src">
+     <or>
+        <filename name="com/swabunga/spell/jedit/*.java"/>
+        <filename name="com/swabunga/spell/engine/*.java"/>
+        <filename name="com/swabunga/spell/event/*.java"/>
+        <filename name="com/swabunga/spell/swing/JSpellDialog.java"/>
+        <filename name="com/swabunga/spell/swing/JSpellForm.java"/>
+      </or>
+  </selector>
+  
+  <target name="init">
+    <condition property="can.reload.plugins">
+        <and>
+            <available classname="org.gjt.sp.jedit.jEdit"/>
+            <available classname="ReloadPluginTask"/>
+        </and>
+    </condition>
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <mkdir dir="${build}"/>
+    <mkdir dir="${dist}"/>
+    <mkdir dir="${dist}/lib"/>
+    <mkdir dir="${javadoc}"/>
+  </target>
+
+  <target name="cross-compile" depends="init">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac deprecation="true" verbose="${compiler.verbose}" srcdir="${src}" destdir="${build}" target="${target}"
+           bootclasspathref="bootclass.path" debug="compiler.debug">
+      <selector refid="jedit-src"/>
+      <classpath refid="classpath"/>
+   </javac>
+  </target>
+
+  <target name="javadoc" depends="init">
+    <!-- Compile the javadoc from ${src} into ${javadoc} -->
+    <javadoc sourcepath="${src}" destdir="${javadoc}" packagenames="com.swabunga.spell.*">
+      <fileset>
+        <selector refid="jedit-src"/>
+      </fileset>
+      <classpath refid="classpath"/>
+    </javadoc>
+  </target>
+
+  <target name="clean">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+    <delete dir="${javadoc}"/>
+  </target>
+ 
+  <target name="pack" depends="init">
+   <copy todir="${build}">
+      <fileset dir="${jedit-config}"/>
+      <fileset dir="${dict}" includes="english.0"/>
+      <fileset dir="${src}" >
+        <include name="**/*.properties"/>
+        <exclude name="**/examples/*"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="build" depends="cross-compile,pack">
+  	<jar jarfile="${dist}/lib/jazzy.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Built-By" value="${user.name}"/>
+      </manifest>
+    </jar>
+    <zip basedir="../" zipfile="${dist}\JazzySrc${DSTAMP}.zip">
+      <include name="jazzy/jedit_build.xml"/>
+      <include name="jazzy/${dict}/english.0"/>
+      <include name="jazzy/src/**"/>
+      <exclude name="jazzy/**/examples/*"/>
+    </zip>
+  </target>
+  
+  <target name="test" depends="debug-compile">
+     <java classpath="%CLASSPATH%;${build}" 
+           classname="${package}.${test-class}"/>
+  </target>
+  
+  <target name="deploy" depends="build">
+    <copy file="${dist}\LaTeXTools.jar" todir="${jedit.jars.dir}"/>
+		<antcall target="reload"/>
+  </target>
+  
+    <target name="reload" if="can.reload.plugins">
+        <taskdef name="reloadPlugin" classname="ReloadPluginTask"/>
+        <reloadPlugin jarfile="${jedit.jars.dir}/LaTeXTools.jar"/>
+    </target>
+  
+</project>
+

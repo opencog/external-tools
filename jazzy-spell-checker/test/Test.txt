@@ -1,0 +1,21 @@
+The following itemized list gives various tests to try to break the 
+spell checker's code.
+  
+  Misspelled word in middle of sentence.
+  This string of charracters is a sentence.
+  
+  Misspelled word at the start of sentence. Note - suggestions should be capitalized.
+  Thhis string of characters is a sentence.
+  
+  Misspelled word at the end of sentence.
+  This string of characters is a sentance.
+  
+  Misspelled word at the start of a line in the middle of sentence.
+  This string of 
+  charracters is a sentence.
+  
+  Capitalized word in the middle of sentence. Note - suggestions should not be capitalized.
+  This string Of characters is a sentence.
+  
+  Lower case word at the start of sentence. 
+  this string of characters is a sentence.

@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<!-- :wrap=soft: -->
+<html> 
+<head> 
+<title>Jazzy Spellchecker</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+</head> 
+ 
+<body> 
+ <h1>Jazzy Spellchecker</h1>
+ 
+ This spellchecker directly uses the Jazzy spellchecker classes, and as such offers an entirely Java based spellchecking solution. There are just two menu commands, 'Spell check selection' is pretty self explanatory - if there is no text selected the whole document is checked; 'Unload Dictionary' simply unloads the dictionary from memory this may be an issue if the dictionary used is fairly large. If the dictionary is large, it is advised to increase the maximum heap size.
+ 
+ <h2>Features</h2>
+ 
+ <ul>
+   <li>Internal Dictionary - used if no user dictionary is specified in the options, or the specified file cannot be found or read for some reason). Note, words cannot be added to the default dictionary.</li>
+   <li>External Dictionary Support - a dictionary should be a text file containing the list of correct words, each on a separate line.</li>
+   <li>Disk based dictionary - an option for the dictionary to be accessed from the hard drive rather than stored in memory is available. This reduces significantly the speed of loading the dictionary, at the expense of some speed in the spellchecking itself.</li>
+   <li>Text Highlighting - misspelled text highlighted when the dialog is shown.</li>
+   <li>Dynamic Replace - text replaced in the buffer as the spellchecker progresses.</li>
+   <li>Mode specific spellchecking - the following special modes are supported:
+      <ul>
+        <li>Java - only documentation comments and range comments are checked. The contents of &lt;CODE&gt; tags are ignored, as are any tags themselves, and JavaDoc tags are also ignored.</li>
+        <li>HTML / XML - All tags are ignored.</li>
+        <li>TeX - All commands and environment names are ignored. Comments are ignored. Math environments (at present only $ and $$ math environments) are ignored.</li>
+      </ul>
+      This feature can be disabled through the options panel.
+   </li>
+ </ul>
+ 
+ <h2>Options</h2>
+ 
+ The options that can be accessed through the Jazzy options pane include specifying the location of the dictionary, and allowing the dictionary to load on startup (this will considerably slow startup time if a large dictionary is used, but will speed up the first spellcheck).
+ 
+ <h2>User Supplied Dictionaries</h2>
+ 
+ If memory based spellchecking is selected, the file location field in the option pane should point to the dictionary file. If memory based checking is selected, the field should point to a folder called 'words' in which the dictionary(ies) is (are) located.
+ 
+ 
+ A comprehensive English dictionary customizable for UK, US, Canadian (and other combinations) is available from the Jazzy CVS <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/jazzy/jazzy/dict/english_dic/">here</a>. Instructions for the dictionaries to include are in the file english.txt. If memory-based checking is being used, the relevant dictionary files should be concatenated into one single file. If disk-based checking is used, this is not necessary (but would allow easy switching between disk and memory based checking). The default dictionary can be extracted from jazzy.jar in the jEdit jars folder using any zip tool, (including jEdits Archive plugin) if the user wishes to add words to the dictionary.
+ 
+</body> 
+</html>

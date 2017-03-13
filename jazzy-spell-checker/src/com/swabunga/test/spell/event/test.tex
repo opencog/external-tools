@@ -1,0 +1,218 @@
+% ` in Discrete Space'
+%{{{ :wrap=soft:maxLineLen=0:folding=explicit::collapseFolds=2:
+%{{{ Preamble
+
+\documentclass[11pt,a4paper]{llncs}
+
+\usepackage{xspace}
+\usepackage[dvipdf]{graphicx}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{ifthen}
+
+\setkeys{Gin}{width=\linewidth}
+
+\newcounter{ax}
+\newenvironment{axioms}[1]
+{\begin{list}{\bf{(#1\arabic{ax})}}{\usecounter{ax}\setlength{\leftmargin}{1cm}
+}}
+{\end{list}}
+
+\newcommand{\keywords}[1]{\noindent{\small\textbf{Key Words:} #1}}
+
+\newcommand{\oC}{\overline{C}}
+\newcommand\oK{\overline{K}}
+\newcommand\Z[1][]{\ensuremath{\mathbb{Z}^{#1}}\xspace}
+\newcommand\R[1][]{\ensuremath{\mathbb{R}^{#1}}\xspace}
+
+\newcommand\cI{\ensuremath{\mathcal{I}}\xspace}
+\newcommand\cC{\ensuremath{\mathcal{C}}\xspace}
+\newcommand\cB{\ensuremath{\mathcal{B}}\xspace}
+\newcommand\cHH{\ensuremath{\mathcal{H}}\xspace}
+\newenvironment{compbullist}
+{\begin{itemize}
+ \setlength{\itemsep}{0ex plus0.2ex}
+ \setlength{\parsep}{0ex plus0.2ex}}
+{\end{itemize}}
+
+\newcounter{tabcount}
+\newcommand{\tab}[1][1]{
+ \setcounter{tabcount}{#1}
+ \whiledo{\value{tabcount}>0}{\hspace{.5em}\addtocounter{tabcount}{-1}}
+}
+
+\newcounter{algCount}
+\newenvironment{compactlist}[1][]
+{\begin{list}{#1\arabic{algCount}.}
+{\usecounter{algCount}
+ \setlength{\itemsep}{0ex plus0.2ex}
+ \setlength{\parsep}{0.2ex}
+}}
+{\end{list}}
+
+\newenvironment{algo}[3]
+{\vspace{2ex}
+
+\noindent\textbf{\textsc{Algorithm }} #1
+
+\emph{Input}: \texttt{#2}
+
+\emph{Output}: \texttt{#3}
+
+\begin{compactlist}
+\begin{ttfamily}}
+{\end{ttfamily}
+ \end{compactlist}
+}
+
+%\renewcommand\baselinestretch{1.5}
+ %}}}
+%{{{ Title page
+ \begin{document}
+
+  \title{ in Discrete Space}
+  \author{Anthony J. Roy \and John G. Stell}
+  \institute{School of Computing,\\
+        University of Leeds,\\
+        Leeds, LS2 9JT, U. K.}
+
+\maketitle
+
+\begin{abstract}
+This paper looks at spaces. 
+\end{abstract}
+
+\keywords{Simple things heere.}
+
+\pagebreak
+
+ %}}}
+%*********************************************************************
+\section{Introduction}%{{{
+
+The concept of a convex region plays an important part in many
+practical computations in GIS. As an example of the
+latter, we note that the region-connection calculus was
+extended~\cite[p287]{CohnGeoInf1997} by adding a one place
+function which returned the convex hull of a region.
+axiom. These correspond to convex geometries  geometries
+respectively, the latter giving rise to. We
+define constructs that give rise to convex
+geometries.
+
+We go on to investigate cell complexes, and see how these give
+rise to aligned spaces. Several definitions are
+given, and relationships between these are given. It is
+important that  in the abstract: it
+is necessary to show how computations can be carried out. We
+provide some algorithms for the computation of convex hulls of
+oriented in Section~\ref{algorithms}. A brief introduction
+to the necessary oriented  concepts is provided earlier in
+Section~\ref{mat}.
+%}}}
+%*********************************************************************
+\section{Coinvexity} %{{{
+
+This serction gives an  of convex a very general setting. The conccepts themselves come from the corresponding concepts of convex geometries defined on a vector space over the real numbers. Both concepts are founded from the notion of linear combinations of points in a vector space - the addition of scalar multiples of a set of points. Given a set of vectors $\mathit{v}_{0}, \ldots, \mathit{v}_{k}$, and a set of scalars, $\lambda_{0}, \ldots, \lambda_{k}$, a linear combination of these vectors given the set of scalars is a vector given by $\sum^{k}_{i=0}\lambda_{i}\mathit{v}_{i}$
+
+A \emph{subspace} of a vector space is a subset $S \subset\R[n]$ which contains all linear combinations of points in $S$. Examples are $\R[n]$, the origin $\mathbf{0}$, any line or  plane passing through the origin etc. Note that the origin will always be in a subspace, since all scalars can be set to zero.
+
+ combinations are a subset of the vector combinations, restricted in that the scalars must add up to exactly $1$. This gives rise to the notion of  sets, the sets $S \subset\R[n]$ which contains all  combinations of points in $S$. The set of  sets includes all translations of the set of subspaces - the origin is no longer a necessary element of an  set, since the scalars can no longer all be set to zero. An  sets is often characterized as a set containing all of the lines through all pairs of points in the set.
+
+Convex combinations are again a subset of the  combinations, and are restricted further by the condition that not only must the scalars add up to $1$, but they must also lie in the range $[0,1]$. Convex sets are simply sets containing all convex combinations of its members - they are often characterized as sets containing all line segments between each of its pairs of points.
+
+It is obvious from the above definitions that linear,  and convex sets are closely related, and that indeed linear subsets are  subsets, and  subsets are convex subsets (though not the reverse in general). The notion of aligned spaces given below is an abstraction of convex and  geometries
+
+
+\subsection{Alignment Spaces}\label{align}%{{{ 
+
+The concept of alignment spaces was introduced by Coppel\cite{Coppel98} as a general axiomatization of . The main focus of his work is on continuous settings, but we show here how the axioms of alignment spaces can be successfully applied to discrete spaces.
+
+In Euclidean space a set, $S$, is said to be convex if for every pair of points in $S$ the straight line between them is also in $S$. We can show  that this definition does not directly extend to discrete space. If we define a straight line between two points, $a$ and $b$, in \Z[n] as being the set of all points co-linear with those points, and between them. That is, $line(a,b) = \{x\in\Z[n]|x = \lambda a + \gamma b,\;\lambda + \gamma = 1,\;0\leq\lambda,\gamma\}$. Figure~\ref{ex1} shows that such a definition of  does not fit with an intuitive notion of convex. In this example, the three points alone are by the naive definition a convex set.
+
+The following definition begins to capture some of the properties we would expect a convex set to possess.
+
+\begin{definition}[Alignment Space]
+An \emph{alignment space} is a set $X$ along with a set $\mathcal{C}$ of subsets of $X$ such that the following axioms hold:
+
+\begin{description}
+ \item [(A0)] $\varnothing \in \mathcal{C}$\hfill (Empty set)\label{a0}
+ \item [(A1)] $X \in \mathcal{C}$\hfill (Top set)\label{a1}
+ \item [(A2)] $\forall S\subseteq \mathcal{C}, \; S\not= \varnothing \rightarrow \bigcap S \in\mathcal{C}$\hfill (Intersection)\label{a2}
+ \item [(A3)] $\forall S\subseteq \mathcal{C}, \; S\not= \varnothing$ if $S$ is totally ordered by inclusion, then $\bigcup S\in\mathcal{C}$\hfill (Qualified union)\label{a3}
+\end{description}
+
+We call the sets in $\mathcal{C}$ \emph{aligned sets}. The intersection of all aligned sets containing a set $S\subseteq X$ is called the \emph{alignment hull} of $S$, denoted $[S]$.
+\end{definition}
+ 
+ \begin{proposition}
+ Note that the following properties hold of any alignment hull:
+ \begin{description}
+ \item [H0] $[\varnothing]=\varnothing$
+ \item [H1] $S\subseteq[S]$
+ \item [H2] $S\subseteq T \rightarrow [S]\subseteq [T]$
+ \item [H3] $[[S]]=[S]$
+ \item [H4] $[S] = \bigcup \{[T]: T\subseteq S \text{ and T is finite}\}$
+ \end{description}
+ \end{proposition}
+ 
+The proof for this proposition can be found in \cite{Coppel98}
+
+In brief the axioms state that the entire set is aligned, arbitrary intersections of aligned sets are aligned, and the union of totally ordered sets of aligned sets are also aligned. These are properties we would expect of convex sets. These axioms alone are not enough however, as Figure~\ref{naive_convex_set} shows.
+
+\begin{figure}
+\parbox{.4\textwidth}{\includegraphics[width=.4\textwidth]{graphics/convex1.png}
+\caption{A `convex' set according to the naive definition.}\label{naive_convex_set}
+}\hfill
+\parbox{.4\textwidth}{\includegraphics[width=.4\textwidth]{graphics/example.png}
+\caption{A subset of $2^X$ that satisfies the alignment axioms.}\label{ex1}
+}\end{figure}
+
+Figure~\ref{ex1} shows two sets of points. Let $\mathcal{C}$ be a set containing these two sets along with their intersection, the entire space $X$ and the empty set. Then, $\mathcal{C}$ satisfies all three axioms, and is hence an aligned space. This is an aligned set, but is not convex in our usual understanding of the concept.
+ %}}}
+\subsection{Convex Geometries}%{{{ 
+
+To overcome the problem just mentioned, a further axiom, known as the anti-exchange property, is added.
+
+\begin{definition}[Anti-exchange Property]
+\label{ae}
+The anti-exchange property is characterized by the following axiom:
+
+\begin{description}
+ \item [(AE)] $\forall x,y\in X, \; \forall S\subseteq X,\; \text{ if } x\not= y \text{ and } y\in [S\cup x]\text{ and }y\not\in[S] \text{ then } x\not\in [S\cup y]$\hfill (Anti-exchange)
+\end{description}
+\end{definition}
+
+Clearly the example in Figure~\ref{ex1} fails to satisfy this additional axiom. Take for example $S$ to be one of the two depicted subsets, and $x$ and $y$ as distinct points not in S then $S\subseteq X,\; x\not= y$ as required, $y\in[S\cup x]$ since $[S\cup x]=X$ ($X$ is the largest aligned set containing $S\cup x$), $y\not\in [S]$ since $S$ is the smallest aligned set containing itself. However, $x\in [S\cup y]$ since $X$ is again the smallest aligned set containing the union of $S$ and $x$.
+
+We shall refer to aligned spaces for which the anti-exchange property holds as \emph{convex geometries}, and the alignment hulls in this special case \emph{convex hulls}. Note that the term usually refers to geometries defined with points and segments as primitives (see \cite{Coppel98}), but in this paper we have already seen that such an axiomatization would not be applicable in the case of discrete space.
+
+Figure~\ref{ex2} shows an example of a space that satisfies the five axioms A0-A3 and AE. Note that though all axioms are satisfied, there are subsets missing that we would normally consider to be convex. %\com{Perhaps some kind of symmetry axiom is necessary? Can't think at the minute how such a thing would work though...}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=.4\textwidth]{graphics/ex2.png}
+\caption{A convex geometry.}\label{ex2}
+\end{center}
+\end{figure}
+
+ %}}}
+%}}}
+%*********************************************************************
+%Bibliography%{{{ 
+%
+%GATHER{.bib}   % For Gather Purpose Only - same filename as bib file below. 
+%GATHER{.bbl}   % Named after this (main) file
+
+\nocite{*} % Include this command to include uncited bib entries into the bibliography
+
+\bibliographystyle{alpha}
+\bibliography{}   % .bib not required. Full pathname allowed.
+
+ %}}}
+
+\end{document}%}}}
+
+
