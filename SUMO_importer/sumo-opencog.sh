@@ -10,7 +10,7 @@ echo -e " \n *** Creating scheme files *** \n"
 cd "sumo/"
 
 for file in *.kif; do
-   python ../sumo-importer.py $file; 
+   python ../sumo-importer.py $file;
 done
 
 echo -e " \n *** Coping the output files to /outputs *** \n "
@@ -19,9 +19,7 @@ if [ ! -d "output" ]; then
 fi
 
 for file in *.scm; do
-   mv $file output   
+   mv $file output
 done
 
 echo "Done"
-
-
