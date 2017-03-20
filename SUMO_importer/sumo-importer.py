@@ -138,7 +138,7 @@ def link(predicate, arguments, link_tv):
         return atomspace.add_link(link_type, arguments, tv=link_tv)
     else:
         if predicate.endswith('Fn'):
-            link_type = types.ExecutionLink
+            link_type = types.ExecutionOutputLink
             node_type = types.SchemaNode
         else:
             link_type = types.EvaluationLink
