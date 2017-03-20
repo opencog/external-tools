@@ -158,7 +158,7 @@ def special_link_type(predicate):
         'not':types.NotLink,
         'instance':types.InheritanceLink,
         # This might break some of the formal precision of SUMO, but who cares
-        'attribute':types.InheritanceLink,
+        'attribute':types.IntensionalInheritanceLink,
         'member':types.MemberLink,
         'subclass':types.InheritanceLink,
         'exists':types.ExistsLink,
