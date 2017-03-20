@@ -89,7 +89,6 @@ def parse_kif_string(inputdata):
 
     return data
 
-
 def convert_multiple_expressions(expressions):
     for expression in expressions:
         convert_expression(expression)
@@ -101,19 +100,14 @@ def convert_expression(expression, link_tv=DEFAULT_LINK_TV):
         return convert_list(expression, link_tv)
 
 def convert_token(token):
-    rtn = ""
-
     try:
         if token.startswith('?'):
-            rtn = atomspace.add_node(types.VariableNode, token)
+            return atomspace.add_node(types.VariableNode, token)
         elif token.startswith('"'):
             word = token[1:-2]
-            rtn = atomspace.add_node(types.ConceptNode, word, tv=DEFAULT_NODE_TV)
+            return atomspace.add_node(types.ConceptNode, word, tv=DEFAULT_NODE_TV)
         else:
-            rtn = atomspace.add_node(types.ConceptNode, token, tv=DEFAULT_NODE_TV)
-
-        # print "===== convert_token =====\n", rtn
-        return rtn
+            return atomspace.add_node(types.ConceptNode, token, tv=DEFAULT_NODE_TV)
 
     except Exception as ex:
         print "\n*** Failed to convert token: " + token
@@ -124,7 +118,6 @@ def convert_list(expression, link_tv):
     arguments = expression[1:]
 
     arguments_atoms = [convert_expression(expr, link_tv=None) for expr in arguments]
-    # print "===== convert_list =====\n", predicate, link(predicate, arguments_atoms, link_tv)
 
     return link(predicate, arguments_atoms, link_tv)
 
@@ -134,6 +127,12 @@ def link(predicate, arguments, link_tv):
         return None
 
     link_type = special_link_type(predicate)
+
+    # Create (Inheritance x definite) for each (Inheritance x y)
+    # to indicate that x is a specific entity
+    if predicate == "instance":
+        definite_node = atomspace.add_node(types.ConceptNode, "definite", tv=DEFAULT_NODE_TV)
+        atomspace.add_link(link_type, [arguments[0], definite_node], tv=link_tv)
 
     if link_type:
         return atomspace.add_link(link_type, arguments, tv=link_tv)
