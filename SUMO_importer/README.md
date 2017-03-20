@@ -1,20 +1,16 @@
-SUMO importer 
+SUMO importer
 ==============
-
-The sumo-importer script is used to convert the SUMO logical expressions into Atomse 
+The sumo-importer script is used to convert the SUMO logical expressions into atomese
 representation to import into the atomspace.
 
- - Run ./sumo-opencog.sh to get clone SUMO and generate the output file.
- - It takes a few minute to convert all.
- - When it finish, you will get sumo directory with a bunch of kif files and Output sub directory,
- - The output directory (sumo/output/) contains the atomse representations of each kif files.
+- Run ./sumo-opencog.sh to clone SUMO and generate the output files.
+- It takes a few minutes to convert them all.
+- When it finishes, you will get a sumo directory with a bunch of kif files and the output directory with a bunch of scheme files containing the atomese representations of each kif files.
 
 TODO lists:
-
 A bit more of a transformation, we need to end up with something that is more transparent for OpenCog algorithms like PLN to deal with.
 
 Improvements we discussed are:
-
 1. Change the predicate-argument format to be frame-based, like in the output of the Lojban parser
 
 2. where we have (instance x y), make sure that as well as (Inheritance x y) we also have (Inheritance x Definite) to indicate that x is a specific entity
@@ -26,11 +22,13 @@ Improvements we discussed are:
 5. attribute = IntensionalInheritance
 
 6. Apply SimultaneousImplication for some expressions like,
-
-	(instance ?X OrganismRemains)
-	(holdsDuring (WhenFn ?X) (attribute ?X Dead))) 
+```
+    (instance ?X OrganismRemains)
+    (holdsDuring (WhenFn ?X) (attribute ?X Dead)))
+```
 might be nicely translated as
-	SimultaneousImplication
-	    Inheritance $X OrganismRemains
-	    IntensionalInheritance $X Dead
-
+```
+    SimultaneousImplication
+        Inheritance $X OrganismRemains
+        IntensionalInheritance $X Dead
+```
