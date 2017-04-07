@@ -51,7 +51,7 @@ def match_parenthesis (symbolString):
         #print "extra closing present at"
         #print index
         return (match_parenthesis(removeExtra(symbolString,index-1))) 
-        
+
 def skip_comments(myfile):
     
     '''You can't use this function directly because it would break parsing of multiline expressions'''
@@ -59,9 +59,12 @@ def skip_comments(myfile):
 
     for line in myfile:
 
-        '''' skip documentation'''
+        '''' skip documentation and such'''
         if copying:
-            if line.startswith('(documentation'):
+            if line.startswith('(documentation ') \
+               or line.startswith('(termFormat ') \
+               or line.startswith('(format ') \
+               or line.startswith('(externalImage '):
                 if '")' in line:
                     line = ""
                     copying = True
@@ -72,8 +75,8 @@ def skip_comments(myfile):
             copying = True   
 
         if copying == False:
-            line = "" 
-            
+            line = ""
+
         '''' skip comments'''
         if not ';' in line:
             line = line.rstrip()
@@ -91,7 +94,7 @@ def parse_kif_string(inputdata):
     #*** Check that parenthisis is mathced on input data
     matched = match_parenthesis(inputdata)
     # print "GOING SMOOTH!!"
- 
+
     from pyparsing import OneOrMore, nestedExpr
     data = OneOrMore(nestedExpr()).parseString(matched)
            # The sExpression (i.e. lisp) parser is cool, but doesn't work for some reason (it might be the '?' characters at the start of variable names?)
