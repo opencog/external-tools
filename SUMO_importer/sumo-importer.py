@@ -162,8 +162,8 @@ def link(predicate, arguments, link_tv):
 
 def special_link_type(predicate):
     mapping = {
-        '=>':types.ImplicationLink,
-        '<=>':types.EquivalenceLink,
+        '=>':types.ImplicationScopeLink,
+        '<=>':types.EquivalenceScopeLink,
         'and':types.AndLink,
         'or':types.OrLink,
         'not':types.NotLink,
