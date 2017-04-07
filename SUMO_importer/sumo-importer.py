@@ -86,6 +86,9 @@ def read_file(filename):
     with open (filename, 'rt') as myfile:
         return '\n'.join(skip_comments(myfile))
 
+def remove_blank_lines(text):
+    return "\n".join([ll.rstrip() for ll in text.splitlines() if ll.strip()])
+
 def parse_kif_string(inputdata):
     '''Returns a list containing the ()-expressions in the file.
     Each list expression is converted into a Python list of strings. Nested expressions become nested lists''' 
@@ -94,6 +97,11 @@ def parse_kif_string(inputdata):
     #*** Check that parenthisis is mathced on input data
     matched = match_parenthesis(inputdata)
     # print "GOING SMOOTH!!"
+
+    matched = remove_blank_lines(matched)
+
+    if not matched:
+        return []
 
     from pyparsing import OneOrMore, nestedExpr
     data = OneOrMore(nestedExpr()).parseString(matched)
