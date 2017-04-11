@@ -62,6 +62,7 @@ def skip_comments(myfile):
         '''' skip documentation and such'''
         if copying:
             if line.startswith('(documentation ') \
+               or line.startswith('(comment ') \
                or line.startswith('(termFormat ') \
                or line.startswith('(format ') \
                or line.startswith('(externalImage '):
