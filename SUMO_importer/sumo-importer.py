@@ -138,37 +138,38 @@ def convert_token(token):
         return atomspace.add_node(types.ConceptNode, token, tv=DEFAULT_NODE_TV)
 
 def convert_list(expression, link_tv):
-    predicate = expression[0]
-    arguments = expression[1:]
+    oper = expression[0]
+    args = expression[1:]
     
-    arguments_atoms = [convert_expression(expr, link_tv=None) for expr in arguments]
-    #print link (predicate, arguments_atoms, link_tv)
+    args_atoms = [convert_expression(expr, link_tv=None) for expr in args]
     
-    return link(predicate, arguments_atoms, link_tv)
+    return link(oper, args_atoms, link_tv)
 
-def link(predicate, arguments, link_tv):
-    # Remove things with "" in them
-    if predicate in ['documentation','externalImage']:
-        return None
-
-    link_type = special_link_type(predicate)
+def link(oper, args_atoms, link_tv):
+    # Map special operator to Atomese link
+    link_type = special_link_type(oper)
 
     if link_type:
-        return atomspace.add_link(link_type, arguments, tv=link_tv)
+        return atomspace.add_link(link_type, args_atoms, tv=link_tv)
     else:
-        if predicate.endswith('Fn'):
-            link_type = types.ExecutionLink
+        if oper.endswith('Fn'):
+            link_type = types.ExecutionOutputLink
             node_type = types.SchemaNode
         else:
             link_type = types.EvaluationLink
             node_type = types.PredicateNode
 
-        node = atomspace.add_node(node_type, predicate, tv=DEFAULT_PREDICATE_TV)
-        return atomspace.add_link(link_type, [node,
-            atomspace.add_link(types.ListLink, arguments)],
-            tv=link_tv)
+        node = atomspace.add_node(node_type, oper, tv=DEFAULT_PREDICATE_TV)
 
-def special_link_type(predicate):
+        # Wrap in a ListLink if there is more than one argument
+        if len(args_atoms) == 1:
+            args_atoms = args_atoms[0]
+        else:
+            args_atoms = atomspace.add_link(types.ListLink, args_atoms)
+
+        return atomspace.add_link(link_type, [node, args_atoms], tv=link_tv)
+
+def special_link_type(oper):
     mapping = {
         '=>':types.ImplicationScopeLink,
         '<=>':types.EquivalenceScopeLink,
@@ -185,8 +186,8 @@ def special_link_type(predicate):
         'causes':types.ImplicationLink
         }
 
-    if predicate in mapping:
-        return mapping[predicate]
+    if oper in mapping:
+        return mapping[oper]
     else:
         return None
 
@@ -220,4 +221,3 @@ if __name__ == '__main__':
     atomspace = AtomSpace()
 
     loadSumoAndExportToScheme(atomspace, filename)
-
