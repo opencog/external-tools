@@ -51,7 +51,7 @@ def match_parenthesis (symbolString):
         #print "extra closing present at"
         #print index
         return (match_parenthesis(removeExtra(symbolString,index-1))) 
-        
+
 def skip_comments(myfile):
     
     '''You can't use this function directly because it would break parsing of multiline expressions'''
@@ -59,9 +59,12 @@ def skip_comments(myfile):
 
     for line in myfile:
 
-        '''' skip documentation'''
+        '''' skip documentation and such'''
         if copying:
-            if line.startswith('(documentation'):
+            if line.startswith('(documentation ') \
+               or line.startswith('(termFormat ') \
+               or line.startswith('(format ') \
+               or line.startswith('(externalImage '):
                 if '")' in line:
                     line = ""
                     copying = True
@@ -72,8 +75,8 @@ def skip_comments(myfile):
             copying = True   
 
         if copying == False:
-            line = "" 
-            
+            line = ""
+
         '''' skip comments'''
         if not ';' in line:
             line = line.rstrip()
@@ -83,6 +86,9 @@ def read_file(filename):
     with open (filename, 'rt') as myfile:
         return '\n'.join(skip_comments(myfile))
 
+def remove_blank_lines(text):
+    return "\n".join([ll.rstrip() for ll in text.splitlines() if ll.strip()])
+
 def parse_kif_string(inputdata):
     '''Returns a list containing the ()-expressions in the file.
     Each list expression is converted into a Python list of strings. Nested expressions become nested lists''' 
@@ -91,7 +97,12 @@ def parse_kif_string(inputdata):
     #*** Check that parenthisis is mathced on input data
     matched = match_parenthesis(inputdata)
     # print "GOING SMOOTH!!"
- 
+
+    matched = remove_blank_lines(matched)
+
+    if not matched:
+        return []
+
     from pyparsing import OneOrMore, nestedExpr
     data = OneOrMore(nestedExpr()).parseString(matched)
            # The sExpression (i.e. lisp) parser is cool, but doesn't work for some reason (it might be the '?' characters at the start of variable names?)
@@ -127,40 +138,41 @@ def convert_token(token):
         return atomspace.add_node(types.ConceptNode, token, tv=DEFAULT_NODE_TV)
 
 def convert_list(expression, link_tv):
-    predicate = expression[0]
-    arguments = expression[1:]
+    oper = expression[0]
+    args = expression[1:]
     
-    arguments_atoms = [convert_expression(expr, link_tv=None) for expr in arguments]
-    #print link (predicate, arguments_atoms, link_tv)
+    args_atoms = [convert_expression(expr, link_tv=None) for expr in args]
     
-    return link(predicate, arguments_atoms, link_tv)
+    return link(oper, args_atoms, link_tv)
 
-def link(predicate, arguments, link_tv):
-    # Remove things with "" in them
-    if predicate in ['documentation','externalImage']:
-        return None
-
-    link_type = special_link_type(predicate)
+def link(oper, args_atoms, link_tv):
+    # Map special operator to Atomese link
+    link_type = special_link_type(oper)
 
     if link_type:
-        return atomspace.add_link(link_type, arguments, tv=link_tv)
+        return atomspace.add_link(link_type, args_atoms, tv=link_tv)
     else:
-        if predicate.endswith('Fn'):
-            link_type = types.ExecutionLink
+        if oper.endswith('Fn'):
+            link_type = types.ExecutionOutputLink
             node_type = types.SchemaNode
         else:
             link_type = types.EvaluationLink
             node_type = types.PredicateNode
 
-        node = atomspace.add_node(node_type, predicate, tv=DEFAULT_PREDICATE_TV)
-        return atomspace.add_link(link_type, [node,
-            atomspace.add_link(types.ListLink, arguments)],
-            tv=link_tv)
+        node = atomspace.add_node(node_type, oper, tv=DEFAULT_PREDICATE_TV)
 
-def special_link_type(predicate):
+        # Wrap in a ListLink if there is more than one argument
+        if len(args_atoms) == 1:
+            args_atoms = args_atoms[0]
+        else:
+            args_atoms = atomspace.add_link(types.ListLink, args_atoms)
+
+        return atomspace.add_link(link_type, [node, args_atoms], tv=link_tv)
+
+def special_link_type(oper):
     mapping = {
-        '=>':types.ImplicationLink,
-        '<=>':types.EquivalenceLink,
+        '=>':types.ImplicationScopeLink,
+        '<=>':types.EquivalenceScopeLink,
         'and':types.AndLink,
         'or':types.OrLink,
         'not':types.NotLink,
@@ -174,8 +186,8 @@ def special_link_type(predicate):
         'causes':types.ImplicationLink
         }
 
-    if predicate in mapping:
-        return mapping[predicate]
+    if oper in mapping:
+        return mapping[oper]
     else:
         return None
 
@@ -209,4 +221,3 @@ if __name__ == '__main__':
     atomspace = AtomSpace()
 
     loadSumoAndExportToScheme(atomspace, filename)
-
