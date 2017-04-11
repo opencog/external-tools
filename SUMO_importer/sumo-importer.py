@@ -5,9 +5,9 @@ reload(sys)
 #sys.setdefaultencoding('Cp1252')
 #sys.setdefaultencoding('utf8')
 
-DEFAULT_NODE_TV = TruthValue(0.01, 1000)
-DEFAULT_LINK_TV = TruthValue(0.9, 100)
-DEFAULT_PREDICATE_TV = TruthValue(0.1, 100)
+DEFAULT_NODE_TV = TruthValue(0.01, 1)
+DEFAULT_LINK_TV = TruthValue(1, 1)
+DEFAULT_PREDICATE_TV = TruthValue(0.1, 1)
 
 atomspace=None
 
