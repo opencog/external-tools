@@ -11,21 +11,19 @@ DEFAULT_PREDICATE_TV = TruthValue(0.1, 1)
 
 atomspace=None
 
-
 def removeExtra (orgString, index):
-   #removes the parenthesis at the given index
-   newSymbolString = orgString[:index]  + orgString[index+1:]
-   #print ("removed and sent back through")  
-   return newSymbolString
-   
-   
+    #removes the parenthesis at the given index
+    newSymbolString = orgString[:index]  + orgString[index+1:]
+    #print ("removed and sent back through")
+    return newSymbolString
+
 def match_parenthesis (symbolString):
-  ## close any and all open parenthesises & return a "file" to be processed further... 
-  from pythonds.basic.stack import Stack
-  s = Stack()
-  balanced = True
-  index = 0
-  while index < len(symbolString) and balanced:
+    ## close any and all open parenthesises & return a "file" to be processed further... 
+    from pythonds.basic.stack import Stack
+    s = Stack()
+    balanced = True
+    index = 0
+    while index < len(symbolString) and balanced:
         symbol = symbolString[index]
         if symbol == "(":
             s.push(symbol+ str(index))
@@ -37,17 +35,17 @@ def match_parenthesis (symbolString):
 
         index = index + 1
 
-  if balanced and s.isEmpty():
+    if balanced and s.isEmpty():
         #print ("it is FINALLY balanced!")
         return symbolString
-  elif balanced and not s.isEmpty():
+    elif balanced and not s.isEmpty():
         #print "opening barace is not closed at " 
         
         idx = int (s.pop().strip("("))
         #print idx
         #print symbolString[idx]
         return (match_parenthesis(removeExtra(symbolString,idx))) 
-  else:   #couldn't pop from stack
+    else:   #couldn't pop from stack
         #print "extra closing present at"
         #print index
         return (match_parenthesis(removeExtra(symbolString,index-1))) 
@@ -117,7 +115,6 @@ def parse_kif_string(inputdata):
            #    print pfe.markInputline('^')
   
     return data
- 
 
 def convert_multiple_expressions(expressions):
     for expression in expressions:
@@ -177,7 +174,7 @@ def special_link_type(oper):
         'and':types.AndLink,
         'or':types.OrLink,
         'not':types.NotLink,
-        'instance':types.InheritanceLink,
+        'instance':types.MemberLink,
         # This might break some of the formal precision of SUMO, but who cares
         'attribute':types.InheritanceLink,
         'member':types.MemberLink,
