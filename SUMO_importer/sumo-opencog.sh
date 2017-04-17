@@ -4,7 +4,7 @@
 # Constants #
 #############
 
-INSTANCE_TYPE_FILE="instances.type"
+SUMO_TO_ATOM_TYPE_FILE="sumo-to-atom-types.txt"
 
 #############
 # Functions #
@@ -38,17 +38,17 @@ fi
 
 cd "sumo/"
 
-if [ ! -f "$INSTANCE_TYPE_FILE" ]; then
-    info_echo "Infer atom types of SUMO instances, put results in sumo/$INSTANCE_TYPE_FILE"
+if [ ! -f "$SUMO_TO_ATOM_TYPE_FILE" ]; then
+    info_echo "Infer atom types of SUMO instances, put results in sumo/$SUMO_TO_ATOM_TYPE_FILE"
     info_echo "Be patient, it may take a while..."
-    ../sumo-instance-types.py *.kif >> "$INSTANCE_TYPE_FILE"
+    ../sumo-to-atom-types.py *.kif >> "$SUMO_TO_ATOM_TYPE_FILE"
 fi
 
 info_echo "Create scheme files"
 
 for file in *.kif; do
     info_echo "Export $file"
-    ../sumo-importer.py "$INSTANCE_TYPE_FILE" $file
+    ../sumo-importer.py "$SUMO_TO_ATOM_TYPE_FILE" $file
 done
 
 info_echo "Move the generated scheme files to sumo/output"
