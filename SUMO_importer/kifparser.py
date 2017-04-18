@@ -45,6 +45,7 @@ def skip_comments(myfile):
                or line.startswith('(comment ') \
                or line.startswith('(termFormat ') \
                or line.startswith('(format ') \
+               or line.startswith('(utterance ') \
                or line.startswith('(externalImage '):
                 if '")' in line:
                     line = ""

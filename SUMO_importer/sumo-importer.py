@@ -36,7 +36,38 @@ def load_instance2type(filename):
 
 def convert_multiple_expressions(i2t, expressions):
     for expression in expressions:
-        convert_expression(i2t, expression)
+        convert_root_expression(i2t, expression)
+
+def is_quantifier(token):
+    return token in {"forall", "exists"}
+
+def is_variable(token):
+    return token.startswith("?") or token.startswith("@")
+
+def find_free_variables(expression, hidden_variables=set()):
+    # Base cases
+    if isinstance(expression, str):
+        if is_variable(expression) and expression not in hidden_variables:
+            return [expression]
+        return []
+
+    # Recursive cases
+    if is_quantifier(expression[0]):
+        hidden_variables |= set(expression[1])
+        return find_free_variables(expression[2], hidden_variables)
+    return set().union(*[find_free_variables(child, hidden_variables)
+                         for child in expression])
+
+def convert_root_expression(i2t, expression, link_tv=DEFAULT_LINK_TV):
+    """
+    Root expressions are implicitely wrapped in a forall. This function
+    finds the free variables in the expression and wrap it in a forall
+    with the free variable declaration.
+    """
+    free_variables = find_free_variables(expression)
+    if 0 < len(free_variables):
+        expression = ["forall", list(free_variables), expression]
+    return convert_expression(i2t, expression, link_tv)
 
 def convert_expression(i2t, expression, link_tv=DEFAULT_LINK_TV):
     if isinstance(expression, str):
@@ -52,22 +83,70 @@ def convert_token(i2t, token):
     atom_type = i2t[token]
     return atomspace.add_node(atom_type, token, tv=DEFAULT_NODE_TV)
 
+def convert_variable(i2t, variable):
+    # This type is gonna work for any translated atom
+    predicate_type = atomspace.add_node(types.TypeNode, "PredicateNode")
+    schema_type = atomspace.add_node(types.TypeNode, "SchemaNode")
+    concept_type = atomspace.add_node(types.TypeNode, "ConceptNode")
+    atom_type = atomspace.add_link(types.TypeChoice,
+                                   [predicate_type, schema_type, concept_type])
+    return atomspace.add_link(types.TypedVariableLink,
+                              [convert_token(i2t, variable), atom_type])
+
 def convert_variables(i2t, variables):
-    var_atoms = [convert_token(i2t, var) for var in variables]
+    if len(variables) == 1:
+        return convert_variable(i2t, variables[0])
+    var_atoms = [convert_variable(i2t, variable) for variable in variables]
     return atomspace.add_link(types.VariableList, var_atoms)
 
-def convert_list(i2t, expression, link_tv):
+def convert_quantifier(i2t, expression, link_tv):
     oper = expression[0]
     args = expression[1:]
 
-    # If it is a quantifier then the first argument is a variable list
-    if oper in {"forall", "exists"}:
-        args_atoms = [convert_variables(i2t, args[0])]
-        args_atoms += [convert_expression(i2t, expr, link_tv=None)
-                       for expr in args[1:]]
-    else:
-        args_atoms = [convert_expression(i2t, expr, link_tv=None) for expr in args]
+    if oper == "forall":
+        var_atoms = convert_variables(i2t, args[0])
 
+        # (forall (=> is translated into ImplicationScopeLink
+        if args[1][0] == "=>":
+            args_atoms = [var_atoms] + \
+                         [convert_expression(i2t, expr, link_tv=None)
+                          for expr in args[1][1:]]
+            return atomspace.add_link(types.ImplicationScopeLink, args_atoms, link_tv)
+
+        # (forall (<=> is translated into EquivalenceScopeLink
+        if args[1][0] == "<=>":
+            args_atoms = [var_atoms] + \
+                         [convert_expression(i2t, expr, link_tv=None)
+                          for expr in args[1][1:]]
+            return atomspace.add_link(types.EquivalenceScopeLink, args_atoms, link_tv)
+
+        # Otherwise (forall ... is translated into ForAllLink
+        args_atoms = [var_atoms] + \
+                     [convert_expression(i2t, expr, link_tv=None)
+                      for expr in args[1:]]
+        return atomspace.add_link(types.ForAllLink, args_atoms, link_tv)
+
+    elif oper == "exists":
+        var_atoms = convert_variables(i2t, args[0])
+
+        # (exists ... is translated into ExistsLink
+        args_atoms = [var_atoms] + \
+                     [convert_expression(i2t, expr, link_tv=None)
+                      for expr in args[1:]]
+        return atomspace.add_link(types.ExistsLink, args_atoms, link_tv)
+    else:
+        return None
+
+def convert_list(i2t, expression, link_tv):
+    # First attempt to convert as a quantifier
+    quantifier_atom = convert_quantifier(i2t, expression, link_tv)
+    if quantifier_atom:
+        return quantifier_atom
+
+    # If failed then call default link converter
+    oper = expression[0]
+    args = expression[1:]
+    args_atoms = [convert_expression(i2t, expr, link_tv=None) for expr in args]
     return link(i2t, oper, args_atoms, link_tv)
 
 def link(i2t, oper, args_atoms, link_tv):
@@ -128,8 +207,8 @@ def link(i2t, oper, args_atoms, link_tv):
 
 def special_link_type(oper):
     mapping = {
-        '=>':types.ImplicationScopeLink,
-        '<=>':types.EquivalenceScopeLink,
+        '=>':types.ImplicationLink,
+        '<=>':types.EquivalenceLink,
         'and':types.AndLink,
         'or':types.OrLink,
         'not':types.NotLink,
