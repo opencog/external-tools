@@ -36,7 +36,38 @@ def load_instance2type(filename):
 
 def convert_multiple_expressions(i2t, expressions):
     for expression in expressions:
-        convert_expression(i2t, expression)
+        convert_root_expression(i2t, expression)
+
+def is_quantifier(token):
+    return token in {"forall", "exists"}
+
+def is_variable(token):
+    return token.startswith("?") or token.startswith("@")
+
+def find_free_variables(expression, hidden_variables=set()):
+    # Base cases
+    if isinstance(expression, str):
+        if is_variable(expression) and expression not in hidden_variables:
+            return [expression]
+        return []
+
+    # Recursive cases
+    if is_quantifier(expression[0]):
+        hidden_variables |= set(expression[1])
+        return find_free_variables(expression[2], hidden_variables)
+    return set().union(*[find_free_variables(child, hidden_variables)
+                         for child in expression])
+
+def convert_root_expression(i2t, expression, link_tv=DEFAULT_LINK_TV):
+    """
+    Root expressions are implicitely wrapped in a forall. This function
+    finds the free variables in the expression and wrap it in a forall
+    with the free variable declaration.
+    """
+    free_variables = find_free_variables(expression)
+    if 0 < len(free_variables):
+        expression = ["forall", list(free_variables), expression]
+    return convert_expression(i2t, expression, link_tv)
 
 def convert_expression(i2t, expression, link_tv=DEFAULT_LINK_TV):
     if isinstance(expression, str):
