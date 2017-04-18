@@ -61,3 +61,6 @@ mv *.scm output
 cd ..
 
 info_echo "Done"
+
+info_echo "In order to load the scheme files to the atomspace, you may run"
+info_echo "guile --no-auto-compile -l <(cat sumo/output/*.scm)"
