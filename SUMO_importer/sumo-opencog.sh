@@ -5,6 +5,7 @@
 #############
 
 ATOM_TYPE_FILE="atom-types.txt"
+ALL_SUMO_KB="all-sumo-labeled-kb.scm"
 
 #############
 # Functions #
@@ -60,7 +61,10 @@ mv *.scm output
 
 cd ..
 
+info_echo "Move all scheme expression in $ALL_SUMO_KB and label them"
+./label-kb.sh > "$ALL_SUMO_KB"
+
 info_echo "Done"
 
 info_echo "In order to load the scheme files to the atomspace, you may run"
-info_echo "guile --no-auto-compile -l <(cat sumo/output/*.scm)"
+info_echo "guile --no-auto-compile -l $ALL_SUMO_KB"
