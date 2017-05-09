@@ -44,7 +44,11 @@ def is_quantifier(token):
 def is_variable(token):
     return token.startswith("?") or token.startswith("@")
 
-def find_free_variables(expression, hidden_variables=set()):
+def find_free_variables(expression, hidden_variables=None):
+    # Work around shitty Python default argument value design
+    if hidden_variables is None:
+        hidden_variables = set()
+
     # Base cases
     if isinstance(expression, str):
         if is_variable(expression) and expression not in hidden_variables:
