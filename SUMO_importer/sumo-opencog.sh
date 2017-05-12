@@ -42,10 +42,10 @@ cd "sumo/"
 if [ ! -f "$ATOM_TYPE_FILE" ]; then
     info_echo "Infer atom types of SUMO instances, put results in sumo/$ATOM_TYPE_FILE"
     info_echo "Be patient, it may take a while..."
-    ../sumo-to-atom-types.py *.kif >> "$ATOM_TYPE_FILE"
+    ../sumo-to-atom-types.py *.kif tests/*.kif.tq > "$ATOM_TYPE_FILE"
 fi
 
-info_echo "Create scheme files"
+info_echo "Create KB scheme files"
 
 for file in *.kif; do
     info_echo "Export $file"
@@ -58,6 +58,20 @@ if [ ! -d "output" ]; then
 fi
 
 mv *.scm output
+
+info_echo "Create test scheme files"
+
+for file in tests/*.kif.tq; do
+    info_echo "Export $file"
+    ../sumo-importer.py "$ATOM_TYPE_FILE" $file
+done
+
+info_echo "Move the generated scheme files to sumo/output/tests"
+if [ ! -d "output/tests" ]; then
+    mkdir -p "output/tests"
+fi
+
+mv tests/*.scm output/tests
 
 cd ..
 
