@@ -21,9 +21,9 @@ def extract_instance_and_class(s_expr):
     instance_name = s_expr[1]
     if isinstance(instance_name, str):
         class_name = s_expr[2]
-        return (instance_name, class_name)
-    else:
-        return None
+        if isinstance(class_name, str):
+            return (instance_name, class_name)
+    return None
 
 def gen_instance2classes(s_exprs):
     instance2classes = defaultdict(lambda: set())
