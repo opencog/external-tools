@@ -256,7 +256,8 @@ def export_to_scheme(i2f_filename, sumo_filename):
     i2t = load_instance2type(i2f_filename)
     load_sumo(i2t, sumo_filename)
 
-    output_filename = sumo_filename[0:-4]+'.scm'
+    output_filename = sumo_filename.replace(".kif.tq", ".scm")
+    output_filename = output_filename.replace(".kif", ".scm")
     with open(output_filename, 'w') as out:
         print_links(out)
 
