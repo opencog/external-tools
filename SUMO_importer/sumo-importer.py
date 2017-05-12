@@ -108,36 +108,44 @@ def convert_quantifier(i2t, expression, link_tv):
     args = expression[1:]
 
     if oper == "forall":
-        var_atoms = convert_variables(i2t, args[0])
+        var_atom = convert_variables(i2t, args[0])
 
         # (forall (=> is translated into ImplicationScopeLink
         if args[1][0] == "=>":
-            args_atoms = [var_atoms] + \
+            args_atoms = [var_atom] + \
                          [convert_expression(i2t, expr, link_tv=None)
                           for expr in args[1][1:]]
             return atomspace.add_link(types.ImplicationScopeLink, args_atoms, link_tv)
 
         # (forall (<=> is translated into EquivalenceScopeLink
         if args[1][0] == "<=>":
-            args_atoms = [var_atoms] + \
+            args_atoms = [var_atom] + \
                          [convert_expression(i2t, expr, link_tv=None)
                           for expr in args[1][1:]]
             return atomspace.add_link(types.EquivalenceScopeLink, args_atoms, link_tv)
 
         # Otherwise (forall ... is translated into ForAllLink
-        args_atoms = [var_atoms] + \
+        args_atoms = [var_atom] + \
                      [convert_expression(i2t, expr, link_tv=None)
                       for expr in args[1:]]
         return atomspace.add_link(types.ForAllLink, args_atoms, link_tv)
 
     elif oper == "exists":
-        var_atoms = convert_variables(i2t, args[0])
+        var_atom = convert_variables(i2t, args[0])
 
         # (exists ... is translated into ExistsLink
-        args_atoms = [var_atoms] + \
+        args_atoms = [var_atom] + \
                      [convert_expression(i2t, expr, link_tv=None)
                       for expr in args[1:]]
         return atomspace.add_link(types.ExistsLink, args_atoms, link_tv)
+    elif oper == "KappaFn":
+        var_atom = convert_variable(i2t, args[0]) # Assume only 1 variable
+
+        # (KappaFn ... is translated into SatisfyingSetLink
+        args_atoms = [var_atom] + \
+                     [convert_expression(i2t, expr, link_tv=None)
+                      for expr in args[1:]]
+        return atomspace.add_link(types.SatisfyingSetLink, args_atoms, link_tv)
     else:
         return None
 
