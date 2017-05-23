@@ -224,11 +224,10 @@ def special_link_type(oper):
         'and':types.AndLink,
         'or':types.OrLink,
         'not':types.NotLink,
-        'instance':types.MemberLink,
-        # This might break some of the formal precision of SUMO, but who cares
-        'attribute':types.MemberLink,
-        'member':types.MemberLink,
         'subclass':types.InheritanceLink,
+        'member':types.MemberLink,
+        'instance':types.MemberLink,
+        'subrelation':types.ImplicationLink,
         'exists':types.ExistsLink,
         'forall':types.ForAllLink,
         'causes':types.ImplicationLink # Should probably be a
