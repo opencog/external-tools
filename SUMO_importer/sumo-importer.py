@@ -141,11 +141,11 @@ def convert_quantifier(i2t, expression, link_tv):
     elif oper == "KappaFn":
         var_atom = convert_variable(i2t, args[0]) # Assume only 1 variable
 
-        # (KappaFn ... is translated into SatisfyingSetLink
+        # (KappaFn ... is translated into SatisfyingSetScopeLink
         args_atoms = [var_atom] + \
                      [convert_expression(i2t, expr, link_tv=None)
                       for expr in args[1:]]
-        return atomspace.add_link(types.SatisfyingSetLink, args_atoms, link_tv)
+        return atomspace.add_link(types.SatisfyingSetScopeLink, args_atoms, link_tv)
     else:
         return None
 
