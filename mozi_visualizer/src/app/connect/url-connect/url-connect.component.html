@@ -1,0 +1,12 @@
+<div id="url-div" >
+  <h4 style="text-align: center">
+    MOZI Visualizer
+  </h4>
+  <form [formGroup]="form" (ngSubmit)="fetchJson()">
+
+    <input [(ngModel)]="url" formControlName="url" type="text" placeholder="Insert url">
+
+  </form>
+</div>
+
+
