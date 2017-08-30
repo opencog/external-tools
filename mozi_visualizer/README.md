@@ -18,8 +18,8 @@ npm start # will start the visualizer at port 4200
 ##Usage
 ---------------
 1 - Navigate to `http://localhost:4200/`
-2 - To fetch data from a certain url , click on the **fetch tab and enter a url then it will visualize the result
-3 - on the **network tab initialy it visualizes a pre defind json object, which can be modifide by fetching from           certain url
+2 - To fetch data from a certain url , click on the **fetch** tab and enter a url then it will visualize the result
+3 - on the **network** tab initialy it visualizes a pre defind json object, which can be modifide by fetching from           certain url
 
 
 
