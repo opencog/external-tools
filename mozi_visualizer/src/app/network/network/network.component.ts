@@ -44,23 +44,12 @@ export class NetworkComponent implements AfterViewInit, OnInit {
     this.atomsService.editItem
         .subscribe(res => {
             this.atoms = res;
-            // draw the graph here if the page is Loaded before;
-            if (!this.initialLoad) {
-                console.log("drawing new graph");
-                console.log(this.atoms);
-                this.draw_graph();
-            }
         });
 }
 
   ngAfterViewInit() {
-
-    if (this.initialLoad) {
-        console.log("initial graph drawing");
-        console.log(this.atoms);
-        this.draw_graph();
-        this.initialLoad = false;
-    }
+    this.draw_graph();
+    this.initialLoad = false;
   }
     ngOnInit(): void {
 
