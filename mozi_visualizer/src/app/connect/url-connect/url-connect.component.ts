@@ -13,6 +13,8 @@ export class UrlConnectComponent implements OnInit {
 
   private url: string;
   form: FormGroup;
+  private errMsg = '';
+  private connecting: boolean = false;
 
   constructor(@Inject(FormBuilder) fb: FormBuilder, 
                       private service: UrlConnectService,
@@ -28,19 +30,27 @@ export class UrlConnectComponent implements OnInit {
 
   fetchJson() {
     console.log(this.url);
+    this.connecting = true;
     this.service.get(this.url)
       .subscribe(res => {
         console.log(res);
+        this.connecting = false;
         // change the atoms to be visualized
         this.visualizeResult(res);
       }, err => {
-        console.log(err);
-      })
+          console.log(err);
+        this.errMsg = 'Can\'t Connect to server.';
+        this.connecting = false;
+      });
   }
 
   private visualizeResult(res) {
         this.atomsService.changeItem(res.response);
         this.router.navigate(["network"]);
     }
+
+  private reset() {
+      this.url = "";
+  }
 
 }
