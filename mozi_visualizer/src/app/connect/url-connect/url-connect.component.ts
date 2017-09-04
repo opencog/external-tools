@@ -45,7 +45,7 @@ export class UrlConnectComponent implements OnInit {
   }
 
   private visualizeResult(res) {
-        this.atomsService.changeItem(res.response);
+        this.atomsService.changeItem(res);
         this.router.navigate(["network"]);
     }
 
