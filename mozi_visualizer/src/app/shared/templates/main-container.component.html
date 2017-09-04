@@ -20,10 +20,6 @@
           <a class="item" *ngFor="let lang of supportedLanguages" (click)="selectLang(lang.value)"><i class="{{ lang.flag }} flag"></i> {{ lang.display }}</a>
         </div>
       </div>
-
-      <a class="item" (click)="signOut()">
-        <i class="sign out icon"></i> {{ 'Sign Out' | translate }}
-      </a>
     </div>
   </div>
 </div>
