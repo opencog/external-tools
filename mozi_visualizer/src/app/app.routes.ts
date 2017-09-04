@@ -8,9 +8,7 @@ import { UrlConnectComponent } from "./connect/url-connect/url-connect.component
 
 
 export const APP_ROUTES: Routes = [
-    ...AuthRoutes,
     { path: '',
-        canActivate: [ AuthService ],
         component: MainContainer,
         children: [
             ... NETWORK_ROUTES,
