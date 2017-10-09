@@ -1,0 +1,1305 @@
+<!--
+    ATOMSPACE VIEWER
+    This version is developed by
+    George Papanikolaou for OpenCog
+    www.skoumas.com
+    skoumas.net@gmail.com
+
+    Basic Javascript files are Functions.js and Visual.js.
+    For different views there are different views such as
+    Visual-3d.js
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- TITLE -->
+    <title>AtomSpace Viewer</title>
+
+    <!-- META -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   
+    <meta name="description" content="Data Visualizer for OpenCog's AtomSpace">
+    <meta name="author" content="openCog skoumas">
+
+    <!-- CSS -->
+    <link href="media/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="media/font-awesome-4.3.0/css/font-awesome.min.css">
+ 
+    <link rel="stylesheet" href="media/css/bootstrap.min.css">
+    <link href="media/css/jquery-ui.css" rel="stylesheet">
+    <link href="media/css/jquery-ui.structure.css" rel="stylesheet">
+    <link href="media/css/jquery-ui.theme.css" rel="stylesheet">
+    <link href="media/css/jquery.switchButton.css" rel="stylesheet">
+    <link rel="shortcut icon" href="media/images/favicon.png" type="image/x-icon"/>
+    <link href="media/css/jquery.terminal.css" rel="stylesheet">
+    <link href="media/css/spectrum.css" rel="stylesheet">
+
+</head>
+ 
+<body>
+
+<!-- NODE RIGHT CLICK MENU -->
+<div id="NodeContextMenu" class="dropdown clearfix contextMenu">
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+    <li ><a tabindex="-1" href="#" id="NodeCMCollapseExpand"><i class="fa fa-minus-square"></i> Collapse All</a></li>
+
+    <li class="divider"></li>
+    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse Incoming</a></li>
+    <li id="NodeCMCollapseExpand"><a tabindex="-1" href="#"><i class="fa fa-minus-square"></i> Collapse Outgoing</a></li>
+    <li class="divider"></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMFix">Fix Position</a></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMHighlight">HighLight</a></li>
+    <li class="divider"></li>
+ 
+    <li ><a tabindex="-1" href="#" id="NodeCMViewDetails">Show Details</a></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMShowConnections">Show Connections</a></li>
+    <li class="divider"></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMHide">Hide</a></li>
+    <li ><a tabindex="-1" href="#" id="NodeCMCDelete">Delete</a></li>
+  </ul>
+</div>
+<!-- LOADING SCREEN -->
+<div id="loading">
+<div id="loadingInner"><i class="fa fa-spin fa-spinner"></i> Please wait</div>
+</div>
+
+<!-- TOP BAR -->
+<nav class="navbar navbar-default" id="navbarTop" style="margin-bottom:0;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" style="margin-left:-20px;margin-top:-5px" href="atom_viewer.html">
+        <img src="media/images/logo.png" alt="AtomSpace Viewer"/>
+      </a>
+    </div>
+    <div>
+ 
+    <!-- RIGHT MENU -->
+    <ul class="nav navbar-nav">
+
+        <!-- NAVBAR FILE -->
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-file"></i>  File <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#" id="FileImport" ><i class="fa fa-exchange"></i> Import</a></li>
+                <li><a href="#" id="FileExport" ><i class="fa fa-exchange"></i> Export</a></li>
+                <li class="divider"></li>
+                <li><a href="#" id="FileImportPreferences" ><i class="fa fa-exchange"></i> Import Preferences</a></li>
+                <li><a href="#" id="FileExportPreferences" ><i class="fa fa-exchange"></i> Export Preferences</a></li>
+            </ul>
+        </li>
+
+        <!-- NAVBAR VIEW -->
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-eye"></i> View <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-header">Views</li>
+                <li><a href="#" viewer="d3"><i class="fa"></i> D3</a></li>
+                <li><a href="#" viewer="sigma"><i class="fa"></i> Sigma</a></li>     
+                <li><a href="#" viewer="3d"><i class="fa"></i> 3D</a></li> 
+                <li><a href="#" viewer="table"><i class="fa"></i> Table</a></li>
+                <li><a href="#" viewer="json"><i class="fa"></i> JSON</a></li>
+                <li><a href="#" viewer="scheme"><i class="fa"></i> Scheme</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Sidebars</li>
+                <li><a href="#" id="visibleLeftSideBar"><i id="visibleLeftSideBari" class="fa fa-square-o"></i> Left Sidebar</a></li>
+                <li><a href="#" id="visibleRightSideBar"><i id="visibleRightSideBari" class="fa fa-square-o"></i> Right Sidebar</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Windows</li>
+                <li><a href="#" id="visibleAtomDetails"><i id="visibleAtomDetailsi" class="fa fa-square-o"></i> Atom Details</a></li>
+                <li><a href="#" id="visibleToolbox"><i id="visibleToolboxi" class="fa fa-square-o"></i> Toolbox</a></li>
+                <li><a href="#" id="visibleTerminal"><i id="visibleTerminali" class="fa fa-square-o"></i> Terminal</a></li>
+            </ul>
+        </li>
+
+         <!-- NAVBAR ANALYZE -->
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-book"></i> Analyze <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#" id="AnalyzeStatistics"><i class="fa fa-question"></i> Statistics</a></li>
+            </ul>
+        </li>
+
+        <!-- NAVBAR HELP -->
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-book"></i> Help <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="#" id="HelpHowToUse"><i class="fa fa-question"></i> How To Use</a></li>
+                <li><a href="#" id="HelpAbout"><i class="fa fa-info"></i> About</a></li>
+            </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- NAVBAR SEARCH -->
+     <ul class="nav navbar-nav collapse navbar-collapse navbar-right">
+        <form class="navbar-form hidden-sm" role="search">
+            <div class="input-group">
+                <input type="text" class="form-control" id="SearchField" placeholder="Search Atom Handler" name="q">
+                <div class="input-group-btn">
+                    <button class="btn btn-default" id="SearchButton" type="button"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </div>
+        </form>
+     </ul>
+ 
+    <ul class="nav navbar-nav collapse navbar-collapse navbar-right" >
+      <div id="navbarTools-d3" style="display:none">
+
+        <button class="btn btn-default navbar-btn toolboxButton toolboxButtonSelected" title="Normal Pointer" id="toolboxPointer"><i class="fa fa-hand-o-up"></i></button>
+        <span class="btn-separator"></span>
+
+        <button class="btn btn-default navbar-btn toolboxButton" title="Collapse/Expand" id="toolboxCollapseExpand"><i class="fa fa-tree"></i></button>
+        <span class="btn-separator"></span>
+
+        
+
+        <button class="btn btn-default navbar-btn toolboxButton" title="Add new node" id="toolboxAddNode"><i class="fa fa-plus-circle"></i></button>
+        <button class="btn btn-default navbar-btn toolboxButton" title="Delete existing node..." id="toolboxRemoveNode"><i class="fa fa-minus-circle"></i></button>
+
+        <span class="btn-separator"></span>
+        <button class="btn btn-default navbar-btn toolboxButton" title="Add new link" id="toolboxAddLink"><i class="fa fa-link"></i></button>
+        <button class="btn btn-default navbar-btn toolboxButton" title="Remove link" id="toolboxRemoveLink"><i class="fa fa-unlink"></i></button>
+
+        <span class="btn-separator"></span>
+        <button class="btn btn-default navbar-btn toolboxButton" title="Highlight" id="toolboxHighlight"><i class="fa fa-star"></i></button>
+         <span class="btn-separator"></span>
+        <button id="snapshotButton" class="btn btn-default navbar-btn"><i class="fa fa-camera"></i> Snapshot</button>  
+        <button id="toggleFixNodes" class="btn btn-default navbar-btn"><i class="fa fa-lock"></i> Fix Nodes</button> 
+      </div>
+    </ul>
+
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="container-fluid">
+    <div class="row" id="wrapper">
+        <div class="col-xs-3" id="leftMenu">
+            <div id="leftMenuInner">
+            <!-- CONNECT -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#connectPanel">
+                    <i class="fa fa-globe"></i> Connect
+                  </a>
+                </div>
+                <div id="connectPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                     <table class="table table-settings">
+                        <tr>
+                          <td width="30%">Server</td>
+                          <td>
+                          <div class="input-group">
+                           <input type="text" class="form-control" id="ConnectCogServer" placeholder="http://localhost:5000/">
+                           <span class="input-group-btn">
+                              <button id="ConnectSaveCogServerModalButton" class="btn btn-default" type="button"><i class="fa fa-floppy-o"></i></button>
+                              <button id="ConnectListCogServerModalButton" class="btn btn-default" type="button">...</button>
+                           </span>
+                        </div>
+                          </td>
+                        </tr>
+                         <tr>
+                          <td width="30%">Status</td>
+                          <td><span id="ConnectionStatus">Not connected yet.</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Autoconnect</td>
+                          <td><div id="ConnectAutoConnect"></div></td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" align="right"  >
+                          <button class="btn btn-info" id="ConnectGetAtomTypesButton"><i class="fa fa-plug"></i> Get Atom Types</button>
+                          <button class="btn btn-success" id="ConnectConnectButton"><i class="fa fa-plug"></i> Get Atoms</button>
+                          </td>   
+                        </tr>
+                      </table>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- FILTER -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#filterPanel">
+                    <i class="fa fa-filter"></i> Filter
+                  </a>
+                </div>
+                <div id="filterPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                     <table class="table table-settings">
+                        <tr>
+                          <td width="40%">Attentional Focus Only</td>
+                          <td><input type="checkbox" id="FilterAttentionalFocusOnly"></td>
+                        </tr>
+                        <tr>
+                          <td>STI Range <span id="FilterSTIRangeAmount"> </span></td>
+                          <td><div id="FilterSTIRange"></div></td>
+                        </tr>
+                        <tr>
+                          <td>TruthValue Strength</td>
+                          <td><input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueStrength"> </td>
+                        </tr>
+                         <tr>
+                          <td>TruthValue Confidence</td>
+                          <td><input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueConfidence"></td>
+                        </tr>
+                         <tr>
+                          <td>TruthValue Count</td>
+                          <td><input class="form-control input-sm" type="text" size="2" placeholder="" id="FilterTruthValueCount"> </td>
+                        </tr>
+                         <tr>
+                          <td>Atom Name</td>
+                          <td><input type="text" class="form-control input-sm" id="FilterAtomName"></td>
+                        </tr>
+                        <tr>
+                          <td>Atom Type</td>
+                          <td>
+                              
+                          <div class="input-group"> 
+                            <select class="form-control input-sm" id="FilterAtomType">
+                              <option value="0" id="FilterAtomTypeNoneValue">--None--</option>
+                            </select>
+
+                            <span class="input-group-btn">
+                              <button title="Refresh AtomTypes" id="FilterRefreshAtomTypes" class="btn btn-sm btn-default" type="button"><i id="FilterRefreshAtomTypesIcon" class="fa fa-refresh"></i></button>
+                              <button title="Only load used AtomTypes" id="FilterToggleUsedAtomTypes" class="btn btn-sm btn-default" type="button"><i id="FilterToggleUsedAtomTypesIcon" class="fa"></i></button>
+                             </span>
+                          </div>
+
+                      </td>
+                        </tr>
+                         <tr>
+                          <td>Limit</td>
+                          <td><input type="text" class="form-control input-sm" id="FilterLimit"></td>
+                        </tr>
+                         <tr>
+                          <td>Incoming Sets</td>
+                          <td> <input type="checkbox" id="FilterIncomingSets"> </td>
+                        </tr>
+                         <tr>
+                          <td>Outcoming Sets</td>
+                          <td><input type="checkbox" id="FilterOutgoingSets"></td>
+                        </tr>
+                        <tr>
+                        <td colspan="2" align="right" >
+                          <button disabled="disabled" class="btn btn-info"  id="FilterRefreshButton">
+                            <i class="fa fa-plug"></i> Refresh
+                          </button>
+                        </td>
+                        </tr>
+                    </table>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- ADVANCED FILTER -->
+              <div class="accordion-group" style="display:none">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#advancedFilterPanel">
+                    <i class="fa fa-globe"></i> Advanced Filter
+                  </a>
+                </div>
+                <div id="advancedFilterPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                        <div class="form-group">
+                          <label for="AdvancedFilterFilter">Advanced Filter</label>
+                          <textarea id="AdvancedFilterFilter" class="form-control"></textarea>
+                          <br>
+                          <label for="AdvancedFilterSavedfilters">Saved Advanced Filters</label>
+                          <select id="AdvancedFilterSavedFilters" class="form-control">
+                          </select>
+                          <br>
+                          <div class="pull-right">
+                            <button id="AdvancedFilterRemember" class="btn btn-success btn-xs" disabled="disabled">Remember</button>
+                            <button id="AdvancedFilterForget" class="btn btn-success btn-xs" disabled="disabled">Forget</button> 
+                            <button id="AdvancedFilterExecute" class="btn btn-success btn-xs" disabled="disabled">Execute</button>
+                          </div>
+                        </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+             
+
+
+              <!-- APPEARANCE -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#appearancePanel">
+                    <i class="fa fa-eye"></i> Appearance
+                  </a>
+                </div>
+                <div id="appearancePanel" class="accordion-body collapse">
+                  <div class="accordion-inner" style="padding:0px">
+                    <!-- CONTENT -->
+                        <div id="AppearanceInner-d3" style="padding:0px">
+                          <table class="table table-settings">
+                            
+                            <tr>
+                              <td>Show Links?</td>
+                              <td><div id="AppearanceShowLinks"></div></td>
+                            </tr>
+                            <tr> 
+                              <td>Show Link Handles:</td>
+                              <td>
+                              <div id="displayShowLinkHandles"></div>  
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Charge</td>
+                              <td><div id="appearanceCharge"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Friction</td>
+                              <td><div id="appearanceFriction"></div></td>
+                            </tr>
+                              <tr>
+                              <td>Link Strength</td>
+                              <td><div id="appearanceLinkStrength"></div></td>
+                            </tr>
+                              <tr>
+                              <td>Link Distance</td>
+                              <td><div id="appearanceLinkDistance"></div></td>
+                            </tr>
+                          </table>
+
+                        </div>
+
+                        <div id="AppearanceInner-sigma">
+                          <button id="appearanceSigmaCircularView" class="btn btn-md btn-success">Circular View</button>
+                          <button id="appearanceSigmaGridView" class="btn btn-md btn-success">Grid View</button> 
+                          <button id="appearanceSigmaClusterView" class="btn btn-md btn-success">Cluster View</button> 
+                        </div>
+
+
+                        <div id="AppearanceInner-3d">
+                          <table class="table table-settings">
+                            <tr>
+                              <td width="30%">Animation?</td>
+                              <td><div id="appearanceAVTAnimation"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Force Dynamics?</td>
+                              <td><div id="appearanceAVTForceDynamics"></div></td>
+                            </tr>
+                            <tr> 
+                              <td>Planar Linkage?</td>
+                              <td><div id="appearanceAVTPlanarLinkage"></div></td>
+                            </tr>
+                            <!--
+                               <tr>
+                                <td>Placement</td>
+                                <td>
+                                  <select>
+                                    <option value="1">Random Position</option>
+                                    <option value="2">Octant Extension</option>
+                                    <option value="3">Random Extension</option>
+                                  </select>
+                              </td>
+                              </tr>
+                            -->
+                            <tr>
+                              <td>Loops</td>
+                              <td><div id="appearanceAVTLoops"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Jump Limit</td>
+                              <td><div id="appearanceAVTJumpLimit"></div></td>
+                            </tr>
+                            <tr>
+                              <td>Force Range</td>
+                              <td><div id="appearanceAVTForceRange"></div></td>
+                            </tr>
+                              <tr>
+                              <td>Link Length</td>
+                              <td><div id="appearanceAVTLinkLength"></div></td>
+                            </tr>
+                             <tr>
+                              <td>Animation Scraper</td>
+                              <td><div id="appearanceAVTAnimationScraper"></div></td>
+                            </tr>
+                            <tr>
+                              <td colspan="2">
+                                 <button id="appearanceAVTSplineCamera" class="btn btn-success btn-xs" >Spline Camera</button>
+                              </td>
+                              
+                            </tr>
+                              
+                          </table>
+                        </div>
+
+                        <div id="AppearanceInner-none" style="padding:10px">
+                          Please select a visualizing view such as D3 or Sigma.
+                        </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+ 
+
+              <!-- SHAPES -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#shapesPanel">
+                    <i class="fa fa-star"></i></i> Shapes
+                  </a>
+                </div>
+                <div id="shapesPanel" class="accordion-body collapse">
+                  <div class="accordion-inner" style="padding:0">
+                  
+                  <!-- CONTENT -->
+                  
+                  <!-- TABS -->
+                  <ul id="shapeTabs" class="nav nav-tabs">  
+                    <li class="active"><a href="#ShapeTabNodes" data-toggle="tab"><i class="fa fa-circle-thin"></i> Nodes</a></li>
+                    <li><a href="#ShapeTabLinkHandles" data-toggle="tab"><i class="fa fa-square"></i> Link Handles</a></li>
+                    <li><a href="#ShapeTabLinkLines" data-toggle="tab"><i class="fa fa-minus"></i> Link Lines</a></li>  
+                  </ul>
+ 
+                  <!-- TABS CONTENT -->
+                  <div id="shapeTabContent" class="tab-content">
+                  
+                    <!-- SHAPE NODES -->
+                    <div class="tab-pane" id="ShapeTabNodes">
+                     <table class="table table-settings" id="colorOptionTable">
+                        <tr>
+                          <td>Nodes Shape</td>
+                          <td>
+                          <select id="displayNodeShape">
+                            <option value="none">--None--</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="rectangle">Rectangle</option>
+                            <option value="circle">Circle</option>
+                          </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Radius Relative to:</td>
+                          <td>
+                            <select id="displayRadiusBasedOn">
+                              <option value="Fixed">Fixed</option>
+                              <option value="Incoming">Incoming</option>
+                              <option value="Outgoing">Outgoing</option>
+                              <option value="IncomingOutgoing">Incoming + Outgoing</option>
+                              <option value="AtomType">AtomType</option>
+                              <option value="Random">Random</option>
+                              <option value="sti">sti</option>
+                              <option value="lti">lti</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Radius Multiplier:</td>
+                          <td>
+                            <div id="displayRadiusMultiplier"></div>
+                          </td>
+                        </tr>
+                        </table>
+                      </div>
+
+                      <!-- SHAPE LINK HANDLES -->
+                      <div class="tab-pane" id="ShapeTabLinkHandles">
+                       <table class="table table-settings">
+                        <tr>
+                          <td width="30%">Link Handle Style</td>
+                          <td></td>
+                        </tr>
+                        </table>
+                      </div>
+
+                       <!-- COLOR LINK LINES -->
+                       <div class="tab-pane" id="ShapeTabLinkLines">
+                        <table class="table table-settings">
+                        <tr>
+                          <td width="30%">Link Lines Style</td>
+                          <td></td>
+                        </tr>
+                        </table>
+                       </div>
+
+                      </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- COLORS -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#colorsPanel">
+                    <i class="fa fa-paint-brush"></i> Colors
+                  </a>
+                </div>
+                <div id="colorsPanel" class="accordion-body collapse">
+                  <div class="accordion-inner" style="padding:0">
+                  
+                  <!-- CONTENT -->
+
+                  <!-- TABS -->
+                  <ul id="colorTabs" class="nav nav-tabs">  
+                    <li class="active"><a href="#ColorTabGeneral" data-toggle="tab"><i class="fa fa-circle"></i> General</a></li>
+                    <li><a href="#ColorTabNodes" data-toggle="tab"><i class="fa fa-circle-thin"></i> Nodes</a></li>
+                    <li><a href="#ColorTabLinkHandles" data-toggle="tab"><i class="fa fa-square"></i> Link Handles</a></li>
+                    <li><a href="#ColorTabLinkLines" data-toggle="tab"><i class="fa fa-minus"></i> Link Lines</a></li>  
+                  </ul>
+
+
+                  <!-- TABS CONTENT -->
+                  <div id="colorsTabContent" class="tab-content">
+                  
+                    <!-- COLOR GENERAL -->
+                    <div class="tab-pane active" id="ColorTabGeneral">
+                     <table class="table table-settings" id="colorOptionTable">
+                          <tr>
+                            <td width="30%">Background Color</td>
+                            <td> 
+                                <input type="color" id="ColorBackgroundColor" value="" class="form-control" />
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <!-- COLOR NODES -->
+                      <div class="tab-pane" id="ColorTabNodes">
+                        <table class="table table-settings" id="colorOptionTable">
+                          <tr>
+                            <td width="30%">Coloring Method</td>
+                            <td>
+                              <select id="colorNodeBased">
+                                <option value="simple">Simple </option>
+                                <option value="incoming">Incoming </option>
+                                <option value="outgoing">Outgoing </option>
+                                <option value="incomingoutgoing">Incoming + Outgoing </option>
+
+                                <option value="atomtype">By AtomType </option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr option="simple" >
+                            <td>Color</td>
+                            <td> 
+                                <input type="color" id="ColorSimpleColor" value=""  class="form-control" />
+                            </td>
+                          </tr>
+                          <tr >
+                            <td>Transparency</td>
+                            <td><div id="colorSimpleTransparency"></div></td>
+                          </tr>
+                           <tr >
+                            <td>Range</td>
+                            <td><input id="colorNodeRange1"> - <input id="colorNodeRange2"> </td>
+                          </tr>
+                           <tr >
+                            <td>Color by Type</td>
+                            <td><button id="modalAtomTypesColorsButton" class="btn btn-default">...</button> </td>
+                          </tr>
+                          </table>
+                         </div>
+
+                         <!-- COLOR LINK HANDLES -->
+                         <div class="tab-pane" id="ColorTabLinkHandles">
+                          <table class="table table-settings">
+                            <tr>
+                              <td width="30%">Coloring Method</td>
+                              <td></td>
+                            </tr>
+                          </table>
+                         </div>
+
+                         <!-- COLOR LINK LINES -->
+                         <div class="tab-pane" id="ColorTabLinkLines">
+                          <table class="table table-settings">
+                          <tr>
+                            <td width="30%">Coloring Method</td>
+                            <td></td>
+                          </tr>
+                          </table>
+                         </div>
+
+                       </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- TEXT -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#textPanel">
+                    <i class="fa fa-font"></i> Text
+                  </a>
+                </div>
+                <div id="textPanel" class="accordion-body collapse">
+                  <div class="accordion-inner" style="padding:0">
+                    <!-- CONTENT -->
+                    <table class="table table-settings">
+                      <tr>
+                      <td colspan=2>
+                        <button id="textFullTextsButton" class="btn btn-success">Show Full Texts</button>
+                        <button id="textAbbreviatedTextsButton" class="btn btn-success">Show AbbrevatedText Texts</button>
+                      </td>
+                      </tr>
+                      <tr>
+                        <td width="30%">Show Text?</td>
+                        <td><div id="AppearanceShowText"></div></td>
+                      </tr>
+                      <tr>
+                        <td>Show Link Type Name</td>
+                        <td><div id="textShowLinkTypeName"></div></td>
+                      </tr>
+                    
+                      <!--
+                      <tr>
+                        <td width="30%">Abbreviation Style</td>
+                        <td>
+                          <select>
+                            <option>  </option>
+                           
+                          </select>
+                      </tr>
+                    -->
+                    </table>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- ADVANCED FILTER -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#rulesPanel">
+                    <i class="fa fa-globe"></i> Rules
+                  </a>
+                </div>
+                <div id="rulesPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                    <table class="table table-settings">
+                      <tr>
+                        <td>Enable visualization rules</td>
+                        <td><div id="rulesEnableVisualizationRules"></div></td>
+                      </tr>
+                    </table>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- ANALYSE -->
+              <div class="accordion-group" style="display:none">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#analyzePanel">
+                    <i class="fa fa-bar-chart"></i> Analyse
+                  </a>
+                </div>
+                <div id="analyzePanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                      To be implemented...
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+ 
+              <!-- SETTINGS -->
+              <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#settingsPanel">
+                    <i class="fa fa-cog"></i> Settings
+                  </a>
+                </div>
+                <div id="settingsPanel" class="accordion-body collapse">
+                  <div class="accordion-inner" style="padding:10px;">
+                    <!-- CONTENT -->
+                    <button id="SettingsClearPreferences" class="btn btn-success">
+                        Clear Preferences
+                    </button>
+                    <button class="btn btn-danger" id="appearanceClearD3">
+                      Clear D3
+                    </button>
+                         <button class="btn btn-danger" id="settingsAnimate">
+                      Animate
+                    </button>
+
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+              </div>
+   
+        </div>
+
+        <div class="col-sm-7" id="mainContent"> 
+        <!-- MAIN SCREENS -->
+
+            <div id="snapshotFlash">
+            </div>
+            
+            <div id="screen-d3">
+            </div>
+  
+            <div id="screen-3d">
+            </div>
+
+            <div id="screen-sigma">
+            </div>
+
+            <div id="screen-table">
+            </div>
+
+            <div id="screen-json">
+            </div>
+
+            <div id="screen-scheme">
+            </div>
+            
+            <div id="screen-statistics">
+            
+            </div>
+
+            <div id="screen-import">
+            <!-- CONTENT -->
+               <form>
+                    <legend>Import Options</legend>
+                    <div class="form-group">
+                    <label for="importFile">Import a scm file.</label>
+                        <input type="file" id="importFile"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="ImportClearAtomSpace"/>
+                    <label for="importFile">Clear atom space.</label>
+                    </div>
+                </form>
+          
+            <hr>
+              <button class="btn btn-success">Import</button>
+            <!-- END CONTENT -->
+            </div>
+
+            <div id="screen-export">
+            <!-- CONTENT -->
+                <form>
+                    <legend>Export Options</legend>
+                  
+                    <ul class="nav nav-tabs">
+                       <li role="presentation" class="active"><a href="#" id="exportOptionGefx" >Gefx - Graph Exchange XML Format</a></li>
+                      <li role="presentation"><a href="#" id="exportOptionScheme" >Scheme Format</a></li>
+                      <li role="presentation"><a href="#" id="exportOptionText">Text File</a></li>
+                    </ul>
+
+                    <div style="width:40%; padding:20px;">
+                      <div class="form-group">
+                        <label for="inputEmail">Creator</label>
+                        <input id="exportGefxCreator" type="text" class="form-control" id="inputEmail" placeholder="Creator">
+                      </div>
+                      <div class="form-group">
+                        <label for="inputEmail">Description</label>
+                        <input id="exportGefxDescription" type="text" class="form-control" id="inputEmail" placeholder="Description">
+                      </div>
+                    <hr>
+                    <button class="btn btn-success" type="button" id="exportExportButton" >Export</button>
+                    </div>
+                    
+                </form>
+            <!-- END CONTENT -->
+            </div>
+
+            <div id="screen-about">
+            <!-- CONTENT -->
+                <h1> OpenCog AtomViewer</h1>
+                <hr>
+                <p>OpenCog AtomSpace Visualization Tool</p>
+                <p>Version: 1.1</p>
+                <p>Copyright (C) 2015 OpenCog Foundation</p>
+                <p> GUI Development and partial Visualization Development by skoumas.</p>
+                <p><a href="http://www.skoumas.com">www.skoumas.com</a></p>
+                <hr>
+                <button id="AboutCloseButton" class="btn btn-success">Close</button>
+            <!-- END CONTENT -->
+            </div>
+
+            <div id="screen-help">
+            <!-- CONTENT -->
+            <h1>Help</h1>
+            <hr>
+            <h2>Terminal Commands </h2>
+            <table class="table">
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+              </tr>
+              <tr>
+                <td>connect</td>
+                <td>Connects to the server</td>
+              </tr>
+               <tr>
+                <td>select [id]</td>
+                <td>Selects a node from the graph</td>
+              </tr>
+               <tr>
+                <td>zoom [id]</td>
+                <td>Zooms at a specific node</td>
+              </tr>
+              <tr>
+                <td>fixed [id]</td>
+                <td>Makes a specific node fixed.</td>
+              </tr>
+               <tr>
+                <td>unfixed [id]</td>
+                <td>Makes a specific node unfixed.</td>
+              </tr>
+              <tr>
+                <td>view [d3,json,table,scheme]</td>
+                <td>Sets a specific view</td>
+              </tr>    
+            </table>
+            <!-- END CONTENT -->
+            </div>
+        </div>
+
+
+
+         <div class="col-sm-2" id="rightMenu">
+
+           
+            
+          <!-- DETAILS -->
+           <div class="accordion-group" >
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#detailsPanel">
+                    <i class="fa fa-globe"></i> <span id="detailsPanelTitle"> Details </span>
+                  </a>
+                </div>
+                <div id="detailsPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                    <div id="detailsPanelNodeContent">
+                         <table class="table table-settings">
+                          <tr>
+                          <td>Handle</td>
+                          <td><input type="text" disabled="disabled" class="form-control atomDetailsForm input-sm" id="detailsAtomHandle" name="atomName"/> </td>
+                        </tr>
+                        <tr>
+                          <td>Type</td>
+                          <td>
+                          <select class="form-control atomDetailsForm input-sm" id="detailsAtomType">
+                          <option value="0" id="detailsAtomTypeNoneValue">--None--</option>
+                          </select></td>
+                        </tr>
+                        <tr>
+                          <td>Name</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomName" name="atomName"/></td>
+                        </tr>
+                        <tr>
+                          <td>LTI</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomLTI" name="detailsAtomLTI"/> </td>
+                        </tr>
+                        <tr>
+                          <td>STI</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomSTI" name="detailsAtomSTI"/>  </td>
+                        </tr>
+                        <tr>
+                          <td>VLTI</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/></td>
+                        </tr>
+                        <tr>
+                          <td>Count</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomCount" id="detailsAtomCount" /></td>
+                        </tr>
+                        <tr>
+                          <td>Confidence</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" name="detailsAtomConfidence" id="detailsAtomConfidence"/></td>
+                        </tr>
+                        <tr>
+                          <td>Strength</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" name="detailAtomStrength" id="detailsAtomStrength"/> </td>
+                        </tr>
+                        <tr>
+                          <td>Fixed</td>
+                          <td><div id="atomDetailsFixed"></div></td>
+                        </tr>
+                        <tr>
+                          <td>VLTI</td>
+                          <td><input type="text" class="form-control atomDetailsForm input-sm" id="detailsAtomVLTI" name="detailsAtomVLTI"/></td>
+                        </tr>
+                         <tr>
+                          <td colspan="2">
+                            <button id="atomDetailsConnections" class="btn btn-md btn-success">Show Connections</button> 
+                          </td>
+                        </tr>
+                         <tr>
+                          <td colspan="2">
+                            <button disabled="disabled" id="atomDetailsUpdate" class="btn btn-md btn-success">Update</button> 
+                            <button disabled="disabled" id="atomDetailsDelete" class="btn btn-md btn-danger">Delete</button>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+
+
+                    <div id="detailsPanelLinkContent">
+                      
+                    </div>
+
+
+                    <div id="detailsPanelMultipleContent">
+                      
+                    </div>
+                    <div id="detailsPanelContentNone">
+                      (Nothing is currently selected)
+                    </div>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+ 
+           <!-- DETAILS -->
+           <div class="accordion-group" >
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#highlightsPanel">
+                    <i class="fa fa-globe"></i> <span id="detailsPanelTitle"> Highlights </span>
+                  </a>
+                </div>
+                <div id="highlightsPanel" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <!-- CONTENT -->
+                     <table class="table table-settings">
+                      <tr>
+                        <td><button class="btn btn-xs btn-success" id="highlightsUnhighlightAll">Unhighlight All</button></td>
+                        <td><button class="btn btn-xs btn-success">Hide Except Highlighted</button></td>
+                      </tr>
+                     </table>
+                    <!-- END CONTENT -->
+                  </div>
+                </div>
+              </div>
+
+ 
+        </div>
+    </div>
+</div>
+
+<!-- TERMINAL -->
+<div id="terminal">
+  <div id="terminalBar">Terminal
+      <span class="pull-right">
+        <a href="#"><i class="fa fa-times" class="detailBarCloseButton" id="terminalClose"></i></a>
+      </span>
+  </div>
+  <div id="terminalText">
+   
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div id="toolbox">
+  <div id="toolboxBar">Toolbox
+      <span class="pull-right">
+        <a href="#"><i class="fa fa-times" class="detailBarCloseButton" id="toolboxClose"></i></a>
+      </span>
+  </div>
+  <div id="toolboxContent">
+    <div class="toolboxIcon" title="Normal Pointer" id="toolboxPointer"><i class="fa fa-hand-o-up"></i></div>
+    <div class="toolboxIcon" title="Add new node" id="toolboxAddNode"><i class="fa fa-plus-circle"></i></div>
+    <div class="toolboxIcon" title="Delete existing node..." id="toolboxRemoveNode"><i class="fa fa-minus-circle"></i></div>
+    <div class="toolBoxLine"></div>
+    <div class="toolboxIcon" title="Add new link" id="toolboxAddLink"><i class="fa fa-link"></i></div>
+    <div class="toolboxIcon" title="Remove link" id="toolboxRemoveLink"><i class="fa fa-unlink"></i></div>
+    <div class="toolBoxLine"></div>
+    <div class="toolboxIcon" title="Highlight" id="toolboxHighlight"><i class="fa fa-search-plus"></i></div>
+  </div>
+</div>
+ 
+<!-- DETAILS -->
+<div id="details">
+    <div id="detailsBar"><span id="detailsBarTitle">Details</span>
+        <span class="pull-right">
+          <a href="#"><i class="fa fa-times" class="detailBarCloseButton" id="detailsClose"></i></a>
+        </span>
+    </div>
+  
+    <div id="detailsLinkContent">
+      <div class="row">
+        <div class="col-lg-6">
+           Source<br>
+            <div class="input-group">
+            <input type="text" class="form-control input-sm" id="detailsLinkSource" name="detailsLinkSource"/> 
+            <div id="detailsLinkSourceButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i></div>
+          </div>
+        </div>
+         <div class="col-lg-6">
+           Target<br>
+            <div class="input-group">
+            <input type="text" class="form-control input-sm" id="detailsLinkTarget" name="detailsLinkTarget"/> 
+            <div id="detailsLinkTargetButton" class="input-group-addon btn btn-success"><i class="fa fa-arrow-circle-right"></i></div>
+            </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-lg-6">
+            <button style="width:100%" disabled="disabled" id="linkDetailsUpdate" class="btn btn-md btn-success">Update</button> 
+        </div>
+        <div class="col-lg-6">
+            <button style="width:100%" disabled="disabled" id="linkDetailsDelete" class="btn btn-md btn-danger">Delete</button> 
+        </div>
+      </div>
+      <br>
+    </div>
+
+    <div id="detailsContentNone">
+        (Nothing is currently selected.)
+    </div>
+
+    <div id="detailsContent">
+    </div>
+
+</div>
+
+
+<!-- MODALS -->
+<div class="modal fade" id="CogServerModalSave" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-cog"></i> Save Cogserver</h4>
+      </div>
+      <div class="modal-body">
+         <table class="table">
+          <tr>
+            <td>Location</td>
+            <td><input id="CogServerModalSaveLocation" class="form-control" type="text"/></td>
+          </tr>
+          <tr>
+            <td>Description <small>(optional)</small></td>
+            <td><input id="CogServerModalDescription" class="form-control" type="text"/></tD>
+          </tr>
+         </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="CogServerModalSaveSaveButton" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="CogServerModalList" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-cog"></i> List Cogserver</h4>
+      </div>
+      <div class="modal-body" id="CogServerModalListBody">
+        No saved servers so far.   
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<!-- IMPORT PREFERENCES -->
+<div class="modal fade" id="modalPreferencesImport" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-exchange"></i> Import Preferences</h4>
+      </div>
+      <div class="modal-body" id="modalPreferencesImportBody">
+         
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT PREFERENCES -->
+<div class="modal fade" id="modalPreferencesExport" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-exchange"></i> Export Preferences</h4>
+      </div>
+      <div class="modal-body" id="modalPreferencesExportBody">
+         
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success">Export</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NODE CONNECTIONS INCOMING AND OUTGOING -->
+<div class="modal fade" id="modalConnections" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"  ><i class="fa fa-exchange"></i> <span id="modalConnectionsIncomingTitle">Atom Connections</i></h4>
+      </div>
+      <div class="modal-body" id="modalConnectionsBody">
+         <div class="row">
+
+          <div class="col-lg-12 panel">
+            <h5> Incoming </h6>
+            <div style="height:200px; overflow-y:scroll">
+              <table id="modalConnectionsIncoming" class="table table-settings">
+              </table>
+            </div>
+          </div>
+           
+          <div class="col-lg-12 panel">
+            <h5> Outgoing </h5>
+            <div style="height:200px; overflow-y:scroll">
+              <table id="modalConnectionsOutgoing" class="table table-settings">
+              </table>
+            </div>
+          </div>
+          
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ATOM TYPE COLORS -->
+<div class="modal fade" id="modalAtomTypesColors" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="modalAtomTypesTitle"><i class="fa fa-exchange"></i> AtomType Colors</h4>
+      </div>
+      <div class="modal-body" >
+
+        <div id="modalAtomTypesColorsOptions" style="margin-bottom:20px">
+          <label class="radio-inline"><input type="radio" name="modalAtomTypesColorsShowType" value="Used" class="modalAtomTypesColorsShowType" >Show Only Used Types</label>
+          <label class="radio-inline"><input type="radio" name="modalAtomTypesColorsShowType" value="All" class="modalAtomTypesColorsShowType"  >Show All Types</label>
+        </div>
+
+        <div id="modalAtomTypesColorsBody">
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="modalAtomTypesColorsReset">Reset</button>
+        <button class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    
+    </div>
+  </div>
+</div>
+ 
+ 
+
+
+
+<!-- Vis RIGHT CLICK MENU -->
+<div id="VisContextMenu" class="dropdown clearfix contextMenu">
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+
+    <li><a tabindex="-1" href="#">Show Highlighted Atoms</a></li>
+  </ul>
+</div>
+
+
+<!-- SCRIPTS -->
+<script src="media/js/d3.min.js" charset="utf-8"></script>
+<script src="media/js/jquery-1.11.2.min.js"></script>
+<script src="media/js/jquery-ui.js"></script>
+<script src="media/js/three.min.js"></script>
+<script src="media/js/bootstrap.min.js"></script>
+<script src="media/js/jquery.slimscroll.js" charset="utf-8"></script>
+<script src="media/js/jquery.switchButton.js" charset="utf-8"></script>
+<script src="media/js/jquery.terminal-0.8.8.js"></script>
+<script src="media/js/jquery.awesome-cursor.min.js"></script>
+<script src="media/js/spectrum.js"></script>
+  
+<!-- ATOMSPACETHREE -->
+<script src="media/js/three.min.js" charset="utf-8"></script>
+<script src="media/js/OrbitControls.min.js" charset="utf-8"></script>
+<script src="media/js/visual-3d.js" charset="utf-8"></script>
+
+<!-- SIGMA -->
+<script src="media/js/sigma.js-master/src/sigma.core.js"></script>
+<script src="media/js/sigma.js-master/src/conrad.js"></script>
+<script src="media/js/sigma.js-master/src/utils/sigma.utils.js"></script>
+<script src="media/js/sigma.js-master/src/utils/sigma.polyfills.js"></script>
+<script src="media/js/sigma.js-master/src/sigma.settings.js"></script>
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.dispatcher.js"></script>
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.configurable.js"></script>
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.graph.js"></script>
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.camera.js"></script>
+<script src="media/js/sigma.js-master/src/classes/sigma.classes.quad.js"></script>
+<script src="media/js/sigma.js-master/src/captors/sigma.captors.mouse.js"></script>
+<script src="media/js/sigma.js-master/src/captors/sigma.captors.touch.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/sigma.renderers.canvas.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/sigma.renderers.webgl.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/sigma.renderers.svg.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/sigma.renderers.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="media/js/sigma.js-master/src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="media/js/sigma.js-master/src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="media/js/sigma.js-master/src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="media/js/sigma.js-master/src/misc/sigma.misc.animation.js"></script>
+<script src="media/js/sigma.js-master/src/misc/sigma.misc.bindEvents.js"></script>
+<script src="media/js/sigma.js-master/src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="media/js/sigma.js-master/src/misc/sigma.misc.drawHovers.js"></script>
+<script src="media/js/sigma.js-master/plugins/sigma.plugins.animate/sigma.plugins.animate.js"></script>
+<script src="media/js/sigma.js-master/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+ 
+
+<!-- NEW LIBS -->
+<script src="media/js/visual.js"></script>
+<script src="media/js/visual-table.js"></script>
+<script src="media/js/visual-json.js"></script>
+<script src="media/js/visual-scheme.js"></script>
+<script src="media/js/visual-sigma.js"></script>
+<script src="media/js/visual-gexf.js"></script>
+<script src="media/js/visual-statistics.js"></script>
+<script src="media/js/functions.js"></script>
+<script src="media/js/terminal.js"></script>
+
+</body>
+</html>
