@@ -1,0 +1,29 @@
+.dataset{
+  overflow-y:scroll;
+  overflow-x:scroll;
+  height:600px;
+  width: 90%;
+  display:block;
+}
+
+::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+  width: 5px;
+  /*height: 2px;*/
+  background-color: teal;
+}
+
+::-webkit-scrollbar-thumb
+{
+  background-color: teal;
+  border: 1px solid #599a9a;
+}
+:-webkit-scrollbar-corner {
+  background-color: black;
+}

@@ -1,0 +1,38 @@
+<div class="ui centered container grid">
+  <div class="row"></div>
+  <div class="row"></div>
+  <div class="row"></div>
+  <div class="ui six wide column raised very padded text segment">
+    <h2 class="ui teal dividing header"><img src="../../../../assets/img/logo31.png" style="cursor: pointer" alt="" [routerLink]="['', 'home']">Login to your Account</h2>
+      <div *ngIf="!isCorrect" class="ui error message">
+          <ul class="list">
+              <li>incorrect username or password.</li>
+          </ul>
+      </div>
+      <form class="ui form attached padded fluid segment" [formGroup]="userForm" (submit)="authenticate()">
+      <div class="twelve wide field" [class.error]="!isCorrect">
+        <label>Username</label>
+        <div class="ui left icon input">
+          <input type="text" name="name" formControlName="username" id="name" placeholder="username" 
+          [(ngModel)]="user.username">
+          <i class="user icon"></i>
+        </div>
+      </div>
+      <div class="twelve wide field" [class.error]="!isCorrect">
+        <label>Password</label>
+        <div class="ui left icon input">
+          <input type="password" name="pass" formControlName="password" id="pass" placeholder="password"
+          [(ngModel)]="user.password">
+          <i class="protect icon"></i>
+        </div>
+        </div>
+      <button class="ui teal button" [disabled]="!userForm.valid" type="submit">Login</button>
+    </form>
+    <div class="ui bottom attached positive message">
+      Don`t have an account ? 
+      <a class="pass-forgot" [routerLink]="['', 'register']">Sign up</a>
+    </div>
+  </div>
+</div>
+
+
