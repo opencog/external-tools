@@ -1,0 +1,109 @@
+<!-- D3 Graph window with controls -->
+<div class="ui grid very padded ui-grid">
+  <div class="sixteen wide column ui-columns">
+    <div class="ui segment visualizer-screen">
+      <div class="tools-div">
+        <div class="ui icon buttons">
+          <button (click)="play()" class="active ui icon teal button" data-tooltip="Play">
+            <i class="icon play"></i>
+          </button>
+          <button (click)="pause()" class="ui icon teal button" data-tooltip="Pause">
+          <i class="icon pause"></i>
+          </button>
+          <button (click)="restart()" class="ui icon teal button" data-tooltip="Restart">
+            <i class="icon refresh"></i>
+          </button>
+        </div>
+        <div class="ui icon buttons">
+          <button (click)="zoomIn('1000')" class="ui icon teal button" data-tooltip="Zoom in">
+            <i class="icon plus"></i>
+          </button>
+          <button (click)="zoomOut('1000')" class="ui icon teal button" data-tooltip="Zoom out">
+            <i class="icon minus"></i>
+          </button>
+          <button (click)="zoomReset('1000')" class="ui icon teal button" data-tooltip="Reset zoom">
+            <i class="icon window restore"></i>
+          </button>
+        </div>
+        <button *ngIf="filteredNodes" (click)="showAll()" class="button ui teal">
+					<span  data-tooltip="Reset filtering to display all Nodes and Links">Show All Data</span>
+				</button>
+        <div *ngIf="selectedNode" class="button ui floating labeled icon dropdown teal" id="filtermenu" data-tooltip="Apply filtering to selected Node">
+          <i class="filter icon"></i>
+          <div class="default text">Filter</div>
+          <!-- <span class="text">{{ currentFilter }}</span> -->
+          <div class="menu">
+            <div class="header">
+              <i class="tags icon"></i><span>Filter on Selection</span>
+            </div>
+            <div class="item" (click)="filterByNode('ConceptNode')">
+              <span>ConceptNode</span>
+            </div>
+            <div class="item" (click)="filterByNode('ReferenceLink')">
+              <span>ReferenceLink</span>
+            </div>
+            <div class="item" (click)="filterByNode('EvaluationLink')">
+              <span>EvaluationLink</span>
+            </div>
+            <div class="divider"></div>
+            <div class="item" (click)="filterByNode('all')">
+              <span>Clear Filter</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedNode" class="selected-node-properties">
+        <table class="ui celled striped table">
+          <thead>
+            <tr>
+              <th colspan="4">
+                {{ type }}
+                <i (click)="closeSelectedNodeProps()" class="right floated remove icon"></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="collapsing">
+                Handle
+              </td>
+              <td colspan="2">{{ handle }}</td>
+            </tr>
+            <tr>
+              <td>
+                LTI
+              </td>
+              <td>{{ av.lti }}</td>
+            </tr>
+            <tr>
+              <td>
+                STI
+              </td>
+              <td>{{ av.sti }}</td>
+            </tr>
+            <tr>
+              <td>
+                VLTI
+              </td>
+              <td>{{ av.vlti }}</td>
+            </tr>
+            <tr>
+              <td>
+                Confidence
+              </td>
+              <td>{{ tv.details.confidence }}</td>
+            </tr>
+            <tr>
+              <td>
+                Strength
+              </td>
+              <td>{{ tv.details.strength }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <svg id="svgcanvas" *ngIf="parsedJson">
+      </svg>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.clearfix {
+  margin-top: 10%;
+}

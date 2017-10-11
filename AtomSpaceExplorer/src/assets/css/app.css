@@ -1,0 +1,206 @@
+a:hover {
+  /*background-color: rgba(197, 198, 199, 0.44);
+  text-decoration: none;*/
+}
+
+/*body > app-root > div > div > header > div.mdl-layout__header-row,
+body > app-root > div > div > header > div.mdl-layout__drawer-button{
+    background: #303F9F;
+}*/
+body > app-root > div > div > main > project-detail > div > app-visualize-result > div.md-grid {
+    padding: 0;
+}
+
+body > app-root > div > div > main > project-detail > div > app-visualize-result > div > div.mdl-cell,
+body > app-root > div > div > main > project-detail > div > div > div.mdl-cell,
+body > app-root > div > div > main > project-detail > div > project-row-data > div > div.mdl-cell {
+    margin: 0;
+}
+
+body > app-root > div > div > header > div:nth-child(3) > div:nth-child(2) > nav,
+body > app-root > div > div > main > project-detail > div > div.mdl-layout__container > div > header > div > div {
+    margin: auto;
+}
+
+body > app-root > div > div > header > div:nth-child(3) > div:nth-child(2) > nav > a:nth-child(n) {
+    font-weight: bold;
+    font-size: 1.23em;
+}
+
+
+
+
+body > app-root > div > div > main > project-detail > div > .mdl-grid {
+    padding: 0;
+}
+
+body > app-root > div > div > main > project-detail > div > div > div.mdl-cell.mdl-cell--4-col.sidebar > div{
+    width: 100%;
+}
+
+body > app-root > div > div > main > project-detail > div > div > div.mdl-cell.mdl-cell--8-col {
+    margin-left: 1%;   
+}
+
+
+
+
+.project-detail-content {
+    margin-top: 10%;
+    margin-left: 5%;
+}
+
+.right-aligned {
+    float: right;
+}
+
+.my-card {
+    background-color: #e4e5e6;
+}
+
+.my-toolbar{
+    background-color: #d4d5d6;
+}
+
+.mdl-card__actions > a:hover {
+    text-decoration: none;
+}
+
+.demo-card-event.mdl-card {
+    width: 256px;
+    height: 256px;
+    background: #3E4EB8;
+}
+.demo-card-event > .mdl-card__actions {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.demo-card-event > .mdl-card__title {
+    align-items: flex-start;
+}
+.demo-card-event > .mdl-card__title > h4 {
+    margin-top: 0;
+}
+.demo-card-event > .mdl-card__actions {
+    display: flex;
+    box-sizing:border-box;
+    align-items: center;
+}
+.demo-card-event > .mdl-card__actions > .material-icons {
+    padding-right: 10px;
+}
+.demo-card-event > .mdl-card__title,
+.demo-card-event > .mdl-card__actions,
+.demo-card-event > .mdl-card__actions > .mdl-button {
+    color: #fff;
+}
+
+/*for the form */
+body > app-root > div > div > main > create-project > div {
+    margin-top: 30px;
+}
+
+md-input-container {
+    width: 100%;
+}
+
+#cdk-overlay-1 {
+    width: 39.5%;
+}
+
+#fs-algo,  {
+    width: 100%;
+}
+
+.mat-select-value > span  {
+    padding-left: 10px;
+}
+
+body > app-root > div > div > main > create-project > div > md-card > md-card-content > form > div > div:nth-child(1) > div > fieldset > div:nth-child(1) > md-input-container > div > div.mat-input-table > div.mat-input-infix > span, 
+#title{ 
+    font-size: 20px;
+}
+
+fieldset {
+    
+}
+
+body > app-root > div > div > main > create-project > div > md-card {
+    margin-bottom: 20px;
+}
+
+/*upload button*/
+
+
+/*info icon*/
+.info-icon {
+    font-size: 1em;
+    float: right;
+    color: papayawhip;
+    cursor: help;
+}
+
+body > app-root > div > div > main > create-project > div > md-card > md-card-content > form > div:nth-child(2) {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+/* project detail content */
+body > app-root > div > div > main > project-detail > div > project-row-data > div > div.mdl-cell.mdl-cell--4-col.sidebar > div > div.mdl-card__title > h2 {
+    margin: auto;
+}
+
+body > app-root > div > div > main > project-detail > div > project-row-data > div > div.mdl-cell.mdl-cell--8-col > div {
+    width: 90%;
+}
+
+body > app-root > div > div > main > project-detail > div > project-row-data > div > div.mdl-cell.mdl-cell--8-col > div{
+    width: 100%;
+}
+
+body > app-root > div > div > main > project-detail > div > project-row-data > div > div.mdl-cell.mdl-cell--8-col > div > scrollable-table > div.dataset {
+    width: 85%;
+    margin: auto;
+}
+
+
+body > app-root > div > div > main > project-detail > div > project-row-data > div > div.mdl-cell.mdl-cell--4-col.sidebar > div {
+    width: 100%;
+}
+
+body > app-root > div > div > main > project-detail > div > project-row-data > div > div.mdl-cell.mdl-cell--4-col.sidebar > div > div.mdl-card__actions.mdl-card--border > a {
+    color: white;
+    width: 100%;
+    font-weight: bold;
+}
+
+body > app-root > div > div > main > project-detail > div > project-row-data > div > div.mdl-cell.mdl-cell--4-col.sidebar > div > div.mdl-card__actions.mdl-card--border {
+    background-color: #009688;
+}
+
+body > app-root > div > div > main > project-detail > div > visualize-result > div > div.mdl-cell.mdl-cell--4-col.sidebar > div {
+    width: 100%;
+}
+
+/* end project detail content */
+
+/* tab */
+body > app-root > div > div > main > project-detail > div > div > div > header > div > div > div > nav > a:nth-child(n) {
+   cursor: pointer;
+}
+
+body > app-root > div > div > main > project-detail > div > div > header > div > div.secondary-toolbar {
+    width: 100%;
+}
+
+body > app-root > div > div > main > project-detail > div > div > header > div > div > div {
+    width: 80%;
+    margin: auto;
+}
+
+body > app-root > div > div > main > project-detail > div > div > header > div > div > div > nav.mdl-navigation {
+    width: 50%;
+    margin: auto;
+}
+/*end tabs*/
+
+
