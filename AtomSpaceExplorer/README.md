@@ -1,7 +1,7 @@
 AtomSpace Explorer
 ====================
-The AtomSpace Explorer is visualization tool for OpenCog data. Data is fetched from the CogServer AtomSpace api,
-then is displayed in a labeled, weighted hypergraph.
+The AtomSpace Explorer is a visualization tool for OpenCog data. Atoms are fetched from the CogServer via
+the REST API, then displayed as a two dimensional graph in the browser.
 
 ## Features
 - Fetch data from user provided AtomSpace REST api URL.
@@ -23,9 +23,9 @@ then is displayed in a labeled, weighted hypergraph.
 - Tooltips for all Navbar and Visualizer command buttons.
 - Languages dropdown supports, English, Chinese, French, German, Italian, Japanese and Spanish. Localizations currently implemented for Navbar only.
 
-The AtomSpace Explorer app was forked from the Mozi Visualizer Demo app.
+The AtomSpace Explorer app was based upon the Mozi Visualizer Demo app (which was in turn based on the Glimpse visualizer).
 
-As the initial commit of the AtomSpace Explorer has substantial changes, there's a more detailed list of the initial commit changes below.
+As the initial commit of the AtomSpace Explorer has substantial changes, there's a more detailed list of the changes and new additions below.
 
 ## Requirements
 1. node v6.0.0 or above 
