@@ -20,10 +20,6 @@
 	position: absolute;
 }
 
-.ui.icon.buttons {
-  opacity: 0.8;
-}
-
 /*
  * ### D3 Graph related ###
  */
@@ -41,15 +37,45 @@ svg.rect {
 	height: 100%;
 }
 
+.ui.icon.buttons {
+  opacity: 0.8;
+}
+
+/* Tooltips toggle checkbox */
+.ui.toggle.checkbox {
+  opacity: 0.8;
+}
+.ui.toggle.checkbox label {
+  /* font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif; */
+  padding-top: 0em !important;  /* icon alignment */
+}
+.ui.toggle.checkbox input:checked~.box:before, .ui.toggle.checkbox input:checked~label:before {
+  background-color: #00B5AD!important;
+}
+.ui.toggle.checkbox input~.box:before, .ui.toggle.checkbox input~label:before {
+  background-color: #bfece9;
+}
+
+/* Right-side Node properties table */
 .selected-node-properties {
 	position: absolute;
-	right: 0;
+  right: 0;
+  min-width: 180px;
+  max-width: 340px;
   /* background-color: black; */
   background-color: #00B5AD;
 	opacity: 0.7;
-	padding: 10px;
+	padding: 6px;
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;
+}
+.selected-node-properties table thead tr th i {
+  margin-left: 2em;
+  margin-bottom: 0em;
+}
+/* Right floated not supported by Semantic UI. Manually add support for it */
+.right.floated {
+  float: right;
 }
 
 .links line {
@@ -67,6 +93,101 @@ svg.rect {
 text.edgelabelshadow {
   stroke: #fff;
 }
+
+/* Node tooltips */
+.node-tooltip {
+  position: absolute;
+  text-align: center;
+  line-height: 0.75em !important;
+  padding: 2px;
+  /* font: 10px sans-serif; */
+  font: 12px;
+  background: #00B5AD;
+  pointer-events: none;
+  border-radius: 3px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+.node-detailed-tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 2px;
+  /* font: 10px sans-serif; */
+  font: 12px;
+  background: #00B5AD;
+  pointer-events: none;
+  border-radius: 3px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Context (right-click) menus */
+.d3-context-menu {
+	position: absolute;
+	display: none;
+	background-color: #f2f2f2;
+	border-radius: 4px;
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	min-width: 150px;
+	border: 1px solid #d4d4d4;
+	z-index:1200;
+}
+.d3-context-menu ul {
+	list-style-type: none;
+	margin: 4px 0px;
+	padding: 0px;
+	cursor: default;
+}
+.d3-context-menu ul li {
+	padding: 4px 16px;
+}
+.d3-context-menu ul li:hover {
+	background-color: #4677f8;
+	color: #fefefe;
+}
+
+/*
+.div.tooltip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip *
+.div.tooltip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently *
+.div.tooltip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+*/
+
+/* disable text selection */
+/* svg *::selection {
+  background : transparent;
+}
+
+svg *::-moz-selection {
+  background:transparent;
+}
+
+svg *::-webkit-selection {
+  background:transparent;
+} */
 
 /*
 .source { 
