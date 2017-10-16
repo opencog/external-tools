@@ -14,13 +14,14 @@ the REST API, then displayed as a two dimensional graph in the browser.
     - Large: For Node.av.sti >= radiusScaleMinVal  (currently 10).
 - Click on an Atom to view it's properties. Use close icon ('X') to dismiss properties. Or reclick same node to dismiss properties. 
 - Double click on an Atom to filter AtomSpace to that Atom along with two levels of neighboring Atoms.
-- Buttons to Pause / Play / Restart Force Simulation.
-- Buttons to Zoom In, Zoom Out, and Reset Zoom.
+- Buttons to Pause / Play / Restart Force Simulation and  to Zoom In, Zoom Out, and Reset Zoom.
+- Keyboard shortcuts for all of the above buttons are indicated in the corresponding button tooltips.
 - Filtering buttons appear when an Atom is selected or double-clicked (TODO filtering capability needs to be updated).
 - D3 client area and Node context (right-click) menus.
 - Individual Nodes are pinnable into fixed location. Ctrl-click, Ctrl-drag, or right-click Pin (Unpin) a Node. Right-click D3 client area has command to unpin all nodes.
 - D3 client area & SVG canvas dynamically sized relative to browser window size, including auto-resize of Force Simulation. Scrollbars are avoided within of min width, min height or width-to-height ratios.
 - Tooltips for all Navbar and Visualizer command buttons.
+- Node tooltips verbosity is controlled via a toggle checkbox. In verbose mode, the detail level is the same as the selected Node properties table. Both methods can be used together, which provides a convenient way to compare details between a baseline selected Node, and other Nodes via hovering over them.
 - Languages dropdown supports, English, Chinese, French, German, Italian, Japanese and Spanish. Localizations currently implemented for Navbar only.
 
 The AtomSpace Explorer app was based upon the Mozi Visualizer Demo app (which was in turn based on the Glimpse visualizer).
@@ -51,6 +52,15 @@ npm start # will start the visualizer at port 4200
     will be displayed in the graph.
 
 ## Revision History
+### Oct-15-2017 - sshermz - HTML Tooltips, plus a few minor features and bug fixes
+- New Feature: Intelligent HTML formatted tooltips, with normal and verbose modes. Verbose mode is selected via new Tooltips toggle checkbox, which has been added underneath the other D3 graph command buttons. The toggle checkbox is styled to match the Semantic UI teal theme. In Verbose mode, the same level of detail, that's in the right-side Node properties box, is shown. However the tooltips are more convenient for quickly surveying details amongst many Nodes without requiring any clicks. Can also use to compare other Nodes to the selected Node. Default non-verbose tooltips are improved to the same new style, and show both the name if available, like before, but now also always show the type. In other words, now all Nodes show tooltips, dynamically showing what information is available.
+- New Feature: Node properties dialog now also shows Node Name, if there is one.
+- Improvement: Right-justified the Node properties 'X' close icon, as is standard for a close button. Also added circular border to make it's purpose more clear. Also did minor node properties table fixes, cleanups & style refinements.
+- New Feature: Added Esc key handling for cancelling context menus. As a bonus, also added new shortcut keys within the new key handling function for various graph command buttons: Space bar pauses and resumes D3 Force Simulation. Enter restarts D3 Force Simulation. Numpad +/- for Zooming. Numpad * for resetting zoom level. And the graph command button tooltips have been updated to indicate all of these shortcuts to help make them self-evident.
+- Bug Fix: Fixed main context menu which wasn't always available when D3 rect was offset by panning.
+- Bug Fix: Fixed a couple of navbar tooltip positions.
+- Also added some disabled node centering and pan recentering code, but disabled for now as it doesn't work when zoomed in.
+- Minor refactoring.
 ### Oct-10-2017 - sshermz - Initial Commit
 #### *Changes from the Mozi Visualizer Demo app*
 - Changed adjacent link labels to inline, which required adding matching SVG shadow text elements to overwrite link line beneath labels.

@@ -4,24 +4,24 @@
     <div class="ui segment visualizer-screen">
       <div class="tools-div">
         <div class="ui icon buttons">
-          <button (click)="play()" class="active ui icon teal button" data-tooltip="Play">
+          <button (click)="play()" class="active ui icon teal button" data-tooltip="Play  (Space bar)" data-position="top left">
             <i class="icon play"></i>
           </button>
-          <button (click)="pause()" class="ui icon teal button" data-tooltip="Pause">
+          <button (click)="pause()" class="ui icon teal button" data-tooltip="Pause  (Space bar)">
           <i class="icon pause"></i>
           </button>
-          <button (click)="restart()" class="ui icon teal button" data-tooltip="Restart">
+          <button (click)="restart()" class="ui icon teal button" data-tooltip="Restart  (Enter)">
             <i class="icon refresh"></i>
           </button>
         </div>
         <div class="ui icon buttons">
-          <button (click)="zoomIn('1000')" class="ui icon teal button" data-tooltip="Zoom in">
+          <button (click)="zoomIn('1000')" class="ui icon teal button" data-tooltip="Zoom in  (Numpad +)">
             <i class="icon plus"></i>
           </button>
-          <button (click)="zoomOut('1000')" class="ui icon teal button" data-tooltip="Zoom out">
+          <button (click)="zoomOut('1000')" class="ui icon teal button" data-tooltip="Zoom out  (Numpad -)">
             <i class="icon minus"></i>
           </button>
-          <button (click)="zoomReset('1000')" class="ui icon teal button" data-tooltip="Reset zoom">
+          <button (click)="zoomReset('1000')" class="ui icon teal button" data-tooltip="Reset zoom  (Numpad *)">
             <i class="icon window restore"></i>
           </button>
         </div>
@@ -51,51 +51,66 @@
             </div>
           </div>
         </div>
+        <br>
+        <div class="ui toggle checkbox" data-tooltip="Detailed tooltips" data-position="bottom left">
+          <input type="checkbox" name="detailedTooltips">
+          <label (click)="toggleTooltips()">
+            <div [ngSwitch]="detailedTooltips">
+              <i *ngSwitchCase="false" class="icon large teal comment outline"></i>
+              <i *ngSwitchCase="true" class="icon large teal talk outline"></i>
+            </div>
+          </label>
+        </div>
       </div>
       <div *ngIf="selectedNode" class="selected-node-properties">
         <table class="ui celled striped table">
           <thead>
             <tr>
-              <th colspan="4">
-                {{ type }}
-                <i (click)="closeSelectedNodeProps()" class="right floated remove icon"></i>
+              <th colspan="2">
+                <span>{{ type }}</span>
+                <i (click) = "closeSelectedNodeProps()" class="ui basic circular right floated remove icon"></i>
+              </th>
+            </tr>
+            <tr *ngIf="name !== ''">
+              <th colspan="2">
+                <span>{{ name }}</span>
               </th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td class="collapsing">
-                Handle
+                <span>Handle</span>
               </td>
-              <td colspan="2">{{ handle }}</td>
+              <td>{{ handle }}</td>
             </tr>
             <tr>
               <td>
-                LTI
+                <span>LTI</span>
               </td>
               <td>{{ av.lti }}</td>
             </tr>
             <tr>
               <td>
-                STI
+                <span>STI</span>
               </td>
               <td>{{ av.sti }}</td>
             </tr>
             <tr>
               <td>
-                VLTI
+                <span>VLTI</span>
               </td>
               <td>{{ av.vlti }}</td>
             </tr>
             <tr>
               <td>
-                Confidence
+                <span>Confidence</span>
               </td>
               <td>{{ tv.details.confidence }}</td>
             </tr>
             <tr>
               <td>
-                Strength
+                <span>Strength</span>
               </td>
               <td>{{ tv.details.strength }}</td>
             </tr>

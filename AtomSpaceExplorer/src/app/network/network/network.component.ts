@@ -24,8 +24,9 @@ import {
 /*
  * ## Consts ##
  */
+const appVersion = '0.10.01 Beta (Oct-15-2017)';
 
- // Force Simulation
+// Force Simulation
 const simInterval = 10;  // Milliseconds.
 const simForceStrengthNormal = -80, simForceStrengthFast = -120, simForceStrengthSlow = -20;
 const simForceStrength = simForceStrengthNormal;
@@ -47,6 +48,9 @@ const strokeWidthLink = 1;
 const strokeWidthLabelShadow = 3;
 const strokeWidthNode = 1.5;
 const strokeWidthSelectedNode = 3;
+const strokeWidthHoverNode = 3;
+const colorSelectedNode = '#00B5AD';
+const colorHoverNode = '#bfece9';
 const fontLink = 'normal 6px arial';
 const fontfamilyNode = 'arial';
 const fontweightNode = 'bold';
@@ -57,20 +61,13 @@ const xtraLevelNeighbors = true;
 const nodePositionMargin = 30;  // Margin within D3 rect, in px.
 const enableFisheye = false;   // Disabled for now unless can fix issue with rotated label positions.
 
-/*
- * Node radius scaling
- */
+// Node radius scaling
 const radiusScaleFactorPct = 33;  // 0 to disable.
+const enablescaleRadiusTippingPoint = true;  // true for fixed larger size with tipping point approach, false for scaled approach.
 const radiusScaleMinVal = 10;  // For tipping point approach only.
 
-/* % approach */
-// function scaleRadius(rad: number, scaleVal: number) { return rad + (scaleVal * (radiusScaleFactorPct / 100)); }
-
-/* Tipping point approach */
-function scaleRadius(rad: number, scaleVal: number) {
-  if (scaleVal >= radiusScaleMinVal) { return rad * (1 + (radiusScaleFactorPct / 100)); }
-  return rad;
-}
+// Other
+const defaultTransitionDuration = 1000;
 
 /*
  * ## Globals ##
@@ -82,6 +79,39 @@ let simulationRunning = false;
 let fisheye: any = null;
 let widthView = 0;
 let heightView = 0;
+
+/*
+ * buildNodeTooltipHTML - Construct html for tooltips
+ */
+function buildNodeTooltipHTML(d, verbose) {
+//  verbose = true;
+  const headText = (d.name === '') ? d.type : d.type + '<hr>' +  d.name;
+  if (verbose) {
+    return "<div class='node-detailed-tooltip'> <table class='ui celled striped table'> <thead> <tr> <th colspan='2'>" + headText +
+      "</th> </tr> </thead> <tbody> <tr> <td class='collapsing'> <span>Handle</span> </td> <td>" + d.id +
+      "</td> </tr> <tr> <td> <span>LTI</span> </td> <td>" + d.av.lti + "</td> </tr> <tr> <td> <span>STI</span> </td> <td>" + d.av.sti +
+      "</td> </tr> <tr> <td> <span>VLTI</span> </td> <td>" + d.av.vlti + "</td> </tr> <tr> <td> <span>Confidence</span> </td> <td>" +
+      d.tv.details.confidence + "</td> </tr> <tr> <td> <span>Strength</span> </td> <td>" + d.tv.details.strength +
+      "</td> </tr> </tbody> </table> </div>";
+  } else {
+    return "<div class='node-tooltip'> <table class='ui celled striped table'> <tbody> <tr> <td nowrap>" + headText +
+      "</td> </tr> </tbody> </table> </div>";
+  }
+}
+
+/*
+ * scaleRadius - Calculate radius for Nodes
+ */
+function scaleRadius(rad: number, scaleVal: number) {
+  if (enablescaleRadiusTippingPoint) {
+    // Tipping point approach
+    if (scaleVal >= radiusScaleMinVal) { return rad * (1 + (radiusScaleFactorPct / 100)); }
+    return rad;
+  } else {
+    // % approach
+    return rad + (scaleVal * (radiusScaleFactorPct / 100));
+  }
+}
 
 /*
  * class NetworkComponent
@@ -98,10 +128,11 @@ export class NetworkComponent implements AfterViewInit, OnInit {
   private parsedJson: Graph = <Graph>{};
   public message: any;  // variable to store node info on node click.
   private selectedNode = false;  // variable to show/hide the information bar.
-  private selectedNodeData: any; // data for information bar.
+  private selectedNodeData = null; // data for information bar.
   private filteredNodes = false;  // variable to show/hide the show whole data button on dblclick of node.
-  private zoom = d3.zoom();  // zoom behaviour.
-  private scale = 1;  // variable to control the scale of zoom.
+  private detailedTooltips = false;
+  private d3zoom = d3.zoom();  // zoom behaviour.
+  private zoomScale = 1;  // variable to control the scale of zoom.
   private svg: any;
   private node: any;
   private link: any;
@@ -113,8 +144,9 @@ export class NetworkComponent implements AfterViewInit, OnInit {
   private type: any;
   private av: any;
   private tv: any;
+  private name: any;
   private handle: any;
-  // private currentfilter: any = "Unfiltered";
+  // private currentfilter = "Unfiltered";
 
   /*
    * Constructor
@@ -140,8 +172,29 @@ export class NetworkComponent implements AfterViewInit, OnInit {
   }
 
  /*
-  * ## Click Handlers ##
+  * ## Functions ##
   */
+
+  /*
+  * panToCenter() - Reset panning to center.
+  */
+  panToCenter(ths) {
+    /* TODO: Not working correctly when Zoomed.
+
+    const scale = ths.zoomScale;
+    const x = -((scale - 1 ) / 2) * widthView;
+    const y = -((scale - 1 ) / 2) * heightView;
+
+//    const view = d3.select('.svg-grp');
+    const view = d3.select('rect');
+    view.transition()
+      .attr('transform', 'translate(' + x + ',' + y + ')scale(' + scale + ')')
+      .on('end', function() {
+          view.transition().duration(defaultTransitionDuration)
+          .call(ths.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
+      });
+    */
+  }
 
  /*
   * Click Handler: Pause Force Simulation
@@ -171,7 +224,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
     this.closeSelectedNodeProps();
     this.filteredNodes = false;
     this.selectedNode = false;
-    this.scale = 1;
+    this.zoomScale = 1;
     this.draw_graph();
   }
 
@@ -179,26 +232,26 @@ export class NetworkComponent implements AfterViewInit, OnInit {
   * Click Handler: Zoom In
   */
   zoomIn(duration: number) {
-    const currScale = this.scale;
+    // const currZoomScale = this.zoomScale;
     const view = d3.select('rect');
-    if (this.scale < 4) {  // to limit the scale variable to scale extent limit.
-      this.scale += 1;
+    if (this.zoomScale < 4) {  // to limit the scale variable to scale extent limit.
+      this.zoomScale += 1;
     }
-    view.transition().duration(duration).call(this.zoom.scaleTo, this.scale);
-    // console.log('zoomIn(): Changed scale from ' + currScale + ' to ' + this.scale);
+    view.transition().duration(duration).call(this.d3zoom.scaleTo, this.zoomScale);
+    // console.log('zoomIn(): Changed scale from ' + currZoomScale + ' to ' + this.scale);
   }
 
   /*
   * Click Handler: Zoom Out
   */
   zoomOut(duration: number) {
-    const currScale = this.scale;
+    // const currScale = this.zoomScale;
     const view = d3.select('rect');
-    if (this.scale > 1) {  // to limit the scale variable to scale extent limit.
-      this.scale -= 1;
+    if (this.zoomScale > 1) {  // to limit the scale variable to scale extent limit.
+      this.zoomScale -= 1;
     }
-    view.transition().duration(duration).call(this.zoom.scaleTo, this.scale);
-    // console.log('zoomOut(): Changed scale from ' + currScale + ' to ' + this.scale);
+    view.transition().duration(duration).call(this.d3zoom.scaleTo, this.zoomScale);
+    // console.log('zoomOut(): Changed scale from ' + currZoomScale + ' to ' + this.scale);
   }
 
   /*
@@ -206,8 +259,17 @@ export class NetworkComponent implements AfterViewInit, OnInit {
   */
   zoomReset(duration: number) {
     const view = d3.select('rect');
-    this.scale = 1;  // variable to control the scale of zoom.
-    view.transition().duration(duration).call(this.zoom.scaleTo, this.scale);
+    this.zoomScale = 1;  // variable to control the scale of zoom.
+    view.transition().duration(duration).call(this.d3zoom.scaleTo, this.zoomScale);
+    this.panToCenter(this);
+  }
+
+  /*
+   * Click Handler: Toggle detailed tooltips on and off
+   */
+  toggleTooltips() {
+    // console.log('Detailed Tooltips checkbox clicked');
+    this.detailedTooltips = !this.detailedTooltips;
   }
 
   /*
@@ -322,7 +384,8 @@ export class NetworkComponent implements AfterViewInit, OnInit {
   showAll() {
     // console.log('showAll()');
 
-    this.zoomReset(100);
+    this.zoomReset(defaultTransitionDuration);
+    this.panToCenter(this);
 
     // Set properties to their original form...
 
@@ -354,11 +417,20 @@ export class NetworkComponent implements AfterViewInit, OnInit {
    */
   private draw_graph() {
     // console.log('draw_graph()');
-
     const __this = this;
 
     // Main context menu
-    const mainMenu = [{
+    const mainMenu = [
+    {
+    //   title: 'Recenter Panning',
+    //   action: function(elm, d, i) {
+    //     if (__this.filteredNodes) {
+    //       centerNode(__this, d);
+    //     } else {
+    //       __this.panToCenter(__this);
+    //     }
+    //   },
+    // }, {
       title: 'Unpin All Nodes',
       action: function(elm, d, i) {
         __this.node.each(function (o) {
@@ -368,18 +440,15 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       }
     }];
 
+    // Define the div for the tooltip
+    const divTooltip = d3.select('body').append('div').attr('class', 'tooltip').style('opacity', 0);
+
     // Node context menu
-    const nodeMenu = [{
-      /* TODO: Show Details Command
-      title: function(d) {
-        return 'Show Details for ' + d.name;
-      },
-      action: function(elm, d, i) {
-        // TODO - Show Details Popup
-      }
-    }, {*/
+    const nodeMenu = [
+    {
       // Pin/Unpin Command
       title: function(d) {
+        divTooltip.transition().duration(0).style('opacity', 0);  // Hide tooltip.
         if (d.fx == null) {
           return 'Pin (Ctrl-Click or Ctrl-Drag) ' + d.name;
         } else {
@@ -397,6 +466,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       },
     }];
 
+    // Clear any old stuff
     this.svg = d3.select('svg');
     this.svg.selectAll('*').remove();
 
@@ -409,6 +479,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       heightView = rect.height;
     }
 
+    // Node color scheme
     const color = d3.scaleOrdinal(d3.schemeCategory20);
 
     // Enable Fisheye Distortion
@@ -430,17 +501,24 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       .attr('height', heightView)
       .style('fill', 'none')
       .style('pointer-events', 'all')
-      .on('contextmenu', d3.contextMenu(mainMenu))
-      .call(this.zoom
-      .scaleExtent([1 / 2, 4])
-      .on('zoom', zoomed))
-      .on('wheel.zoom', null);  // Disable zoom by mouse wheel.
+//      .on('contextmenu', d3.contextMenu(mainMenu))
+      .call(this.d3zoom
+        .scaleExtent([1 / 2, 4])
+        .on('zoom', zoomed))
+        .on('wheel.zoom', null);  // Disable zoom by mouse wheel.
 
     // Add group under svg element
     const g = this.svg.append('g').attr('class', 'svg-grp');
 
     // Set up zooming for this element
     function zoomed() { g.attr('transform', d3.event.transform); }
+
+    // Set up main context menu on svg client area
+    this.svg.on('contextmenu', d3.contextMenu(mainMenu));
+    // .call(this.d3zoom
+    //   .scaleExtent([1 / 2, 4])
+    //   .on('zoom', zoomed))
+    //   .on('wheel.zoom', null);  // Disable zoom by mouse wheel.
 
     // Build up the graph...
 
@@ -465,7 +543,9 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       .attr('id', function (d, i) {
         return 'edgepath' + i;
       })
-      .style('pointer-events', 'none');
+      .style('pointer-events', 'none')
+      .style('user-select', 'none')
+      ;
 
     // Link Label Shadows
     if (inlineLinkText === true) {
@@ -474,6 +554,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
         .enter()
         .append('text')
         .style('pointer-events', 'none')
+        .style('user-select', 'none')
         .style('font', fontLink)
         .style('line-height', '150%')
         // .attr("y", ".31em")
@@ -491,6 +572,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       .enter()
       .append('text')
       .style('pointer-events', 'none')
+      .style('user-select', 'none')
       .style('font', fontLink)
       .style('line-height', '150%')
       // .style("fill", "white")  // Text color
@@ -508,6 +590,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
         })
         .style('text-anchor', 'middle')
         .style('pointer-events', 'none')
+        .style('user-select', 'none')
         .attr('startOffset', '50%')
         .text(function (d) {
           return d.name;
@@ -521,6 +604,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       })
       .style('text-anchor', 'middle')
       .style('pointer-events', 'none')
+      .style('user-select', 'none')
       .attr('startOffset', '50%')
       .text(function (d) {
         return d.name;
@@ -542,6 +626,80 @@ export class NetworkComponent implements AfterViewInit, OnInit {
     .attr('fill', function (d) {
       return color(d.group);
     })
+    // Handle tooltips
+    .on('mouseover', function (d) {
+      const e = d3.event;
+
+      // if (__this.detailedTooltips !== true) { return; }
+
+      if (e.buttons !== 0) {
+        // console.log('mouseover, dragging')
+
+        // Hide tooltip when dragging
+        divTooltip.transition().duration(0).style('opacity', 0);
+        return;
+      }
+
+      divTooltip.transition()
+        .delay(100)
+        // .duration(100)
+        .style('opacity', 0.90);
+        divTooltip.html(buildNodeTooltipHTML(d, __this.detailedTooltips))
+        .style('left', (d3.event.pageX + 12) + 'px')
+        .style('top', (d3.event.pageY - 12) + 'px');
+
+      // Temporarily blank out title element so prevent regular tooltip
+      // (TODO: Delete this code for old style, non-dynamic tooltips)
+      // const circ = d3.select(this);
+      // const title = d3.select(this).select('title');
+      // title.text('');
+
+      // Selection indication
+      d3.selectAll('circle')
+        .style('stroke-width', function(o) {
+          // Mouse-over Node or selected Node?, else use usual style
+          return o.id === d.id || (__this.selectedNode && (o.id === __this.selectedNodeData.id)) ?
+            strokeWidthSelectedNode : strokeWidthNode; })
+        .style('stroke', function (o) {
+          if (o.id === d.id) {
+            return colorHoverNode;  // Mouse-over Node.
+          } else if (__this.selectedNode && (o.id === __this.selectedNodeData.id)) {
+            return colorSelectedNode;  // Selected Node.
+          } else {
+            return '#fff';  // Usual style.
+          }
+      });
+    })
+    .on('mouseout', function (d) {
+      // if (__this.detailedTooltips !== true) { return; }
+
+      // Hide tooltip when mouse out from Node
+      divTooltip.transition().duration(0).style('opacity', 0);
+
+      // Restore title element for regular tooltips
+      // (TODO: Delete this code for old style, non-dynamic tooltips)
+      // const circ = d3.select(this);
+      // const title = d3.select(this).select('title');
+      // title.text(d.name);
+
+      // Selection indication
+      d3.selectAll('circle')
+      .style('stroke-width', function(o) {
+        // Mouse-over Node or Selected Node?, else use usual style
+        return o.id === d.id || (__this.selectedNode && (o.id === __this.selectedNodeData.id)) ?
+          strokeWidthSelectedNode : strokeWidthNode;
+      }).style('stroke', function (o) {
+        if (__this.selectedNode) {
+          // Is there a selected Node?
+          const nodeColor = __this.selectedNode ? colorSelectedNode : colorHoverNode;
+          return o.id === __this.selectedNodeData.id ? nodeColor : '#fff';
+        } else {
+          // Else all nodes go back to usual style
+          return '#fff';
+        }
+      });
+    })
+    // Enable node dragging
     .call(d3.drag()
       .on('start', dragstarted)
       .on('drag', dragged)
@@ -569,19 +727,24 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       .attr('class', 'node-labels')
       .style('text-anchor', 'middle')
       .style('pointer-events', 'none')
+      .style('user-select', 'none')
       .style('fill', '#fff');  // Text color inside nodes.
 
     // Enable tooltip with complete (non-truncated) name
-    this.node.append('title')
-      .text(function (d) {
-        return d.name;
-      });
+    // (TODO: Delete this code for old style, non-dynamic tooltips)
+    // this.node.append('title')
+    //   .text(function (d) {
+    //     return d.name;
+    //   });
 
     /*
      * Node On-Single-Click function
      */
     this.node.on('click', (d) => {
       // console.log('Click: ', d);
+
+      // Hide tooltip in case visible
+      divTooltip.transition().duration(0).style('opacity', 0);
 
       // If this node already selected, then unselect
       if (this.selectedNode === true && this.selectedNodeData === d) {
@@ -595,6 +758,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       }
 
       // Data values
+      this.name = d.name;
       this.handle = d.id;
       this.type = d.type;
       this.av = d.av;
@@ -609,23 +773,13 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       this.node.style('stroke-width', function(o) {
         return o.id === d.id ? strokeWidthSelectedNode : strokeWidthNode;
       }).style('stroke', function (o) {
-        return o.id === d.id ? 'red' : '#fff';
+        return o.id === d.id ? colorSelectedNode : '#fff';
       });
 
       // If simulation already paused, keep it paused
-      // d3.event.preventDefault();
       if (simulationRunning === false) { this.pause(); }
     });
     /* End Node On-Single-Click function */
-
-    /*
-     * Node On-Mouse-Move function  (Placeholder for future usage)
-     *
-    this.node.on('mousemove', (d) => {
-      console.log('Mousemove: ', d);
-      d3.event.preventDefault();
-    });*/
-    /* End Node On-Mouse-Move function */
 
     /*
      * Node On-Double-Click function
@@ -722,18 +876,21 @@ export class NetworkComponent implements AfterViewInit, OnInit {
         }
       });
 
-      this.node.each(function (o) {
-        d.x = (d.id === o.id) ? widthView / 2 : d.x;
-        d.y = (d.id === o.id) ? heightView / 2 : d.y;
-      });
-
       // Make sure that the selection indication is added to the selected node
       // d3.selectAll('circle').style('stroke-width', strokeWidthNode).style('stroke', '#fff');
       this.node.style('stroke-width', function(o) {
         return o.id === d.id ? strokeWidthSelectedNode : strokeWidthNode;
       }).style('stroke', function (o) {
-        return o.id === d.id ? 'red' : '#fff';
+        return o.id === d.id ? colorSelectedNode : '#fff';
       });
+
+      this.node.each(function (o) {
+        // d.fixed = false;
+        d.x = (d.id === o.id) ? widthView / 2 : d.x;
+        d.y = (d.id === o.id) ? heightView / 2 : d.y;
+      });
+
+      centerNode(this, d);
     });
     /* End Node On-Double-Click function */
 
@@ -759,6 +916,43 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       // Recenter Force Simulation within new window size
       if (simulationRunning === true) {
         simulation.force('center', d3.forceCenter(widthView / 2, heightView / 2));
+      }
+    });
+
+    /*
+     * On-Keydown function
+     */
+    d3.select(window).on('keydown', function() {
+      const e = d3.event;
+       switch (e.keyCode) {
+        case 27:  // ESC key
+          // Hide tooltip
+          divTooltip.transition().duration(0).style('opacity', 0);
+          break;
+        case 32:  // Space bar
+          if (simulation) {
+            if (simulationRunning === true) {
+              __this.pause();
+            } else {
+              __this.play();
+            }
+          }
+          break;
+        case 13:  // Enter key
+          __this.restart();
+          break;
+        case 107:  // + key
+          __this.zoomIn(defaultTransitionDuration);
+        break;
+        case 109:  // - key
+          __this.zoomOut(defaultTransitionDuration);
+        break;
+        case 106:  // * key
+          __this.zoomReset(defaultTransitionDuration);
+        break;
+        case 19:  // Pause/Break key - stealth version number.
+          alert('Version ' + appVersion);
+          break;
       }
     });
 
@@ -913,7 +1107,6 @@ export class NetworkComponent implements AfterViewInit, OnInit {
     /*
      * Simulation dragability implementations
     */
-    // let realDrag = false;
     function dragstarted(d) {  // Note that this gets invoked by drags or clicks.
       // console.log('dragstarted(): d3.event.active=\'' + d3.event.active + '\'' );
 
@@ -922,6 +1115,8 @@ export class NetworkComponent implements AfterViewInit, OnInit {
 
       d.fx = d.x;
       d.fy = d.y;
+
+      d3.event.sourceEvent.stopPropagation();
     }
     function dragged(d) {  // Note that this gets invoked by drags or clicks.
       // console.log('dragged(): d3.event.active=\'' + d3.event.active + '\'' );
@@ -939,7 +1134,6 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       //  distinguish "real" drag events from single/double clicks is to watch for X, Y movement during drag.
       if (d3.event.sourceEvent.movementX !== 0 || d3.event.sourceEvent.movementY !== 0) {
         simulationRunning = true;
-        // realDrag = true;
       } else {
         // console.log('  invoked by click (not an actual drag)');
       }
@@ -981,8 +1175,30 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       // console.log('getSizeNodeLabel() ' + d.name + ': radius=' + radius + ', data-scale=' + dataScale);
       d3text.attr('data-scale', dataScale);  // Sets the data attribute, which is read in the next step.
     }
+
+    /*
+    * centerNode() - Center the specified node in the D3 client rectangle.
+    */
+    function centerNode(ths, d) {
+      /* TODO: Not working correctly when Zoomed.
+
+      const scale = ths.zoomScale;
+      const x = (widthView / 2) - (d.x * scale);
+      const y = (heightView / 2) - (d.y * scale);
+      // const view = d3.select('rect');
+      const view = d3.select('.svg-grp');
+
+      view.transition()
+      // .attr('transform', 'translate(' + x + ',' + y + ')scale(' + scale + ')')
+      .attr('transform', 'translate(' + x + ',' + y + ')')
+        .on('end', function() {
+            view.transition().duration(defaultTransitionDuration)
+            // .call(ths.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale))
+            .call(ths.d3zoom.transform, d3.zoomIdentity.translate(x, y));
+        });
+      */
+      }
   }
   /* End draw_graph() */
-
 }
 /* End class NetworkComponent */
