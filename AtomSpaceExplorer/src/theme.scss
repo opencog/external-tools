@@ -1,5 +1,5 @@
-@import '~@angular/material/core/theming/all-theme';
-
+// @import '~@angular/material/core/theming/all-theme';
+@import '~@angular/material/_theming.scss';
 
 // Include non-theme styles for core.
 @include mat-core();
