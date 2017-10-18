@@ -24,7 +24,7 @@ import {
 /*
  * ## Consts ##
  */
-const appVersion = '0.10.01 Beta (Oct-15-2017)';
+const appVersion = '0.10.01 Beta (Oct-17-2017)';
 
 // Force Simulation
 const simInterval = 10;  // Milliseconds.
@@ -72,7 +72,6 @@ const defaultTransitionDuration = 1000;
 /*
  * ## Globals ##
  */
-declare var jQuery: any;
 declare var d3: any;
 let simulation: any = null;
 let simulationRunning = false;
@@ -87,15 +86,15 @@ function buildNodeTooltipHTML(d, verbose) {
 //  verbose = true;
   const headText = (d.name === '') ? d.type : d.type + '<hr>' +  d.name;
   if (verbose) {
-    return "<div class='node-detailed-tooltip'> <table class='ui celled striped table'> <thead> <tr> <th colspan='2'>" + headText +
-      "</th> </tr> </thead> <tbody> <tr> <td class='collapsing'> <span>Handle</span> </td> <td>" + d.id +
-      "</td> </tr> <tr> <td> <span>LTI</span> </td> <td>" + d.av.lti + "</td> </tr> <tr> <td> <span>STI</span> </td> <td>" + d.av.sti +
-      "</td> </tr> <tr> <td> <span>VLTI</span> </td> <td>" + d.av.vlti + "</td> </tr> <tr> <td> <span>Confidence</span> </td> <td>" +
-      d.tv.details.confidence + "</td> </tr> <tr> <td> <span>Strength</span> </td> <td>" + d.tv.details.strength +
-      "</td> </tr> </tbody> </table> </div>";
+    return '<div class=\'node-detailed-tooltip\'> <table class=\'ui celled striped table\'> <thead> <tr> <th colspan=\'2\'>' + headText +
+      '</th> </tr> </thead> <tbody> <tr> <td class=\'collapsing\'> <span>Handle</span> </td> <td>' + d.id +
+      '</td> </tr> <tr> <td> <span>LTI</span> </td> <td>' + d.av.lti + '</td> </tr> <tr> <td> <span>STI</span> </td> <td>' + d.av.sti +
+      '</td> </tr> <tr> <td> <span>VLTI</span> </td> <td>' + d.av.vlti + '</td> </tr> <tr> <td> <span>Confidence</span> </td> <td>' +
+      d.tv.details.confidence + '</td> </tr> <tr> <td> <span>Strength</span> </td> <td>' + d.tv.details.strength +
+      '</td> </tr> </tbody> </table> </div>';
   } else {
-    return "<div class='node-tooltip'> <table class='ui celled striped table'> <tbody> <tr> <td nowrap>" + headText +
-      "</td> </tr> </tbody> </table> </div>";
+    return '<div class=\'node-tooltip\'> <table class=\'ui celled striped table\'> <tbody> <tr> <td nowrap>' + headText +
+      '</td> </tr> </tbody> </table> </div>';
   }
 }
 
@@ -460,8 +459,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
           d.fx = d.x;
           d.fy = d.y;
         } else {  // Unpin
-          d.fx = null;
-          d.fy = null;
+          d.fx = d.fy = null;
         }
       },
     }];
@@ -924,12 +922,14 @@ export class NetworkComponent implements AfterViewInit, OnInit {
      */
     d3.select(window).on('keydown', function() {
       const e = d3.event;
-       switch (e.keyCode) {
-        case 27:  // ESC key
-          // Hide tooltip
-          divTooltip.transition().duration(0).style('opacity', 0);
+      switch (e.keyCode) {
+        // Cancel menu: ESC key
+        case 27:
+          divTooltip.transition().duration(0).style('opacity', 0);  // Hide tooltip.
+          d3.select('.d3-context-menu').style('display', 'none');  // Close menu.
           break;
-        case 32:  // Space bar
+        // Pause/Play: Pause (Break) key
+        case 19:
           if (simulation) {
             if (simulationRunning === true) {
               __this.pause();
@@ -938,19 +938,24 @@ export class NetworkComponent implements AfterViewInit, OnInit {
             }
           }
           break;
-        case 13:  // Enter key
+        // Restart: Enter key
+        case 13:
           __this.restart();
           break;
-        case 107:  // + key
+        // Zoom in: + key
+        case 107:
           __this.zoomIn(defaultTransitionDuration);
         break;
-        case 109:  // - key
+        // Zoom out: - key
+        case 109:
           __this.zoomOut(defaultTransitionDuration);
         break;
-        case 106:  // * key
+        // Reset zoom: * key
+        case 106:
           __this.zoomReset(defaultTransitionDuration);
         break;
-        case 19:  // Pause/Break key - stealth version number.
+        // Stealth version number: v key
+        case 86:
           alert('Version ' + appVersion);
           break;
       }
@@ -1126,18 +1131,6 @@ export class NetworkComponent implements AfterViewInit, OnInit {
 
       d.fx = Math.max(nodePositionMargin, Math.min(widthView - nodePositionMargin, d3.event.x));
       d.fy = Math.max(nodePositionMargin, Math.min(heightView - nodePositionMargin, d3.event.y));
-
-      // Dragging automatically restarts simulation, so update simulationRunning to correct state
-      //
-      // Workaround required because: 1) D3 drag gestures invoke d3.force.resume(), which cannot be disabled
-      // 2) Single/double clicks fire all the drag events too. Also no way to disable. Hence, only way to
-      //  distinguish "real" drag events from single/double clicks is to watch for X, Y movement during drag.
-      if (d3.event.sourceEvent.movementX !== 0 || d3.event.sourceEvent.movementY !== 0) {
-        simulationRunning = true;
-      } else {
-        // console.log('  invoked by click (not an actual drag)');
-      }
-
     }
     function dragended(d) {  // Note that this gets invoked by drags or clicks.
       // console.log('dragended(): d3.event.active=\'' + d3.event.active + '\'' );
@@ -1145,12 +1138,11 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       // Let simulation cool back down
       if (!d3.event.active) { simulation.alphaTarget(0); }
 
+      // If simulation already paused, keep it paused
+      if (simulationRunning === false) { __this.pause(); }
+
       // Leave node pinned if dragged (or clicked or double-clicked) w/CTRL key
-      const e = d3.event.sourceEvent;
-      if (!e.ctrlKey) {
-        d.fx = null;
-        d.fy = null;
-      }
+      if (!d3.event.sourceEvent.ctrlKey) { d.fx = d.fy = null; }
     }
 
     /*

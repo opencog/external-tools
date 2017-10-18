@@ -1,7 +1,8 @@
 AtomSpace Explorer
 ====================
-The AtomSpace Explorer is a visualization tool for OpenCog data. Atoms are fetched from the CogServer via
-the REST API, then displayed as a two dimensional graph in the browser.
+The AtomSpace Explorer is a visualization tool for OpenCog data. Atoms are fetched from the CogServer via the AtomSpace REST API, then displayed as a two dimensional graph in the browser.
+
+![AtomSpace Explorer](src\assets\img\AtomSpace-Explorer.jpg)
 
 ## Features
 - Fetch data from user provided AtomSpace REST api URL.
@@ -22,7 +23,7 @@ the REST API, then displayed as a two dimensional graph in the browser.
 - D3 client area & SVG canvas dynamically sized relative to browser window size, including auto-resize of Force Simulation. Scrollbars are avoided within of min width, min height or width-to-height ratios.
 - Tooltips for all Navbar and Visualizer command buttons.
 - Node tooltips verbosity is controlled via a toggle checkbox. In verbose mode, the detail level is the same as the selected Node properties table. Both methods can be used together, which provides a convenient way to compare details between a baseline selected Node, and other Nodes via hovering over them.
-- Languages dropdown supports, English, Chinese, French, German, Italian, Japanese and Spanish. Localizations currently implemented for Navbar only.
+- Languages dropdown supports, English, Chinese, French, German, Italian, Japanese and Spanish. Localizations currently implemented for Navbar text labels only.
 
 The AtomSpace Explorer app was based upon the Mozi Visualizer Demo app (which was in turn based on the Glimpse visualizer).
 
@@ -35,11 +36,20 @@ This project was originally generated with [angular-cli](https://github.com/angu
 
 ## Setup
 ```
-sh
-# inside the root directory of this file
-npm install #install all dependencies
+sh                                  # Inside the root directory of this file
+npm install                         # Install all dependencies.
+npm start                           # Start the app on the default AngularJS port 4200.
 
-npm start # will start the visualizer at port 4200
+npm start -- --port=[port-number]   # Start the app at [port-number].
+npm start -- --port=8080            # Example with port number 8080.
+
+Alternatively, you can permanently change the default port by inserting the following to angular-cli.json, at the top of the "defaults" block:
+  "defaults": {                     #    Existing line.
+    "serve": {                      # <- Inserted line.
+      "port": 8080                  # <- Inserted line. Example port 8080. Set port number as desired.
+    },                              # <- Inserted line.
+    "styleExt": "css",              #    Existing line.
+
 ```
 
 ## Usage
@@ -52,6 +62,12 @@ npm start # will start the visualizer at port 4200
     will be displayed in the graph.
 
 ## Revision History
+### Oct-17-2017 - sshermz - Package updates (Angular 4, etc), plus minor feature & bug fixes.
+- Updated Angular 2 to Angular 4, and other packages to latest where ever possible. Fixes as necessary due to deprecations, including to MaterialModule. Also some TSLint fixes. Fixes #97.
+- New Feature: Keep in paused mode if drag Node while paused (Simulation will tick while dragging, but will now repause when the drag is completed).
+- Bug Fix: Revised some shortcut keys. Space bar interferes with the tabbing/space bar method of operating the UI, so now using Pause key to Pause / Unpause the Force Simulation, instead of the Space bar.
+- Bug fix: Added Esc key handling for cancelling context menus (for real this time!).
+- Documentation: How to override default port number added to README.md.
 ### Oct-15-2017 - sshermz - HTML Tooltips, plus a few minor features and bug fixes
 - New Feature: Intelligent HTML formatted tooltips, with normal and verbose modes. Verbose mode is selected via new Tooltips toggle checkbox, which has been added underneath the other D3 graph command buttons. The toggle checkbox is styled to match the Semantic UI teal theme. In Verbose mode, the same level of detail, that's in the right-side Node properties box, is shown. However the tooltips are more convenient for quickly surveying details amongst many Nodes without requiring any clicks. Can also use to compare other Nodes to the selected Node. Default non-verbose tooltips are improved to the same new style, and show both the name if available, like before, but now also always show the type. In other words, now all Nodes show tooltips, dynamically showing what information is available.
 - New Feature: Node properties dialog now also shows Node Name, if there is one.
