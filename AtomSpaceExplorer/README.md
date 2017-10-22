@@ -2,7 +2,7 @@ AtomSpace Explorer
 ====================
 The AtomSpace Explorer is a visualization tool for OpenCog data. Atoms are fetched from the CogServer via the AtomSpace REST API, then displayed as a two dimensional graph in the browser.
 
-![AtomSpace Explorer](src\assets\img\AtomSpace-Explorer.jpg)
+![AtomSpace Explorer](src/assets/img/AtomSpace-Explorer.jpg)
 
 ## Features
 - Fetch data from user provided AtomSpace REST api URL.
@@ -17,10 +17,12 @@ The AtomSpace Explorer is a visualization tool for OpenCog data. Atoms are fetch
 - Double click on an Atom to filter AtomSpace to that Atom along with two levels of neighboring Atoms.
 - Buttons to Pause / Play / Restart Force Simulation and  to Zoom In, Zoom Out, and Reset Zoom.
 - Keyboard shortcuts for all of the above buttons are indicated in the corresponding button tooltips.
-- Filtering buttons appear when an Atom is selected or double-clicked (TODO filtering capability needs to be updated).
+- A Filtering dropdown appears when an Atom is selected or double-clicked.
 - D3 client area and Node context (right-click) menus.
-- Individual Nodes are pinnable into fixed location. Ctrl-click, Ctrl-drag, or right-click Pin (Unpin) a Node. Right-click D3 client area has command to unpin all nodes.
-- D3 client area & SVG canvas dynamically sized relative to browser window size, including auto-resize of Force Simulation. Scrollbars are avoided within of min width, min height or width-to-height ratios.
+- Individual Nodes are pinnable into fixed location. Ctrl-click, Ctrl-double-click, Ctrl-drag, or use right-click menu to Pin/Unpin a Node. Right-click the D3 client area to access a menu command to Unpin all Nodes.
+- Increased Force Simulation Charge can be applied to individual Nodes. Shift-click, Shift-double-click, Shift-drag, or use right-click menu to apply/remove high charge force to/from a Node. Right-click the D3 client area to access a menu command to remove high charge from all Nodes.
+- New Feature: Apply high force simulation charge to a specific Node, thereby strongly repulsing all of it's neighbors. With suitable data, like single Nodes with many children subtrees, this is nice for spreading (repulsing) out neighboring nodes more forcefully in a radial fashion from that central, highly-charged Node. Available on Node right-click menu. Can also apply with Shift key when selecting, clicking, double-clicking or dragging Nodes.
+- D3 client area & SVG canvas is dynamically-sized relative to the browser window size, including auto-resize of Force Simulation. Scrollbars are avoided within of min width, min height or width-to-height ratios.
 - Tooltips for all Navbar and Visualizer command buttons.
 - Node tooltips verbosity is controlled via a toggle checkbox. In verbose mode, the detail level is the same as the selected Node properties table. Both methods can be used together, which provides a convenient way to compare details between a baseline selected Node, and other Nodes via hovering over them.
 - Languages dropdown supports, English, Chinese, French, German, Italian, Japanese and Spanish. Localizations currently implemented for Navbar text labels only.
@@ -61,7 +63,20 @@ Alternatively, you can permanently change the default port by inserting the foll
 3 - Alternatively, if you go straight to the **Visualize** button on the navbar, built-in sample data 
     will be displayed in the graph.
 
+## Known Issues
+- Filtering capability is preliminary and needs to be developed further. For example, filter types in the dropdown should be generated dynamically (after parsing them from the data?).
+- D3 graphs are creating up by building all the elements in the DOM. Therefore, there are limits to the number of nodes and links that are performant. Remediations are TBD.
+- Sample data should be externalized.
+
 ## Revision History
+### Oct-21-2017 - sshermz - Apply High Charge to Node feature, filtering improvements, performance fix and refactoring.
+- New Feature: Apply very high force simulation charge to a specific Node, thereby strongly repulsing all of it's neighbors. With suitable data, like single Nodes with many children subtrees, this is nice for spreading (repulsing) out neighboring nodes more forcefully in a radial fashion from that central, highly-charged Node. Available on Node right-click menu. Can also apply with Shift key when selecting, clicking, double-clicking or dragging Nodes.
+- Feature Change: Added more filter types in Filtering dropdown. Longer-term, need to generate dynamically and/or provide type in filter so user can enter any filter type.
+- Feature Change: Changed STI weighted Node size scale up factor from 33% to 50%, to make it a bit more noticeable.
+- Performance: Double-click filtering previously hid Nodes and Links > 2 levels away from double-clicked Node. Those hidden Nodes/Links remained in the DOM, affecting performance and also the Force Simuation behavior. Now when you double-click, the non-neighboring Nodes and Links are pruned from the DOM, providing a much nicer and performant user experience with the double-click-filtered data.
+- Bug Fix: Filtering dropdown now supports returning to default Unfiltered state. Workaround that cleared the Node selection and closed the filter dropdown was removed.
+- Bug Fix: Replaced Enter key shortcut to restart with Shift-Pause, as Enter key also invokes a button when the focus is on that button.
+- Refactoring: Refactoring of D3 graphing code.
 ### Oct-17-2017 - sshermz - Package updates (Angular 4, etc), plus minor feature & bug fixes.
 - Updated Angular 2 to Angular 4, and other packages to latest where ever possible. Fixes as necessary due to deprecations, including to MaterialModule. Also some TSLint fixes. Fixes #97.
 - New Feature: Keep in paused mode if drag Node while paused (Simulation will tick while dragging, but will now repause when the drag is completed).
