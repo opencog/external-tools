@@ -4,13 +4,13 @@
     <div class="ui segment visualizer-screen">
       <div class="tools-div">
         <div class="ui icon buttons">
-          <button (click)="play()" class="active ui icon teal button" data-tooltip="Play  (Pause key)" data-position="top left">
+          <button (click)="playSimulation()" class="active ui icon teal button" data-tooltip="Play  (Pause key)" data-position="top left">
             <i class="icon play"></i>
           </button>
-          <button (click)="pause()" class="ui icon teal button" data-tooltip="Pause  (Pause key)">
+          <button (click)="pauseSimulation()" class="ui icon teal button" data-tooltip="Pause  (Pause key)">
           <i class="icon pause"></i>
           </button>
-          <button (click)="restart()" class="ui icon teal button" data-tooltip="Restart  (Enter key)">
+          <button (click)="restartSimulation()" class="ui icon teal button" data-tooltip="Restart  (Shift-Pause key)">
             <i class="icon refresh"></i>
           </button>
         </div>
@@ -25,13 +25,9 @@
             <i class="icon window restore"></i>
           </button>
         </div>
-        <button *ngIf="filteredNodes" (click)="showAll()" class="button ui teal">
-					<span  data-tooltip="Reset filtering to display all Nodes and Links">Show All Data</span>
-				</button>
-        <div *ngIf="selectedNode" class="button ui floating labeled icon dropdown teal" id="filtermenu" data-tooltip="Apply filtering to selected Node">
+        <div *ngIf="isSelectedNode" class="button ui floating labeled icon dropdown teal" id="filtermenu" data-tooltip="Apply filtering to selected Node">
           <i class="filter icon"></i>
-          <div class="default text">Filter</div>
-          <!-- <span class="text">{{ currentFilter }}</span> -->
+          <div class="default text">Unfiltered</div>
           <div class="menu">
             <div class="header">
               <i class="tags icon"></i><span>Filter on Selection</span>
@@ -39,30 +35,64 @@
             <div class="item" (click)="filterByNode('ConceptNode')">
               <span>ConceptNode</span>
             </div>
-            <div class="item" (click)="filterByNode('ReferenceLink')">
-              <span>ReferenceLink</span>
+            <div class="item" (click)="filterByNode('PredicateNode')">
+              <span>PredicateNode</span>
+            </div>
+            <div class="item" (click)="filterByNode('VariableNode')">
+              <span>VariableNode</span>
+            </div>
+            <div class="divider"></div>
+            <div class="item" (click)="filterByNode('AndLink')">
+              <span>AndLink</span>
+            </div>
+            <div class="item" (click)="filterByNode('EquivalenceLink')">
+              <span>EquivalenceLink</span>
             </div>
             <div class="item" (click)="filterByNode('EvaluationLink')">
               <span>EvaluationLink</span>
             </div>
+            <div class="item" (click)="filterByNode('ImplicationLink')">
+              <span>ImplicationLink</span>
+            </div>
+            <div class="item" (click)="filterByNode('InheritanceLink')">
+              <span>InheritanceLink</span>
+            </div>
+            <div class="item" (click)="filterByNode('LambdaLink')">
+              <span>LambdaLink</span>
+            </div>
+            <div class="item" (click)="filterByNode('ListLink')">
+              <span>ListLink</span>
+            </div>
+            <div class="item" (click)="filterByNode('MemberLink')">
+              <span>MemberLink</span>
+            </div>
+            <div class="item" (click)="filterByNode('ReferenceLink')">
+              <span>ReferenceLink</span>
+            </div>
+            <div class="item" (click)="filterByNode('SetLink')">
+              <span>SetLink</span>
+            </div>
             <div class="divider"></div>
             <div class="item" (click)="filterByNode('all')">
-              <span>Clear Filter</span>
+              <span>Unfiltered</span>
             </div>
           </div>
         </div>
+        <button *ngIf="isFilteredNodes" (click)="showAll()" class="button ui teal">
+					<span  data-tooltip="Restore all Nodes and Links">Show All Data</span>
+				</button>
         <br>
         <div class="ui toggle checkbox" data-tooltip="Detailed tooltips" data-position="bottom left">
           <input type="checkbox" name="detailedTooltips">
           <label (click)="toggleTooltips()">
-            <div [ngSwitch]="detailedTooltips">
+            <div [ngSwitch]="isDetailedTooltips">
               <i *ngSwitchCase="false" class="icon large teal comment outline"></i>
               <i *ngSwitchCase="true" class="icon large teal talk outline"></i>
             </div>
           </label>
         </div>
       </div>
-      <div *ngIf="selectedNode" class="selected-node-properties">
+      <div *ngIf="isSelectedNode" class="selected-node-properties">
         <table class="ui celled striped table">
           <thead>
             <tr>
