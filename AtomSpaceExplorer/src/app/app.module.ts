@@ -19,6 +19,7 @@ import { TranslateModule } from './core/translate/translate.module';
 import { NetworkModule } from './network/network.module';
 import { InitializeDropdown } from './shared/directives/intitialise-dropdown.directive';
 import { ConnectModule } from './connect/connect.module';
+import { LocalStorageModule } from 'angular-2-local-storage';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,11 @@ import { ConnectModule } from './connect/connect.module';
     SharedModule,
     TranslateModule,
     ToastModule.forRoot(),
-    ConnectModule
+    ConnectModule,
+    LocalStorageModule.withConfig({
+      prefix: 'my-app',
+      storageType: 'localStorage'
+  })
   ],
   providers: [ APIService ],
   bootstrap: [ AppComponent ],

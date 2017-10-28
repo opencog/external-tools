@@ -26,6 +26,7 @@
     "@angular/platform-browser-dynamic": "^4.4.5",
     "@angular/platform-server": "^4.4.5",
     "@angular/router": "^4.4.5",
+    "angular-2-local-storage": "^1.0.1",
     "core-js": "^2.5.1",
     "d3": "^4.11.0",
     "d3-context-menu": "^0.1.2",
