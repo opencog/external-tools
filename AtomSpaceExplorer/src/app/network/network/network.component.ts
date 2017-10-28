@@ -24,7 +24,7 @@ import {
 /*
  * ## Consts ##
  */
-const appVersion = '0.10.02 Beta (Oct-21-2017)';
+const appVersion = '0.10.03 Beta (Oct-27-2017)';
 
 // Force Simulation
 const simInterval = 10;  // Milliseconds.
@@ -81,6 +81,7 @@ let isSimulationRunning = false;
 let fisheye: any = null;
 let widthView = 0;
 let heightView = 0;
+let d3timer: any = null;
 
 /*
  * ## Global Functions ##
@@ -127,7 +128,7 @@ function scaleRadius(rad: number, scaleVal: number) {
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./network.component.css']
 })
-export class NetworkComponent implements AfterViewInit, OnInit {
+export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   private atoms: any;
   private isInitialLoad = true;
   private parsedJson: Graph = <Graph>{};
@@ -165,13 +166,27 @@ export class NetworkComponent implements AfterViewInit, OnInit {
   /*
    * Init
    */
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log('ngOnInit()');
+   }
+
+  /*
+   * Cleanup
+   */
+  ngOnDestroy(): void {
+    console.log('ngOnDestroy()');
+    this.pauseSimulation();
+    d3timer.stop(); // TODO: Doesn't work?
+   }
 
   /*
    * Post-Init
    */
   ngAfterViewInit() {
     this.parsedJson = this.networkService.getParsedJson(this.atoms.result.atoms);
+    const numAtoms = this.atoms.result.atoms.length;
+    console.log('ngAfterViewInit(): ' + numAtoms + ' atoms, complete=' + this.atoms.result.complete +
+      ', skipped=' + this.atoms.result.skipped);
     this.draw_graph();
     isSimulationRunning = true;
     this.isInitialLoad = false;
@@ -769,7 +784,7 @@ export class NetworkComponent implements AfterViewInit, OnInit {
     // Setup Node and D3 client area handlers
     this.node.on('click', (d) => { nodeSingleClick(this, d); });
     this.node.on('dblclick', (d) => { nodeDoubleClick(this, d); });
-    d3.select(window).on('resize', graphResize);
+    d3.select(window).on('resize', (d) => { graphResize(this); });
     d3.select(window).on('keydown', () => { graphKeydown(this); });
     d3.select(window).on('mousemove', () => { graphMousemove(this); });
 
@@ -785,8 +800,8 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       .links(this.parsedJson.links);
 
     // Start simulation timer
-    // d3.timer(function () { simulation.alpha(0.1); }, simInterval);
-    setInterval(function() { simulation.alpha(0.1); }, simInterval);
+    d3timer = d3.timer(function () { simulation.alpha(0.1); }, simInterval);
+    // d3.interval(function() { simulation.alpha(0.1); }, simInterval);
 
     /*
      * Node Drag implementation
@@ -1113,8 +1128,10 @@ export class NetworkComponent implements AfterViewInit, OnInit {
     /*
      * graphResize() - On-Resize function
      */
-    function graphResize() {
+    function graphResize(self) {
       // console.log('Resize (before): w=' + widthView + ', h=' + heightView);
+
+      if (document.getElementById('svgcanvas') === null) { return; }
 
       // Resize the D3 rect to the new SVG window size
       const view = d3.select('rect');
@@ -1133,12 +1150,12 @@ export class NetworkComponent implements AfterViewInit, OnInit {
       if (isSimulationRunning === true) {
         simulation.force('center', d3.forceCenter(widthView / 2, heightView / 2));
       } else {
-        this.playSimulation();
+        self.playSimulation();
 
         simulation.force('center', d3.forceCenter(widthView / 2, heightView / 2));
 
         // Workaround: If don't leave simuation running, recentering simulation not working during resize
-        // this.pauseSimulation();
+        // self.pauseSimulation();
       }
     }
 
@@ -1158,7 +1175,6 @@ export class NetworkComponent implements AfterViewInit, OnInit {
           if (!simulation) { break; }
           if (e.shiftKey) {
             // With Shift key to restart
-            self.zoomScale = 1;
             self.restartSimulation();
           } else {
             // Else Play or Pause
@@ -1168,9 +1184,6 @@ export class NetworkComponent implements AfterViewInit, OnInit {
               self.playSimulation();
             }
           }
-          break;
-        // Restart: Enter key
-        case 13:
           break;
         // Zoom in: + key
         case 107:
@@ -1184,9 +1197,11 @@ export class NetworkComponent implements AfterViewInit, OnInit {
         case 106:
           self.zoomReset(defaultTransitionDuration);
         break;
-        // Stealth version number: v key
+        // Stealth version number: Ctrl-Alt-v key
         case 86:
-          alert('Version ' + appVersion);
+          if (e.altKey && e.ctrlKey) {
+            alert('Version ' + appVersion);
+          }
           break;
       }
     }
