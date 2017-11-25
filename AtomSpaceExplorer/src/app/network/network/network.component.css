@@ -101,7 +101,7 @@ text.edgelabelshadow {
   line-height: 0.75em !important;
   padding: 2px;
   /* font: 10px sans-serif; */
-  font: 12px;
+  font-size: 12px;
   background: #00B5AD;
   pointer-events: none;
   border-radius: 3px;
@@ -112,7 +112,7 @@ text.edgelabelshadow {
   text-align: center;
   padding: 2px;
   /* font: 10px sans-serif; */
-  font: 12px;
+  font-size: 12px;
   background: #00B5AD;
   pointer-events: none;
   border-radius: 3px;

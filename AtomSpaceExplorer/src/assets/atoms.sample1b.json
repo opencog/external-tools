@@ -1,0 +1,442 @@
+{
+  "result": {
+    "atoms": [{
+      "outgoing": [2, 3],
+      "handle": 1,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [],
+      "type": "EquivalenceLink"
+    }, {
+      "outgoing": [],
+      "handle": 2,
+      "name": "LOC285484",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 18,
+        "vlti": false
+      },
+      "incoming": [1],
+      "type": "PredicateNode"
+    }, {
+      "outgoing": [4, 5],
+      "handle": 3,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [1],
+      "type": "LambdaLink"
+    }, {
+      "outgoing": [],
+      "handle": 4,
+      "name": "$X",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 22,
+        "vlti": false
+      },
+      "incoming": [3, 7],
+      "type": "VariableNode"
+    }, {
+      "outgoing": [6, 7],
+      "handle": 5,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [3],
+      "type": "EvaluationLink"
+    }, {
+      "outgoing": [],
+      "handle": 6,
+      "name": "overexpressed",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [5],
+      "type": "PredicateNode"
+    }, {
+      "outgoing": [8, 4],
+      "handle": 7,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [5],
+      "type": "ListLink"
+    }, {
+      "outgoing": [],
+      "handle": 8,
+      "name": "LOC285483",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [7],
+      "type": "GeneNode"
+    }, {
+      "outgoing": [10, 11],
+      "handle": 9,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 25,
+        "vlti": false
+      },
+      "incoming": [],
+      "type": "AndLink"
+    }, {
+      "outgoing": [],
+      "handle": 10,
+      "name": "CCR6",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 13,
+        "vlti": false
+      },
+      "incoming": [9, 12],
+      "type": "GeneNode"
+    }, {
+      "outgoing": [],
+      "handle": 11,
+      "name": "GO:0009986",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [9],
+      "type": "ConceptNode"
+    }, {
+      "outgoing": [10, 13],
+      "handle": 12,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 3,
+        "vlti": false
+      },
+      "incoming": [],
+      "type": "MemberLink"
+    }, {
+      "outgoing": [],
+      "handle": 13,
+      "name": "GO:0010634",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [12],
+      "type": "ConceptNode"
+    }, {
+      "outgoing": [15, 16],
+      "handle": 14,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 25,
+        "vlti": false
+      },
+      "incoming": [],
+      "type": "AndLink"
+    }, {
+      "outgoing": [],
+      "handle": 15,
+      "name": "CCR7",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 9,
+        "vlti": false
+      },
+      "incoming": [14, 17],
+      "type": "GeneNode"
+    }, {
+      "outgoing": [],
+      "handle": 16,
+      "name": "GO:409986",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [14],
+      "type": "ConceptNode"
+    }, {
+      "outgoing": [15, 18],
+      "handle": 17,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 3,
+        "vlti": false
+      },
+      "incoming": [],
+      "type": "MemberLink"
+    }, {
+      "outgoing": [],
+      "handle": 18,
+      "name": "GO:4010634",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [17],
+      "type": "ConceptNode"
+    }, {
+      "outgoing": [20, 21],
+      "handle": 19,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [],
+      "type": "AndLink"
+    }, {
+      "outgoing": [],
+      "handle": 20,
+      "name": "CCR8",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [19, 22],
+      "type": "GeneNode"
+    }, {
+      "outgoing": [],
+      "handle": 21,
+      "name": "GO:509986",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [19],
+      "type": "ConceptNode"
+    }, {
+      "outgoing": [20, 23],
+      "handle": 22,
+      "name": "",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 3,
+        "vlti": false
+      },
+      "incoming": [],
+      "type": "MemberLink"
+    }, {
+      "outgoing": [],
+      "handle": 23,
+      "name": "GO:4020634",
+      "truthvalue": {
+        "type": "simple",
+        "details": {
+          "count": 0.0,
+          "confidence": 0.0,
+          "strength": 1.0
+        }
+      },
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "incoming": [22],
+      "type": "ConceptNode"
+    }]
+  }
+}

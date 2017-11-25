@@ -1,0 +1,2193 @@
+{
+  "result": {
+    "atoms": [{
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 4,
+      "incoming": [3],
+      "name": "",
+      "outgoing": [1, 2],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 7,
+      "incoming": [3],
+      "name": "",
+      "outgoing": [5, 6],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 10,
+      "incoming": [9],
+      "name": "",
+      "outgoing": [8, 6],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 13,
+      "incoming": [11, 12],
+      "name": "",
+      "outgoing": [2, 8],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 17,
+      "incoming": [11],
+      "name": "",
+      "outgoing": [14, 15, 5, 16],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 21,
+      "incoming": [20],
+      "name": "",
+      "outgoing": [18, 19],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 24,
+      "incoming": [23],
+      "name": "",
+      "outgoing": [22, 19],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 25,
+      "incoming": [12],
+      "name": "",
+      "outgoing": [15, 5, 16],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 30,
+      "incoming": [28, 29],
+      "name": "",
+      "outgoing": [26, 27],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 35,
+      "incoming": [33, 34, 29],
+      "name": "",
+      "outgoing": [31, 32],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 38,
+      "incoming": [37],
+      "name": "",
+      "outgoing": [19, 36],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 41,
+      "incoming": [40],
+      "name": "",
+      "outgoing": [34, 39],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 45,
+      "incoming": [44],
+      "name": "",
+      "outgoing": [42, 43],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 48,
+      "incoming": [42],
+      "name": "",
+      "outgoing": [46, 47],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 49,
+      "incoming": [33],
+      "name": "",
+      "outgoing": [27, 39],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 52,
+      "incoming": [51],
+      "name": "",
+      "outgoing": [50, 46],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 55,
+      "incoming": [54],
+      "name": "",
+      "outgoing": [19, 53],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 58,
+      "incoming": [51],
+      "name": "",
+      "outgoing": [56, 57],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 60,
+      "incoming": [59],
+      "name": "",
+      "outgoing": [42, 51],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 63,
+      "incoming": [62],
+      "name": "",
+      "outgoing": [61, 42],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 65,
+      "incoming": [28],
+      "name": "",
+      "outgoing": [31, 64, 32],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 68,
+      "incoming": [67],
+      "name": "",
+      "outgoing": [66, 42],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "AndLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 6,
+      "incoming": [10, 7],
+      "name": "",
+      "outgoing": [2, 16],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 8,
+      "incoming": [10, 13],
+      "name": "",
+      "outgoing": [1, 5],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 36,
+      "incoming": [38],
+      "name": "",
+      "outgoing": [69, 70, 71, 72],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 18,
+      "incoming": [21],
+      "name": "",
+      "outgoing": [69, 73, 71],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 53,
+      "incoming": [55],
+      "name": "",
+      "outgoing": [69, 74, 71],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 22,
+      "incoming": [24],
+      "name": "",
+      "outgoing": [69, 75, 71],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 43,
+      "incoming": [45],
+      "name": "",
+      "outgoing": [50, 57, 76, 77, 78, 79],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 64,
+      "incoming": [65],
+      "name": "",
+      "outgoing": [80, 81],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 19,
+      "incoming": [24, 55, 21, 38],
+      "name": "",
+      "outgoing": [82, 83],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 66,
+      "incoming": [68],
+      "name": "",
+      "outgoing": [50, 57, 76, 77],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 11,
+      "incoming": [84],
+      "name": "",
+      "outgoing": [13, 17],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 28,
+      "incoming": [85],
+      "name": "",
+      "outgoing": [65, 30],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 29,
+      "incoming": [86],
+      "name": "",
+      "outgoing": [35, 30],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 3,
+      "incoming": [87],
+      "name": "",
+      "outgoing": [7, 4],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 12,
+      "incoming": [88],
+      "name": "",
+      "outgoing": [13, 25],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 34,
+      "incoming": [41],
+      "name": "",
+      "outgoing": [27, 35],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 51,
+      "incoming": [60],
+      "name": "",
+      "outgoing": [76, 52, 78, 58],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 33,
+      "incoming": [89],
+      "name": "",
+      "outgoing": [35, 49],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 39,
+      "incoming": [49, 41],
+      "name": "",
+      "outgoing": [26, 32],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 42,
+      "incoming": [63, 68, 60, 45],
+      "name": "",
+      "outgoing": [90, 48],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 61,
+      "incoming": [63],
+      "name": "",
+      "outgoing": [50, 57, 76, 77, 79],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "OrLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 16,
+      "incoming": [17, 25, 6],
+      "name": "",
+      "outgoing": [1],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 5,
+      "incoming": [17, 7, 25, 8],
+      "name": "",
+      "outgoing": [91],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 15,
+      "incoming": [17, 25],
+      "name": "",
+      "outgoing": [92],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 70,
+      "incoming": [36],
+      "name": "",
+      "outgoing": [93],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 71,
+      "incoming": [22, 53, 18, 36],
+      "name": "",
+      "outgoing": [94],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 83,
+      "incoming": [19],
+      "name": "",
+      "outgoing": [73],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 2,
+      "incoming": [4, 13, 6],
+      "name": "",
+      "outgoing": [14],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 32,
+      "incoming": [35, 65, 39],
+      "name": "",
+      "outgoing": [95],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 47,
+      "incoming": [48],
+      "name": "",
+      "outgoing": [76],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 82,
+      "incoming": [19],
+      "name": "",
+      "outgoing": [69],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 27,
+      "incoming": [49, 30, 34],
+      "name": "",
+      "outgoing": [80],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 81,
+      "incoming": [64],
+      "name": "",
+      "outgoing": [96],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 31,
+      "incoming": [35, 65],
+      "name": "",
+      "outgoing": [26],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 78,
+      "incoming": [51, 43],
+      "name": "",
+      "outgoing": [97],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 46,
+      "incoming": [48, 52],
+      "name": "",
+      "outgoing": [57],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 72,
+      "incoming": [36],
+      "name": "",
+      "outgoing": [98],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 90,
+      "incoming": [42],
+      "name": "",
+      "outgoing": [50],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 79,
+      "incoming": [43, 61],
+      "name": "",
+      "outgoing": [99],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 77,
+      "incoming": [66, 43, 61],
+      "name": "",
+      "outgoing": [56],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "NotLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 9,
+      "incoming": [],
+      "name": "",
+      "outgoing": [100, 10],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 37,
+      "incoming": [],
+      "name": "",
+      "outgoing": [101, 38],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 20,
+      "incoming": [],
+      "name": "",
+      "outgoing": [102, 21],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 59,
+      "incoming": [],
+      "name": "",
+      "outgoing": [103, 60],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 85,
+      "incoming": [],
+      "name": "",
+      "outgoing": [104, 28],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 54,
+      "incoming": [],
+      "name": "",
+      "outgoing": [105, 55],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 40,
+      "incoming": [],
+      "name": "",
+      "outgoing": [106, 41],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 89,
+      "incoming": [],
+      "name": "",
+      "outgoing": [107, 33],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 87,
+      "incoming": [],
+      "name": "",
+      "outgoing": [108, 3],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 62,
+      "incoming": [],
+      "name": "",
+      "outgoing": [109, 63],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 84,
+      "incoming": [],
+      "name": "",
+      "outgoing": [110, 11],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 67,
+      "incoming": [],
+      "name": "",
+      "outgoing": [111, 68],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 88,
+      "incoming": [],
+      "name": "",
+      "outgoing": [112, 12],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 86,
+      "incoming": [],
+      "name": "",
+      "outgoing": [113, 29],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 44,
+      "incoming": [],
+      "name": "",
+      "outgoing": [114, 45],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 23,
+      "incoming": [],
+      "name": "",
+      "outgoing": [115, 24],
+      "truthvalue": {
+        "details": {
+          "confidence": 1,
+          "count": 3999999199.8849773,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "EquivalenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 108,
+      "incoming": [87],
+      "name": "oovc_ensemble:moses_model_15",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 110,
+      "incoming": [84],
+      "name": "oovc_ensemble:moses_model_14",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 14,
+      "incoming": [17, 2],
+      "name": "CHD7",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 1,
+      "incoming": [4, 8, 16],
+      "name": "FLJ40536",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 91,
+      "incoming": [5],
+      "name": "FKBP11",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 92,
+      "incoming": [15],
+      "name": "SPINT1",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 93,
+      "incoming": [70],
+      "name": "RXFP3",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 98,
+      "incoming": [72],
+      "name": "STK39",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 74,
+      "incoming": [53],
+      "name": "TRAF1",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 94,
+      "incoming": [71],
+      "name": "PDZD9",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 103,
+      "incoming": [59],
+      "name": "oovc_ensemble:moses_model_04",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 107,
+      "incoming": [89],
+      "name": "oovc_ensemble:moses_model_03",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 57,
+      "incoming": [58, 66, 43, 61, 46],
+      "name": "SLC16A5",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 106,
+      "incoming": [40],
+      "name": "oovc_ensemble:moses_model_02",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 50,
+      "incoming": [52, 66, 43, 61, 90],
+      "name": "FREM3",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 100,
+      "incoming": [9],
+      "name": "oovc_ensemble:moses_model_13",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 26,
+      "incoming": [30, 39, 31],
+      "name": "KCNJ15",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 69,
+      "incoming": [22, 53, 18, 36, 82],
+      "name": "LINC00692",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 75,
+      "incoming": [22],
+      "name": "MRPS26",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 105,
+      "incoming": [54],
+      "name": "oovc_ensemble:moses_model_09",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 96,
+      "incoming": [81],
+      "name": "TBC1D21",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 111,
+      "incoming": [67],
+      "name": "oovc_ensemble:moses_model_05",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 101,
+      "incoming": [37],
+      "name": "oovc_ensemble:moses_model_11",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 80,
+      "incoming": [64, 27],
+      "name": "CRISPLD1",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 113,
+      "incoming": [86],
+      "name": "oovc_ensemble:moses_model_01",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 112,
+      "incoming": [88],
+      "name": "oovc_ensemble:moses_model_12",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 104,
+      "incoming": [85],
+      "name": "oovc_ensemble:moses_model_00",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 95,
+      "incoming": [32],
+      "name": "TRIM5",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 56,
+      "incoming": [58, 77],
+      "name": "DCAF8",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 102,
+      "incoming": [20],
+      "name": "oovc_ensemble:moses_model_10",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 97,
+      "incoming": [78],
+      "name": "CUX1",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 109,
+      "incoming": [62],
+      "name": "oovc_ensemble:moses_model_06",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 114,
+      "incoming": [44],
+      "name": "oovc_ensemble:moses_model_07",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 99,
+      "incoming": [79],
+      "name": "C1orf146",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 115,
+      "incoming": [23],
+      "name": "oovc_ensemble:moses_model_08",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 76,
+      "incoming": [66, 51, 43, 61, 47],
+      "name": "TPGS1",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 73,
+      "incoming": [18, 83],
+      "name": "PCBP4",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0,
+          "count": 0,
+          "strength": 1
+        },
+        "type": "simple"
+      },
+      "type": "PredicateNode"
+    }],
+    "complete": true,
+    "skipped": 0,
+    "total": 115
+  }
+}
