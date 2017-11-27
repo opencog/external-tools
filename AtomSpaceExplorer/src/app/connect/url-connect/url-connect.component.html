@@ -4,7 +4,7 @@
       <div class="card" style="width: 40%; margin: 10% auto;">
         <div class="content">
           <div class="header">
-            <span>Fetch Results From AtomSpace</span>
+            <span>Fetch AtomSpace Results</span>
           </div>
           <div class="description">
             <form [formGroup]="form" (ngSubmit)="fetchJson()">
@@ -15,7 +15,8 @@
                 <i [ngClass]="{'search icon': connecting}"></i>
               </div>
               <div class="error" *ngIf="errMsg != ''">{{ errMsg }}</div>
-              <br><span>Example: http://128.0.0.0:5000/api/v1.1/atoms</span>
+              <div *ngIf="errMsg != ''"><br></div>
+              <span>Example: http://128.0.0.0:5000/api/v1.1/atoms</span>
             </form>
           </div>
         </div>
@@ -23,6 +24,11 @@
           <div class="ui two buttons">
             <div class="ui basic green button" (click)="fetchJson()">Fetch</div>
             <div class="ui basic red button" (click)="reset()">Reset</div>
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="ui two buttons">
+            <div class="ui basic blue button" (click)="fetchSampleJson()">Load Sample Data</div>
           </div>
         </div>
       </div>
