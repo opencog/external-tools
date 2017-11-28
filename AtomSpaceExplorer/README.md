@@ -51,9 +51,9 @@ npm start -- --port=8080            # Example with port number 8080.
 
 Alternatively, you can permanently change the default port by inserting the following to angular-cli.json, at the top of the "defaults" block:
   "defaults": {                     #    Existing line.
-    "serve": {                      # <- Inserted line.
-      "port": 8080                  # <- Inserted line. Example port 8080. Set port number as desired.
-    },                              # <- Inserted line.
+    "serve": {                      # <- Insert line.
+      "port": 8080                  # <- Insert line. Example port 8080. Set port number as desired.
+    },                              # <- Insert line.
     "styleExt": "css",              #    Existing line.
 
 ```
@@ -62,9 +62,9 @@ Alternatively, you can permanently change the default port by inserting the foll
 
 1 - Navigate to [http://localhost:4200/](http://localhost:4200/)
 
-2 - Click on Fetch. A 'Fetch Results From AtomSpace' prompt is displayed. Enter a valid AtomSpace api url.
+2 - Click on Fetch. A 'Fetch AtomSpace Results' prompt is displayed. Enter a valid AtomSpace api url.
     I.E <http://255.255.255.255:5000/api/v1.1/atoms>, then click on the Fetch button to graph the data. 
-    Alternatively, click on 'Load Sample Data', to load the built-in sample data file ./src/assets/atoms.json.
+    Alternatively, click on 'Load Sample Data', to load the built-in sample data file. See next section regarding sample data.
 
 ## Sample Data
 
@@ -77,6 +77,7 @@ Alternatively, you can permanently change the default port by inserting the foll
   - atoms.sample2.json: Original external sample.
   - atoms.humans.json: From humans.scm.
   - atoms.oovc\_ensemble.json: From oovc_ensemble.scm.
+  - atoms.oovc\_ensemble\_sti.json: Same as previous, with non-zero STI values. <== *Configured as default sample*
 
 ## Known Issues
 
@@ -86,6 +87,15 @@ Alternatively, you can permanently change the default port by inserting the foll
 - Languages support is minimal and needs to be implemented throughout the UI.
 
 ## Revision History
+
+### Nov-27-2017 - sshermz - Simulation Force update and bug fixes
+
+- Feature Change: Revised Simulation Force to avoid squashing of Atoms/Links to the D3 client area boundaries (includes removal of gravity force from previous commit which only helped in certain cases). Fixes #105.
+- Samples: Added another sample json file, atoms.oovc\_ensemble\_sti.json, and changed to it as the default built-in sample.
+- Bug Fix: Suppress tooltips after Fetch until mouse is moved one time. Avoids unintended tooltips when Fetch data and Nodes or Links happen to slide under mouse cursor.
+- Bug Fix: Fixed stroke width bug in Node decorator drawing code.
+- Bug Fix: Fixed context menu regression.
+- Refactoring: More refactoring of the D3 graphing code.
 
 ### Nov-24-2017 - sshermz - Tooltips for Links, auto-positioning tooltips, Simulation Force tweaks, package updates, etc
 
