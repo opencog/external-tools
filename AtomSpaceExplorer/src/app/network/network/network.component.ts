@@ -365,6 +365,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   onLoadFiltering(event) {
     // console.log('onloadFiltering() ' + event);
     if (filterMenuInitialized) { return; }
+    // console.log('onloadFiltering() - building menu ' + event);
 
     // Build Filter menu
     $('#filtermenu').empty();
@@ -582,6 +583,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     // Clear everything out of the DOM
     this.svg = d3.select('svg');
     this.svg.selectAll('*').remove();
+    filterMenuInitialized = false;
 
     // Get SVG element width and height
     widthView = document.getElementById('svgcanvas').clientWidth;
