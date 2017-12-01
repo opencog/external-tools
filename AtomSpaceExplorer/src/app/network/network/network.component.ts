@@ -4,22 +4,10 @@
  * Description: Implementation of D3 Directed Force Graph for AtomSpace data.
  *
  */
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation,
-  AfterViewInit,
-  OnDestroy
-} from '@angular/core';
-import {
-  NetworkService
-} from './network.service';
-import {
-  Graph
-} from './graph';
-import {
-  AtomsService
-} from '../../shared/services/atoms.service';
+import { Component, OnInit, ViewEncapsulation, AfterViewInit, OnDestroy } from '@angular/core';
+import { NetworkService } from './network.service';
+import { Graph } from './graph';
+import { AtomsService } from '../../shared/services/atoms.service';
 
 /*
  * ## Interfaces ##
@@ -33,7 +21,7 @@ interface Menus {
  * ## Consts ##
  */
 
-const appVersion = '0.10.05 Beta (Nov-27-2017)';
+const appVersion = '0.11.00 Beta (Nov-30-2017)';
 
 // Force Simulation
 // const simForceStrengthNormal = -80, simForceStrengthFast = -120, simForceStrengthSlow = -20;
@@ -41,8 +29,10 @@ const simForceStrengthNormal = -60, simForceStrengthFast = -100, simForceStrengt
 const simForceStrength = simForceStrengthNormal;
 const isDblClickPinAndRepulse = true;
 const simForceStrengthHighNodeCharge = -2000;
+const reheatFactorMax = 6;
 
 // Node & Link related consts
+const isNodesConstrainedToClientArea = false;
 const dyLinkLabel = '0.38em';
 const radiusNodeNameless = 6;
 const radiusNode = 12;
@@ -71,6 +61,9 @@ const isXtraLevelNeighbors = true;
 const nodePositionMargin = 30;  // Margin within D3 rect, in px.
 const isFisheye = false;   // Disabled for now unless can fix issue with rotated label positions.
 const isPruneFilteredNodes = true;  // Remove filtered nodes from DOM. Provides performance benefit when filtered.
+const maxNodeFilterSize = 20;
+const maxLinkFilterSize = 20;
+const filterTypeAll = 'Unfiltered';
 
 // Node radius scaling
 const radiusScaleFactorPct = 50;  // 0 to disable.
@@ -86,9 +79,11 @@ const defaultTransitionDuration = 1000;
 declare var d3: any;
 let simulation: any = null;
 let isSimulationRunning = false;
+let reheatFactor = 1;
 let fisheye: any = null;
 let widthView = 0;
 let heightView = 0;
+let filterMenuInitialized = false;
 
 /*
  * Class NetworkComponent
@@ -100,6 +95,8 @@ let heightView = 0;
   styleUrls: ['./network.component.css']
 })
 export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
+  private nodeTypes = [];
+  private linkTypes = [];
   private menus: Menus;
   private divTooltip = null;
   private isSuppressTooltip = true;
@@ -107,10 +104,9 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   private atoms: any;
   private isInitialLoad = true;
   private parsedJson: Graph = <Graph>{};
-  public message: any;  // variable to store node info on node click.
   private isSelectedNode = false;  // variable to show/hide the information bar.
   private selectedNodeData = null; // data for information bar.
-  private isFilteredNodes = false;  // variable to show/hide the show whole data button on dblclick of node.
+  private isDrilledNodes = false;  // variable to show/hide the show whole data button on dblclick of node.
   private isDetailedTooltips = false;
   private d3zoom = d3.zoom();  // zoom behaviour.
   private zoomScale = 1;  // variable to control the scale of zoom.
@@ -127,6 +123,9 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   private tv: any;
   private name: any;
   private handle: any;
+
+  static ___this;
+  static this() { return this.___this; }
 
   /*
   * scaleRadius - Calculate radius for Nodes
@@ -158,8 +157,10 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnInit(): void {
     // console.log('ngOnInit()');
 
+    NetworkComponent.___this = this;
+
     // Initialize menus
-    this.menus = this.initMenus();
+    this.menus = this.initContextMenus(this);
 
     // Define div for the tooltip
     if (this.divTooltip === null) {
@@ -188,6 +189,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       let resultStr = 'Loaded ' + this.atoms.result.atoms.length + ' atoms';
       if (typeof this.atoms.result.complete !== 'undefined') { resultStr += ', complete=' + this.atoms.result.complete; }
       if (typeof this.atoms.result.skipped !== 'undefined') { resultStr += ', skipped=' + this.atoms.result.skipped; }
+      this.getFilters(this.parsedJson);
       console.log(resultStr);
     }
 
@@ -198,35 +200,37 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /*
    * panToCenter() - Reset panning to center.
-   *
-   * TODO: Not working correctly when Zoomed.
    */
   panToCenter(self) {
     const scale = self.zoomScale;
-    const x = -((scale - 1) / 2) * widthView;
+    let x = -((scale - 1) / 2) * widthView;
     const y = -((scale - 1) / 2) * heightView;
+    x *= 0.70193340494092373791621911922664;
+    // console.log('panToCenter(): transform: ' + x + ', ' + y + ', ' + scale);
 
-    const view = d3.select('.svg-grp');
-
+    const view = d3.select('svg');
     view.transition()
-      // .attr('transform', 'translate(' + x + ',' + y + ')scale(' + scale + ')')
-      // .attr('transform', 'scale(' + scale + ').translate(' + x + ',' + y + ')')
       .attr('transform', 'translate(' + x + ',' + y + ').scale(' + scale + ')')
       .on('end', function () {
-        // view.transition().duration(defaultTransitionDuration)
-        view
-          .call(self.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
-        // .call(ths.d3zoom.transform, d3.zoomIdentity.center);
-        // .call(ths.d3zoom.transform, d3.zoomIdentity);
+        view.call(self.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
       });
+  }
 
-    // // Execute recenter of pan position (these calls are functional but incorrect when zoomed)
-    // view.call(ths.d3zoom.transform, d3.zoomIdentity.translate(0, 0).scale(scale));
-    // // view.call(ths.d3zoom.transform, d3.zoomIdentity.scale(scale).translate(0, 0));
+  /*
+   * panNodeToCenter() - Center the specified node in the D3 client rectangle.
+   */
+  panNodeToCenter(self, d) {
+    const scale = self.zoomScale;
+    const x = (widthView / 2) - (d.x * scale);
+    const y = (heightView / 2) - (d.y * scale);
+    // console.log('panNodeToCenter(): transform: ' + x + ', ' + y + ', ' + scale);
 
-    // // Sync zoom object (these calls don't work. they don't seem to have any effect)
-    // d3.zoomIdentity.scale(scale);
-    // d3.zoomIdentity.translate(0, 0);
+    const view = d3.select('svg');
+    view.transition()
+      .attr('transform', 'translate(' + x + ',' + y + ').scale(' + scale + ')')
+      .on('end', function () {
+        view.call(self.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
+      });
   }
 
   /*
@@ -249,16 +253,28 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     if (simulation) {
       simulation.stop();
       isSimulationRunning = false;
+      reheatFactor = 1;
     }
   }
 
   /*
-   * Click Handler: Continue (paused) Force Simulation. Does not reheat.
+   * Click Handler: Continue (paused) Force Simulation. Or if already running, add some heat.
    */
   playSimulation() {
     if (simulation) {
-      simulation.restart();
-      isSimulationRunning = true;
+      if (!isSimulationRunning) {  // Not running
+        simulation.restart();
+        isSimulationRunning = true;
+      } else {  // Already running
+        reheatFactor = Math.min(reheatFactorMax, reheatFactor + 1);  // Pump up the volume, within limits.
+        // console.log('reheatFactor=', reheatFactor);
+
+        simulation
+          .alpha(1)
+          .alphaTarget(0.1 * reheatFactor)
+          .force('charge', d3.forceManyBody().strength(simForceStrength * reheatFactor).distanceMax(400))
+          .restart();
+      }
     }
   }
 
@@ -268,8 +284,8 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   restartSimulation() {
     this.pauseSimulation();
     this.closeSelectedNodeProps();
-    this.isFilteredNodes = false;
-    this.zoomScale = 1;
+    this.isDrilledNodes = false;
+    filterMenuInitialized = false;
 
     // Reset to original data, just in case data has been pruned
     this.parsedJson = this.networkService.getParsedJson(this.atoms.result.atoms);
@@ -283,11 +299,13 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
    * Click Handler: Zoom In
    */
   zoomIn(duration: number) {
-    // const currZoomScale = this.zoomScale;
-    const view = d3.select('rect');
-    if (this.zoomScale < 4) {  // to limit the scale variable to scale extent limit.
+    // Adjust scale variable within constraints
+    if (this.zoomScale < 1) {
+      this.zoomScale = 1;
+    } else if (this.zoomScale < 4) {
       this.zoomScale += 1;
     }
+    const view = d3.select('svg');
     view.transition().duration(duration).call(this.d3zoom.scaleTo, this.zoomScale);
     // console.log('zoomIn(): Changed scale from ' + currZoomScale + ' to ' + this.scale);
   }
@@ -296,11 +314,13 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
    * Click Handler: Zoom Out
    */
   zoomOut(duration: number) {
-    // const currScale = this.zoomScale;
-    const view = d3.select('rect');
-    if (this.zoomScale > 1) {  // to limit the scale variable to scale extent limit.
+    // Adjust scale variable within constraints
+    if (this.zoomScale === 1) {
+      this.zoomScale = 0.5;
+    } else if (this.zoomScale > 1) {
       this.zoomScale -= 1;
     }
+    const view = d3.select('svg');
     view.transition().duration(duration).call(this.d3zoom.scaleTo, this.zoomScale);
     // console.log('zoomOut(): Changed scale from ' + currZoomScale + ' to ' + this.scale);
   }
@@ -309,10 +329,10 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
    * Click Handler: Restore default Zoom level
    */
   zoomReset(duration: number) {
-    const view = d3.select('rect');
     this.zoomScale = 1;  // variable to control the scale of zoom.
+    const view = d3.select('svg');
     view.transition().duration(duration).call(this.d3zoom.scaleTo, this.zoomScale);
-    // this.panToCenter(this);
+    this.panToCenter(this);
   }
 
   /*
@@ -327,11 +347,46 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
    * Click Handler: Hide the Popup Selected Node Information Table
    */
   closeSelectedNodeProps() {
+    // Node selection
     this.isSelectedNode = false;
     this.selectedNodeData = null;
 
+    // Node filtering
+    filterMenuInitialized = false;
+    this.clearFilters();
+
     // Undo Selection indication
     this.removeNodeDecorators();
+  }
+
+  /*
+   * onLoadFiltering() - Load Filtering menu
+   */
+  onLoadFiltering(event) {
+    // console.log('onloadFiltering() ' + event);
+    if (filterMenuInitialized) { return; }
+
+    // Build Filter menu
+    $('#filtermenu').empty();
+    $('#filtermenu').append('<div class=\'header\'><i class=\'tags icon\'></i><span>Filter on Selection</span></div>\
+      <div class=\'divider\'></div>');
+    this.nodeTypes.forEach(type => { $('#filtermenu').append('<div class=\'item\'><span>' + type + '</span></div>'); });
+    $('#filtermenu').append('<div class=\'divider\'></div>');
+    this.linkTypes.forEach(type => { $('#filtermenu').append('<div class=\'item\'><span>' + type + '</span></div>'); });
+    $('#filtermenu').append('<div class=\'divider\'></div><div class=\'item\'><span>Unfiltered</span></div>');
+    // .click(function(e) { NetworkComponent.this().filterByNode(e.target.innerText); });
+
+    filterMenuInitialized = true;
+  }
+
+  /*
+   * onClickFiltering() - Click Handler for Filtering menu
+   */
+  onClickFiltering(event) {
+    // console.log('onClickFiltering() ' + event);
+    if (event.target.innerText) {
+      NetworkComponent.this().filterByNode(event.target.innerText);
+    }
   }
 
   /*
@@ -343,7 +398,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     // console.log('filterByNode(type): ' + type);
 
     // Clear Filter
-    if (type === 'all') {
+    if (type === filterTypeAll) {
       // this.showAll();
       this.clearFilters();
       return;
@@ -364,14 +419,14 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     // Show/hide neighboring Nodes
     this.node.style('opacity', (d) => {
       return (neighboring(d, this.selectedNodeData) && d.type === type) ||
-        // return (neighboring(d, this.selectedNodeData) && (d.type === type || type === 'all')) ||
+        // return (neighboring(d, this.selectedNodeData) && (d.type === type || type === filterTypeAll)) ||
         d.id === this.selectedNodeData.id ? opacityNode : opacityHidden;
     });
 
     // Show/hide neighboring Node Labels
     this.nodeLabel.style('opacity', (d) => {
       return (neighboring(d, this.selectedNodeData) && d.type === type) ||
-        // return (neighboring(d, this.selectedNodeData) && (d.type === type || type === 'all')) ||
+        // return (neighboring(d, this.selectedNodeData) && (d.type === type || type === filterTypeAll)) ||
         d.id === this.selectedNodeData.id ? opacityNodeLabel : opacityHidden;
     });
 
@@ -379,10 +434,10 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     this.link.style('opacity', (o) => {
       // return (o.source === this.selectedNodeData || o.target === this.selectedNodeData) ? 1 : 0;
       if ((o.source === this.selectedNodeData) && o.target.type === type) {
-        // if ((o.source === this.selectedNodeData) && (o.target.type === type || type === 'all')) {
+        // if ((o.source === this.selectedNodeData) && (o.target.type === type || type === filterTypeAll)) {
         return opacityLink;
       } else if ((o.target === this.selectedNodeData) && o.source.type === type) {
-        // } else if ((o.target === this.selectedNodeData) && (o.source.type === type || type === 'all')) {
+        // } else if ((o.target === this.selectedNodeData) && (o.source.type === type || type === filterTypeAll)) {
         return opacityLink;
       } else {
         return opacityHidden;
@@ -393,10 +448,10 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     this.linkLabelShadow.style('opacity', (o) => {
       // return (o.source === this.selectedNodeData || o.target === this.selectedNodeData) ? 1 : 0;
       if ((o.source === this.selectedNodeData) && o.target.type === type) {
-        // if ((o.source === this.selectedNodeData) && (o.target.type === type || type === 'all')) {
+        // if ((o.source === this.selectedNodeData) && (o.target.type === type || type === filterTypeAll)) {
         return opacityLinkLabel;
       } else if ((o.target === this.selectedNodeData) && o.source.type === type) {
-        // } else if ((o.target === this.selectedNodeData) && (o.source.type === type || type === 'all')) {
+        // } else if ((o.target === this.selectedNodeData) && (o.source.type === type || type === filterTypeAll)) {
         return opacityLinkLabel;
       } else {
         return opacityHidden;
@@ -407,10 +462,10 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     this.linkLabel.style('opacity', (o) => {
       // return (o.source === this.selectedNodeData || o.target === this.selectedNodeData) ? 1 : 0;
       if ((o.source === this.selectedNodeData) && o.target.type === type) {
-        //  if ((o.source === this.selectedNodeData) && (o.target.type === type || type === 'all')) {
+        //  if ((o.source === this.selectedNodeData) && (o.target.type === type || type === filterTypeAll)) {
         return opacityLinkLabel;
       } else if ((o.target === this.selectedNodeData) && o.source.type === type) {
-        // } else if ((o.target === this.selectedNodeData) && (o.source.type === type || type === 'all')) {
+        // } else if ((o.target === this.selectedNodeData) && (o.source.type === type || type === filterTypeAll)) {
         return opacityLinkLabel;
       } else {
         return opacityHidden;
@@ -432,11 +487,45 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     // console.log(this.parsedJson);
 
     this.closeSelectedNodeProps();
-    this.isFilteredNodes = false;
+    this.isDrilledNodes = false;
+    filterMenuInitialized = false;
 
     this.draw_graph();
 
     if (isSimulationRunning) { simulation.restart(); }
+  }
+
+ /*
+  * getFilters() - Extract unique Node types and Link types from AtomSpace data for filtering menu
+  */
+  private getFilters(parsedJson) {
+    const len = parsedJson.nodes.length;
+    for (let i = 0; i < len; i++) {
+      const obj = parsedJson.nodes[i];
+      if (obj.name !== '') {
+        // Node
+        if (this.nodeTypes.indexOf(obj.type) === -1) {
+          if (this.nodeTypes.length < maxNodeFilterSize) {
+            this.nodeTypes.push(obj.type);
+          } else {
+            console.log('Dropping Node filter for \'' + obj.type + '\' because exceeded maxNodeFilterSize (' + maxNodeFilterSize + ')');
+          }
+          // console.log('Node type push(' + obj.type + ')');
+        }
+      } else {
+        // Link
+        if (this.linkTypes.indexOf(obj.type) === -1) {
+          if (this.linkTypes.length < maxLinkFilterSize) {
+            this.linkTypes.push(obj.type);
+          } else {
+            console.log('Dropping Link filter for \'' + obj.type + '\' because exceeded maxLinkFilterSize (' + maxLinkFilterSize + ')');
+          }
+          // console.log('Link type push(' + obj.type + ')');
+        }
+      }
+    }
+    this.nodeTypes.sort();
+    this.linkTypes.sort();
   }
 
   /*
@@ -519,7 +608,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     if (simulation) { simulation.stop(); }  // Make sure simulation is stopped, else get nodes "explosion" effect.
     simulation = d3.forceSimulation()
       .force('link', d3.forceLink().id(function (d) { return d.id; }).distance(100))  // .strength(1))
-      .force('charge', d3.forceManyBody().strength(simForceStrength).distanceMax(200))
+      .force('charge', d3.forceManyBody().strength(simForceStrength).distanceMax(250))
       // .force('charge', d3.forceManyBody().theta(0.8))
       .force('center', d3.forceCenter(widthView / 2, heightView / 2))
       .force('collide', d3.forceCollide().radius(function (d) {
@@ -529,22 +618,18 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       }))
       .alphaDecay(alphaDecay);
 
-    // Set up Rect for rendering graph within SVG window
+    // Set up Rect within SVG window
     this.svg.append('rect')
       .attr('width', widthView)
       .attr('height', heightView)
       .style('fill', 'none')
-      .style('pointer-events', 'all')
-      .call(this.d3zoom
-        .scaleExtent([1 / 2, 4])
-        .on('zoom', zoomed))
-      .on('wheel.zoom', null);  // Disable zoom by mouse wheel.
+      .style('pointer-events', 'all');
 
     // Add group under svg element
     const g = this.svg.append('g').attr('class', 'svg-grp');
 
     // Set up zooming for this element
-    function zoomed() { g.attr('transform', d3.event.transform); }
+    function zoomHandler() { g.attr('transform', d3.event.transform); }
 
     // Set up main context menu on svg client area
     this.svg.on('contextmenu', d3.contextMenu(this.menus.mainMenu));
@@ -705,6 +790,18 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     d3.select(window).on('keydown', () => { graphKeydown(this); });
     d3.select(window).on('mousemove', () => { graphMousemove(this); });
 
+    // Set up zooming after all elements are added to svg group, else those elements
+    // won't stay in sync during certain operations like programmatic panning transforms
+    this.svg.call(this.d3zoom
+      .scaleExtent([1 / 2, 4])
+      .on('zoom', zoomHandler));
+
+    // Reapply scale if it has been changed from default
+    if (this.zoomScale !== 1) {
+      const view = d3.select('svg');
+      view.transition().duration(defaultTransitionDuration).call(this.d3zoom.scaleTo, this.zoomScale);
+    }
+
     /*
      * Force Simulation
      */
@@ -736,8 +833,13 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       // console.log('  d3.event.sourceEvent.movementY=\'' + d3.event.sourceEvent.movementY + '\'' );
       // console.log('  w=' + widthView + ', h=' + heightView);
 
-      d.fx = Math.max(nodePositionMargin, Math.min(widthView - nodePositionMargin, d3.event.x));
-      d.fy = Math.max(nodePositionMargin, Math.min(heightView - nodePositionMargin, d3.event.y));
+      if (isNodesConstrainedToClientArea) {
+        d.fx = Math.max(nodePositionMargin, Math.min(widthView - nodePositionMargin, d3.event.x));
+        d.fy = Math.max(nodePositionMargin, Math.min(heightView - nodePositionMargin, d3.event.y));
+      } else {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+      }
     }
     function nodeDragEnded(self, d) {  // Note that this gets invoked by drags or clicks.
       // console.log('nodeDragEnded(): d3.event.active=\'' + d3.event.active + '\'' );
@@ -764,12 +866,12 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     /*
-    * ## draw_graph() Functions ##
-    */
+     * ## draw_graph() Functions ##
+     */
 
     /*
-    * graphTick() - Adjust positions of all the Force Simulation elements
-    */
+     * graphTick() - Adjust positions of all the Force Simulation elements
+     */
     function graphTick(self) {
       // console.log('graphTick(): Simulation Force alpha: ' +
       //   simulation.alpha());  // Simulation stops automatically when alpha drops below 0.001.
@@ -815,10 +917,18 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       // Update Node position
       self.node
         .attr('cx', function (d) {
-          return d.x = Math.max(nodePositionMargin, Math.min(widthView - nodePositionMargin, d.x));
+          if (isNodesConstrainedToClientArea) {
+            return d.x = Math.max(nodePositionMargin, Math.min(widthView - nodePositionMargin, d.x));
+          } else {
+            return d.x;
+          }
         })
         .attr('cy', function (d) {
-          return d.y = Math.max(nodePositionMargin, Math.min(heightView - nodePositionMargin, d.y));
+          if (isNodesConstrainedToClientArea) {
+            return d.y = Math.max(nodePositionMargin, Math.min(heightView - nodePositionMargin, d.y));
+          } else {
+            return d.y;
+          }
         });
 
       // Update Node Label position
@@ -850,7 +960,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       const yTT = evt.pageY < window.innerHeight - hTT ? evt.pageY - 12 : (evt.pageY + 12) - hTT;
       self.divTooltip.style('left', xTT + 'px').style('top', yTT + 'px');  // To avoid easing from previous position which is distracting.
       self.divTooltip.transition()
-//        .delay(100)
+        // .delay(100)
         // .duration(100)
         .style('opacity', 0.90)
         .style('left', xTT + 'px')
@@ -886,7 +996,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       const yTT = evt.pageY < window.innerHeight - hTT ? evt.pageY - 12 : (evt.pageY + 12) - hTT;
       self.divTooltip.style('left', xTT + 'px').style('top', yTT + 'px');  // To avoid easing from previous position which is distracting.
       self.divTooltip.transition()
-//        .delay(100)
+        // .delay(100)
         // .duration(100)
         .style('opacity', 0.90)
         .style('left', xTT + 'px')
@@ -916,6 +1026,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
         self.isSelectedNode = false;
         self.selectedNodeData = null;
+        filterMenuInitialized = false;
 
         // If simulation already paused, keep it paused
         if (isSimulationRunning === false) { self.pauseSimulation(); }
@@ -947,7 +1058,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     function nodeDoubleClick(self, d) {
       // console.log('Doubleclick: ', d);
 
-      self.isFilteredNodes = true;
+      self.isDrilledNodes = true;
       self.selectedNodeData = d;
       self.isSelectedNode = true;
 
@@ -1077,7 +1188,8 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         // TODO: Try removing charge from all hidden nodes?
       }  /* End isPruneFilteredNodes block */
 
-      // panNodeToCenter(self, d);
+      // self.panNodeToCenter(self, d);
+      // d3.event.stopPropagation();  // Else double-click interferes with panning. TODO: But causes jumpiness.
     }
     /* End Node On-Double-Click function */
 
@@ -1110,7 +1222,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
         simulation.force('center', d3.forceCenter(widthView / 2, heightView / 2));
 
-        // Workaround: If don't leave simuation running, recentering simulation not working during resize
+        // Workaround: Commented out because if don't leave simulation running, recentering simulation not working during resize
         // self.pauseSimulation();
       }
     }
@@ -1359,48 +1471,35 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       // console.log('getSizeNodeLabel() ' + d.name + ': radius=' + radius + ', data-scale=' + dataScale);
       d3text.attr('data-scale', dataScale);  // Sets the data attribute, which is read in the next step.
     }
-
-    /*
-     * panNodeToCenter() - Center the specified node in the D3 client rectangle.
-     *
-     * TODO: Not working correctly when Zoomed.
-     *
-     */
-    function panNodeToCenter(ths, d) {
-      const scale = ths.zoomScale;
-      const x = (widthView / 2) - (d.x * scale);
-      const y = (heightView / 2) - (d.y * scale);
-      // const view = d3.select('rect');
-      const view = d3.select('.svg-grp');
-
-      view.transition()
-        // .attr('transform', 'translate(' + x + ',' + y + ')scale(' + scale + ')')
-        .attr('transform', 'translate(' + x + ',' + y + ')')
-        .on('end', function () {
-          view.transition().duration(defaultTransitionDuration)
-            // .call(ths.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale))
-            .call(ths.d3zoom.transform, d3.zoomIdentity.translate(x, y));
-        });
-    }
   }  /* End draw_graph() */
 
   /*
-   * initMenus()
+   * initContextMenus()
    */
-  private initMenus() {
+  private initContextMenus(self) {
     const __this = this;
 
     // Main context menu
     const mainMenu = [{
-      /*title: 'Recenter Panning',
-      action: function(elm, d, i) {
-        if (__this.isFilteredNodes) {
-          panNodeToCenter(__this, d);
+      title: function (d) {
+        if (!__this.isSelectedNode) {
+          return 'Recenter Panning';
         } else {
-          __this.panToCenter(__this);
+          let menutext = 'Pan Selected Node to center';
+          menutext += __this.selectedNodeData.name ? ': \'' + __this.selectedNodeData.name + '\'' : '';
+          return menutext;
         }
       },
-    }, {*/
+      action: function(elm, d, i) {
+        if (!__this.isSelectedNode) {
+          __this.panToCenter(__this);
+        } else {
+          // However, if a Node is selected, center that Node
+          __this.panNodeToCenter(__this, __this.selectedNodeData);
+        }
+      }
+    },
+    {
       title: 'Unpin all Nodes',
       action: function (elm, d, i) {
         __this.node.each(function (o) {
@@ -1409,7 +1508,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         });
       }
     }, {
-      title: 'Reset Charge for all Nodes',
+      title: 'Reset Charge of all Nodes',
       action: function (elm, d, i) {
         simulation.force('charge', d3.forceManyBody().strength(function (o) {
           o.charge = simForceStrength;
@@ -1427,13 +1526,9 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         title: function (d) {
           __this.divTooltip.style('opacity', 0); // Hide tooltip.
           if (d.fx == null) {
-            let menutext = 'Pin (Ctrl-Click or Ctrl-Drag)';
-            menutext += d.name ? ' \'' + d.name + '\'' : '';
-            return menutext;
+            return 'Pin (Ctrl-Click or Ctrl-Drag)';
           } else {
-            let menutext = 'Unpin (Click or Drag)';
-            menutext += d.name ? ' \'' + d.name + '\'' : '';
-            return menutext;
+            return 'Unpin (Click or Drag)';
           }
         },
         action: function (elm, d, i) {
@@ -1458,13 +1553,9 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         title: function (d) {
           __this.divTooltip.style('opacity', 0); // Hide tooltip.
           if (d.charge && d.charge === simForceStrengthHighNodeCharge) {
-            let menutext = 'Restore Normal Charge (Click or Drag)';
-            menutext += d.name ? ' to \'' + d.name + '\'' : '';
-            return menutext;
+            return 'Restore Normal Charge (Click or Drag)';
           } else {
-            let menutext = 'Apply High Charge (Shift-Click or Shift-Drag)';
-            menutext += d.name ? ' to \'' + d.name + '\'' : '';
-            return menutext;
+            return 'Apply High Charge (Shift-Click or Shift-Drag)';
           }
         },
         action: function (elm, d, i) {
@@ -1490,9 +1581,15 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
             simulation.alphaTarget(0.1).restart();
           }
         }
+      },
+      {
+        title: 'Pan to center',
+        action: function(elm, d, i) {
+          __this.panNodeToCenter(__this, d);
+        },
       }
     ];
     return { mainMenu, nodeMenu };
-  } /* End initMenus() */
+  } /* End initContextMenus() */
 }
 /* End Class NetworkComponent */

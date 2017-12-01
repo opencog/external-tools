@@ -25,63 +25,13 @@
             <i class="icon window restore"></i>
           </button>
         </div>
-        <div *ngIf="isSelectedNode" class="button ui floating labeled icon dropdown teal" id="filtermenu" data-tooltip="Apply filtering to selected Node">
+        <div *ngIf="isSelectedNode" (window:mousedown)="onLoadFiltering($event)" class="button ui floating labeled icon dropdown teal" id="filtermenu-btn" data-tooltip="Apply filtering to selected Node">
           <i class="filter icon"></i>
-          <div class="default text">Unfiltered</div>
-          <div class="menu">
-            <div class="header">
-              <i class="tags icon"></i><span>Filter on Selection</span>
-            </div>
-            <div class="item" (click)="filterByNode('ConceptNode')">
-              <span>ConceptNode</span>
-            </div>
-            <div class="item" (click)="filterByNode('PredicateNode')">
-              <span>PredicateNode</span>
-            </div>
-            <div class="item" (click)="filterByNode('VariableNode')">
-              <span>VariableNode</span>
-            </div>
-            <div class="divider"></div>
-            <div class="item" (click)="filterByNode('AndLink')">
-              <span>AndLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('EquivalenceLink')">
-              <span>EquivalenceLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('EvaluationLink')">
-              <span>EvaluationLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('ImplicationLink')">
-              <span>ImplicationLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('InheritanceLink')">
-              <span>InheritanceLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('LambdaLink')">
-              <span>LambdaLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('ListLink')">
-              <span>ListLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('MemberLink')">
-              <span>MemberLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('OrLink')">
-              <span>OrLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('ReferenceLink')">
-              <span>ReferenceLink</span>
-            </div>
-            <div class="item" (click)="filterByNode('SetLink')">
-              <span>SetLink</span>
-            </div>
-            <div class="divider"></div>
-            <div class="item" (click)="filterByNode('all')">
-              <span>Unfiltered</span>
-            </div>
+          <div class="default text" id="filtermenu-text">Unfiltered</div>
+          <div class="menu" (click)="onClickFiltering($event)" id="filtermenu">
           </div>
         </div>
-        <button *ngIf="isFilteredNodes" (click)="showAll()" class="button ui teal">
+        <button *ngIf="isDrilledNodes" (click)="showAll()" class="button ui teal">
 					<span  data-tooltip="Restore all Nodes and Links">Show All Data</span>
 				</button>
         <br>
