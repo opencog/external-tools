@@ -94,8 +94,11 @@ text.edgelabelshadow {
   stroke: #fff;
 }
 
-/* Node tooltips */
-.node-tooltip {
+/* Node & Link tooltips */
+.tooltip {
+  position: absolute;
+}
+.html-tooltip {
   position: absolute;
   text-align: center;
   line-height: 0.75em !important;
@@ -107,7 +110,7 @@ text.edgelabelshadow {
   border-radius: 3px;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
 }
-.node-detailed-tooltip {
+.html-detailed-tooltip {
   position: absolute;
   text-align: center;
   padding: 2px;

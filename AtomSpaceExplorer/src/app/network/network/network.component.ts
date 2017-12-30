@@ -21,7 +21,7 @@ interface Menus {
  * ## Consts ##
  */
 
-const appVersion = '0.11.00 Beta (Nov-30-2017)';
+const appVersion = '0.11.01 Beta (Dec-28-2017)';
 
 // Force Simulation
 // const simForceStrengthNormal = -80, simForceStrengthFast = -120, simForceStrengthSlow = -20;
@@ -160,7 +160,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     NetworkComponent.___this = this;
 
     // Initialize menus
-    this.menus = this.initContextMenus(this);
+    this.menus = this.initContextMenus();
 
     // Define div for the tooltip
     if (this.divTooltip === null) {
@@ -201,35 +201,41 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   /*
    * panToCenter() - Reset panning to center.
    */
-  panToCenter(self) {
-    const scale = self.zoomScale;
+  panToCenter() {
+    const scale = this.zoomScale;
     let x = -((scale - 1) / 2) * widthView;
     const y = -((scale - 1) / 2) * heightView;
     x *= 0.70193340494092373791621911922664;
     // console.log('panToCenter(): transform: ' + x + ', ' + y + ', ' + scale);
 
+    const __this = this;
     const view = d3.select('svg');
+    // console.log('panToCenter(): transform(before)=' + d3.zoomTransform(view.node()));
     view.transition()
       .attr('transform', 'translate(' + x + ',' + y + ').scale(' + scale + ')')
       .on('end', function () {
-        view.call(self.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
+        view.call(__this.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
+        // console.log('panToCenter(): transform(after)=' + d3.zoomTransform(view.node()));
       });
   }
 
   /*
    * panNodeToCenter() - Center the specified node in the D3 client rectangle.
    */
-  panNodeToCenter(self, d) {
-    const scale = self.zoomScale;
+  panNodeToCenter(d) {
+    const scale = this.zoomScale;
     const x = (widthView / 2) - (d.x * scale);
     const y = (heightView / 2) - (d.y * scale);
     // console.log('panNodeToCenter(): transform: ' + x + ', ' + y + ', ' + scale);
 
+    const __this = this;
     const view = d3.select('svg');
+    // console.log('panNodeToCenter(): transform(before)=' + d3.zoomTransform(view.node()));
     view.transition()
       .attr('transform', 'translate(' + x + ',' + y + ').scale(' + scale + ')')
       .on('end', function () {
-        view.call(self.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
+        view.call(__this.d3zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
+        // console.log('panNodeToCenter(): transform(after)=' + d3.zoomTransform(view.node()));
       });
   }
 
@@ -332,7 +338,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     this.zoomScale = 1;  // variable to control the scale of zoom.
     const view = d3.select('svg');
     view.transition().duration(duration).call(this.d3zoom.scaleTo, this.zoomScale);
-    this.panToCenter(this);
+    this.panToCenter.call(this);
   }
 
   /*
@@ -583,6 +589,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     // Clear everything out of the DOM
     this.svg = d3.select('svg');
     this.svg.selectAll('*').remove();
+    this.isSuppressTooltip = true;
     filterMenuInitialized = false;
 
     // Get SVG element width and height
@@ -631,7 +638,18 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     const g = this.svg.append('g').attr('class', 'svg-grp');
 
     // Set up zooming for this element
-    function zoomHandler() { g.attr('transform', d3.event.transform); }
+    function zoomHandler() {
+      // console.log('zoomHandler() scale before=' + this.zoomScale);
+      this.zoomScale = d3.event.transform.k;  // Keep zoomScale in sync.
+      g.attr('transform', d3.event.transform);
+      // console.log('zoomHandler() scale after=' + this.zoomScale);
+    }
+    // function zoomWheelDelta() {
+    //   const delta = -d3.event.deltaY * (d3.event.deltaMode ? 120 : 1) / 500;
+    //   // console.log('zoomWheelDelta(): ' + delta);
+    //   this.zoomScale = this.zoomScale + delta;  // Keep zoomScale in sync.
+    //   return delta;
+    // }
 
     // Set up main context menu on svg client area
     this.svg.on('contextmenu', d3.contextMenu(this.menus.mainMenu));
@@ -648,8 +666,8 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       .attr('class', 'lines')
       .attr('stroke-width', strokeWidthLink)
       // Handle tooltips
-      .on('mouseover', (d) => { linkMouseOver(this, d); })
-      .on('mouseout', (d) => { linkMouseOut(this, d); });
+      .on('mouseover', (d) => linkMouseOver.call(this, d))
+      .on('mouseout', (d) => linkMouseOut.call(this, d));
 
     // Link edgepath
     this.textPath = g.append('g')
@@ -665,7 +683,9 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       .style('user-select', 'none');
 
     // Link Label Shadows
-    this.linkLabelShadow = g.append('g').attr('class', 'edgelabelshadow-grp').selectAll('.edgelabel')
+    this.linkLabelShadow = g.append('g')
+      .attr('class', 'edgelabelshadow-grp')
+      .selectAll('.edgelabel')
       .data(this.parsedJson.links)
       .enter()
       .append('text')
@@ -680,7 +700,9 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       });
 
     // Link Labels
-    this.linkLabel = g.append('g').attr('class', 'edgelabel-grp').selectAll('.edgelabel')
+    this.linkLabel = g.append('g')
+      .attr('class', 'edgelabel-grp')
+      .selectAll('.edgelabel')
       .data(this.parsedJson.links)
       .enter()
       .append('text')
@@ -707,8 +729,8 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         return d.name;
       })
       // Handle tooltips (also over link text to make it easier to get tooltip to open)
-      .on('mouseover', (d) => { linkMouseOver(this, d); })
-      .on('mouseout', (d) => { linkMouseOut(this, d); });
+      .on('mouseover', (d) => linkMouseOver.call(this, d))
+      .on('mouseout', (d) => linkMouseOut.call(this, d));
 
     // Position label midway along the link
     this.linkLabel.append('textPath')
@@ -748,16 +770,18 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         return d.color;
       })
       // Handle tooltips
-      .on('mouseover', (d) => { nodeMouseOver(this, d); })
-      .on('mouseout', (d) => { nodeMouseOut(this, d); })
+      .on('mouseover', (d) => nodeMouseOver.call(this, d))
+      .on('mouseout', (d) => nodeMouseOut.call(this, d))
       // Enable node dragging
-      .call(d3.drag().subject((d) => { return d; })
-        .on('start', (d) => { nodeDragStarted(this, d); })
-        .on('drag', (d) => { nodeDragging(this, d); })
-        .on('end', (d) => { nodeDragEnded(this, d); }));
+      .call(d3.drag().subject((d) => d)
+        .on('start', (d) => nodeDragStarted.call(this, d))
+        .on('drag', (d) => nodeDragging.call(this, d))
+        .on('end', (d) => nodeDragEnded.call(this, d)));
 
     // Node Text
-    this.nodeLabel = g.append('g').attr('class', 'nodelabel-grp').selectAll('.mytext')
+    this.nodeLabel = g.append('g')
+      .attr('class', 'nodelabel-grp')
+      .selectAll('.mytext')
       .data(this.parsedJson.nodes)
       .enter()
       .append('text')
@@ -786,17 +810,19 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       .style('fill', '#fff');  // Text color inside nodes.
 
     // Setup Node and D3 client area handlers
-    this.node.on('click', (d) => { nodeSingleClick(this, d); });
-    this.node.on('dblclick', (d) => { nodeDoubleClick(this, d); });
-    d3.select(window).on('resize', (d) => { graphResize(this); });
-    d3.select(window).on('keydown', () => { graphKeydown(this); });
-    d3.select(window).on('mousemove', () => { graphMousemove(this); });
+    this.node.on('click', (d) => nodeSingleClick.call(this, d));
+    this.node.on('dblclick', (d) => nodeDoubleClick.call(this, d));
+    d3.select(window).on('resize', () => graphResize.call(this));
+    d3.select(window).on('keydown', () => graphKeydown.call(this));
+    d3.select(window).on('mousemove', () => graphMousemove.call(this));
 
     // Set up zooming after all elements are added to svg group, else those elements
     // won't stay in sync during certain operations like programmatic panning transforms
     this.svg.call(this.d3zoom
       .scaleExtent([1 / 2, 4])
-      .on('zoom', zoomHandler));
+      .duration(defaultTransitionDuration)
+      // .wheelDelta( () => zoomWheelDelta.call(this))
+      .on('zoom', () => zoomHandler.call(this)));
 
     // Reapply scale if it has been changed from default
     if (this.zoomScale !== 1) {
@@ -809,7 +835,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
      */
     simulation
       .nodes(this.parsedJson.nodes)
-      .on('tick', () => { graphTick(this); });
+      .on('tick', () => graphTick.call(this));
 
     // Simulation Links
     simulation.force('link')
@@ -818,7 +844,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     /*
      * Node Drag implementation
      */
-    function nodeDragStarted(self, d) {  // Note that this gets invoked by drags or clicks.
+    function nodeDragStarted(d) {  // Note that this gets invoked by drags or clicks.
       // console.log('nodeDragStarted(): d3.event.active=\'' + d3.event.active + '\'' );
 
       // Set alphaTarget during layout update so that node positions will update smoothly
@@ -829,7 +855,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
       d3.event.sourceEvent.stopPropagation();
     }
-    function nodeDragging(self, d) {  // Note that this gets invoked by drags or clicks.
+    function nodeDragging(d) {  // Note that this gets invoked by drags or clicks.
       // console.log('nodeDragging(): d3.event.active=\'' + d3.event.active + '\'' );
       // console.log('  d3.event.sourceEvent.movementX=\'' + d3.event.sourceEvent.movementX + '\'' );
       // console.log('  d3.event.sourceEvent.movementY=\'' + d3.event.sourceEvent.movementY + '\'' );
@@ -843,14 +869,14 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         d.fy = d3.event.y;
       }
     }
-    function nodeDragEnded(self, d) {  // Note that this gets invoked by drags or clicks.
+    function nodeDragEnded(d) {  // Note that this gets invoked by drags or clicks.
       // console.log('nodeDragEnded(): d3.event.active=\'' + d3.event.active + '\'' );
 
       // Let simulation cool back down
       if (!d3.event.active) { simulation.alphaTarget(0); }
 
       // If simulation already paused, keep it paused
-      if (isSimulationRunning === false) { self.pauseSimulation(); }
+      if (isSimulationRunning === false) { this.pauseSimulation(); }
 
       // Leave node pinned if dragged (or clicked or double-clicked) w/CTRL key
       if (!d3.event.sourceEvent.ctrlKey) {
@@ -872,26 +898,26 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
      */
 
     /*
-     * graphTick() - Adjust positions of all the Force Simulation elements
+     * graphTick.() - Adjust positions of all the Force Simulation elements
      */
-    function graphTick(self) {
+    function graphTick() {
       // console.log('graphTick(): Simulation Force alpha: ' +
       //   simulation.alpha());  // Simulation stops automatically when alpha drops below 0.001.
 
       // Update Link positions
-      self.link
+      this.link
         .attr('x1', function (d) { return d.source.x; })
         .attr('y1', function (d) { return d.source.y; })
         .attr('x2', function (d) { return d.target.x; })
         .attr('y2', function (d) { return d.target.y; });
 
       // Update Link Label positions
-      self.textPath.attr('d', function (d) {
+      this.textPath.attr('d', function (d) {
         return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y;
       });
 
       // Update Link Label Shadow rotation
-      self.linkLabelShadow.attr('transform', function (d) {
+      this.linkLabelShadow.attr('transform', function (d) {
         if (d.target.x < d.source.x) {
           const bbox = this.getBBox();
           // console.log('Simulation transform (' + d.name + '): ' + bbox.x + ',' + bbox.y + ',' + bbox.width + ',' + bbox.height);
@@ -904,7 +930,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       });
 
       // Update Link Label rotation
-      self.linkLabel.attr('transform', function (d) {
+      this.linkLabel.attr('transform', function (d) {
         if (d.target.x < d.source.x) {
           const bbox = this.getBBox();
           // console.log('Simulation transform (' + d.name + '): ' + bbox.x + ',' + bbox.y + ',' + bbox.width + ',' + bbox.height);
@@ -917,7 +943,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       });
 
       // Update Node position
-      self.node
+      this.node
         .attr('cx', function (d) {
           if (isNodesConstrainedToClientArea) {
             return d.x = Math.max(nodePositionMargin, Math.min(widthView - nodePositionMargin, d.x));
@@ -934,7 +960,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         });
 
       // Update Node Label position
-      self.nodeLabel
+      this.nodeLabel
         .attr('x', function (d) { return d.x; })
         .attr('y', function (d) { return d.y; })
         .attr('dy', '0.35em');
@@ -944,129 +970,129 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     /*
      * Node Mouse In/Out implementation
      */
-    function nodeMouseOver(self, d) {
+    function nodeMouseOver(d) {
       // Hide tooltip when dragging
       if (d3.event.buttons !== 0) {
         // console.log('mouseover node, dragging');
-        self.divTooltip.transition().duration(0).style('opacity', 0);
+        this.divTooltip.transition().duration(0).style('opacity', 0);
         return;
       }
 
       // Check for active tooltip transition
-      if (self.isSuppressTooltip) { return; }
+      if (this.isSuppressTooltip) { return; }
 
       // Else show tooltip
-      self.divTooltip.html(buildNodeTooltip(d, self.isDetailedTooltips));
-      const evt = d3.event, wTT = self.divTooltip.node().firstChild.clientWidth, hTT = self.divTooltip.node().firstChild.clientHeight;
-      const xTT = evt.pageX < (window.innerWidth - wTT) - self.marginTT ? evt.pageX + 12 : (evt.pageX - 12) - wTT;
+      this.divTooltip.html(buildNodeTooltip(d, this.isDetailedTooltips));
+      const evt = d3.event, wTT = this.divTooltip.node().firstChild.clientWidth, hTT = this.divTooltip.node().firstChild.clientHeight;
+      const xTT = evt.pageX < (window.innerWidth - wTT) - this.marginTT ? evt.pageX + 12 : (evt.pageX - 12) - wTT;
       const yTT = evt.pageY < window.innerHeight - hTT ? evt.pageY - 12 : (evt.pageY + 12) - hTT;
-      self.divTooltip.style('left', xTT + 'px').style('top', yTT + 'px');  // To avoid easing from previous position which is distracting.
-      self.divTooltip.transition()
+      this.divTooltip.style('left', xTT + 'px').style('top', yTT + 'px');  // To avoid easing from previous position which is distracting.
+      this.divTooltip.transition()
         // .delay(100)
         // .duration(100)
         .style('opacity', 0.90)
         .style('left', xTT + 'px')
         .style('top', yTT + 'px');
 
-      drawNodeDecorators(self, d, true);
+      drawNodeDecorators.call(this, d, true);
     }
-    function nodeMouseOut(self, d) {
+    function nodeMouseOut(d) {
       // Hide tooltip when mouse out from Node
-      self.divTooltip.transition().duration(0).style('opacity', 0);
+      this.divTooltip.transition().duration(0).style('opacity', 0);
 
-      drawNodeDecorators(self, d, false);
+      drawNodeDecorators.call(this, d, false);
     }
 
     /*
      * Link Mouse In/Out implementation
      */
-    function linkMouseOver(self, d) {
+    function linkMouseOver(d) {
       // Hide tooltip when dragging
       if (d3.event.buttons !== 0) {
         // console.log('mouseover link, dragging');
-        self.divTooltip.transition().duration(0).style('opacity', 0);
+        this.divTooltip.transition().duration(0).style('opacity', 0);
         return;
       }
 
       // Check for active tooltip transition
-      if (self.isSuppressTooltip) { return; }
+      if (this.isSuppressTooltip) { return; }
 
       // Else show tooltip
-      self.divTooltip.html(buildLinkTooltip(d, self.isDetailedTooltips));
-      const evt = d3.event, wTT = self.divTooltip.node().firstChild.clientWidth, hTT = self.divTooltip.node().firstChild.clientHeight;
-      const xTT = evt.pageX < (window.innerWidth - wTT) - self.marginTT ? evt.pageX + 12 : (evt.pageX - 12) - wTT;
+      this.divTooltip.html(buildLinkTooltip(d, this.isDetailedTooltips));
+      const evt = d3.event, wTT = this.divTooltip.node().firstChild.clientWidth, hTT = this.divTooltip.node().firstChild.clientHeight;
+      const xTT = evt.pageX < (window.innerWidth - wTT) - this.marginTT ? evt.pageX + 12 : (evt.pageX - 12) - wTT;
       const yTT = evt.pageY < window.innerHeight - hTT ? evt.pageY - 12 : (evt.pageY + 12) - hTT;
-      self.divTooltip.style('left', xTT + 'px').style('top', yTT + 'px');  // To avoid easing from previous position which is distracting.
-      self.divTooltip.transition()
+      this.divTooltip.style('left', xTT + 'px').style('top', yTT + 'px');  // To avoid easing from previous position which is distracting.
+      this.divTooltip.transition()
         // .delay(100)
         // .duration(100)
         .style('opacity', 0.90)
         .style('left', xTT + 'px')
         .style('top', yTT + 'px');
 
-      drawLinkDecorators(self, d, true);
+      drawLinkDecorators.call(this, d, true);
     }
-    function linkMouseOut(self, d) {
+    function linkMouseOut(d) {
       // Hide tooltip when mouse out from Node
-      self.divTooltip.transition().duration(0).style('opacity', 0);
+      this.divTooltip.transition().duration(0).style('opacity', 0);
 
-      drawLinkDecorators(self, d, false);
+      drawLinkDecorators.call(this, d, false);
     }
 
     /*
      * Node On-Single-Click function
      */
-    function nodeSingleClick(self, d) {
+    function nodeSingleClick(d) {
       // console.log('Click: ', d);
 
       // Hide tooltip in case visible
-      self.divTooltip.transition().duration(0).style('opacity', 0);
+      this.divTooltip.transition().duration(0).style('opacity', 0);
 
       // If this node already selected, then unselect
-      if (self.isSelectedNode === true && self.selectedNodeData === d) {
-        self.removeNodeDecorators();
+      if (this.isSelectedNode === true && this.selectedNodeData === d) {
+        this.removeNodeDecorators();
 
-        self.isSelectedNode = false;
-        self.selectedNodeData = null;
+        this.isSelectedNode = false;
+        this.selectedNodeData = null;
         filterMenuInitialized = false;
 
         // If simulation already paused, keep it paused
-        if (isSimulationRunning === false) { self.pauseSimulation(); }
+        if (isSimulationRunning === false) { this.pauseSimulation(); }
 
         return;
       }
 
       // Data values
-      self.name = d.name;
-      self.handle = d.id;
-      self.type = d.type;
-      self.av = d.av;
-      self.tv = d.tv;
+      this.name = d.name;
+      this.handle = d.id;
+      this.type = d.type;
+      this.av = d.av;
+      this.tv = d.tv;
 
       // Display node info popup
-      self.selectedNodeData = d;
-      self.isSelectedNode = true;
+      this.selectedNodeData = d;
+      this.isSelectedNode = true;
 
-      drawNodeDecorators(self, d, false);
+      drawNodeDecorators.call(this, d, false);
 
       // If simulation already paused, keep it paused
-      if (isSimulationRunning === false) { self.pauseSimulation(); }
+      if (isSimulationRunning === false) { this.pauseSimulation(); }
     }
     /* End Node On-Single-Click function */
 
     /*
      * Node On-Double-Click function
      */
-    function nodeDoubleClick(self, d) {
+    function nodeDoubleClick(d) {
       // console.log('Doubleclick: ', d);
 
-      self.isDrilledNodes = true;
-      self.selectedNodeData = d;
-      self.isSelectedNode = true;
+      this.isDrilledNodes = true;
+      this.selectedNodeData = d;
+      this.isSelectedNode = true;
 
       // Build link map
       const linkedByIndex = {};
-      self.link.each(function (k) {
+      this.link.each(function (k) {
         linkedByIndex[k.source.index + ',' + k.target.index] = true;
         linkedByIndex[k.target.index + ',' + k.source.index] = true;
       });
@@ -1076,14 +1102,14 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       const neighlink = [];
       const neigh = [];
       if (isXtraLevelNeighbors) {
-        self.node.each(function (k) {
+        this.node.each(function (k) {
           if (neighboring(d, k) && k.name === '') {
             neighbourLinks.push(k);
           }
         });
         for (let i = 0; i < neighbourLinks.length; i++) {
           neighlink.push(neighbourLinks[i].id);
-          self.node.each(function (l) {
+          this.node.each(function (l) {
             if (neighboring(neighbourLinks[i], l)) {
               neigh.push(l.id);
             }
@@ -1097,7 +1123,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       }
 
       // Node
-      self.node.style('opacity', function (o) {
+      this.node.style('opacity', function (o) {
         if (isXtraLevelNeighbors) {
           return neighboring(d, o) || (d.id === o.id) || (neigh.indexOf(o.id) !== -1) ? opacityNode : opacityHidden;
         } else {
@@ -1107,7 +1133,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       // console.log(neigh);
 
       // Node Label
-      self.nodeLabel.style('opacity', function (o) {
+      this.nodeLabel.style('opacity', function (o) {
         if (isXtraLevelNeighbors) {
           return neighboring(d, o) || (d.id === o.id) || (neigh.indexOf(o.id) !== -1) ? opacityNodeLabel : opacityHidden;
         } else {
@@ -1116,7 +1142,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       });
 
       // Link
-      self.link.style('opacity', function (o) {
+      this.link.style('opacity', function (o) {
         if (isXtraLevelNeighbors) {
           return o.source === d || o.target === d || ((neigh.indexOf(o.target.id) !== -1) &&
             (neighlink.indexOf(o.source.id) !== -1)) || ((neigh.indexOf(o.source.id) !== -1) &&
@@ -1127,7 +1153,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       });
 
       // Link Text Shadow
-      self.linkLabelShadow.style('opacity', function (o) {
+      this.linkLabelShadow.style('opacity', function (o) {
         if (isXtraLevelNeighbors) {
           return o.source === d || o.target === d || ((neigh.indexOf(o.target.id) !== -1) &&
             (neighlink.indexOf(o.source.id) !== -1)) || ((neigh.indexOf(o.source.id) !== -1) &&
@@ -1138,7 +1164,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       });
 
       // Link Text
-      self.linkLabel.style('opacity', function (o) {
+      this.linkLabel.style('opacity', function (o) {
         if (isXtraLevelNeighbors) {
           return o.source === d || o.target === d || ((neigh.indexOf(o.target.id) !== -1) &&
             (neighlink.indexOf(o.source.id) !== -1)) || ((neigh.indexOf(o.source.id) !== -1) &&
@@ -1153,7 +1179,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         const nodesFiltered = [], linksFiltered = [];
         const isRunning = isSimulationRunning;
 
-        self.node.each(function (o) {
+        this.node.each(function (o) {
           if (d3.select(this).style('opacity') === opacityHidden.toString()) {
             // console.log('Node ' + o.name + ' is hidden');
           } else {
@@ -1161,7 +1187,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
           }
 
         });
-        self.link.each(function (o) {
+        this.link.each(function (o) {
           if (d3.select(this).style('opacity') === opacityHidden.toString()) {
             // console.log('Link ' + o.name + ' is hidden');
           } else {
@@ -1171,12 +1197,12 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         // console.log('nodesFiltered: ' + nodesFiltered);
         // console.log('linksFiltered: ' + linksFiltered);
 
-        // self.parsedJson.nodes = self.parsedJson.nodes.filter(function(d) { return !.d.hidden;});
-        self.parsedJson.nodes = nodesFiltered;
-        self.parsedJson.links = linksFiltered;
+        // this.parsedJson.nodes = this.parsedJson.nodes.filter(function(d) { return !.d.hidden;});
+        this.parsedJson.nodes = nodesFiltered;
+        this.parsedJson.links = linksFiltered;
 
-        self.draw_graph();
-        drawNodeDecorators(self, d, false);
+        this.draw_graph();
+        drawNodeDecorators.call(this, d, false);
 
         // If double-clicked w/Shift key, apply high charge force to this node
         if (d3.event.shiftKey) {
@@ -1190,7 +1216,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         // TODO: Try removing charge from all hidden nodes?
       }  /* End isPruneFilteredNodes block */
 
-      // self.panNodeToCenter(self, d);
+      // this.panNodeToCenter.call(this, d);
       // d3.event.stopPropagation();  // Else double-click interferes with panning. TODO: But causes jumpiness.
     }
     /* End Node On-Double-Click function */
@@ -1198,7 +1224,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     /*
      * graphResize() - On-Resize function
      */
-    function graphResize(self) {
+    function graphResize() {
       // console.log('Resize (before): w=' + widthView + ', h=' + heightView);
 
       if (document.getElementById('svgcanvas') === null) { return; }
@@ -1220,24 +1246,24 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       if (isSimulationRunning === true) {
         simulation.force('center', d3.forceCenter(widthView / 2, heightView / 2));
       } else {
-        self.playSimulation();
+        this.playSimulation();
 
         simulation.force('center', d3.forceCenter(widthView / 2, heightView / 2));
 
         // Workaround: Commented out because if don't leave simulation running, recentering simulation not working during resize
-        // self.pauseSimulation();
+        // this.pauseSimulation();
       }
     }
 
     /*
      * graphKeydown() - On-Keydown function
      */
-    function graphKeydown(self) {
+    function graphKeydown() {
       const e = d3.event;
       switch (e.keyCode) {
         // Cancel menu: ESC key
         case 27:
-          self.divTooltip.transition().duration(0).style('opacity', 0);  // Hide tooltip.
+          this.divTooltip.transition().duration(0).style('opacity', 0);  // Hide tooltip.
           d3.select('.d3-context-menu').style('display', 'none');  // Close menu.
           break;
         // Pause/Play/Restart: Pause (Break) key
@@ -1245,27 +1271,27 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
           if (!simulation) { break; }
           if (e.shiftKey) {
             // With Shift key to restart
-            self.restartSimulation();
+            this.restartSimulation();
           } else {
             // Else Play or Pause
             if (isSimulationRunning === true) {
-              self.pauseSimulation();
+              this.pauseSimulation();
             } else {
-              self.playSimulation();
+              this.playSimulation();
             }
           }
           break;
         // Zoom in: + key
         case 107:
-          self.zoomIn(defaultTransitionDuration);
+          this.zoomIn(defaultTransitionDuration);
           break;
         // Zoom out: - key
         case 109:
-          self.zoomOut(defaultTransitionDuration);
+          this.zoomOut(defaultTransitionDuration);
           break;
         // Reset zoom: * key
         case 106:
-          self.zoomReset(defaultTransitionDuration);
+          this.zoomReset(defaultTransitionDuration);
           break;
         // Stealth version number: Ctrl-Alt-v key
         case 86:
@@ -1279,9 +1305,9 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     /*
      * graphMousemove() - On-Mouse-Move function
      */
-    function graphMousemove(self) {
+    function graphMousemove() {
       // Tooltips are initially suppressed to avoid possible immediate tooltip popup if node or link slides under cursor after a data fetch
-      self.isSuppressTooltip = false;
+      this.isSuppressTooltip = false;
 
       if (isSimulationRunning || fisheye === null || !isFisheye) { return; }
 
@@ -1290,20 +1316,20 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       fisheye.focus(d3.mouse(this));
 
       // Update Node position
-      self.node.each(function (d) { d.fisheye = fisheye(d); })
+      this.node.each(function (d) { d.fisheye = fisheye(d); })
         .attr('cx', function (d) { return d.fisheye.x; })
         .attr('cy', function (d) { return d.fisheye.y; })
         // .attr("r", function(d) { return d.fisheye.z * 4.5; }); // TODO: Use z to scale up the radius
         ;
 
       // Update Node Label position
-      self.nodeLabel
+      this.nodeLabel
         .attr('x', function (d) { return d.fisheye.x; })
         .attr('y', function (d) { return d.fisheye.y; })
         .attr('dy', function (d) { return '0.35em'; });
 
       // Update Link positions
-      self.link
+      this.link
         .attr('x1', function (d) { return d.source.fisheye.x; })
         .attr('y1', function (d) { return d.source.fisheye.y; })
         .attr('x2', function (d) { return d.target.fisheye.x; })
@@ -1311,7 +1337,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
       // Update Link Label positions
       // TODO: Transformed (rotated) text goes in wrong position
-      self.textPath.attr('d', function (d) {
+      this.textPath.attr('d', function (d) {
         if (d.target.fisheye.x < d.source.fisheye.x) {
           // Broken
           return 'M ' + d.source.fisheye.x + ' ' + d.source.fisheye.y + ' L ' + d.target.fisheye.x + ' ' + d.target.fisheye.y;
@@ -1323,7 +1349,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
       /* Needed?
       // Update Link Label Shadow rotation
-      self.linkLabelShadow.attr('transform', function (d) {
+      this.linkLabelShadow.attr('transform', function (d) {
         if (d.target.x < d.source.x) {
           const bbox = this.getBBox();
           // console.log('Simulation transform (' + d.name + '): ' + bbox.x + ',' + bbox.y + ',' + bbox.width + ',' + bbox.height);
@@ -1336,7 +1362,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       });
 
       // Update Link Label rotation
-      self.linkLabel.attr('transform', function (d) {
+      this.linkLabel.attr('transform', function (d) {
         if (d.target.x < d.source.x) {
           const bbox = this.getBBox();
           // console.log('Simulation transform (' + d.name + '): ' + bbox.x + ',' + bbox.y + ',' + bbox.width + ',' + bbox.height);
@@ -1352,19 +1378,20 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     /*
      * drawNodeDecorators() - Draw applicable decorator indications on Node.
      */
-    function drawNodeDecorators(self, d, isOver) {
+    function drawNodeDecorators(d, isOver) {
+      const __this = this;
       d3.selectAll('circle')
         .style('stroke-width', function (o) {
           if (isOver) {
             if (o.id === d.id) {
               return strokeWidthHoverNode;  // Mouse-over Node.
-            } else if (self.isSelectedNode && (o.id === self.selectedNodeData.id)) {
+            } else if (__this.isSelectedNode && (o.id === __this.selectedNodeData.id)) {
               return strokeWidthSelectedNode;  // Selected Node.
             } else {
               return strokeWidthNode;  // Usual style.
             }
           } else {
-            if (self.isSelectedNode && (o.id === self.selectedNodeData.id)) {
+            if (__this.isSelectedNode && (o.id === __this.selectedNodeData.id)) {
               return strokeWidthSelectedNode;  // Selected Node.
             } else {
               return strokeWidthNode;  // Usual style.
@@ -1374,13 +1401,13 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
           if (isOver) {
             if (o.id === d.id) {
               return colorHoverNode;  // Mouse-over Node.
-            } else if (self.isSelectedNode && (o.id === self.selectedNodeData.id)) {
+            } else if (__this.isSelectedNode && (o.id === __this.selectedNodeData.id)) {
               return colorSelectedNode;  // Selected Node.
             } else {
               return '#fff';  // Usual style.
             }
           } else {
-            if (self.isSelectedNode && (o.id === self.selectedNodeData.id)) {
+            if (__this.isSelectedNode && (o.id === __this.selectedNodeData.id)) {
               return colorSelectedNode;  // Selected Node.
             } else {
               return '#fff';  // Usual style.
@@ -1392,7 +1419,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     /*
      * drawLinkDecorators() - Draw applicable decorator indications on Link.
      */
-    function drawLinkDecorators(self, d, isOver) {
+    function drawLinkDecorators(d, isOver) {
       d3.selectAll('.lines')
         .style('stroke-width', function (o: any) {
           if (isOver) {
@@ -1439,14 +1466,14 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     */
     function getTooltipHTML(d, headText, verbose) {
       if (verbose) {
-        return '<div class=\'node-detailed-tooltip\'> <table class=\'ui celled striped table\'> <thead> <tr> <th colspan=\'2\'>' +
+        return '<div class=\'html-detailed-tooltip\'> <table class=\'ui celled striped table\'> <thead> <tr> <th colspan=\'2\'>' +
           headText + '</th> </tr> </thead> <tbody> <tr> <td class=\'collapsing\'> <span>Handle</span> </td> <td>' + d.id +
           '</td> </tr> <tr> <td> <span>LTI</span> </td> <td>' + d.av.lti + '</td> </tr> <tr> <td> <span>STI</span> </td> <td>' + d.av.sti +
           '</td> </tr> <tr> <td> <span>VLTI</span> </td> <td>' + d.av.vlti + '</td> </tr> <tr> <td> <span>Confidence</span> </td> <td>' +
           d.tv.details.confidence + '</td> </tr> <tr> <td> <span>Strength</span> </td> <td>' + d.tv.details.strength +
           '</td> </tr> </tbody> </table> </div>';
       } else {
-        return '<div class=\'node-tooltip\'> <table class=\'ui celled striped table\'> <tbody> <tr> <td nowrap>' + headText +
+        return '<div class=\'html-tooltip\'> <table class=\'ui celled striped table\'> <tbody> <tr> <td nowrap>' + headText +
           '</td> </tr> </tbody> </table> </div>';
       }
     }
@@ -1478,7 +1505,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   /*
    * initContextMenus()
    */
-  private initContextMenus(self) {
+  private initContextMenus() {
     const __this = this;
 
     // Main context menu
@@ -1494,10 +1521,10 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       },
       action: function(elm, d, i) {
         if (!__this.isSelectedNode) {
-          __this.panToCenter(__this);
+          __this.panToCenter.call(__this);
         } else {
           // However, if a Node is selected, center that Node
-          __this.panNodeToCenter(__this, __this.selectedNodeData);
+          __this.panNodeToCenter.call(__this, __this.selectedNodeData);
         }
       }
     },
@@ -1587,7 +1614,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       {
         title: 'Pan to center',
         action: function(elm, d, i) {
-          __this.panNodeToCenter(__this, d);
+          __this.panNodeToCenter.call(__this, d);
         },
       }
     ];

@@ -60,7 +60,7 @@ Alternatively, you can permanently change the default port by inserting the foll
 1 - Navigate to [http://localhost:4200/](http://localhost:4200/)
 
 2 - Click on Fetch. A 'Fetch AtomSpace Results' prompt is displayed. Enter a valid AtomSpace api url.
-    I.E <http://255.255.255.255:5000/api/v1.1/atoms>, then click on the Fetch button to graph the data. 
+    I.E <http://255.255.255.255:5000/api/v1.1/atoms>, then click on the Fetch button to graph the data.
     Alternatively, click on 'Load Sample Data', to load the built-in sample data file. See next section regarding sample data.
 
 ## Sample Data
@@ -84,6 +84,13 @@ Alternatively, you can permanently change the default port by inserting the foll
 - Languages support is minimal and needs to be implemented throughout the UI.
 
 ## Revision History
+
+### Dec-28-2017 - sshermz - Bug fixes and minor refactoring
+
+- Bug Fix: Minor dependency update. Fixes #115.
+- Bug Fix: Zooming fix to keep zoom scale in sync when zoom by wheel or by double click.
+- Refactoring: Minor refactoring of D3 graphing code.
+- Build: Removed unnecessarily checked in ./semantic/ files.
 
 ### Nov-30-2017 - sshermz - Zooming / Panning enhancements, Simulation reheating and boundary removal, and dynamic Filter menu
 
@@ -161,9 +168,9 @@ Alternatively, you can permanently change the default port by inserting the foll
 - Added ability to pause, resume and restart the Force Simulation with new buttons for each.
 - Added reset zoom button.
 - Rebranded app to AtomSpace Explorer, including change of main icon to OpenCog icon, and change of default Angular icon in browser tab to small Cog icon.
-- Changed Navbar "Network" to "Visualize", and changed the Semantic-UI icons for Fetch and Visualize. Added hyperlink to http://opencog.org/ from Navbar OpenCog icon.
+- Changed Navbar "Network" to "Visualize", and changed the Semantic-UI icons for Fetch and Visualize. Added hyperlink to <http://opencog.org/> from Navbar OpenCog icon.
 - Fixed Navbar buttons alignment to fully left-justified Icon/Fetch/Visualize, and fully right-justified Language dropdown.
-- Partial fixes to Filter dropdown - Changed redundant "Show All" vs ("Show All Data") to "Clear Filter" (with an added divider). However, "Clear Filter" is still doing "Show All Data" like before. TODO to fix this to only remove current filter, and not show all data when filtered to a node and 2 levels of neighbors via a double-click. BTW, perhaps there should be more than the 3 hard-coded filter types? 
+- Partial fixes to Filter dropdown - Changed redundant "Show All" vs ("Show All Data") to "Clear Filter" (with an added divider). However, "Clear Filter" is still doing "Show All Data" like before. TODO to fix this to only remove current filter, and not show all data when filtered to a node and 2 levels of neighbors via a double-click. BTW, perhaps there should be more than the 3 hard-coded filter types?
 - Added meaningful tooltips to all Navbar elements, and to all Graph buttons.
 - Added context (right-click) menus for D3 client rect, and for Nodes.
 - Added Pin/Unpin feature which is accessible via CTRL actions and via the context menus. Also an Unpin all for the D3 client rect area.
