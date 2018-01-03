@@ -73,14 +73,18 @@ svg.rect {
 	opacity: 0.9;
 	padding: 6px;
 	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  user-select: none;
+  pointer-events: none;  /* Allow selecting, dragging, etc through the table... */
+}
+#selected-node-properties-close-btn {
+  pointer-events: all;  /* ...However, need to enable pointer-events on close button */
 }
 .selected-node-properties table thead tr th i {
   margin-left: 2em;
   margin-bottom: 0em;
 }
-/* Right floated not supported by Semantic UI. Manually add support for it */
-.right.floated {
+.right.floated {  /* Right floated not supported by Semantic UI. Manually add support for it */
   float: right;
 }
 

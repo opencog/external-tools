@@ -21,8 +21,7 @@ interface Menus {
 /*
  * ## Consts ##
  */
-
-const appVersion = '0.12.00 Beta (Jan-2-2018)';
+const appVersion = '0.12.01 Beta (Jan-3-2018)';
 
 // Force Simulation
 // const simForceStrengthNormal = -80, simForceStrengthFast = -120, simForceStrengthSlow = -20;
@@ -57,9 +56,7 @@ const colorHoverNode = '#BFECE9';
 const colorHoverLink = '#BFECE9';
 const colorMarker = '#000';
 const fontLink = 'normal 6px arial';
-//const fontfamilyNode = 'arial';
-//const fontfamilyNode = "Helvetica","Arial",sans-serif;
-const fontfamilyNode = 'sans-serif';
+const fontfamilyNode = 'arial';
 const fontweightNode = 'bold';
 const maxfontsizeNode = 18;
 const maxNodeLabelLength = 9;
@@ -1006,39 +1003,61 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
       // Update Link and Link Label positions
       //
-      // Pair of nodes with X links between them:
-      //  1 link: Link line is drawn with straight path.
-      //  2 links: Link lines are drawn with opposing arc paths.
-      //  3 links: First pair of link lines are drawn with opposing arc paths. Third link line is drawn with straight path.
-      //  >= 4: Not handled presently. Forth and beyond link lines are drawn with straight paths. Could improve in future to draw
-      //    links 4 & 5 with increased arc. If >= 6, perhaps draw single fat line that indicates too many links to draw individually.
+      // Multiple link handling:
+      //  - 1 or more links, with odd quantity: 1st link is straight. Next pair (2 & 3) are arc-pathed links. Next pair (4 & 5) are
+      //    arc-pathed with a larger radius. #6 and beyond not supported for now. They'll be drawn straight, overlapping each other.
+      // - 2 or more links, with even quantity: 1st pair (1 & 2) are arc-pathed links. Next pair (3 & 4) are arc-pathed with a larger
+      //   radius. #5 and beyond not supported for now. They'll be drawn straight, overlapping each other.
+      const offsetRadsL1 = 0.13, offsetRadsL2 = 0.26, offsetRadsL3 = 0.39,
+            radiusFactorL1 = 1.75, radiusFactorL2 = 1.0, radiusFactorL3 = 0.70;
       this.link.attr('d', function(d) {
         const arrOutLinks = getOutgoingLinks(d);
-        if (arrOutLinks.length === 1) {
-          return straightPath(d, true);
-        } else {  // Handle multiple links
+        if (arrOutLinks.length % 2) {  // Odd # of links
           switch (d.id) {
-            case arrOutLinks[0]:
-              return arcPath(d, true, true);
-            case arrOutLinks[1]:
-              return arcPath(d, true, false);
-            default:
-              return straightPath(d, true);
+            case arrOutLinks[0]: return straightPath(d, true);
+            case arrOutLinks[1]: return arcPath(d, true, offsetRadsL1, radiusFactorL1, true);
+            case arrOutLinks[2]: return arcPath(d, true, offsetRadsL1, radiusFactorL1, false);
+            case arrOutLinks[3]: return arcPath(d, true, offsetRadsL2, radiusFactorL2, true);
+            case arrOutLinks[4]: return arcPath(d, true, offsetRadsL2, radiusFactorL2, false);
+            case arrOutLinks[5]: return arcPath(d, true, offsetRadsL3, radiusFactorL3, true);
+            case arrOutLinks[6]: return arcPath(d, true, offsetRadsL3, radiusFactorL3, false);
+            default: return straightPath(d, true);  // More links not supported yet. Overwrite central link for now.
+          }
+        } else {  // Even # of links
+          switch (d.id) {
+            case arrOutLinks[0]: return arcPath(d, true, offsetRadsL1, radiusFactorL1, true);
+            case arrOutLinks[1]: return arcPath(d, true, offsetRadsL1, radiusFactorL1, false);
+            case arrOutLinks[2]: return arcPath(d, true, offsetRadsL2, radiusFactorL2, true);
+            case arrOutLinks[3]: return arcPath(d, true, offsetRadsL2, radiusFactorL2, false);
+            case arrOutLinks[4]: return arcPath(d, true, offsetRadsL3, radiusFactorL3, true);
+            case arrOutLinks[5]: return arcPath(d, true, offsetRadsL3, radiusFactorL3, false);
+            default: return straightPath(d, true);  // More links not supported yet. Overwrite central link for now.
           }
         }
       });
       this.textPath.attr('d', function(d) {
+        const isLeftHand = d.source.x < d.target.x;
         const arrOutLinks = getOutgoingLinks(d);
-        if (arrOutLinks.length === 1) {
-          return straightPath(d, d.source.x < d.target.x);
-        } else {  // Handle multiple links
+        if (arrOutLinks.length % 2) {  // Odd # of links
           switch (d.id) {
-            case arrOutLinks[0]:
-              return arcPath(d, d.source.x < d.target.x, true);
-            case arrOutLinks[1]:
-              return arcPath(d, d.source.x < d.target.x, false);
-            default:
-              return straightPath(d, d.source.x < d.target.x);
+            case arrOutLinks[0]: return straightPath(d, isLeftHand);
+            case arrOutLinks[1]: return arcPath(d, isLeftHand, offsetRadsL1, radiusFactorL1, true);
+            case arrOutLinks[2]: return arcPath(d, isLeftHand, offsetRadsL1, radiusFactorL1, false);
+            case arrOutLinks[3]: return arcPath(d, isLeftHand, offsetRadsL2, radiusFactorL2, true);
+            case arrOutLinks[4]: return arcPath(d, isLeftHand, offsetRadsL2, radiusFactorL2, false);
+            case arrOutLinks[5]: return arcPath(d, isLeftHand, offsetRadsL3, radiusFactorL3, true);
+            case arrOutLinks[6]: return arcPath(d, isLeftHand, offsetRadsL3, radiusFactorL3, false);
+            default: return straightPath(d, isLeftHand);  // More links not supported yet. Overwrite central link for now.
+          }
+        } else {  // Even # of links
+          switch (d.id) {
+            case arrOutLinks[0]: return arcPath(d, isLeftHand, offsetRadsL1, radiusFactorL1, true);
+            case arrOutLinks[1]: return arcPath(d, isLeftHand, offsetRadsL1, radiusFactorL1, false);
+            case arrOutLinks[2]: return arcPath(d, isLeftHand, offsetRadsL2, radiusFactorL2, true);
+            case arrOutLinks[3]: return arcPath(d, isLeftHand, offsetRadsL2, radiusFactorL2, false);
+            case arrOutLinks[4]: return arcPath(d, isLeftHand, offsetRadsL3, radiusFactorL3, true);
+            case arrOutLinks[5]: return arcPath(d, isLeftHand, offsetRadsL3, radiusFactorL3, false);
+            default: return straightPath(d, isLeftHand);  // More links not supported yet. Overwrite central link for now.
           }
         }
       });
@@ -1568,8 +1587,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     /*
      * arcPath() - Generate arc path.
      */
-    function arcPath(d, isLeftHand, isDefaultSweep) {
-      const offsetRads = 0.13;
+    function arcPath(d, isLeftHand, offsetRads, radiusFactor, isDefaultSweep) {
       const start = isLeftHand ? { x: getSourceNodeCircumPt(d, offsetRads, isDefaultSweep)[0],
                                    y: getSourceNodeCircumPt(d, offsetRads, isDefaultSweep)[1] } :
                                  { x: getTargetNodeCircumPt(d, offsetRads, isDefaultSweep)[0],
@@ -1580,7 +1598,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
                                  y: getSourceNodeCircumPt(d, offsetRads, isDefaultSweep)[1] };
       const dx = end.x - start.x,
             dy = end.y - start.y,
-            dr = Math.sqrt(dx * dx + dy * dy) * 1.5;
+            dr = Math.sqrt(dx * dx + dy * dy) * radiusFactor;
       let sweep = isLeftHand ? 0 : 1;
       if (!isDefaultSweep) {
         sweep = isLeftHand ? 1 : 0;
