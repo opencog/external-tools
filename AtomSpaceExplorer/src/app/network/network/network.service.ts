@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Graph } from './graph';
 import { Link } from './link';
 import { Node } from './node';
+
 declare var d3: any;
+
 @Injectable()
 export class NetworkService {
   nodes: Node[] = [];
@@ -27,6 +29,8 @@ export class NetworkService {
         node.type = atoms[i].type;
         node.av = atoms[i].attentionvalue;
         node.tv = atoms[i].truthvalue;
+        node.incoming = atoms[i].incoming;
+        node.outgoing = atoms[i].outgoing;
         this.nodes.push(node);
       }
     }
@@ -63,6 +67,8 @@ export class NetworkService {
           linkNode.type = label;
           linkNode.av = av;
           linkNode.tv = tv;
+          linkNode.incoming = incoming;
+          linkNode.outgoing = outgoing;
           this.links.push(link);
           this.nodes.push(linkNode);
         } else if (outgoing.length === 2) {
@@ -74,6 +80,8 @@ export class NetworkService {
             link.id = handle;
             link.av = av;
             link.tv = tv;
+            link.incoming = incoming;
+            link.outgoing = outgoing;
             this.links.push(link);
           } else {
             const linkNode: Node = <Node>{};
@@ -85,18 +93,24 @@ export class NetworkService {
             linkNode.type = label;
             linkNode.av = av;
             linkNode.tv = tv;
+            linkNode.incoming = incoming;
+            linkNode.outgoing = outgoing;
             link1.source = handle;
             link1.target = outgoing[0];
             link1.name = label;
             link1.id = handle;
             link1.av = av;
             link1.tv = tv;
+            link1.incoming = incoming;
+            link1.outgoing = outgoing[0];
             link2.source = handle;
             link2.target = outgoing[1];
             link2.name = label;
             link2.id = handle;
             link2.av = av;
             link2.tv = tv;
+            link2.incoming = incoming;
+            link2.outgoing = outgoing[1];
             this.nodes.push(linkNode);
             this.links.push(link1);
             this.links.push(link2);
@@ -109,6 +123,8 @@ export class NetworkService {
           linkNode.type = label;
           linkNode.av = av;
           linkNode.tv = tv;
+          linkNode.incoming = incoming;
+          linkNode.outgoing = outgoing;
           this.nodes.push(linkNode);
           for (let k = 0; k < outgoing.length; k++) {
             const link: Link = <Link>{};
@@ -118,6 +134,8 @@ export class NetworkService {
             link.id = handle;
             link.av = av;
             link.tv = tv;
+            link.incoming = incoming;
+            link.outgoing = outgoing;
             this.links.push(link);
           }
         }
