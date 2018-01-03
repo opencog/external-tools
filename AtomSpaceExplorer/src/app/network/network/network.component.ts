@@ -8,6 +8,7 @@ import { Component, OnInit, ViewEncapsulation, AfterViewInit, OnDestroy } from '
 import { NetworkService } from './network.service';
 import { Graph } from './graph';
 import { AtomsService } from '../../shared/services/atoms.service';
+import { configs } from '../../app.config';
 
 /*
  * ## Interfaces ##
@@ -21,7 +22,7 @@ interface Menus {
  * ## Consts ##
  */
 
-const appVersion = '0.11.01 Beta (Dec-28-2017)';
+const appVersion = '0.12.00 Beta (Jan-2-2018)';
 
 // Force Simulation
 // const simForceStrengthNormal = -80, simForceStrengthFast = -120, simForceStrengthSlow = -20;
@@ -33,34 +34,37 @@ const reheatFactorMax = 6;
 
 // Node & Link related consts
 const isNodesConstrainedToClientArea = false;
+const isPruneFilteredNodes = true;  // Remove filtered nodes from DOM. Provides performance benefit when filtered.
+const isXtraLevelNeighbors = true;
 const dyLinkLabel = '0.38em';
 const radiusNodeNameless = 6;
 const radiusNode = 12;
-const opacityNode = 1;
-const opacityNodeLabel = 1;
+const opacityNode = 0.85;
+const opacityNodeLabel = 0.85;
+const opacityHidden = 0;
+// const opacityHidden =  0.08;  // For Development only.
 const opacityLink = 0.8;
 const opacityLinkLabel = 1;
-const opacityHidden = 0;
-// const opacityHidden =  0.1;  // For Development only.
+const opacityLinkLabelHidden = isPruneFilteredNodes ? 0 : 0.75;
 const strokeWidthLink = 1;
-const strokeWidthHoverLink = 2;
+const strokeWidthHoverLink = 4; // 2;
 const strokeWidthLabelShadow = 3;
 const strokeWidthNode = 1.5;
 const strokeWidthSelectedNode = 3;
 const strokeWidthHoverNode = 3;
 const colorSelectedNode = '#00B5AD';
 const colorHoverNode = '#BFECE9';
-const colorHoverLink = '#68d3ce';  // '#7AD8D3';
+const colorHoverLink = '#BFECE9';
+const colorMarker = '#000';
 const fontLink = 'normal 6px arial';
-const fontfamilyNode = 'arial';
+//const fontfamilyNode = 'arial';
+//const fontfamilyNode = "Helvetica","Arial",sans-serif;
+const fontfamilyNode = 'sans-serif';
 const fontweightNode = 'bold';
 const maxfontsizeNode = 18;
 const maxNodeLabelLength = 9;
 const nodeLabelPadding = 0.80;  // Padding factor for text within node circle.
-const isXtraLevelNeighbors = true;
 const nodePositionMargin = 30;  // Margin within D3 rect, in px.
-const isFisheye = false;   // Disabled for now unless can fix issue with rotated label positions.
-const isPruneFilteredNodes = true;  // Remove filtered nodes from DOM. Provides performance benefit when filtered.
 const maxNodeFilterSize = 20;
 const maxLinkFilterSize = 20;
 const filterTypeAll = 'Unfiltered';
@@ -72,6 +76,7 @@ const radiusScaleMinVal = 10;  // For tipping point approach only.
 
 // Other
 const defaultTransitionDuration = 1000;
+const versionIE = GetIEVersion();
 
 /*
  * ## Globals ##
@@ -80,10 +85,27 @@ declare var d3: any;
 let simulation: any = null;
 let isSimulationRunning = false;
 let reheatFactor = 1;
-let fisheye: any = null;
 let widthView = 0;
 let heightView = 0;
 let filterMenuInitialized = false;
+
+/*
+ * IE Detection utility function
+ */
+function GetIEVersion() {
+  const sAgent = window.navigator.userAgent;
+  const Idx = sAgent.indexOf('MSIE');
+
+  // If IE, return version number
+  if (Idx > 0) {
+    return parseInt(sAgent.substring(Idx + 5, sAgent.indexOf('.', Idx)), 10);
+  } else if (!!navigator.userAgent.match(/Trident\/7\./)) {
+    // If updated user agent string matches, then IE11
+    return 11;
+  } else {
+    return 0;  // Not IE.
+  }
+}
 
 /*
  * Class NetworkComponent
@@ -95,34 +117,28 @@ let filterMenuInitialized = false;
   styleUrls: ['./network.component.css']
 })
 export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
-  private nodeTypes = [];
-  private linkTypes = [];
-  private menus: Menus;
-  private divTooltip = null;
-  private isSuppressTooltip = true;
-  private marginTT = 30;
-  private atoms: any;
   private isInitialLoad = true;
-  private parsedJson: Graph = <Graph>{};
-  private isSelectedNode = false;  // variable to show/hide the information bar.
-  private selectedNodeData = null; // data for information bar.
-  private isDrilledNodes = false;  // variable to show/hide the show whole data button on dblclick of node.
+  private isSelectedNode = false;   // Variable to show/hide the selected node properties box.
+  private selectedNodeData = null;  // Selected node data.
+  private isDrilledNodes = false;   // Variable to show/hide the Show All Data button on dblclick of node.
   private isDetailedTooltips = false;
-  private d3zoom = d3.zoom();  // zoom behaviour.
-  private zoomScale = 1;  // variable to control the scale of zoom.
+  private d3zoom = d3.zoom();  // Zoom behaviour.
+  private zoomScale = 1;  // Variable to control the scale of zoom.
   private svg: any;
+  private parsedJson: Graph = <Graph>{};
+  private atoms: any;
   private node: any;
   private link: any;
+  private nodeTypes = [];
+  private linkTypes = [];
   private nodeLabel: any;
   private linkLabel: any;
   private linkLabelShadow: any;
   private textPath: any;
-  private types: string[];
-  private type: any;
-  private av: any;
-  private tv: any;
-  private name: any;
-  private handle: any;
+  private menus: Menus;
+  private divTooltip = null;
+  private isSuppressTooltip = true;
+  private marginTT = 30;
 
   static ___this;
   static this() { return this.___this; }
@@ -130,14 +146,19 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   /*
   * scaleRadius - Calculate radius for Nodes
   */
-  static scaleRadius(rad: number, scaleVal: number) {
+  static scaleRadius(originalRadius: number, scaleVal: number) {
     if (isScaleRadiusTippingPoint) {
-      // Tipping point approach
-      if (scaleVal >= radiusScaleMinVal) { return rad * (1 + (radiusScaleFactorPct / 100)); }
-      return rad;
+      // Tipping point approach - Increase radius by radiusScaleFactorPct iff
+      // input scaling factor is >= tipping point value radiusScaleMinVal
+      if (scaleVal >= radiusScaleMinVal) {
+        return originalRadius * (1 + (radiusScaleFactorPct / 100));
+      } else {
+        return originalRadius;
+      }
     } else {
-      // % approach
-      return rad + (scaleVal * (radiusScaleFactorPct / 100));
+      // Percentage approach
+      // Note that algorithm is sqrt-based as human visual perception relates relative value differences to area, not radius
+      return originalRadius + (Math.sqrt(scaleVal) * 2 *  (radiusScaleFactorPct / 100));
     }
   }
 
@@ -156,6 +177,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // console.log('ngOnInit()');
+    // if (versionIE > 0) { console.log('This is IE ' + versionIE); } else { console.log('Not IE ' + versionIE); }
 
     NetworkComponent.___this = this;
 
@@ -438,13 +460,25 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     });
 
     // Show/hide Links
-    this.link.style('opacity', (o) => {
-      // return (o.source === this.selectedNodeData || o.target === this.selectedNodeData) ? 1 : 0;
-      if ((o.source === this.selectedNodeData) && o.target.type === type) {
-        // if ((o.source === this.selectedNodeData) && (o.target.type === type || type === filterTypeAll)) {
+    this.link.style('opacity', (d) => {
+      // return (d.source === this.selectedNodeData || d.target === this.selectedNodeData) ? 1 : 0;
+      if ((d.source === this.selectedNodeData) && d.target.type === type) {
+        // if ((d.source === this.selectedNodeData) && (d.target.type === type || type === filterTypeAll)) {
         return opacityLink;
-      } else if ((o.target === this.selectedNodeData) && o.source.type === type) {
-        // } else if ((o.target === this.selectedNodeData) && (o.source.type === type || type === filterTypeAll)) {
+      } else if ((d.target === this.selectedNodeData) && d.source.type === type) {
+        // } else if ((d.target === this.selectedNodeData) && (d.source.type === type || type === filterTypeAll)) {
+        return opacityLink;
+      } else {
+        return opacityHidden;
+      }
+    });
+    this.textPath.style('opacity', (d) => {
+        // return (d.source === this.selectedNodeData || d.target === this.selectedNodeData) ? 1 : 0;
+      if ((d.source === this.selectedNodeData) && d.target.type === type) {
+        // if ((d.source === this.selectedNodeData) && (d.target.type === type || type === filterTypeAll)) {
+        return opacityLink;
+      } else if ((d.target === this.selectedNodeData) && d.source.type === type) {
+        // } else if ((d.target === this.selectedNodeData) && (d.source.type === type || type === filterTypeAll)) {
         return opacityLink;
       } else {
         return opacityHidden;
@@ -452,27 +486,27 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     });
 
     // Show/hide Link Shadow text
-    this.linkLabelShadow.style('opacity', (o) => {
-      // return (o.source === this.selectedNodeData || o.target === this.selectedNodeData) ? 1 : 0;
-      if ((o.source === this.selectedNodeData) && o.target.type === type) {
-        // if ((o.source === this.selectedNodeData) && (o.target.type === type || type === filterTypeAll)) {
+    this.linkLabelShadow.style('opacity', (d) => {
+      // return (d.source === this.selectedNodeData || d.target === this.selectedNodeData) ? 1 : 0;
+      if ((d.source === this.selectedNodeData) && d.target.type === type) {
+        // if ((d.source === this.selectedNodeData) && (d.target.type === type || type === filterTypeAll)) {
         return opacityLinkLabel;
-      } else if ((o.target === this.selectedNodeData) && o.source.type === type) {
-        // } else if ((o.target === this.selectedNodeData) && (o.source.type === type || type === filterTypeAll)) {
+      } else if ((d.target === this.selectedNodeData) && d.source.type === type) {
+        // } else if ((d.target === this.selectedNodeData) && (d.source.type === type || type === filterTypeAll)) {
         return opacityLinkLabel;
       } else {
-        return opacityHidden;
+        return opacityLinkLabelHidden;
       }
     });
 
     // Show/hide Link text
-    this.linkLabel.style('opacity', (o) => {
-      // return (o.source === this.selectedNodeData || o.target === this.selectedNodeData) ? 1 : 0;
-      if ((o.source === this.selectedNodeData) && o.target.type === type) {
-        //  if ((o.source === this.selectedNodeData) && (o.target.type === type || type === filterTypeAll)) {
+    this.linkLabel.style('opacity', (d) => {
+      // return (d.source === this.selectedNodeData || d.target === this.selectedNodeData) ? 1 : 0;
+      if ((d.source === this.selectedNodeData) && d.target.type === type) {
+        //  if ((d.source === this.selectedNodeData) && (d.target.type === type || type === filterTypeAll)) {
         return opacityLinkLabel;
-      } else if ((o.target === this.selectedNodeData) && o.source.type === type) {
-        // } else if ((o.target === this.selectedNodeData) && (o.source.type === type || type === filterTypeAll)) {
+      } else if ((d.target === this.selectedNodeData) && d.source.type === type) {
+        // } else if ((d.target === this.selectedNodeData) && (d.source.type === type || type === filterTypeAll)) {
         return opacityLinkLabel;
       } else {
         return opacityHidden;
@@ -503,14 +537,13 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
  /*
-  * getFilters() - Extract unique Node types and Link types from AtomSpace data for filtering menu
+  * getFilters() - Extract unique Node types and Link types from AtomSpace data for dynamically constructed filtering menu
   */
   private getFilters(parsedJson) {
-    const len = parsedJson.nodes.length;
-    for (let i = 0; i < len; i++) {
+    // Nodes
+    for (let i = 0; i < parsedJson.nodes.length; i++) {
       const obj = parsedJson.nodes[i];
       if (obj.name !== '') {
-        // Node
         if (this.nodeTypes.indexOf(obj.type) === -1) {
           if (this.nodeTypes.length < maxNodeFilterSize) {
             this.nodeTypes.push(obj.type);
@@ -519,15 +552,19 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
           }
           // console.log('Node type push(' + obj.type + ')');
         }
-      } else {
-        // Link
-        if (this.linkTypes.indexOf(obj.type) === -1) {
+      }
+    }
+    // Links
+    for (let i = 0; i < parsedJson.links.length; i++) {
+      const obj = parsedJson.links[i];
+      if (obj.name !== '') {
+        if (this.linkTypes.indexOf(obj.name) === -1) {
           if (this.linkTypes.length < maxLinkFilterSize) {
-            this.linkTypes.push(obj.type);
+            this.linkTypes.push(obj.name);
           } else {
-            console.log('Dropping Link filter for \'' + obj.type + '\' because exceeded maxLinkFilterSize (' + maxLinkFilterSize + ')');
+            console.log('Dropping Link filter for \'' + obj.name + '\' because exceeded maxLinkFilterSize (' + maxLinkFilterSize + ')');
           }
-          // console.log('Link type push(' + obj.type + ')');
+          // console.log('Link type push(' + obj.name + ')');
         }
       }
     }
@@ -537,6 +574,8 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /*
    * Clear filters (unhide hidden nodes and links)
+   *
+   * TODO: Doesn't work if not in isPruneFilteredNodes mode.
    */
   private clearFilters() {
     // console.log('clearFilters()');
@@ -553,6 +592,9 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
     // Links
     this.link.style('stroke-width', strokeWidthLink).style('opacity', opacityLink);
+
+    // Text Path
+    this.textPath.style('opacity', opacityLink);
 
     // Nodes
     this.node.style('opacity', opacityNode).style('stroke', '#fff');
@@ -581,9 +623,12 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   /*
-   * Main D3 Graph rendering function
+   * draw_graph() - Main D3 Graph rendering function
    */
   private draw_graph() {
+    const unorderedLinkTypeRoots: string [] = configs.unordered_linktype_roots;
+    const linkedByOutgoing = {};
+
     // console.log('draw_graph()');
 
     // Clear everything out of the DOM
@@ -603,13 +648,6 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
 
     // Node color scheme
     const colorScheme = d3.scaleOrdinal(d3.schemeCategory20);
-
-    // Enable Fisheye Distortion
-    if (isFisheye) {
-      fisheye = d3.fisheye.circular()
-        .radius(200)
-        .distortion(2);
-    }
 
     // Set up Force Simulation
     const defaultAlphaDecay = 1 - Math.pow(0.001, 1 / 300);  // ~0.0228.
@@ -644,30 +682,71 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       g.attr('transform', d3.event.transform);
       // console.log('zoomHandler() scale after=' + this.zoomScale);
     }
-    // function zoomWheelDelta() {
-    //   const delta = -d3.event.deltaY * (d3.event.deltaMode ? 120 : 1) / 500;
-    //   // console.log('zoomWheelDelta(): ' + delta);
-    //   this.zoomScale = this.zoomScale + delta;  // Keep zoomScale in sync.
-    //   return delta;
-    // }
 
     // Set up main context menu on svg client area
     this.svg.on('contextmenu', d3.contextMenu(this.menus.mainMenu));
 
-    // Build up the graph...
+    // Build up the graph elements in the DOM...
+
+    // Define arrowheads for lines
+    g.append('svg:defs')
+      .selectAll('marker')
+      .data(['marker'])
+      .enter()
+      .append('svg:marker')
+      .attr('id', 'markerEnd')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 8)
+      .attr('markerWidth', 5)
+      .attr('markerHeight', 5)
+      .attr('markerUnits', 'userSpaceOnUse')  // Do not scale up marker size per path's stroke width.
+      .attr('orient', 'auto')
+      .append('svg:path')
+      // .attr('d', 'M0,-5L10,0L0,5')
+      .attr('d', 'M0,-3.5L10,0L0,3.5')
+      .style('fill', colorMarker)
+      .style('stroke', 'none');
+    g.append('svg:defs')
+      .selectAll('marker')
+      .data(['marker'])
+      .enter()
+      .append('svg:marker')
+      .attr('id', 'markerStart')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 2)
+      .attr('markerWidth', 5)
+      .attr('markerHeight', 5)
+      .attr('markerUnits', 'userSpaceOnUse')  // Do not scale up marker size per path's stroke width.
+      .attr('orient', 'auto')
+      .append('svg:path')
+      // .attr('d', 'M0,0L10,-5L10,5Z')
+      .attr('d', 'M0,0L10,-3.5L10,3.5Z')
+      .style('fill', colorMarker)
+      .style('stroke', 'none');
 
     // Links
     this.link = g.append('g')
       .attr('class', 'links')
-      .selectAll('line')
+      .selectAll('path')
       .data(this.parsedJson.links)
       .enter()
-      .append('line')
+      .append('path')
       .attr('class', 'lines')
-      .attr('stroke-width', strokeWidthLink)
-      // Handle tooltips
+      .style('fill', 'none')  // Else if path is arc'd, the concave side will be filled in.
+      .style('stroke-width', strokeWidthLink)
+      .style('stroke-linecap', 'round')
+      .attr('marker-end', 'url(#markerEnd)')  // Arrow to show incoming direction.
+      .attr('marker-start', function(d) {  // Also add outgoing arrow for unordered (symmetric links)
+        for (let i = 0; i < unorderedLinkTypeRoots.length; i++) {
+          if (d.name.endsWith(unorderedLinkTypeRoots[i])) { return 'url(#markerStart)'; }
+          return '';
+        }
+      });
+      /* Mouseover/out over link lines no longer works after converting from lines to paths (including arcs). Was hard
+       * for users to trigger over the narrow link lines anyway, so just leaving link labels as the mouseover target
       .on('mouseover', (d) => linkMouseOver.call(this, d))
       .on('mouseout', (d) => linkMouseOut.call(this, d));
+      */
 
     // Link edgepath
     this.textPath = g.append('g')
@@ -677,6 +756,8 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       .enter()
       .append('path')
       .attr('class', 'edgepath')
+      .style('fill', 'none')  // Else if path is an arc, the concave side will be filled in.
+      .style('stroke', 'black')
       .attr('id', function (d, i) {
         return 'edgepath' + i;
       })
@@ -728,7 +809,7 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       .text(function (d) {
         return d.name;
       })
-      // Handle tooltips (also over link text to make it easier to get tooltip to open)
+      // Hover over link label for tooltip (using label shadows because they're a slightly larger target than the labels themselves)
       .on('mouseover', (d) => linkMouseOver.call(this, d))
       .on('mouseout', (d) => linkMouseOut.call(this, d));
 
@@ -752,23 +833,18 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       .data(this.parsedJson.nodes)
       .enter().append('circle')
       .on('contextmenu', d3.contextMenu(this.menus.nodeMenu))
-      // .attr('r', function (d) {
-      //   let r = (d.name === '') ? radiusNodeNameless : radiusNode;
-      //   r = this.scaleRadius(r, d.av.sti);  // Node Weighting by STI.
-      //   // console.log('Appending circle \'' + d.name + '\' radius=' + r);
-      //   return r;
-      // })
       .attr('r', (d) => {
         let r = (d.name === '') ? radiusNodeNameless : radiusNode;
         r = NetworkComponent.scaleRadius(r, d.av.sti);  // Node Weighting by STI.
         // console.log('Appending circle \'' + d.name + '\' radius=' + r);
         return r;
       })
-      .attr('fill', function (d) {
+      .style('fill', function (d) {
         // If node already has color, use it. Else get from color scheme
         d.color = d.color ? d.color : colorScheme(d.group);
         return d.color;
       })
+      .style('opacity', opacityNode)
       // Handle tooltips
       .on('mouseover', (d) => nodeMouseOver.call(this, d))
       .on('mouseout', (d) => nodeMouseOut.call(this, d))
@@ -804,10 +880,11 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       })
       // .style('font-size', function(d) { return Math.min(2 * d.r, (2 * d.r - 8) / this.getComputedTextLength() * 24) + 'px'; })
       .attr('class', 'node-labels')
-      .style('text-anchor', 'middle')
+      .attr('text-anchor', 'middle')
       .style('pointer-events', 'none')
       .style('user-select', 'none')
-      .style('fill', '#fff');  // Text color inside nodes.
+      .style('fill', '#fff')  // Text color inside nodes.
+      .style('opacity', opacityNodeLabel);
 
     // Setup Node and D3 client area handlers
     this.node.on('click', (d) => nodeSingleClick.call(this, d));
@@ -821,8 +898,8 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     this.svg.call(this.d3zoom
       .scaleExtent([1 / 2, 4])
       .duration(defaultTransitionDuration)
-      // .wheelDelta( () => zoomWheelDelta.call(this))
-      .on('zoom', () => zoomHandler.call(this)));
+      .on('zoom', () => zoomHandler.call(this)))
+      .on('dblclick.zoom', null);  // Dbl-click zoom causes problems when drill down to node and it's neighbors.
 
     // Reapply scale if it has been changed from default
     if (this.zoomScale !== 1) {
@@ -840,6 +917,21 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     // Simulation Links
     simulation.force('link')
       .links(this.parsedJson.links);
+
+    // Build map of outgoing links for identifying multiple links between nodes
+    this.link.each(function (d) {
+      if (linkedByOutgoing[d.source.id + ',' + d.target.id]) {
+        linkedByOutgoing[d.source.id + ',' + d.target.id] += ',' + d.id;
+      } else {
+        linkedByOutgoing[d.source.id + ',' + d.target.id] = d.id.toString();
+      }
+      if (linkedByOutgoing[d.target.id + ',' + d.source.id]) {
+        linkedByOutgoing[d.target.id + ',' + d.source.id] += ',' + d.id;
+      } else {
+        linkedByOutgoing[d.target.id + ',' + d.source.id] = d.id.toString();
+      }
+    });
+    // console.log(linkedByOutgoing);
 
     /*
      * Node Drag implementation
@@ -904,41 +996,50 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
       // console.log('graphTick(): Simulation Force alpha: ' +
       //   simulation.alpha());  // Simulation stops automatically when alpha drops below 0.001.
 
-      // Update Link positions
-      this.link
-        .attr('x1', function (d) { return d.source.x; })
-        .attr('y1', function (d) { return d.source.y; })
-        .attr('x2', function (d) { return d.target.x; })
-        .attr('y2', function (d) { return d.target.y; });
+      // Work around for IE (version 10, 11, ??). Without this workaround, SVG markers cause severe rendering problems on IE
+      // https://stackoverflow.com/questions/15588478/internet-explorer-10-not-showing-svg-path-d3-js-graph
+      if (versionIE > 0) {
+        // The workaround is to iterate over all the links on every tick of the animation, re-adding
+        // them to the DOM. This causes IE to re-render them, bypassing the IE rendering problems
+        this.link.each(function() { this.parentNode.insertBefore(this, this); } );
+      }
 
-      // Update Link Label positions
-      this.textPath.attr('d', function (d) {
-        return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y;
-      });
-
-      // Update Link Label Shadow rotation
-      this.linkLabelShadow.attr('transform', function (d) {
-        if (d.target.x < d.source.x) {
-          const bbox = this.getBBox();
-          // console.log('Simulation transform (' + d.name + '): ' + bbox.x + ',' + bbox.y + ',' + bbox.width + ',' + bbox.height);
-          const rx = bbox.x + bbox.width / 2;
-          const ry = bbox.y + bbox.height / 2;
-          return 'rotate(180 ' + rx + ' ' + ry + ')';
-        } else {
-          return 'rotate(0)';
+      // Update Link and Link Label positions
+      //
+      // Pair of nodes with X links between them:
+      //  1 link: Link line is drawn with straight path.
+      //  2 links: Link lines are drawn with opposing arc paths.
+      //  3 links: First pair of link lines are drawn with opposing arc paths. Third link line is drawn with straight path.
+      //  >= 4: Not handled presently. Forth and beyond link lines are drawn with straight paths. Could improve in future to draw
+      //    links 4 & 5 with increased arc. If >= 6, perhaps draw single fat line that indicates too many links to draw individually.
+      this.link.attr('d', function(d) {
+        const arrOutLinks = getOutgoingLinks(d);
+        if (arrOutLinks.length === 1) {
+          return straightPath(d, true);
+        } else {  // Handle multiple links
+          switch (d.id) {
+            case arrOutLinks[0]:
+              return arcPath(d, true, true);
+            case arrOutLinks[1]:
+              return arcPath(d, true, false);
+            default:
+              return straightPath(d, true);
+          }
         }
       });
-
-      // Update Link Label rotation
-      this.linkLabel.attr('transform', function (d) {
-        if (d.target.x < d.source.x) {
-          const bbox = this.getBBox();
-          // console.log('Simulation transform (' + d.name + '): ' + bbox.x + ',' + bbox.y + ',' + bbox.width + ',' + bbox.height);
-          const rx = bbox.x + bbox.width / 2;
-          const ry = bbox.y + bbox.height / 2;
-          return 'rotate(180 ' + rx + ' ' + ry + ')';
-        } else {
-          return 'rotate(0)';
+      this.textPath.attr('d', function(d) {
+        const arrOutLinks = getOutgoingLinks(d);
+        if (arrOutLinks.length === 1) {
+          return straightPath(d, d.source.x < d.target.x);
+        } else {  // Handle multiple links
+          switch (d.id) {
+            case arrOutLinks[0]:
+              return arcPath(d, d.source.x < d.target.x, true);
+            case arrOutLinks[1]:
+              return arcPath(d, d.source.x < d.target.x, false);
+            default:
+              return straightPath(d, d.source.x < d.target.x);
+          }
         }
       });
 
@@ -1062,13 +1163,6 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         return;
       }
 
-      // Data values
-      this.name = d.name;
-      this.handle = d.id;
-      this.type = d.type;
-      this.av = d.av;
-      this.tv = d.tv;
-
       // Display node info popup
       this.selectedNodeData = d;
       this.isSelectedNode = true;
@@ -1152,14 +1246,25 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
         }
       });
 
+      // Text Path
+      this.textPath.style('opacity', function (o) {
+        if (isXtraLevelNeighbors) {
+          return o.source === d || o.target === d || ((neigh.indexOf(o.target.id) !== -1) &&
+            (neighlink.indexOf(o.source.id) !== -1)) || ((neigh.indexOf(o.source.id) !== -1) &&
+              (neighlink.indexOf(o.target.id) !== -1)) ? opacityLink : opacityHidden;
+        } else {
+          return o.source === d || o.target === d ? opacityLink : opacityHidden;
+        }
+      });
+
       // Link Text Shadow
       this.linkLabelShadow.style('opacity', function (o) {
         if (isXtraLevelNeighbors) {
           return o.source === d || o.target === d || ((neigh.indexOf(o.target.id) !== -1) &&
             (neighlink.indexOf(o.source.id) !== -1)) || ((neigh.indexOf(o.source.id) !== -1) &&
-              (neighlink.indexOf(o.target.id) !== -1)) ? 1 : opacityHidden;
+              (neighlink.indexOf(o.target.id) !== -1)) ? 1 : opacityLinkLabelHidden;
         } else {
-          return o.source === d || o.target === d ? 1 : opacityHidden;
+          return o.source === d || o.target === d ? 1 : opacityLinkLabelHidden;
         }
       });
 
@@ -1185,7 +1290,6 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
           } else {
             nodesFiltered.push(o);
           }
-
         });
         this.link.each(function (o) {
           if (d3.select(this).style('opacity') === opacityHidden.toString()) {
@@ -1308,71 +1412,6 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     function graphMousemove() {
       // Tooltips are initially suppressed to avoid possible immediate tooltip popup if node or link slides under cursor after a data fetch
       this.isSuppressTooltip = false;
-
-      if (isSimulationRunning || fisheye === null || !isFisheye) { return; }
-
-      // Update focal point of distortion
-      // console.log('mousemove: ' + d3.mouse(this));
-      fisheye.focus(d3.mouse(this));
-
-      // Update Node position
-      this.node.each(function (d) { d.fisheye = fisheye(d); })
-        .attr('cx', function (d) { return d.fisheye.x; })
-        .attr('cy', function (d) { return d.fisheye.y; })
-        // .attr("r", function(d) { return d.fisheye.z * 4.5; }); // TODO: Use z to scale up the radius
-        ;
-
-      // Update Node Label position
-      this.nodeLabel
-        .attr('x', function (d) { return d.fisheye.x; })
-        .attr('y', function (d) { return d.fisheye.y; })
-        .attr('dy', function (d) { return '0.35em'; });
-
-      // Update Link positions
-      this.link
-        .attr('x1', function (d) { return d.source.fisheye.x; })
-        .attr('y1', function (d) { return d.source.fisheye.y; })
-        .attr('x2', function (d) { return d.target.fisheye.x; })
-        .attr('y2', function (d) { return d.target.fisheye.y; });
-
-      // Update Link Label positions
-      // TODO: Transformed (rotated) text goes in wrong position
-      this.textPath.attr('d', function (d) {
-        if (d.target.fisheye.x < d.source.fisheye.x) {
-          // Broken
-          return 'M ' + d.source.fisheye.x + ' ' + d.source.fisheye.y + ' L ' + d.target.fisheye.x + ' ' + d.target.fisheye.y;
-        } else {
-          // Okay
-          return 'M ' + d.source.fisheye.x + ' ' + d.source.fisheye.y + ' L ' + d.target.fisheye.x + ' ' + d.target.fisheye.y;
-        }
-      });
-
-      /* Needed?
-      // Update Link Label Shadow rotation
-      this.linkLabelShadow.attr('transform', function (d) {
-        if (d.target.x < d.source.x) {
-          const bbox = this.getBBox();
-          // console.log('Simulation transform (' + d.name + '): ' + bbox.x + ',' + bbox.y + ',' + bbox.width + ',' + bbox.height);
-          const rx = bbox.fisheye.x + bbox.width / 2;
-          const ry = bbox.fisheye.y + bbox.height / 2;
-          return 'rotate(180 ' + rx + ' ' + ry + ')';
-        } else {
-          return 'rotate(0)';
-        }
-      });
-
-      // Update Link Label rotation
-      this.linkLabel.attr('transform', function (d) {
-        if (d.target.x < d.source.x) {
-          const bbox = this.getBBox();
-          // console.log('Simulation transform (' + d.name + '): ' + bbox.x + ',' + bbox.y + ',' + bbox.width + ',' + bbox.height);
-          const rx = bbox.fisheye.x + bbox.width / 2;
-          const ry = bbox.fisheye.y + bbox.height / 2;
-          return 'rotate(180 ' + rx + ' ' + ry + ')';
-        } else {
-          return 'rotate(0)';
-        }
-      });*/
     }
 
     /*
@@ -1466,16 +1505,101 @@ export class NetworkComponent implements AfterViewInit, OnInit, OnDestroy {
     */
     function getTooltipHTML(d, headText, verbose) {
       if (verbose) {
+        const incoming = d.incoming && d.incoming.length ? d.incoming.join(', ') : '';
+        const outgoing = d.outgoing && d.outgoing.length ? d.outgoing.join(', ') : '';
         return '<div class=\'html-detailed-tooltip\'> <table class=\'ui celled striped table\'> <thead> <tr> <th colspan=\'2\'>' +
           headText + '</th> </tr> </thead> <tbody> <tr> <td class=\'collapsing\'> <span>Handle</span> </td> <td>' + d.id +
-          '</td> </tr> <tr> <td> <span>LTI</span> </td> <td>' + d.av.lti + '</td> </tr> <tr> <td> <span>STI</span> </td> <td>' + d.av.sti +
-          '</td> </tr> <tr> <td> <span>VLTI</span> </td> <td>' + d.av.vlti + '</td> </tr> <tr> <td> <span>Confidence</span> </td> <td>' +
-          d.tv.details.confidence + '</td> </tr> <tr> <td> <span>Strength</span> </td> <td>' + d.tv.details.strength +
+          '</td> </tr> <tr> <td> <span>Incoming</span> </td> <td nowrap>' + incoming +
+          '</td> </tr> <tr> <td> <span>Outgoing</span> </td> <td nowrap>' + outgoing +
+          '</td> </tr> <tr> <td> <span>LTI</span> </td> <td>' + d.av.lti +
+          '</td> </tr> <tr> <td> <span>STI</span> </td> <td>' + d.av.sti +
+          '</td> </tr> <tr> <td> <span>VLTI</span> </td> <td>' + d.av.vlti +
+          '</td> </tr> <tr> <td> <span>Confidence</span> </td> <td>' + d.tv.details.confidence +
+          '</td> </tr> <tr> <td> <span>Strength</span> </td> <td>' + d.tv.details.strength +
           '</td> </tr> </tbody> </table> </div>';
       } else {
         return '<div class=\'html-tooltip\'> <table class=\'ui celled striped table\'> <tbody> <tr> <td nowrap>' + headText +
           '</td> </tr> </tbody> </table> </div>';
       }
+    }
+
+    /*
+     * getOutgoingLinks() - Return outgoing links.
+     */
+    function getOutgoingLinks(d) {
+      const strOutLinks: string = linkedByOutgoing[d.target.id + ',' + d.source.id];
+      const arrOutLinks = [];
+      if (strOutLinks) {
+        arrOutLinks.push.apply(arrOutLinks, strOutLinks.split(',').map(function (str) { return Number(str); }));
+      }
+      return arrOutLinks;
+    }
+
+    /*
+     * getSourceNodeCircumPt() - Helper function for adjusting Link line start point so that it's outside of the Node radius.
+     */
+    function getSourceNodeCircumPt(d, offsetRads, isDefaultSweep) {
+      const r = d.source.name === '' ? radiusNodeNameless : radiusNode;
+      const radius = NetworkComponent.scaleRadius(r, d.source.av.sti) + strokeWidthNode + 1;
+      const dx = d.source.x - d.target.x;
+      const dy = d.source.y - d.target.y;
+      const offset = isDefaultSweep ? offsetRads : -offsetRads;
+      const gamma = Math.atan2(dy, dx) + offset;  // Math.atan2 returns the angle in the correct quadrant as opposed to Math.atan.
+      const tx = d.source.x - (Math.cos(gamma) * radius);
+      const ty = d.source.y - (Math.sin(gamma) * radius);
+      return [tx, ty];
+    }
+
+    /*
+     * getTargetNodeCircumPt() - Helper function for adjusting Link line end point so that it's outside of the Node radius.
+     */
+    function getTargetNodeCircumPt(d, offsetRads, isDefaultSweep) {
+      const r = d.target.name === '' ? radiusNodeNameless : radiusNode;
+      const radius = NetworkComponent.scaleRadius(r, d.target.av.sti) + strokeWidthNode + 1;
+      const dx = d.target.x - d.source.x;
+      const dy = d.target.y - d.source.y;
+      const offset = isDefaultSweep ? -offsetRads : offsetRads;
+      const gamma = Math.atan2(dy, dx) + offset;  // Math.atan2 returns the angle in the correct quadrant as opposed to Math.atan.
+      const tx = d.target.x - (Math.cos(gamma) * radius);
+      const ty = d.target.y - (Math.sin(gamma) * radius);
+      return [tx, ty];
+    }
+
+    /*
+     * arcPath() - Generate arc path.
+     */
+    function arcPath(d, isLeftHand, isDefaultSweep) {
+      const offsetRads = 0.13;
+      const start = isLeftHand ? { x: getSourceNodeCircumPt(d, offsetRads, isDefaultSweep)[0],
+                                   y: getSourceNodeCircumPt(d, offsetRads, isDefaultSweep)[1] } :
+                                 { x: getTargetNodeCircumPt(d, offsetRads, isDefaultSweep)[0],
+                                   y: getTargetNodeCircumPt(d, offsetRads, isDefaultSweep)[1] };
+      const end = isLeftHand ? { x: getTargetNodeCircumPt(d, offsetRads, isDefaultSweep)[0],
+                                 y: getTargetNodeCircumPt(d, offsetRads, isDefaultSweep)[1] } :
+                               { x: getSourceNodeCircumPt(d, offsetRads, isDefaultSweep)[0],
+                                 y: getSourceNodeCircumPt(d, offsetRads, isDefaultSweep)[1] };
+      const dx = end.x - start.x,
+            dy = end.y - start.y,
+            dr = Math.sqrt(dx * dx + dy * dy) * 1.5;
+      let sweep = isLeftHand ? 0 : 1;
+      if (!isDefaultSweep) {
+        sweep = isLeftHand ? 1 : 0;
+      }
+      return 'M' + start.x + ',' + start.y + 'A' + dr + ',' + dr + ' 0 0,' + sweep + ' ' + end.x + ',' + end.y;
+    }
+
+    /*
+     * straightPath() - Generate straight path.
+     */
+    function straightPath(d, isLeftHand) {
+      const start = isLeftHand ? { x: getSourceNodeCircumPt(d, 0, true)[0], y: getSourceNodeCircumPt(d, 0, true)[1] } :
+                                 { x: getTargetNodeCircumPt(d, 0, true)[0], y: getTargetNodeCircumPt(d, 0, true)[1] };
+      const end = isLeftHand ? { x: getTargetNodeCircumPt(d, 0, true)[0], y: getTargetNodeCircumPt(d, 0, true)[1] } :
+                               { x: getSourceNodeCircumPt(d, 0, true)[0], y: getSourceNodeCircumPt(d, 0, true)[1] };
+      const dx = end.x - start.x,
+            dy = end.y - start.y,
+            sweep = isLeftHand ? 1 : 0;
+      return 'M ' + start.x + ' ' + start.y + ' L ' + end.x + ' ' + end.y;
     }
 
     /*

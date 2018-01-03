@@ -1,0 +1,578 @@
+{
+  "result": {
+    "atoms": [{
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 4,
+        "vlti": false
+      },
+      "handle": 137,
+      "incoming": [133, 135, 136],
+      "name": "quickly@7c8c7ca3-44bd-46b9-9e09-941254ac91d7",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9900000095367432,
+          "count": 79200.07629401807,
+          "strength": 0.0010000000474974513
+        },
+        "type": "simple"
+      },
+      "type": "ConceptNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 157,
+      "incoming": [156],
+      "name": "42.000000",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "NumberNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 215,
+      "incoming": [212, 213, 214],
+      "name": "",
+      "outgoing": [179, 211],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "ListLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 214,
+      "incoming": [],
+      "name": "",
+      "outgoing": [242, 215],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "EvaluationLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 213,
+      "incoming": [],
+      "name": "",
+      "outgoing": [243, 215],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "EvaluationLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 212,
+      "incoming": [],
+      "name": "",
+      "outgoing": [246, 215],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "EvaluationLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 10,
+        "vlti": false
+      },
+      "handle": 255,
+      "incoming": [253, 254],
+      "name": "🌎",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "WordNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 80,
+      "incoming": [264, 265, 266, 78, 267, 79],
+      "name": "he",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "WordNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 253,
+      "incoming": [],
+      "name": "",
+      "outgoing": [211, 255],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "ReferenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 264,
+      "incoming": [],
+      "name": "",
+      "outgoing": [187, 80],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "ReferenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 136,
+      "incoming": [],
+      "name": "",
+      "outgoing": [137, 211],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "ReferenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 267,
+      "incoming": [],
+      "name": "",
+      "outgoing": [192, 80],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "ReferenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 78,
+      "incoming": [],
+      "name": "",
+      "outgoing": [29, 80],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "ReferenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 287,
+      "incoming": [279, 281, 282, 283, 284, 285, 286],
+      "name": "sentence@9f079f5d-052f-47d5-aae4-a0f1c1b8ea93_parse_0",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9879999756813049,
+          "count": 65866.53156307897,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "ParseNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 29,
+      "incoming": [37, 55, 35, 32, 53, 51, 49, 78, 5, 90, 13, 99, 79, 100],
+      "name": "he@5c3978be-30a7-493b-b276-ebaf4a879669",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "WordInstanceNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 179,
+      "incoming": [258, 283, 150, 297, 257, 298, 215, 190, 182, 204, 231, 236, 252],
+      "name": "runs@ab2940c8-f997-4d4d-9200-80c7ab661019",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "WordInstanceNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 192,
+      "incoming": [131, 289, 154, 300, 265, 301, 207, 195, 202, 227, 233, 234, 237, 267],
+      "name": "he@0dc3eaff-5250-4a13-a49c-b823f1329c73",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "WordInstanceNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 187,
+      "incoming": [264, 281, 152, 304, 266, 305, 190, 218, 204, 235, 238, 239, 228, 140],
+      "name": "he@be348474-26a7-4bb7-b37a-1cb282327d73",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "WordInstanceNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 211,
+      "incoming": [253, 285, 156, 308, 254, 215, 136],
+      "name": "quickly@7c8c7ca3-44bd-46b9-9e09-941254ac91d7",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "WordInstanceNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 285,
+      "incoming": [],
+      "name": "",
+      "outgoing": [211, 287],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "WordInstanceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 156,
+      "incoming": [],
+      "name": "",
+      "outgoing": [211, 157],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "WordSequenceLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 243,
+      "incoming": [213, 276],
+      "name": "MVa",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "LinkGrammarRelationshipNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 7,
+        "vlti": false
+      },
+      "handle": 310,
+      "incoming": [308],
+      "name": "adv",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "DefinedLinguisticConceptNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 246,
+      "incoming": [212],
+      "name": "_advmod",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "DefinedLinguisticRelationshipNode"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 308,
+      "incoming": [],
+      "name": "",
+      "outgoing": [211, 310],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "PartOfSpeechLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 254,
+      "incoming": [],
+      "name": "",
+      "outgoing": [211, 255],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "LemmaLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 265,
+      "incoming": [],
+      "name": "",
+      "outgoing": [192, 80],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "LemmaLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 266,
+      "incoming": [],
+      "name": "",
+      "outgoing": [187, 80],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "LemmaLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 79,
+      "incoming": [],
+      "name": "",
+      "outgoing": [29, 80],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.9999998211860657,
+          "count": 4473923466.666667,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "LemmaLink"
+    }, {
+      "attentionvalue": {
+        "lti": 0,
+        "sti": 0,
+        "vlti": false
+      },
+      "handle": 242,
+      "incoming": [318, 214, 276],
+      "name": "MVa@48608ad3-93b1-4736-8ab4-aba058391a56",
+      "outgoing": [],
+      "truthvalue": {
+        "details": {
+          "confidence": 0.0,
+          "count": 0.0,
+          "strength": 1.0
+        },
+        "type": "simple"
+      },
+      "type": "LgLinkInstanceNode"
+    }],
+    "complete": true,
+    "skipped": 0,
+    "total": 30
+  }
+}

@@ -72,6 +72,8 @@ Alternatively, you can permanently change the default port by inserting the foll
   - atoms.sample1a.json: Same as previous, with some non-zero STI values.
   - atoms.sample1b.json: Same as previous, plus two additional three-node-clusters.
   - atoms.sample2.json: Original external sample.
+  - atoms.sample2a.json: Subset of original external sample. Has several double-linked nodes.
+  - atoms.sample2b.json: Subset of original external sample. Has several double-linked nodes. Plus a triple-linked node.
   - atoms.humans.json: From humans.scm.
   - atoms.oovc\_ensemble.json: From oovc_ensemble.scm.
   - atoms.oovc\_ensemble\_sti.json: Same as previous, with non-zero STI values. <== *Configured as default sample*
@@ -85,10 +87,18 @@ Alternatively, you can permanently change the default port by inserting the foll
 
 ## Revision History
 
+### Jan-2-2018 - sshermz - Link enhancements: Directional arrowheads and support for multiple links between nodes. Also bug fixes
+
+- New Feature: Added arrowheads to link lines. Ordered (assymmetric) link types now have a single arrowhead to show "incoming set" direction. And unordered (symmetric) link types now have arrowheads on both ends. For now, unordered link types are identified by new config parameter 'unordered\_linktype\_roots' in app.config.ts. Fixes #108.
+- New Feature: Added incoming and outgoing handle lists to selected node properties box, and also to detailed-mode tooltips.
+- Bug Fix: Now handling multiple links between a pair of nodes. Double links are drawn with opposing arc paths (which required changing links from svg:line to svg:path). Up to 3 links between a pair of nodes is currently supported. Fixes #111.
+- Bug Fix: Fixed bug with extraction of link types from atomspace data, which is used for dynamically constructed filter menu. Was not retrieving all link types.
+- Refactoring: Minor cleanup of unused code and other minor improvements.
+
 ### Dec-28-2017 - sshermz - Bug fixes and minor refactoring
 
 - Bug Fix: Minor dependency update. Fixes #115.
-- Bug Fix: Zooming fix to keep zoom scale in sync when zoom by wheel or by double click.
+- Bug Fix: Zooming fix to keep zoom scale in sync when zoom by wheel.
 - Refactoring: Minor refactoring of D3 graphing code.
 - Build: Removed unnecessarily checked in ./semantic/ files.
 
@@ -99,7 +109,7 @@ Alternatively, you can permanently change the default port by inserting the foll
 - New Feature: Restart no longer resets zooming to default level. So now if you zoom in or out, then Restart, the Force Simulation will replay at your current zoom level.
 - New Feature: If you click on Play, without first clicking on Pause, additional "heat" will be added to the Force Simulation.
 - New Feature: Right-click 'Recenter Panning' and 'Pan (Node) to center' commands. The latter menu option appears when you right-click on a Node, else you get the former menu option if you right-click anywhere else.
-- New Feature: Enabled zooming by mouse wheel. This type of zooming is relative to the position of your mouse cursor. Can also double-click in client area to zoom in.
+- New Feature: Enabled zooming by mouse wheel. This type of zooming is relative to the position of your mouse cursor.
 - New Feature: Filter types in the 'Filter On Selection' dropdown menu are now generated dynamically by parsing them from the data. These were previously hard-coded and therefore did not match the actual Nodes and Links in the AtomSpace data.
 
 ### Nov-27-2017 - sshermz - Simulation Force update and bug fixes

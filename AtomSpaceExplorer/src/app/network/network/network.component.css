@@ -20,6 +20,12 @@
 	position: absolute;
 }
 
+/* Tighten up default Semantic UI menu dropdown top/bottom padding, as there may be many items in dynamically built filter list */
+.ui.dropdown .menu>.item {
+  /* padding: 0.78571429rem 1.14285714rem !important;  # semantic ui default */
+  padding: 0.392857145rem 1.14285714rem !important;
+}
+
 /*
  * ### D3 Graph related ###
  */
@@ -64,7 +70,7 @@ svg.rect {
   max-width: 340px;
   /* background-color: black; */
   background-color: #00B5AD;
-	opacity: 0.7;
+	opacity: 0.9;
 	padding: 6px;
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;
