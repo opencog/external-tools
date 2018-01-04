@@ -53,12 +53,12 @@
           </div>
         </div>
         <div *ngIf="isSelectedNode" class="selected-node-properties">
-          <table class="ui celled striped table" style="user-select: none">
+          <table class="ui celled striped table">
             <thead>
               <tr>
                 <th colspan="2">
                   <span>{{ selectedNodeData.type }}</span>
-                  <i (click)="closeSelectedNodeProps()" class="ui basic circular right floated remove icon"></i>
+                  <i (click)="closeSelectedNodeProps()" class="ui basic circular right floated remove icon" id="selected-node-properties-close-btn"></i>
                 </th>
               </tr>
               <tr *ngIf="name !== ''">

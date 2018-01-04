@@ -87,6 +87,11 @@ Alternatively, you can permanently change the default port by inserting the foll
 
 ## Revision History
 
+### Jan-3-2018 - sshermz - Bug fix and multiple link handling improvement
+
+- Bug Fix: Double-click on nodes to drill didn't work in the region covered by the selected node properties table, even when the table was hidden. Bonus with this fix is that you can now drag nodes even if they are behind the visible selected node properties table.
+- Feature Change: Max number of multiple links supported increased from 3 maximum to 7 maximum. Beyond 7 will need to be handled in a different manner in the future.
+
 ### Jan-2-2018 - sshermz - Link enhancements: Directional arrowheads and support for multiple links between nodes. Also bug fixes
 
 - New Feature: Added arrowheads to link lines. Ordered (assymmetric) link types now have a single arrowhead to show "incoming set" direction. And unordered (symmetric) link types now have arrowheads on both ends. For now, unordered link types are identified by new config parameter 'unordered\_linktype\_roots' in app.config.ts. Fixes #108.
