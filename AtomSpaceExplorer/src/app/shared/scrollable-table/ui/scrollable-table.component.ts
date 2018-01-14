@@ -23,8 +23,8 @@ export class ScrollableTableComponent implements OnInit,OnChanges {
     private col_headers;
     private isProcessing:boolean = false;
 
-    private dataCount = 1;
-    private isDataLoaded = false;
+    public dataCount = 1;
+    public isDataLoaded = false;
 
     constructor(private route: ActivatedRoute, private router: Router, private scrollableTableService: ScrollableTableService) {
     }

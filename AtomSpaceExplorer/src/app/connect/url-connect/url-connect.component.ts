@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UrlConnectService } from './url-connect.service';
-import { AtomsService } from '../../shared/services/atoms.service';
+import { AtomService } from 'ng2-atomspace-visualizer';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { configs } from '../../app.config';
@@ -14,19 +14,19 @@ import { configs } from '../../app.config';
 export class UrlConnectComponent implements OnInit {
   private urlKey = 'ase-fetch-url';
   private maxAtoms = 2500;
-  private url: string;
-  form: FormGroup;
-  private errMsg = '';
-  private connecting = false;
   private subscription = null;
+  public form: FormGroup;
+  public url: string;
+  public errMsg = '';
+  public connecting = false;
 
   // Sample data file in ./src/assets/ folder
   // Filename is configured in ./src/app/app.config.ts
-  private fileJSON = './../../../assets/' + configs.sample_data_file;
+  private fileJSON = 'assets/' + configs.sample_data_file;
 
   constructor( @Inject(FormBuilder) fb: FormBuilder,
     private service: UrlConnectService,
-    private atomsService: AtomsService,
+    private atomsService: AtomService,
     private router: Router,
     private localStorageService: LocalStorageService) {
     this.form = fb.group({
@@ -42,16 +42,15 @@ export class UrlConnectComponent implements OnInit {
   }
 
   fetchJson() {
-    console.log('Fetching data from ' + this.url);
+    console.log('\n' + 'Fetching data from ' + this.url);
     this.errMsg = '';
     this.connecting = true;
     this.subscription = this.service.get(this.url)
       .subscribe(res => {
-        // const json = JSON.stringify(res);
-        // console.log(json);
+        // const json = JSON.stringify(res); console.log(json);
         const numAtoms = res.result.atoms.length;
         // console.log(res);
-        // console.log('Fetched ' + numAtoms + ' atoms from ' + this.fileJSON);
+        console.log('Fetched ' + numAtoms + ' atoms from ' + this.url);
         this.connecting = false;
         this.localStorageService.set(this.urlKey, this.url);
 
@@ -69,14 +68,15 @@ export class UrlConnectComponent implements OnInit {
   }
 
   fetchSampleJson() {
-    console.log('Fetching data from file ' + this.fileJSON);
+    console.log('\n' + 'Loading sample data from file ' + this.fileJSON);
     this.errMsg = '';
     this.connecting = true;
     this.service.get(this.fileJSON)
       .subscribe(res => {
+        // const json = JSON.stringify(res); console.log(json);
         const numAtoms = res.result.atoms.length;
         // console.log(res);
-        // console.log('Fetched ' + numAtoms + ' atoms from ' + this.fileJSON);
+        console.log('Fetched ' + numAtoms + ' atoms from ' + this.fileJSON);
         this.connecting = false;
 
         if (numAtoms > this.maxAtoms) {
@@ -94,10 +94,11 @@ export class UrlConnectComponent implements OnInit {
 
   private visualizeResult(res) {
     this.atomsService.changeItem(res);
-    this.router.navigate(['network']);
+    // this.router.navigate(['cog-visualizer', res]);
+    this.router.navigate(['cog-visualizer']);
   }
 
-  private reset() {
+  public reset() {
     this.errMsg = '';
     this.url = '';
     this.localStorageService.remove(this.urlKey);

@@ -10,7 +10,7 @@ export const configs = {
   'unordered_linktype_roots': [ 'EquivalenceLink', 'IdenticalLink', 'EqualLink', 'UnorderedLink', 'SetLink',
                                 'SimilarityLink', 'PresentLink', 'ParallelLink', 'JoinLink', 'CosenseLink' ],
 
-  // Built-in Sample Data - Uncomment one of the following:
+  // Built-in 'Load Sample Data' options from assets directory. Uncomment one of the following:
   // 'sample_data_file': 'atoms.sample1.json'
   // 'sample_data_file': 'atoms.sample1a.json'
   // 'sample_data_file': 'atoms.sample1b.json'

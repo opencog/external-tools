@@ -57,11 +57,12 @@ Alternatively, you can permanently change the default port by inserting the foll
 
 ## Usage
 
-1 - Navigate to [http://localhost:4200/](http://localhost:4200/)
-
-2 - Click on Fetch. A 'Fetch AtomSpace Results' prompt is displayed. Enter a valid AtomSpace api url.
+1. Navigate to [http://localhost:4200/](http://localhost:4200/)
+1. Click on Fetch in the Navbar. A 'Fetch AtomSpace Results' prompt is displayed. Then do any of the following options:
+   - Fetch from CogServer:  Enter a valid AtomSpace api URL in the Server URL box.
     I.E <http://255.255.255.255:5000/api/v1.1/atoms>, then click on the Fetch button to graph the data.
-    Alternatively, click on 'Load Sample Data', to load the built-in sample data file. See next section regarding sample data.
+   - Load built-in sample data:  Click on 'Load Sample Data'. See next section regarding configuring sample data.
+   - Load non-default built-in sample data: Enter the path, in the form of 'assets/{file-name}' to any of the bundled sample data json files in the Server URL box. I.E. 'assets/atoms.humans.json' (enter it without quotes). Then click on the Fetch button.
 
 ## Sample Data
 
@@ -78,6 +79,11 @@ Alternatively, you can permanently change the default port by inserting the foll
   - atoms.oovc\_ensemble.json: From oovc_ensemble.scm.
   - atoms.oovc\_ensemble\_sti.json: Same as previous, with non-zero STI values. <== *Configured as default sample*
 
+## Dependencies
+
+- As of Jan-13-2018, the D3 Atomspace charting code from this app has been moved into the reusable NPMJS [ng2-atomspace-visualizer](https://www.npmjs.com/package/ng2-atomspace-visualizer) package. From now on, enhancement requests and issues that are specifically related to D3 Atomspace charting functionality should be logged against ng2-atomspace-visualizer, not this app.
+- For now, "@angular/cli" in the "devDependencies" must remain at version 1.4.7. Later versions have stricter Typescript compliance enforcement, and ng2-atomspace-visualizer is not currently compatible.
+
 ## Known Issues
 
 - Filtering capability is preliminary and needs to be developed further.
@@ -86,6 +92,13 @@ Alternatively, you can permanently change the default port by inserting the foll
 - Languages support is minimal and needs to be implemented throughout the UI.
 
 ## Revision History
+
+### Jan-13-2018 - sshermz - Migrated to NPMJS ng2-atomspace-visualizer package and miscellaneous
+
+- Migrated to the NPMJS [ng2-atomspace-visualizer](https://www.npmjs.com/package/ng2-atomspace-visualizer) package which now provides the D3 Atomspace Visualizer charting functionality. Conseqently, the local D3 Atomspace charting code has been deleted from this AtomSpaceExplorer app. Future Atomspace D3 charting-specific enhancements and fixes will be applied to ng2-atomspace-visualizer, and can then be utlilized in this app by simply updating to the latest version of ng2-atomspace-visualizer.
+- Various changes to support above change to ng2-atomspace-visualizer. Including downgrade of angular-cli version. See the newly added Dependencies section above for details.
+- Bug Fix: Fixed Production mode compile errors. Now can successfully execute 'ng serve --prod'.
+- Some Typescript compliance fixes.
 
 ### Jan-3-2018 - sshermz - Bug fix and multiple link handling improvement
 
