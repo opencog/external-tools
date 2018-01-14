@@ -16,10 +16,10 @@ import { SharedModule } from './shared/shared.module';
 import { MainContainer } from './shared/ui/main-container.component';
 import { APIService } from './shared/services/api.service';
 import { TranslateModule } from './core/translate/translate.module';
-import { NetworkModule } from './network/network.module';
 import { InitializeDropdown } from './shared/directives/intitialise-dropdown.directive';
 import { ConnectModule } from './connect/connect.module';
 import { LocalStorageModule } from 'angular-2-local-storage';
+import { AtomspaceVisualizerModule } from 'ng2-atomspace-visualizer';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,6 @@ import { LocalStorageModule } from 'angular-2-local-storage';
     FormsModule,
     HttpModule,
     AuthModule,
-    NetworkModule,
     RouterModule,
     RouterModule.forRoot(APP_ROUTES, {useHash: true}),
     FlexLayoutModule,
@@ -42,7 +41,8 @@ import { LocalStorageModule } from 'angular-2-local-storage';
     LocalStorageModule.withConfig({
       prefix: 'my-app',
       storageType: 'localStorage'
-  })
+    }),
+    AtomspaceVisualizerModule.forRoot()
   ],
   providers: [ APIService ],
   bootstrap: [ AppComponent ],
