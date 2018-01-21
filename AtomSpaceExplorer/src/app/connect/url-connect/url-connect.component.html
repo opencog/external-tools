@@ -10,13 +10,13 @@
             <form [formGroup]="form" (ngSubmit)="fetchJson()">
               <!--<input [(ngModel)]="url" formControlName="url" type="text" placeholder="Insert url">-->
               <div class="ui left icon input loading" style="height: 100px">
-                <input [(ngModel)]="url" formControlName="url" type="text" placeholder="Server Url">
+                <input [(ngModel)]="url" formControlName="url" type="text" placeholder="Cog Server Url">
                 <!-- <input [(ngModel)]="url" formControlName="url" type="text" autocomplete="off"> -->
                 <i [ngClass]="{'search icon': connecting}"></i>
               </div>
               <div class="error" *ngIf="errMsg != ''">{{ errMsg }}</div>
               <div *ngIf="errMsg != ''"><br></div>
-              <span>Example: http://128.0.0.0:5000/api/v1.1/atoms</span>
+              <span style="color: #5F85D0"><b>Example: 'http://128.0.0.0:5000'.&nbsp;&nbsp;Do <u>not</u> append '/api/v1.1/atoms'</b></span>
             </form>
           </div>
         </div>

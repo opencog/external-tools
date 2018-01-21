@@ -5,17 +5,17 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { configs } from "../../app.config";
- 
+import { configs } from '../../app.config';
+
 @Injectable()
 export class APIService {
-    private ROOT_PATH = configs.url;
-    TOKEN_KEY: string = "access_token";
+    private ROOT_PATH = configs.local_api_url;
+    TOKEN_KEY: string = 'access_token';
     headers: Headers = new Headers({
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Access-Control-Allow-Headers" : "Accept-Ranges",
-        "authorization": ""
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Headers' : 'Accept-Ranges',
+        'authorization': ''
     });
 
     public static toastMessageEvent =  new EventEmitter();
@@ -77,23 +77,19 @@ export class APIService {
           return response;
         }
         else if (response.status == 0) {
-            APIService.toastMessageEvent.emit({msg:"The Server is down!",title:"Network Error"})
+            APIService.toastMessageEvent.emit({msg:'The Server is down!',title:'Network Error'})
         }
         else if(response.status === 422){
             // APIService.toastMessageEvent.emit({msg:"Uprocesseable Entity!", title:"Validation Error"});
-            //let the component handle the error
-        }
-        else if (response.status == 400) {
-            APIService.toastMessageEvent.emit({msg:"Something went wrong", title:"Bad request"});
-        }
-        else if (response.status == 401) {
-            APIService.toastMessageEvent.emit({msg:"You're are not authorized to do this action",title: "Unauthorized"});
-        }
-        else if (response.status == 404) {
-            APIService.toastMessageEvent.emit({msg:"The Item you are looking for is not Found", title:"Not Found"});
-        }
-        else if (response.status == 500) {
-            APIService.toastMessageEvent.emit({msg:"Something wrong happened", title:"Unknown Error"});
+            // let the component handle the error
+        } else if (response.status == 400) {
+            APIService.toastMessageEvent.emit({msg:'Something went wrong', title:'Bad request'});
+        } else if (response.status == 401) {
+            APIService.toastMessageEvent.emit({msg:'You\'re are not authorized to do this action',title: 'Unauthorized'});
+        } else if (response.status == 404) {
+            APIService.toastMessageEvent.emit({msg:'The Item you are looking for is not Found', title:'Not Found'});
+        } else if (response.status === 500) {
+            APIService.toastMessageEvent.emit({msg: 'Something wrong happened', title: 'Unknown Error'});
         }
         return Observable.throw(err);
 

@@ -9,13 +9,15 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AppComponent {
   title = 'cog';
-  private atoms: any = null;
-  private style: any = null;
+  private atoms: object = null;
+  private unordered_linktypes: string[] = null;
+  private custom_style: string = null;
 
   constructor(public toastr: ToastsManager, vRef: ViewContainerRef, private route: ActivatedRoute) {
     this.toastr.setRootViewContainerRef(vRef);
     console.log(route.root);
-    this.atoms = '';
-    this.style = '';
+    this.atoms = null;
+    this.unordered_linktypes = null;
+    this.custom_style = '';
   }
 }
