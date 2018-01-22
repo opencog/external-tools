@@ -22,7 +22,12 @@ export class UrlConnectService {
 
   public get(path: string): Observable<any> {
     const api_timeout: number = +configs.opencog_url_timeout;
-    return this._http.get(path, { headers: this.headers })
+    const api_urlroot: string = configs.atomspace_api;
+
+    // Retrieving sample *.json files from ./assets?
+    const url = path.endsWith('.json') ? path : `${path}${api_urlroot}/atoms`;
+
+    return this._http.get(url, { headers: this.headers })
       .pipe(timeout(api_timeout))
       .map((res: Response) => res.json())
       .catch(this.handleError);

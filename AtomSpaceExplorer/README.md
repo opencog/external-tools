@@ -19,7 +19,7 @@ The AtomSpace Explorer is a visualization tool for OpenCog data. Atoms are fetch
 - D3 client area and Node context (right-click) menus.
 - Individual Nodes are pinnable into fixed location. Ctrl-click, Ctrl-double-click, Ctrl-drag, or use right-click menu to Pin/Unpin a Node. Right-click the D3 client area to access a menu command to Unpin all Nodes.
 - Increased Force Simulation Charge can be applied to individual Nodes. Shift-click, Shift-double-click, Shift-drag, or use right-click menu to apply/remove high charge force to/from a Node. Right-click the client area to access a menu command to remove high charge from all Nodes. With suitable data, like single Nodes with many children subtrees, this is nice for spreading (repulsing) out neighboring nodes more forcefully in a radial fashion from that central, highly-charged Node.
-- D3 Graph client area and SVG canvas is dynamically-sized relative to the browser window size, including auto-resize of Force Simulation. Scrollbars are avoided within certain limits of minimum width, height, and width-to-height ratios.
+- D3 Graph client area and SVG canvas is dynamically-sized relative to the browser window size, including auto-resize of Force Simulation. Scrollbars are avoided within limits of minimum width, height, and width-to-height ratios.
 - Tooltips for all Navbar and Visualizer command buttons.
 - Tooltips for Nodes and Links. Node and Link tooltip verbosity is controlled via the 'Detailed Tooltips' toggle checkbox. In verbose mode, the Node detail level is the same as the selected Node properties table. Both methods can be used together, which provides a convenient way to compare details between a baseline selected Node, and other Nodes via hovering over them. The 'Detailed Tooltips' toggle checkbox also affects Link tooltip verbosity in a similar manner. Tips:
   - The Force Simulation can optionally be paused to make it easier to hover over Nodes and Links to show details via tooltips. However, tooltips do also work while the simulation is running.
@@ -59,10 +59,12 @@ Alternatively, you can permanently change the default port by inserting the foll
 
 1. Navigate to [http://localhost:4200/](http://localhost:4200/)
 1. Click on Fetch in the Navbar. A 'Fetch AtomSpace Results' prompt is displayed. Then do any of the following options:
-   - Fetch from CogServer:  Enter a valid AtomSpace api URL in the Server URL box.
-    I.E <http://255.255.255.255:5000/api/v1.1/atoms>, then click on the Fetch button to graph the data.
+   - Fetch from CogServer:  Enter a valid CogServer URL __*__ in the Server URL box.
+    I.E <http://localhost:5000> or <http://my_cogserver:5000> __*__, then click on the Fetch button to graph the data.
    - Load built-in sample data:  Click on 'Load Sample Data'. See next section regarding configuring sample data.
    - Load non-default built-in sample data: Enter the path, in the form of 'assets/{file-name}' to any of the bundled sample data json files in the Server URL box. I.E. 'assets/atoms.humans.json' (enter it without quotes). Then click on the Fetch button.
+
+    __\* Note: Do <u>not</u> append '/api/v1.1/atoms', as was required for earlier versions of AtomSpace Explorer.__
 
 ## Sample Data
 
@@ -93,6 +95,14 @@ Alternatively, you can permanently change the default port by inserting the foll
 
 ## Revision History
 
+### Jan-21-2018 - sshermz - Updated to latest ng2-as-visualizer, Simplified fetch URL, RT fetch of unordered linktypes & miscellaneous
+
+- Updated to [ng2-atomspace-visualizer](https://www.npmjs.com/package/ng2-atomspace-visualizer) 1.3.2.
+- Simplified required URL for fetching from CogServer AtomSpace REST api. Now enter an address like <http://localhost:5000> or <http://255.255.255.255:5000>. Do <u>not</u> append '/api/v1.1/atoms' like before. Fetch dialog help text updated too.
+- Fixed Fetch spinning load icon which wasn't appearing.
+- Updated default (built-in) list of unordered linktypes. Also added dynamic call to fetch unordered linktypes from Cog Server whenever fetching data. If successful, overrides built-in list. Depends on new (cog-get-all-subtypes 'UnorderedLink) scheme command (github.com/opencog/atomspace/pull/1516).
+- License update.
+
 ### Jan-13-2018 - sshermz - Migrated to NPMJS ng2-atomspace-visualizer package and miscellaneous
 
 - Migrated to the NPMJS [ng2-atomspace-visualizer](https://www.npmjs.com/package/ng2-atomspace-visualizer) package which now provides the D3 Atomspace Visualizer charting functionality. Conseqently, the local D3 Atomspace charting code has been deleted from this AtomSpaceExplorer app. Future Atomspace D3 charting-specific enhancements and fixes will be applied to ng2-atomspace-visualizer, and can then be utlilized in this app by simply updating to the latest version of ng2-atomspace-visualizer.
@@ -107,7 +117,7 @@ Alternatively, you can permanently change the default port by inserting the foll
 
 ### Jan-2-2018 - sshermz - Link enhancements: Directional arrowheads and support for multiple links between nodes. Also bug fixes
 
-- New Feature: Added arrowheads to link lines. Ordered (assymmetric) link types now have a single arrowhead to show "incoming set" direction. And unordered (symmetric) link types now have arrowheads on both ends. For now, unordered link types are identified by new config parameter 'unordered\_linktype\_roots' in app.config.ts. Fixes #108.
+- New Feature: Added arrowheads to link lines. Ordered (asymmetric) link types now have a single arrowhead to show "incoming set" direction. And unordered (symmetric) link types now have arrowheads on both ends. For now, unordered link types are identified by new config parameter 'unordered\_linktype\_roots' in app.config.ts. Fixes #108.
 - New Feature: Added incoming and outgoing handle lists to selected node properties box, and also to detailed-mode tooltips.
 - Bug Fix: Now handling multiple links between a pair of nodes. Double links are drawn with opposing arc paths (which required changing links from svg:line to svg:path). Up to 3 links between a pair of nodes is currently supported. Fixes #111.
 - Bug Fix: Fixed bug with extraction of link types from atomspace data, which is used for dynamically constructed filter menu. Was not retrieving all link types.
