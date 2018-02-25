@@ -2,23 +2,23 @@
 export const LANG_CN_NAME = 'cn';
 
 export const LANG_CN_TRANS = {
-    'Data Sets': '数据集',
-    'Projects': '项目',
-    'Sign Out': '登出',
-    // 'Network': '网络',
-    'Network': '想象',
+    'Visualize': '想象',
     'Fetch': '取',
     'Language': '语言',
     'Filter': '过滤',
-    'Research Libraries': '研究图书馆',
-    'No data Set is Found': '没有找到数据集',
-    'Create New': '创建新的',
+    'Dataset-not-found': '没有找到数据集',
     'Search': '搜索',
-    'Filter by': '过滤',
-    'Date': '日期',
-    'size': '尺寸',
-    'analysis': '分析',
-    'No project is Found': '没有找到项目',
+    'Filter-by': '过滤',
     'Detail': '详情',
-    'Delete': '删除'
+    'OpenCog-TT': 'OpenCog 基金会',
+    'Fetch-TT': '从 AtomSpace 服务获取数据',
+    'Visualize-TT': '可视化 AtomSpace 数据',
+    'Language-TT': '改变语言',
+    'English': '英语',
+    'Chinese': '中文',
+    'French': '法国',
+    'German': '德语',
+    'Italian': '意大利',
+    'Japanese': '日本',
+    'Spanish': '西班牙语'
 };

@@ -2,24 +2,23 @@
 export const LANG_JP_NAME = 'jp';
 
 export const LANG_JP_TRANS = {
-
-    'Data Sets': 'Data Sets',
-    'Projects': 'Projects',
-    'Sign Out': 'Sign Out',
-    // 'Network': 'ネットワーク',
-    'Network': '視覚化する',
+    'Visualize': '視覚化する',
     'Fetch': '取って参る',
     'Language': '言語',
     'Filter': '漉す', // 'フィルタ'
-    'Research Libraries': 'Research Libraries',
-    'No data Set is Found': 'No Data Set is Found',
-    'Create New': 'Create New',
+    'Dataset-not-found': 'No Data Set is Found',
     'Search': 'Search',
-    'Filter by': 'Filter by',
-    'Date': 'Date',
-    'size': 'size',
-    'analysis': 'analysis',
-    'No project is Found': 'No project is Found',
+    'Filter-by': 'Filter by',
     'Detail': 'Detail',
-    'Delete': 'Delete'
+    'OpenCog-TT': 'OpenCog 財団',
+    'Fetch-TT': 'AtomSpace サービスからデータを取得する',
+    'Visualize-TT': 'AtomSpace データを視覚化する',
+    'Language-TT': '言語を変えてください',
+    'English': '英語',
+    'Chinese': '中国語',
+    'French': 'フランス語',
+    'German': 'ドイツ人',
+    'Italian': 'イタリアの',
+    'Japanese': '日本語',
+    'Spanish': 'スペイン語'
 };
