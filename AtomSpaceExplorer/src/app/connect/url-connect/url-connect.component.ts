@@ -139,7 +139,7 @@ export class UrlConnectComponent implements OnInit {
   }
 
   private visualizeResult(res) {
-    const as_data: AtomServiceData = { atoms: null, unordered_linktypes: null, custom_style: null };
+    const as_data: AtomServiceData = { atoms: null, unordered_linktypes: null, custom_style: null, language: null };
     as_data.atoms = res;
     if (this.unorderedLinkTypesArr !== null) {
       as_data.unordered_linktypes = this.unorderedLinkTypesArr;

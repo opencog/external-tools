@@ -5,6 +5,7 @@ import {Component, OnInit} from '@angular/core';
 import {TranslateConfig} from "../../core/translate/translate-config";
 import {TranslateService} from "../../core/translate/translate.service";
 import {AuthService} from "../../core/auth/services/auth.service";
+import { AtomService, AtomServiceData } from 'ng2-atomspace-visualizer';
 
 @Component({
     selector: 'main-container',
@@ -15,7 +16,7 @@ import {AuthService} from "../../core/auth/services/auth.service";
 export class MainContainer implements OnInit{
     public supportedLanguages: any[];
 
-    constructor(private _authService: AuthService,private _translate: TranslateService){}
+    constructor(private _authService: AuthService, private _translate: TranslateService, private _atomsService: AtomService) { }
 
     ngOnInit() {
         this.supportedLanguages = [
@@ -37,6 +38,11 @@ export class MainContainer implements OnInit{
     private selectLang(lang: string) {
         this._translate.use(lang);
         TranslateConfig.setCurrentLang(lang);
+
+        // Also set language of the atomspace-visualizer module
+        const as_data: AtomServiceData = { atoms: null, unordered_linktypes: null, custom_style: null, language: lang };
+        this._atomsService.changeItem(as_data);
+        // this.router.navigate(['cog-visualizer']);
     }
 
     private setLanguage(lang){
@@ -44,9 +50,8 @@ export class MainContainer implements OnInit{
         this.selectLang(key);
     }
 
-    private signOut(){
-        this._authService
-            .signOut();
-    }
-
+    // private signOut(){
+    //     this._authService
+    //         .signOut();
+    // }
 }

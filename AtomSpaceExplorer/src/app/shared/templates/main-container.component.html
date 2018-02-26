@@ -1,29 +1,29 @@
 <div class="ui attached stackable menu">
   <div class="item">
-    <span data-tooltip="The OpenCog Foundation" data-position="bottom left">
+    <span [attr.data-tooltip]="'OpenCog-TT' | translate" data-position="bottom left">
       <a href="http://opencog.org/" target="_blank" class="ui mini image">
         <img src="../../../assets/img/Logo.png" alt="OpenCog">
       </a>
     </span>
   </div>
   <a class="item" routerLink="/fetch">
-    <span data-tooltip="Fetch data from AtomSpace Service" data-position="bottom left">
+    <span [attr.data-tooltip]="'Fetch-TT' | translate" data-position="bottom left">
       <i class="icon large cloud download"></i> {{ 'Fetch' | translate }}
     </span>
   </a>
   <a class="item" routerLink="/cog-visualizer">
-    <span data-tooltip="Visualize AtomSpace data" data-position="bottom center">
-      <i class="icon large share alternate"></i> {{ 'Network' | translate }}
+    <span [attr.data-tooltip]="'Visualize-TT' | translate" data-position="bottom center">
+      <i class="icon large share alternate"></i> {{ 'Visualize' | translate }}
     </span>
   </a>
   <div class="ui secondary stackable right menu">
     <div class="ui dropdown item">
-      <span data-tooltip="Change Language" data-position="bottom center">
+      <span [attr.data-tooltip]="'Language-TT' | translate" data-position="bottom center">
         <i class="large icon translate"></i> {{ 'Language' | translate }}
         <i class="large icon dropdown"></i>
       </span>
       <div class="menu">
-        <a class="item" *ngFor="let lang of supportedLanguages" (click)="selectLang(lang.value)"><i class="{{ lang.flag }} flag"></i> {{ lang.display }}</a>
+        <a class="item" *ngFor="let lang of supportedLanguages" (click)="selectLang(lang.value)"><i class="{{ lang.flag }} flag"></i> {{ lang.display | translate }}</a>
       </div>
     </div>
   </div>
