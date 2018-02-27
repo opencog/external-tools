@@ -64,7 +64,7 @@ Alternatively, you can permanently change the default port by inserting the foll
    - Load built-in sample data:  Click on 'Load Sample Data'. See next section regarding configuring sample data.
    - Load non-default built-in sample data: Enter the path, in the form of 'assets/{file-name}' to any of the bundled sample data json files in the Server URL box. I.E. 'assets/atoms.humans.json' (enter it without quotes). Then click on the Fetch button.
 
-    __\* Note: Do <u>not</u> append '/api/v1.1/atoms', as was required for earlier versions of AtomSpace Explorer.__
+    __\* Note: Do not append '/api/v1.1/atoms', as was required for earlier versions of AtomSpace Explorer.__
 
 ## Sample Data
 
@@ -94,14 +94,20 @@ Alternatively, you can permanently change the default port by inserting the foll
 
 ## Revision History
 
+### Feb-26-2018 - sshermz - Fetch form cleanup, localization improvements / fixes, sync to latest ng2-as-visualizer
+
+- Localized and also refined appearance of the Fetch form.
+- Added ability to cancel the Fetch form via an upper right-hand 'X' icon button.
+- Synched to latest ng2-atomspace-visualizer (1.3.7) which has localization fixes itself.
+
 ### Feb-25-2018 - sshermz - Localization improved
 
-- Localization now fully implemented for all container (this host app) Navbar buttons & dropdowns, including their tooltips. Depends on ng2-atomspace-visualizer  version 1.3.5, which adds language support, and honors the container's language selection.
+- Localization implemented for all container (this host app) Navbar buttons & dropdowns, including their tooltips. Depends on ng2-atomspace-visualizer 1.3.5, which adds language support, and honors the container's language selection. Fixes #107.
 
 ### Jan-21-2018 - sshermz - Updated to latest ng2-as-visualizer, Simplified fetch URL, RT fetch of unordered linktypes & miscellaneous
 
 - Updated to [ng2-atomspace-visualizer](https://www.npmjs.com/package/ng2-atomspace-visualizer) 1.3.2.
-- Simplified required URL for fetching from CogServer AtomSpace REST api. Now enter an address like <http://localhost:5000> or <http://255.255.255.255:5000>. Do <u>not</u> append '/api/v1.1/atoms' like before. Fetch dialog help text updated too.
+- Simplified required URL for fetching from CogServer AtomSpace REST api. Now enter an address like <http://localhost:5000> or <http://255.255.255.255:5000>. Do NOT append '/api/v1.1/atoms' like before. Fetch dialog help text updated too.
 - Fixed Fetch spinning load icon which wasn't appearing.
 - Updated default (built-in) list of unordered linktypes. Also added dynamic call to fetch unordered linktypes from Cog Server whenever fetching data. If successful, overrides built-in list. Depends on new (cog-get-all-subtypes 'UnorderedLink) scheme command (github.com/opencog/atomspace/pull/1516).
 - License update.

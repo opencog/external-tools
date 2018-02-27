@@ -35,7 +35,7 @@ import { EqualValidator } from './directives/equal-validator.directive';
     EqualValidator
   ],
   providers: [ OpencogAPIService, AtomService ],
-  exports: [ InitializeDropdown, InitializeToggle, InitializeTooltip, OrderByPipe, SearchPipe, TruncatePipe,
+  exports: [ InitializeDropdown, InitializeToggle, InitializeTooltip, OrderByPipe, SearchPipe, TruncatePipe, TranslatePipe,
     CardTransition, ConfirmationDialogComponent ]
 })
 export class SharedModule { }

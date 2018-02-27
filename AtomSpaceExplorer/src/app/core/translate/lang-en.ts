@@ -20,5 +20,9 @@ export const LANG_EN_TRANS = {
     'German': 'German',
     'Italian': 'Italian',
     'Japanese': 'Japanese',
-    'Spanish': 'Spanish'
+    'Spanish': 'Spanish',
+    'Fetch-Title': 'Fetch AtomSpace Results',
+    'Placeholder-URL': 'Cog Server URL   (i.e. \'http://128.0.0.0:5000\')',
+    'Reset': 'Reset',
+    'Load-sample-data': 'Load Sample Data'
 };
