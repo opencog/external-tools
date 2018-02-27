@@ -6,6 +6,8 @@ import { AtomService, AtomServiceData } from 'ng2-atomspace-visualizer';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { configs } from '../../app.config';
+import { TranslateConfig } from '../../core/translate/translate-config';
+import { TranslateService } from '../../core/translate/translate.service';
 
 // Default Unordered (Symmetric) Link types
 //
@@ -37,17 +39,19 @@ export class UrlConnectComponent implements OnInit {
   // Filename is configured in ./src/app/app.config.ts
   private fileJSON = 'assets/' + configs.sample_data_file;
 
-  constructor( @Inject(FormBuilder) fb: FormBuilder,
+  constructor(@Inject(FormBuilder) fb: FormBuilder,
     private service: UrlConnectService,
     private cogAPIService: OpencogAPIService,
     private atomsService: AtomService,
     private router: Router,
+    private translate: TranslateService,
     private localStorageService: LocalStorageService) {
     this.form = fb.group({
       url: ''
     });
   }
 
+  // Init
   ngOnInit() {
     const savedURL: string = this.localStorageService.get(this.urlKey);
     if (savedURL !== null) {
@@ -55,9 +59,17 @@ export class UrlConnectComponent implements OnInit {
     }
   }
 
+  // Fetch results from a CogServer (or from a built-in sample json file located in the assets folder)
   fetchJson() {
     console.log('\n' + 'Fetching from ' + this.url);
 
+    // Shouldn't get here as Fetch button is disabled unless something is entered into URL text field
+    if (!this.url) {
+      this.errMsg = 'Invalid URL';
+      return;
+    }
+
+    // Handle loading sample data from ./assets.  I.E. 'assets/atoms.sample1.json'
     if (this.url.endsWith('.json')) {
       // Retrieving sample *.json files from ./assets
     } else {
@@ -92,6 +104,7 @@ export class UrlConnectComponent implements OnInit {
       });
   }
 
+  // Load sample data
   fetchSampleJson() {
     console.log('\n' + 'Loading sample data from file ' + this.fileJSON);
     this.errMsg = '';
@@ -116,6 +129,7 @@ export class UrlConnectComponent implements OnInit {
       });
   }
 
+  // Fetch unordered link types (used for filter menu)
   fetchLinkTypes(url: string) {
     // console.log('\n' + 'Fetching unordered link types from ' + url);
     this.errMsg = '';
@@ -138,17 +152,25 @@ export class UrlConnectComponent implements OnInit {
       });
   }
 
+  // Display visualizer
   private visualizeResult(res) {
     const as_data: AtomServiceData = { atoms: null, unordered_linktypes: null, custom_style: null, language: null };
+
+    // Configure inputs
     as_data.atoms = res;
     if (this.unorderedLinkTypesArr !== null) {
       as_data.unordered_linktypes = this.unorderedLinkTypesArr;
     }
+    as_data.language = this.translate.currentLang;
+
+    // Invoke atom service
     this.atomsService.changeItem(as_data);
 
+    // Navigate to visualizer chart
     this.router.navigate(['cog-visualizer']);
   }
 
+  // Reset form
   public reset() {
     this.connecting = false;
     this.errMsg = '';
@@ -158,5 +180,14 @@ export class UrlConnectComponent implements OnInit {
       this.subscription.unsubscribe();
       this.subscription = null;
     }
+  }
+
+  // Cancel form
+  public cancel() {
+    this.connecting = false;
+    this.errMsg = '';
+
+    // Navigate to home page
+    this.router.navigate(['']);
   }
 }

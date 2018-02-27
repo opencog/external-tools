@@ -10,14 +10,15 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true
   },
-
   "files": [
     "src/app/app.module.ts",
     "src/main.ts"
   ],
-
+  "exclude": [
+    "node_modules"
+  ],
   "angularCompilerOptions": {
    "genDir": "aot",
    "skipMetadataEmit" : true
- }
+  }
 }

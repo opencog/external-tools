@@ -1,34 +1,30 @@
 <div class="center-div">
   <div id="url-div">
     <div class="ui cards">
-      <div class="card" style="width: 40%; margin: 10% auto;">
+      <div class="card" style="width: 40%; max-width: 500px; margin: 10% auto;">
         <div class="content">
           <div class="header">
-            <span>Fetch AtomSpace Results</span>
+            <span style="font-size: 17px">{{ 'Fetch-Title' | translate }}</span>
+            <i (click)="cancel()" class="ui basic circular right floated remove icon smallest" style="margin-top: -.15em !important; margin-right: -.2em !important"></i>
           </div>
           <div class="description">
             <form [formGroup]="form" (ngSubmit)="fetchJson()">
-              <!--<input [(ngModel)]="url" formControlName="url" type="text" placeholder="Insert url">-->
               <div class="ui left icon input loading" style="height: 100px">
-                <input [(ngModel)]="url" formControlName="url" type="text" placeholder="Cog Server Url">
-                <!-- <input [(ngModel)]="url" formControlName="url" type="text" autocomplete="off"> -->
+                <input [(ngModel)]="url" formControlName="url" type="text" placeholder="{{ 'Placeholder-URL' | translate }}">
                 <i [ngClass]="{'search icon': connecting}"></i>
               </div>
               <div class="error" *ngIf="errMsg != ''">{{ errMsg }}</div>
               <div *ngIf="errMsg != ''"><br></div>
-              <span style="color: #5F85D0"><b>Example: 'http://128.0.0.0:5000'.&nbsp;&nbsp;Do <u>not</u> append '/api/v1.1/atoms'</b></span>
+              <div class="ui two buttons">
+                <button class="ui basic green button" [disabled]="url === undefined || url === ''" (click)="fetchJson()">{{ 'Fetch' | translate }}</button>
+                <button class="ui basic red button" [disabled]="url === undefined || url === ''" (click)="reset()">{{ 'Reset' | translate }}</button>
+              </div>
             </form>
           </div>
         </div>
         <div class="extra content">
           <div class="ui two buttons">
-            <div class="ui basic green button" (click)="fetchJson()">Fetch</div>
-            <div class="ui basic red button" (click)="reset()">Reset</div>
-          </div>
-        </div>
-        <div class="extra content">
-          <div class="ui two buttons">
-            <div class="ui basic blue button" (click)="fetchSampleJson()">Load Sample Data</div>
+            <button class="ui basic blue button" (click)="fetchSampleJson()">{{ 'Load-sample-data' | translate }}</button>
           </div>
         </div>
       </div>

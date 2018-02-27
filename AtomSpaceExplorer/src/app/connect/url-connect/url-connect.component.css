@@ -18,13 +18,17 @@
 /*}*/
 
 #url-div > div > div > div:nth-child(1) > div > form > div {
-    width: 100%;
+  width: 100%;
+}
+
+#url-div > div > div > div:nth-child(1) > div.description > form > div.ui.left.icon.input.loading {
+  height: 80px !important;
 }
 
 .error {
-    color: #D8000C;
-    width: 50%;
-    margin: 0 auto;
-    background-color: #FFBABA;
-    text-align: center;
+  color: #D8000C;
+  width: 50%;
+  margin: 0 auto;
+  background-color: #FFBABA;
+  text-align: center;
 }

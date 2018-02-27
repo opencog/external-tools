@@ -20,5 +20,9 @@ export const LANG_IT_TRANS = {
     'German': 'Tedesco',
     'Italian': 'Italiano',
     'Japanese': 'Giapponese',
-    'Spanish': 'Spagnolo'
+    'Spanish': 'Spagnolo',
+    'Fetch-Title': 'Recupera i risultati di AtomSpace',
+    'Placeholder-URL': ' URL del server di comando   (ad esempio http://128.0.0.0:5000)',
+    'Reset': 'Reset',
+    'Load-sample-data': 'Carica i dati di esempio'
 };
