@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Take 2 arguments
 #
@@ -243,7 +243,7 @@ def special_link_type(oper):
 
 def print_links(file):
     for atom in atomspace:
-        if atom.is_a(types.Link) and atom.tv.count > 0:
+        if atom.is_link() and atom.tv.count > 0:
             file.write(repr(atom))
 
 def load_sumo(i2t, filename):

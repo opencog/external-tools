@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Takes a SUO-kif file in argument and generate a file associating
 # each SUMO instance to an atom type. Each line is formatted as
@@ -79,7 +79,7 @@ def classes2atomtype(instance, classes):
 
 def output_instance2atomtype(instance2classes):
     for instance in instance2classes:
-        print instance, classes2atomtype(instance, instance2classes[instance])
+        print(instance, classes2atomtype(instance, instance2classes[instance]))
 
 if __name__ == '__main__':
     # Turn the kif file into a list of s-expressions
