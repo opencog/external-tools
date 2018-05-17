@@ -32,6 +32,17 @@ def match_parenthesis(symbolString):
     else:   #couldn't pop from stack
         return (match_parenthesis(removeExtra(symbolString,index-1)))
 
+def istartswith(l, s):
+    # '''
+    # Like startswith but is case insensitive
+
+    # For instance:
+
+    # istartswith("Hello World!", "he")
+    # returns True
+    # '''
+    return l.lower().startswith(s.lower())
+
 def skip_comments(myfile):
 
     '''You can't use this function directly because it would break parsing of multiline expressions'''
@@ -41,22 +52,22 @@ def skip_comments(myfile):
 
         '''' skip documentation and such'''
         if copying:
-            if line.startswith('(documentation ') \
-               or line.startswith('(comment ') \
-               or line.startswith('(termFormat ') \
-               or line.startswith('(format ') \
-               or line.startswith('(utterance ') \
-               or line.startswith('(externalImage '):
+            if istartswith(line, '(documentation ') \
+               or istartswith(line, '(comment ') \
+               or istartswith(line, '(termFormat ') \
+               or istartswith(line, '(format ') \
+               or istartswith(line, '(utterance ') \
+               or istartswith(line, '(externalImage '):
                 if '")' in line:
                     line = ""
                     copying = True
                 else:
                     copying = False
-        elif '")' in line and copying == False:
+        elif '")' in line and not copying:
             line = ""
             copying = True
 
-        if copying == False:
+        if not copying:
             line = ""
 
         '''' skip comments'''
