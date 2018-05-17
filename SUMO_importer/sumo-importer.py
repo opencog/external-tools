@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Take 2 arguments
 #
@@ -83,6 +83,7 @@ def convert_token(i2t, token):
     if token.startswith('?') or token.startswith('@'):
         return atomspace.add_node(types.VariableNode, token)
     if token.startswith('"'):
+        assert token.endswith('"')
         token = token[1:-2]
     atom_type = i2t[token]
     return atomspace.add_node(atom_type, token, tv=DEFAULT_NODE_TV)
@@ -243,7 +244,7 @@ def special_link_type(oper):
 
 def print_links(file):
     for atom in atomspace:
-        if atom.is_a(types.Link) and atom.tv.count > 0:
+        if atom.is_link() and atom.tv.count > 0:
             file.write(repr(atom))
 
 def load_sumo(i2t, filename):
