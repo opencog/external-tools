@@ -83,6 +83,7 @@ def convert_token(i2t, token):
     if token.startswith('?') or token.startswith('@'):
         return atomspace.add_node(types.VariableNode, token)
     if token.startswith('"'):
+        assert token.endswith('"')
         token = token[1:-2]
     atom_type = i2t[token]
     return atomspace.add_node(atom_type, token, tv=DEFAULT_NODE_TV)
