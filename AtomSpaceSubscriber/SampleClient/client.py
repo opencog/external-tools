@@ -20,12 +20,12 @@ def main():
     subscriber = context.socket(zmq.SUB)
     subscriber.set_hwm(1000000)
     subscriber.connect("tcp://" + IP_ADDRESS + ":" + PORT)
-    subscriber.setsockopt(zmq.SUBSCRIBE, "add")
-    subscriber.setsockopt(zmq.SUBSCRIBE, "remove")
-    subscriber.setsockopt(zmq.SUBSCRIBE, "tvChanged")
-    subscriber.setsockopt(zmq.SUBSCRIBE, "avChanged")
-    subscriber.setsockopt(zmq.SUBSCRIBE, "addAF")
-    subscriber.setsockopt(zmq.SUBSCRIBE, "removeAF")    
+    subscriber.setsockopt(zmq.SUBSCRIBE, b"add")
+    subscriber.setsockopt(zmq.SUBSCRIBE, b"remove")
+    subscriber.setsockopt(zmq.SUBSCRIBE, b"tvChanged")
+    subscriber.setsockopt(zmq.SUBSCRIBE, b"avChanged")
+    subscriber.setsockopt(zmq.SUBSCRIBE, b"addAF")
+    subscriber.setsockopt(zmq.SUBSCRIBE, b"removeAF")    
 
     while True:
         # Read envelope with address
