@@ -33,7 +33,7 @@ error_echo() {
 
 if [ ! -d "sumo" ]; then
 info_echo "Download sumo"
-git clone https://github.com/ontologyportal/sumo.git
+git clone --depth 1 https://github.com/ontologyportal/sumo.git
 info_echo "Finished downloading SUMO kif files"
 fi
 

@@ -8,6 +8,7 @@
 # and export the file to atomese scheme
 
 import sys
+import re
 import kifparser
 from collections import defaultdict
 from opencog.atomspace import AtomSpace, TruthValue, types, get_type
@@ -18,6 +19,8 @@ DEFAULT_PREDICATE_TV = TruthValue(0.1, 1)
 
 global atomspace
 atomspace=None
+
+rgx = re.compile(r"([A-Z][a-z0-9]+)")
 
 def load_instance2type(filename):
     """
@@ -86,6 +89,10 @@ def convert_token(i2t, token):
         assert token.endswith('"')
         token = token[1:-2]
     atom_type = i2t[token]
+    if atom_type == types.ConceptNode and len(token) != 0:
+        token = rgx.sub(r"_\1", token).lower()
+        if token[0] == "_":
+            token = token[1:]
     return atomspace.add_node(atom_type, token, tv=DEFAULT_NODE_TV)
 
 def convert_variable(i2t, variable):
