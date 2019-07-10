@@ -76,7 +76,7 @@ def skip_comments(myfile):
             yield line
 
 def read_kif_file(filename):
-    with open(filename, 'rt') as myfile:
+    with open(filename, 'rt', encoding="utf-8") as myfile:
         return '\n'.join(skip_comments(myfile))
 
 def remove_blank_lines(text):
