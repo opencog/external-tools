@@ -6,6 +6,7 @@
 
 ATOM_TYPE_FILE="atom-types.txt"
 ALL_SUMO_KB="all-sumo-labeled-kb.scm"
+LOWER_CASE_CONCEPT=""
 
 #############
 # Functions #
@@ -28,6 +29,14 @@ error_echo() {
 }
 
 ########
+# Args #
+########
+case $1 in
+    -l|--lower) LOWER_CASE_CONCEPT="--lower-case" ;;
+esac
+
+
+########
 # Main #
 ########
 
@@ -45,11 +54,12 @@ if [ ! -f "$ATOM_TYPE_FILE" ]; then
     ../sumo-to-atom-types.py *.kif tests/*.kif.tq > "$ATOM_TYPE_FILE"
 fi
 
+
 info_echo "Create KB scheme files"
 
 for file in *.kif; do
     info_echo "Export $file"
-    ../sumo-importer.py "$ATOM_TYPE_FILE" $file
+    ../sumo-importer.py "$ATOM_TYPE_FILE" $file $LOWER_CASE_CONCEPT
 done
 
 info_echo "Move the generated scheme files to sumo/output"
