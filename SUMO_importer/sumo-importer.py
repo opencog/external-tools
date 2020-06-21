@@ -12,7 +12,6 @@ import kifparser
 from collections import defaultdict
 from opencog.atomspace import types, get_type
 from opencog.type_constructors import AtomSpace, TruthValue
-import ipdb 
 
 DEFAULT_NODE_TV = TruthValue(0.01, 1)
 DEFAULT_LINK_TV = TruthValue(1, 1)
