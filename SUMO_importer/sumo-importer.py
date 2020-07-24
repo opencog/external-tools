@@ -11,7 +11,8 @@ import sys
 import re
 import kifparser
 from collections import defaultdict
-from opencog.atomspace import AtomSpace, TruthValue, types, get_type
+from opencog.atomspace import types, get_type
+from opencog.type_constructors import AtomSpace, TruthValue
 
 DEFAULT_NODE_TV = TruthValue(0.01, 1)
 DEFAULT_LINK_TV = TruthValue(1, 1)
@@ -255,7 +256,7 @@ def special_link_type(oper):
 def print_links(file):
     for atom in atomspace:
         if atom.is_link() and atom.tv.count > 0:
-            file.write(repr(atom))
+            file.write(repr(atom) + '\n')
 
 def load_sumo(i2t, filename):
     expressions = kifparser.parse_kif_file(filename)
