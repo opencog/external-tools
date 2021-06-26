@@ -1,0 +1,12 @@
+.loading {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-upload-sucess-info {
+    background: rgba(52, 177, 68, 0.58);
+    padding: 10px;
+    color: green;
+}

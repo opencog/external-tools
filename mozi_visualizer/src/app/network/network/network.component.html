@@ -1,0 +1,158 @@
+<div class="ui grid very padded">
+	<!-- <div class="four wide column">
+		<div class="ui segment attached chat-text-holder">
+			<div class="ui list">
+				<div class="item">
+					<div class="right floated content blue">
+						<p class="user-text">Hello Bot! this is a sample command for practice.</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="left floated content teal">
+						<p class="bot-text"><i class="spy icon"></i>Hello User! am the bot to process your request.</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="right floated content blue">
+						<p class="user-text">show the moses data model for current project.</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="left floated content teal">
+						<p class="bot-text"><i class="spy icon"></i>the moses data model for the current project is ...</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="right floated content blue">
+						<p class="user-text">visualize the result of the following data ..</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="left floated content teal">
+						<p class="bot-text"><i class="spy icon"></i>visualization of the data you requested is as follows ...</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="right floated content">
+						<p class="user-text">show me the analysed result</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="left floated content">
+						<p class="bot-text"><i class="spy icon"></i>here is the analysed result of the project ...</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="right floated content">
+						<p class="user-text">take me to my homepage please.</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="left floated content">
+						<p class="bot-text"><i class="spy icon"></i>Have a nice day! thank you.</p>
+					</div>
+				</div>
+				<div class="item">
+					<div class="right floated content">
+						<p class="user-text">Ok thanks</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui bottom attached padded segment">
+			<div class="ui fluid action input chat-input">
+				<input type="text" placeholder="Enter your command here">
+				<div class="ui teal button">Go</div>
+			</div>
+		</div>
+	</div> -->
+	<div class="sixteen wide column">
+		<div class="ui segment visualizer-screen">
+			<div class="tools-div">
+				<button (click) = "zoomOut()" class="circular ui icon teal button">
+				<i class="icon minus"></i>
+				</button>
+				<button (click) = "zoomIn()" class="circular ui icon teal button">
+					<i class="icon plus"></i>
+				</button>
+				<button *ngIf = "filtered" (click) = "show()" class="ui teal button">
+					show the whole data
+				</button>
+				<div *ngIf = "selected" class="ui floating labeled icon dropdown teal button">
+				  <i class="filter icon"></i>
+				  <span class="text">Filter</span>
+				  <div class="menu">
+				    <div class="header">
+				      <i class="tags icon"></i>
+				      Filter on Selection
+				    </div>
+				    <div class="item" (click) = "filterByNode('ConceptNode')">
+				      ConceptNode
+				    </div>
+				    <div class="item" (click) = "filterByNode('ReferenceLink')">
+				      ReferenceLink
+				    </div>
+				    <div class="item" (click) = "filterByNode('EvaluationLink')">
+				      EvaluationLink
+				    </div>
+				    <div class="item" (click) = "filterByNode('all')">
+				      show all
+				    </div>
+				  </div>
+				</div>
+			</div>
+			<div *ngIf = "selected" class="message-div">
+				<table class="ui celled striped table">
+					<thead>
+					<tr><th colspan="4">
+						{{ type }}
+						<i (click) = "close()" class="right floated remove icon"></i>
+
+					</th>
+					</tr></thead>
+					<tbody>
+					<tr>
+						<td class="collapsing">
+							Handle
+						</td>
+						<td colspan="2">{{ handle }}</td>
+					</tr>
+					<tr>
+						<td>
+							LTI
+						</td>
+						<td>{{ av.lti }}</td>
+					</tr>
+					<tr>
+						<td>
+							STI
+						</td>
+						<td>{{ av.sti }}</td>
+					</tr>
+					<tr>
+						<td>
+							VLTI
+						</td>
+						<td>{{ av.vlti }}</td>
+					</tr>
+					<tr>
+						<td>
+							Confidence
+						</td>
+						<td>{{ tv.details.confidence }}</td>
+					</tr>
+					<tr>
+						<td>
+							Strength
+						</td>
+						<td>{{ tv.details.strength }}</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<svg *ngIf="parsedJson" width="1400" height="640">
+				
+			</svg>
+		</div>
+	</div>
+</div>

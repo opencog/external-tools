@@ -1,0 +1,37 @@
+<!-- <div *ngIf="isDataLoaded" class="dataset" moz-scroll (onTableScroll)="handleScroll($event)">
+  <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+    <thead>
+    <tr>
+      <th class="mdl-data-table__cell--non-numeric" *ngFor="let col of col_headers">{{ col }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of dataset">
+      <td class="mdl-data-table__cell--non-numeric" *ngFor="let attr of item">{{ attr }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div class="loading" *ngIf="!isDataLoaded">
+  <md-spinner></md-spinner>
+</div>
+
+ -->
+<div *ngIf="isDataLoaded" class="dataset" moz-scroll (onTableScroll)="handleScroll($event)">
+  <table class="ui celled table">
+    <thead>
+      <tr>
+        <th *ngFor="let col of col_headers">{{ col }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of dataset">
+        <td *ngFor="let attr of item"> {{ attr }} </td>
+      </tr>
+    </tbody>
+  </table>
+</div> 
+
+<div *ngIf="!isDataLoaded" class="ui large active centered inline loader" style="margin-top: 20%"></div>
