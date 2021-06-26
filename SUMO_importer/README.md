@@ -20,9 +20,11 @@ Usage
 
 Run
 ```bash
-./sumo-opencog.sh
+./sumo-opencog.sh [-l|--lower]
 ```
 to clone SUMO and generate the output files.
+The optional [-l|--lower] argument converts concept names to lowercase
+and multiple words camel-case separation to underscore separation.
 
 It may take a few minutes to convert all. When finished, you will get
 a sumo directory with a bunch of kif files and an output

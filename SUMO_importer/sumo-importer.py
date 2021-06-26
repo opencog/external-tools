@@ -8,6 +8,7 @@
 # and export the file to atomese scheme
 
 import sys
+import re
 import kifparser
 from collections import defaultdict
 from opencog.atomspace import types, get_type
@@ -19,6 +20,9 @@ DEFAULT_PREDICATE_TV = TruthValue(0.1, 1)
 
 global atomspace
 atomspace=None
+
+lower_case_concept = False
+rgx = re.compile(r"([A-Z][a-z0-9]+)")
 
 def load_instance2type(filename):
     """
@@ -87,6 +91,12 @@ def convert_token(i2t, token):
         assert token.endswith('"')
         token = token[1:-2]
     atom_type = i2t[token]
+    if lower_case_concept and \
+       atom_type == types.ConceptNode and \
+       len(token) != 0:
+        token = rgx.sub(r"_\1", token).lower()
+        if token[0] == "_":
+            token = token[1:]
     return atomspace.add_node(atom_type, token, tv=DEFAULT_NODE_TV)
 
 def convert_variable(i2t, variable):
@@ -266,5 +276,6 @@ if __name__ == '__main__':
     atomspace = AtomSpace()
     i2t_filename = sys.argv[1]
     sumo_filename = sys.argv[2]
-
+    if len(sys.argv) == 4 and sys.argv[3] == "--lower-case":
+        lower_case_concept = True
     export_to_scheme(i2t_filename, sumo_filename)
